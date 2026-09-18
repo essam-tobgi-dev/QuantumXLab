@@ -68,6 +68,18 @@ inline constexpr double kRackPanelWidth_m = 0.4826;       // 19-inch panel
 inline constexpr double kRackUnit_m = 0.04445;            // 1U
 inline constexpr double kRackUnitDepth_m = 0.55;
 inline constexpr double kTrapChipSize_m[3] = {0.010, 0.0005, 0.003};
+
+// Gas-handling cabinet front panel (spec 17 §3.4, rack detail pass): the mimic diagram drawn by
+// Box(front: valve_mimic) and the valves / gauges the builder mounts on it share one layout, as
+// fractions of the cabinet width (x) and height (y). Rows are manifold lines of the mixture
+// circuit (top to bottom: condensing, still pumping, OVC / turbo, dumps and recovery); columns
+// are the branch valves on each line. Gauges sit in a row above the diagram.
+inline constexpr int kGhsValveCols = 5, kGhsValveRows = 4, kGhsGaugeCount = 6;
+inline constexpr double ghsValveX(int col) { return 0.17 * col - 0.34; }
+inline constexpr double ghsValveY(int row) { return 0.10 - 0.12 * row; }
+inline constexpr double ghsGaugeX(int i) { return 0.15 * i - 0.375; }
+inline constexpr double kGhsGaugeY = 0.36, kGhsPanelTop = 0.44, kGhsPanelBottom = -0.30, kGhsGrilleTop = -0.34;
+inline constexpr double kGhsFlowMeterX = 0.42, kGhsFlowMeterY = -0.10;
 inline constexpr double kGantryHeight_m = 0.35;
 inline constexpr double kTrayWidth_m = 0.30, kTrayHeight_m = 0.06;
 

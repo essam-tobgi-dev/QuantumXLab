@@ -71,15 +71,61 @@
     "geometry": {
       "generator": "RackUnit",
       "u": 4,
-      "front": "vna"
+      "front": "vna",
+      "front_panel": {
+        "finish": "light_grey",
+        "handles": true,
+        "screen": {
+          "x": -0.18,
+          "y": 0.05,
+          "w": 0.52,
+          "h": 0.78
+        },
+        "keypads": [
+          {
+            "x": 0.24,
+            "y": 0.12,
+            "rows": 4,
+            "cols": 4
+          }
+        ],
+        "knobs": [
+          {
+            "x": 0.4,
+            "y": 0.15,
+            "r_mm": 16
+          }
+        ],
+        "leds": [
+          {
+            "x": 0.4,
+            "y": -0.35,
+            "colour": "green"
+          }
+        ],
+        "connectors": [
+          {
+            "type": "N",
+            "x": -0.2,
+            "y": -0.42,
+            "label": "PORT 1"
+          },
+          {
+            "type": "N",
+            "x": 0.06,
+            "y": -0.42,
+            "label": "PORT 2"
+          }
+        ]
+      }
     },
     "lod": [
       {
-        "max_m": 2.0,
+        "max_m": 6.0,
         "detail": "full"
       },
       {
-        "max_m": 8.0,
+        "max_m": 30.0,
         "detail": "simple"
       },
       {

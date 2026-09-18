@@ -11,3 +11,4 @@ compile_commands.json
 # Specification material is kept out of the repository (owner decision, 2026-09-18)
 specs/
 SPEC_DEVIATIONS.md
+__pycache__/

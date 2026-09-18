@@ -49,6 +49,12 @@ public:
 
     void setLodHysteresis(double fraction) { hysteresis_ = fraction; }
     void setLabels(bool on) { labels_ = on; }
+    // Model labels on the rack units' nameplates at full detail (spec 17 §3.3 amended): the
+    // descriptor name in SDF text anchored to the nameplate, within `panelLabelRange_m`.
+    void setPanelLabels(bool on, double range_m = 3.5) {
+        panelLabels_ = on;
+        panelLabelRange_m = range_m;
+    }
     // Camera position of the last prepare(): world-space lines and 3D labels are submitted
     // relative to it (see submitOverlays).
     const glm::dvec3& eye() const { return eye_; }
@@ -65,6 +71,8 @@ private:
     glm::dvec3 eye_{0.0};
     double hysteresis_ = 0.10; // spec 17 §10
     bool labels_ = true;
+    bool panelLabels_ = true;
+    double panelLabelRange_m = 3.5;
     struct Gpu {
         std::unique_ptr<gfx::Mesh> mesh;
         std::uint32_t version = 0;

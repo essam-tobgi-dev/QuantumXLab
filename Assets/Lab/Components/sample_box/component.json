@@ -1,0 +1,77 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T12:04:07Z"
+  },
+  "data": {
+    "id": "sample_box",
+    "name": "Sample storage box",
+    "category": "infra",
+    "parent": "bench",
+    "function": "Nitrogen-purged storage box that holds packaged and bare chips between fabrication, bonding and installation. Superconducting films grow a native oxide and adsorb water within hours in laboratory air; both add two-level-system defects at the metal–air and substrate–air interfaces, which are the dominant dielectric loss in planar resonators and a limit on qubit T1. Keeping the chips dry and dark, and logging the hours of air exposure, is part of the coherence budget rather than housekeeping, and the box's serial position on the bench is where the current chip is shown in the bench view.",
+    "physics": {
+      "summary": "Limits air exposure, hence interface TLS growth, of stored chips.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "purge gas",
+        "unit": "",
+        "typical": [
+          0,
+          1
+        ]
+      },
+      {
+        "field": "relative humidity",
+        "unit": "%",
+        "typical": [
+          0,
+          10
+        ]
+      },
+      {
+        "field": "capacity",
+        "unit": "",
+        "typical": [
+          4,
+          24
+        ]
+      },
+      {
+        "field": "air exposure logged",
+        "unit": "h",
+        "typical": [
+          0,
+          48
+        ]
+      }
+    ],
+    "theory": [
+      "T05#10-decoherence-mechanisms"
+    ],
+    "tooltip": "Dry storage for chips: interface TLS loss grows with air exposure.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.14,
+      "h_m": 0.04,
+      "d_m": 0.14
+    },
+    "lod": [
+      {
+        "max_m": 6.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 30.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

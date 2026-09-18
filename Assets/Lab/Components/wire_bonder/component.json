@@ -1,0 +1,77 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T12:04:07Z"
+  },
+  "data": {
+    "id": "wire_bonder",
+    "name": "Wedge wire bonder",
+    "category": "infra",
+    "parent": "bench",
+    "function": "Ultrasonic wedge bonder that stitches 25 µm aluminium wire from the chip's bond pads to the PCB launchers and across the ground plane. Each bond is a small inductor: a 1 mm loop adds about 1 nH, which in series with a 50 Ω line is a tenth of a wavelength at 8 GHz, so loop height and the number of parallel ground bonds set the return loss of every drive and readout line and, through ground discontinuities, the crosstalk between neighbouring lines. The bonder's power, force and time settings are logged per package because a heel crack that opens on cooldown is the classic cause of a line that worked warm and is dead at base temperature.",
+    "physics": {
+      "summary": "Bond-wire inductance and ground stitching set line matching and crosstalk.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "wire diameter",
+        "unit": "um",
+        "typical": [
+          17,
+          33
+        ]
+      },
+      {
+        "field": "bond inductance per mm",
+        "unit": "nH",
+        "typical": [
+          0.8,
+          1.2
+        ]
+      },
+      {
+        "field": "ultrasonic power",
+        "unit": "W",
+        "typical": [
+          0.5,
+          2.0
+        ]
+      },
+      {
+        "field": "bonds per package",
+        "unit": "",
+        "typical": [
+          50,
+          400
+        ]
+      }
+    ],
+    "theory": [
+      "T07#11-flux-bias-lines-filters-and-crosstalk"
+    ],
+    "tooltip": "Wedge wire bonder: 25 µm Al wires from chip pads to the launchers.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.46,
+      "h_m": 0.4,
+      "d_m": 0.44
+    },
+    "lod": [
+      {
+        "max_m": 6.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 30.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

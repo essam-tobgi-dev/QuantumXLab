@@ -48,11 +48,11 @@
     },
     "lod": [
       {
-        "max_m": 2.0,
+        "max_m": 6.0,
         "detail": "full"
       },
       {
-        "max_m": 8.0,
+        "max_m": 30.0,
         "detail": "simple"
       },
       {

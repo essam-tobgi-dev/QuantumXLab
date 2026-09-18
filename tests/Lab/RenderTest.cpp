@@ -50,13 +50,14 @@ TEST_CASE("culling and level of detail run without a GL context") {
     CHECK(overview.considered > 100);
     CHECK(overview.triangles > 0);
     CHECK(overview.triangles < 3'000'000); // spec 24 §6 budget at a bookmark
-    CHECK(overview.lodHidden > 0);         // the chip is far away: its micrometre parts are hidden
-    CHECK(overview.occluded > 0);          // the interior is inside the closed vacuum can
+    CHECK(overview.occluded > 0);          // the interior (chip included) is inside the closed vacuum can
 
-    // Hiding the cans exposes the interior; the occlusion test then keeps nothing out.
+    // Hiding the cans exposes the interior; the occlusion test then keeps nothing out, and the
+    // chip, 8 m away, is hidden by its micrometre parts' LOD rule instead.
     ui.setCansVisible(false);
     renderer.prepare(camera, ui);
     CHECK(renderer.stats().occluded == 0);
+    CHECK(renderer.stats().lodHidden > 0);
     CHECK(renderer.stats().layerHidden > 0); // the cans themselves
 
     // Beyond 6 m the wiring LOD hides the lines; X-ray brings them back (spec 17 §7.6/§10) and
@@ -235,7 +236,15 @@ TEST_CASE("every bookmark renders to a PNG within the triangle budget") {
     const Review reviews[]{{{-0.9, 3.1, 0.7}, {0.0, 2.3, 0.0}, true, "lab_bm_topplate.png"},
                            {{0.75, 2.45, 0.55}, {0.15, 2.25, 0.0}, true, "lab_bm_ovc_flange.png"},
                            {{1.1, 2.2, 0.9}, {0.0, 1.9, 0.0}, false, "lab_bm_stages.png"},
-                           {{0.55, 1.05, 0.5}, {0.0, 1.1, 0.0}, false, "lab_bm_sample_stage.png"}};
+                           {{0.55, 1.05, 0.5}, {0.0, 1.1, 0.0}, false, "lab_bm_sample_stage.png"},
+                           // rack detail pass: the instruments up close (rack B test gear, rack A control), the
+                           // gas-handling panel, the bench instruments, the workstation, the dewars and the door
+                           {{2.9, 1.65, -0.10}, {2.9, 1.50, -1.05}, true, "lab_bm_rack_b_close.png"},
+                           {{2.2, 1.55, -0.10}, {2.2, 1.45, -1.05}, true, "lab_bm_rack_a_close.png"},
+                           {{-2.5, 1.35, 0.05}, {-2.5, 1.20, -1.15}, true, "lab_bm_ghs_panel.png"},
+                           {{-1.5, 1.45, 3.2}, {-1.5, 0.95, 2.0}, true, "lab_bm_bench.png"},
+                           {{2.5, 1.55, 3.3}, {2.5, 0.85, 1.8}, true, "lab_bm_workstation.png"},
+                           {{-0.6, 1.9, 0.0}, {-3.4, 1.0, 1.7}, true, "lab_bm_door_dewars.png"}};
     for (const Review& view : reviews) {
         INFO(view.file);
         gfx::Camera cam;

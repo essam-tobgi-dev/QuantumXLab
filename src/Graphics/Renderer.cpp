@@ -81,7 +81,9 @@ void Renderer::shadowPass() {
     }
     FrameUbo f{};
     f.view = cam_.viewRel(); f.proj = cam_.projMatrix(); f.viewProj = f.proj * f.view; f.lightViewProj = lvp;
-    f.cameraPos = glm::vec4(0, 0, 0, static_cast<float>(time_));
+    // xyz: the camera's world position (float) so the TEXTURED triplanar path can restore world
+    // space from the camera-relative vWorld; every other shader works camera-relative.
+    f.cameraPos = glm::vec4(glm::vec3(cam_.position()), static_cast<float>(time_));
     f.viewport = glm::vec4(w_, h_, 1.0f / w_, 1.0f / h_);
     // Soft shadows (spec 18 §4 amended): the ortho box spans 2r across and 4r in depth, so one
     // texel is 2r/S metres and a world offset δ is δ/(4r) in window depth. The lookup point is
@@ -124,6 +126,22 @@ void Renderer::shadowPass() {
     stats_.shadowMs = t.ms();
 }
 
+void Renderer::bindMaterial(const Material& mat, const TextureSet*& bound) {
+    glm::vec3 albedoGain(1.0f);
+    float roughnessGain = 1.0f;
+    if (texturesOn_ && mat.textured()) {
+        // Spec 18 §4 (textures): one bind per run of equal sets — the submit lists are sorted by
+        // set, so a batch of n parts sharing a set costs one bind.
+        const TextureSet& set = textures_->get(mat.textureSet);
+        if (&set != bound) { set.bind(); bound = &set; ++stats_.textureBinds; }
+        albedoGain = 1.0f / set.albedoMean;
+        roughnessGain = 1.0f / set.roughnessMean;
+    }
+    MaterialUbo mu = mat.toUbo(albedoGain, roughnessGain);
+    if (!texturesOn_) mu.tex.w = 0.0f;
+    updateUbo(uboMaterial_, mu);
+}
+
 void Renderer::mainPass() {
     core::Timer t;
     msaaFbo_.bind();
@@ -138,9 +156,28 @@ void Renderer::mainPass() {
     cmaps_.bind(ColormapId::Viridis, 6);
     // IBL (spec 18 §4 amended): irradiance, prefiltered specular, BRDF LUT on units 7–9.
     envIrradiance_.bind(7); envPrefiltered_.bind(8); brdfLut_.bind(9);
+    for (ShaderProgram* p : {&pbr_, &pbrInst_, &pbrTex_, &pbrTexInst_}) {
+        p->use();
+        p->set("uShadowMap", 5); p->set("uColormap", 6);
+        p->set("uIrradiance", 7); p->set("uPrefiltered", 8); p->set("uBrdfLut", 9);
+        if (p == &pbrTex_ || p == &pbrTexInst_) {
+            p->set("uAlbedoMap", static_cast<int>(kTexUnitAlbedo));
+            p->set("uNormalMap", static_cast<int>(kTexUnitNormal));
+            p->set("uOrmMap", static_cast<int>(kTexUnitOrm));
+        }
+    }
+    // Batching by texture set (spec 18 §4): untextured items first, then runs of equal sets, so
+    // the program switches once and each set binds once per pass.
+    auto bySet = [](const auto& a, const auto& b) { return a.mat.textureSet < b.mat.textureSet; };
+    std::stable_sort(opaque_.begin(), opaque_.end(), bySet);
+    std::stable_sort(instanced_.begin(), instanced_.end(), bySet);
     glm::mat4 camOff = glm::translate(glm::mat4(1.0f), -glm::vec3(cam_.position()));
+    const TextureSet* bound = nullptr;
+    const ShaderProgram* current = nullptr;
+    auto useProgram = [&](const ShaderProgram& p) { if (&p != current) { p.use(); current = &p; } };
     auto drawItem = [&](const Item& it) {
-        MaterialUbo mu = it.mat.toUbo(); updateUbo(uboMaterial_, mu);
+        useProgram(texturesOn_ && it.mat.textured() ? pbrTex_ : pbr_);
+        bindMaterial(it.mat, bound);
         ObjectUbo o{}; o.model = camOff * it.model; o.normal = glm::transpose(glm::inverse(it.model));
         o.id = glm::uvec4(it.flags.noPick ? 0u : it.id.value, (it.flags.receiveShadow ? 1u : 0u), 0, 0);
         updateUbo(uboObject_, o);
@@ -148,15 +185,10 @@ void Renderer::mainPass() {
         it.mesh->draw(); ++stats_.drawCalls; stats_.triangles += it.mesh->indexCount() / 3;
         if (!it.flags.depthTest) glEnable(GL_DEPTH_TEST);
     };
-    pbr_.use();
-    pbr_.set("uShadowMap", 5); pbr_.set("uColormap", 6);
-    pbr_.set("uIrradiance", 7); pbr_.set("uPrefiltered", 8); pbr_.set("uBrdfLut", 9);
     for (auto& it : opaque_) drawItem(it);
-    pbrInst_.use();
-    pbrInst_.set("uShadowMap", 5); pbrInst_.set("uColormap", 6);
-    pbrInst_.set("uIrradiance", 7); pbrInst_.set("uPrefiltered", 8); pbrInst_.set("uBrdfLut", 9);
     for (auto& ii : instanced_) {
-        MaterialUbo mu = ii.mat.toUbo(); updateUbo(uboMaterial_, mu);
+        useProgram(texturesOn_ && ii.mat.textured() ? pbrTexInst_ : pbrInst_);
+        bindMaterial(ii.mat, bound);
         ObjectUbo o{}; o.model = camOff; o.normal = glm::mat4(1.0f); o.id = glm::uvec4(0, ii.flags.receiveShadow ? 1u : 0u, 0, 0);
         updateUbo(uboObject_, o);
         instBuf_.setData(ii.data, BufferUsage::Stream);
@@ -165,14 +197,13 @@ void Renderer::mainPass() {
         ++stats_.drawCalls; stats_.triangles += ii.mesh->indexCount() / 3 * ii.data.size();
     }
     // depth-tested overlay lines
-    line_.use();
+    line_.use(); current = nullptr;
     lines_.upload(); lines_.draw(); stats_.drawCalls += lines_.empty() ? 0 : 1;
     // transparent, sorted back to front, no id write, no depth write
     std::sort(transparent_.begin(), transparent_.end(), [](const Item& a, const Item& b) { return a.depth > b.depth; });
     glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthMask(GL_FALSE);
     glDisable(GL_CULL_FACE);
-    pbr_.use();
     for (auto& it : transparent_) drawItem(it);
     // gizmo lines and text on top
     glDisable(GL_DEPTH_TEST);

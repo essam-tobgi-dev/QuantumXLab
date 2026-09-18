@@ -36,15 +36,45 @@
     "geometry": {
       "generator": "RackUnit",
       "u": 1,
-      "front": "pdu"
+      "front": "pdu",
+      "front_panel": {
+        "finish": "anodised_black",
+        "leds": [
+          {
+            "x": 0.3,
+            "y": 0.0,
+            "colour": "green"
+          }
+        ],
+        "connector_rows": [
+          {
+            "type": "IEC",
+            "count": 8,
+            "x0": -0.36,
+            "x1": 0.16,
+            "y": 0.0,
+            "label": "OUTLET",
+            "rows": 1,
+            "dy": 0.42
+          }
+        ],
+        "keypads": [
+          {
+            "x": 0.4,
+            "y": 0.0,
+            "rows": 1,
+            "cols": 2
+          }
+        ]
+      }
     },
     "lod": [
       {
-        "max_m": 2.0,
+        "max_m": 6.0,
         "detail": "full"
       },
       {
-        "max_m": 8.0,
+        "max_m": 30.0,
         "detail": "simple"
       },
       {

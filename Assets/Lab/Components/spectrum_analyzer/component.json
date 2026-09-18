@@ -57,15 +57,61 @@
     "geometry": {
       "generator": "RackUnit",
       "u": 4,
-      "front": "spectrum_analyzer"
+      "front": "spectrum_analyzer",
+      "front_panel": {
+        "finish": "light_grey",
+        "handles": true,
+        "screen": {
+          "x": -0.18,
+          "y": 0.05,
+          "w": 0.52,
+          "h": 0.78
+        },
+        "keypads": [
+          {
+            "x": 0.24,
+            "y": 0.1,
+            "rows": 5,
+            "cols": 3
+          }
+        ],
+        "knobs": [
+          {
+            "x": 0.4,
+            "y": 0.18,
+            "r_mm": 16
+          }
+        ],
+        "leds": [
+          {
+            "x": 0.44,
+            "y": -0.42,
+            "colour": "green"
+          }
+        ],
+        "connectors": [
+          {
+            "type": "N",
+            "x": 0.38,
+            "y": -0.32,
+            "label": "RF IN"
+          },
+          {
+            "type": "BNC",
+            "x": 0.26,
+            "y": -0.32,
+            "label": "REF IN"
+          }
+        ]
+      }
     },
     "lod": [
       {
-        "max_m": 2.0,
+        "max_m": 6.0,
         "detail": "full"
       },
       {
-        "max_m": 8.0,
+        "max_m": 30.0,
         "detail": "simple"
       },
       {

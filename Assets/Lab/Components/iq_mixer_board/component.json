@@ -54,15 +54,57 @@
     "geometry": {
       "generator": "RackUnit",
       "u": 1,
-      "front": "iq_mixer"
+      "front": "iq_mixer",
+      "front_panel": {
+        "finish": "light_grey",
+        "leds": [
+          {
+            "x": 0.42,
+            "y": 0.0,
+            "colour": "green"
+          }
+        ],
+        "connectors": [
+          {
+            "type": "SMA",
+            "x": -0.3,
+            "y": 0.0,
+            "label": "LO"
+          },
+          {
+            "type": "SMA",
+            "x": -0.15,
+            "y": 0.0,
+            "label": "RF"
+          },
+          {
+            "type": "SMA",
+            "x": 0.0,
+            "y": 0.0,
+            "label": "IF"
+          },
+          {
+            "type": "SMA",
+            "x": 0.18,
+            "y": 0.0,
+            "label": "I"
+          },
+          {
+            "type": "SMA",
+            "x": 0.3,
+            "y": 0.0,
+            "label": "Q"
+          }
+        ]
+      }
     },
     "lod": [
       {
-        "max_m": 2.0,
+        "max_m": 6.0,
         "detail": "full"
       },
       {
-        "max_m": 8.0,
+        "max_m": 30.0,
         "detail": "simple"
       },
       {

@@ -65,16 +65,65 @@
     "tooltip": "Digitizer: readout demodulation to IQ points.",
     "geometry": {
       "generator": "RackUnit",
-      "u": 2,
-      "front": "digitizer"
+      "u": 3,
+      "front": "digitizer",
+      "front_panel": {
+        "finish": "anodised_black",
+        "handles": true,
+        "connector_rows": [
+          {
+            "type": "SMA",
+            "count": 8,
+            "x0": -0.3,
+            "x1": 0.22,
+            "y": -0.1,
+            "label": "CH",
+            "rows": 1,
+            "dy": 0.42
+          }
+        ],
+        "connectors": [
+          {
+            "type": "BNC",
+            "x": 0.34,
+            "y": -0.1,
+            "label": "TRIG"
+          },
+          {
+            "type": "SMA",
+            "x": 0.42,
+            "y": -0.1,
+            "label": "CLK IN"
+          }
+        ],
+        "leds": [
+          {
+            "x": -0.44,
+            "y": 0.35,
+            "colour": "green"
+          },
+          {
+            "x": -0.44,
+            "y": 0.27,
+            "colour": "amber"
+          }
+        ],
+        "vents": {
+          "x": 0.0,
+          "y": 0.3,
+          "w": 0.6,
+          "h": 0.25,
+          "rows": 3
+        }
+      }
     },
     "lod": [
       {
-        "max_m": 2.0,
+        "max_m": 6.0,
         "detail": "full"
       },
       {
-        "max_m": 8.0,
+        "max_m": 30.0,
         "detail": "simple"
       },
       {

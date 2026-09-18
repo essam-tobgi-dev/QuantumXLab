@@ -35,6 +35,12 @@ TEST_CASE("all shaders compile and link") {
             d.defines = {"INSTANCED"};
             REQUIRE(ShaderProgram::fromFiles(d).has_value());
         }
+        if (stem == "pbr") {   // spec 18 §4 textures: the TEXTURED permutations
+            d.defines = {"TEXTURED"};
+            REQUIRE(ShaderProgram::fromFiles(d).has_value());
+            d.defines = {"INSTANCED", "TEXTURED"};
+            REQUIRE(ShaderProgram::fromFiles(d).has_value());
+        }
         if (stem == "ssao_blur") { d.defines = {"UPSAMPLE"}; REQUIRE(ShaderProgram::fromFiles(d).has_value()); }
         if (stem == "bloom_blur") { d.defines = {"BRIGHT"}; REQUIRE(ShaderProgram::fromFiles(d).has_value()); }
     }

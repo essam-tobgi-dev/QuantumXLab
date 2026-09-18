@@ -38,15 +38,42 @@
     "geometry": {
       "generator": "RackUnit",
       "u": 1,
-      "front": "controller"
+      "front": "controller",
+      "front_panel": {
+        "finish": "blue_grey",
+        "leds": [
+          {
+            "x": -0.44,
+            "y": 0.0,
+            "colour": "green"
+          },
+          {
+            "x": -0.41,
+            "y": 0.0,
+            "colour": "amber"
+          }
+        ],
+        "connector_rows": [
+          {
+            "type": "BNC",
+            "count": 8,
+            "x0": -0.3,
+            "x1": 0.3,
+            "y": 0.0,
+            "label": "10 MHz OUT",
+            "rows": 1,
+            "dy": 0.42
+          }
+        ]
+      }
     },
     "lod": [
       {
-        "max_m": 2.0,
+        "max_m": 6.0,
         "detail": "full"
       },
       {
-        "max_m": 8.0,
+        "max_m": 30.0,
         "detail": "simple"
       },
       {

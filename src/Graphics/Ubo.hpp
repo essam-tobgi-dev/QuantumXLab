@@ -35,6 +35,8 @@ struct alignas(16) MaterialUbo {
     glm::vec4 emissive;        // rgb, w = emissive strength
     glm::vec4 props;           // metallic, roughness, ao, colormap-mix (0 = none)
     glm::vec4 misc;            // x = colormap value, y = flags (bit0 unlit, bit1 wireframe tint), z,w unused
+    glm::vec4 tex;             // x = uv scale, y = triplanar flag, z = normal strength, w = textured flag
+    glm::vec4 texGain;         // rgb = 1/mean(albedo map), w = 1/mean(roughness map) (1 = no normalisation)
 };
 
 struct alignas(16) ObjectUbo {

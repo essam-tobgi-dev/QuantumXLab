@@ -27,7 +27,7 @@ TEST_CASE("every shipped component descriptor loads and passes the spec 17 §4 l
     std::size_t dirs = 0;
     for (const auto& e : std::filesystem::directory_iterator(core::assetDir() / "Lab" / "Components"))
         if (std::filesystem::exists(e.path() / "component.json")) ++dirs;
-    REQUIRE(dirs == 104); // 97 + the seven of the fridge detail pass (spec 17 §3.1 amended)
+    REQUIRE(dirs == 108); // 97 + seven of the fridge detail pass (spec 17 §3.1 amended) + four of the rack detail pass (cable_loom, microscope, wire_bonder, sample_box)
     REQUIRE(cat.size() == dirs);
     for (const auto& d : cat.all()) {
         INFO(d.id);

@@ -2,14 +2,19 @@
 // Spec 18 §4 — material presets used by the laboratory. Names follow the spec table
 // (gold_plated_cu, copper, aluminium, stainless, mu_metal, niobium_film, silicon, pcb_green,
 // rack_black, plastic_grey, glass, eccosorb) plus lab-specific finishes; parts whose appearance is
-// carried by vertex colours use "vertex".
+// carried by vertex colours use "vertex". Every opaque finish also names a texture set of
+// Assets/Textures (spec 18 §4, textures): the set carries the micro-structure (brush lines, blast
+// grain, solder mask), the table keeps the calibrated colour, metallic and roughness.
 #include "Graphics/Material.hpp"
+#include <span>
 #include <string_view>
 
 namespace qlab::lab {
 
 gfx::Material labMaterial(std::string_view name);
 bool isKnownMaterial(std::string_view name);
+// Every name of the table, in table order (tests iterate it).
+std::span<const std::string_view> labMaterialNames();
 
 // Coax catalog id (cryo::Element::coax, e.g. "SS_086", "CuNi_219", "NbTi_086") → material name.
 std::string_view coaxMaterial(std::string_view coaxId);

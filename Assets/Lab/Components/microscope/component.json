@@ -1,0 +1,77 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T12:04:07Z"
+  },
+  "data": {
+    "id": "microscope",
+    "name": "Stereo inspection microscope",
+    "category": "infra",
+    "parent": "bench",
+    "function": "Stereo zoom microscope (7–45×) on a boom stand over the assembly bench, used to inspect every wirebond, the junction-area wiring and the resonator surfaces before a package is sealed. A bond with a poor heel, a wire touching the ground plane, or a particle on the coplanar gap is visible here and invisible once the package is in the fridge; particles and resist residue on the metal edges are the two-level systems that set the internal quality factor and the qubit's T1 at millikelvin, so what this instrument finds is a coherence budget item rather than cosmetics.",
+    "physics": {
+      "summary": "Inspection of bonds and surfaces whose defects become TLS loss at millikelvin.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "magnification",
+        "unit": "",
+        "typical": [
+          7,
+          45
+        ]
+      },
+      {
+        "field": "working distance",
+        "unit": "mm",
+        "typical": [
+          80,
+          120
+        ]
+      },
+      {
+        "field": "field of view",
+        "unit": "mm",
+        "typical": [
+          5,
+          30
+        ]
+      },
+      {
+        "field": "ring-light power",
+        "unit": "W",
+        "typical": [
+          3,
+          10
+        ]
+      }
+    ],
+    "theory": [
+      "T05#10-decoherence-mechanisms"
+    ],
+    "tooltip": "Stereo microscope on the bench: inspecting bonds and chip surfaces.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.26,
+      "h_m": 0.42,
+      "d_m": 0.3
+    },
+    "lod": [
+      {
+        "max_m": 6.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 30.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

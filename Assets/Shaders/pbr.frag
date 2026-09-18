@@ -13,6 +13,9 @@ uniform sampler1D uColormap;
 uniform samplerCube uIrradiance;    // E(N)/π, 32²
 uniform samplerCube uPrefiltered;   // GGX-prefiltered radiance, level k ↔ roughness k/5
 uniform sampler2D uBrdfLut;         // (A, B) over (n·v, roughness)
+#ifdef TEXTURED
+#include "texturing.glsl"
+#endif
 
 const float PI = 3.14159265359;
 const float PREFILTER_LEVELS = 5.0;
@@ -95,6 +98,16 @@ void main() {
     vec3 N = normalize(vNormal);
     vec3 V = normalize(-vWorld); // camera at origin (camera-relative)
     if (!gl_FrontFacing) N = -N;
+#ifdef TEXTURED
+    // Spec 18 §4 (textures): albedo × map, roughness × map, normal from the map; the gains
+    // normalise the maps to their means so baseColor/roughness remain the surface's mean values.
+    Surface surf = sampleSurface(N);
+    albedo = min(albedo * surf.albedo * uTexGain.rgb, vec3(1.0));
+    rough = clamp(rough * surf.orm.r * uTexGain.w, 0.04, 1.0);
+    metallic *= surf.orm.g;
+    ao *= surf.orm.b;
+    N = surf.N;
+#endif
     vec3 color;
     if (uMisc.y > 0.5) {
         color = albedo;

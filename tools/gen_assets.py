@@ -723,11 +723,67 @@ comp("bias_tee", "Bias tee", "wiring",
      "Merges DC bias and RF pulses onto one line.", ["flux_from_current"],
      [row("RF band", "GHz", [0.01, 12]), row("DC current rating", "mA", [10, 100])],
      [T05("4")], "Bias tee merging DC flux bias with fast pulses.", {"generator": "Box", "w_m": 0.02, "h_m": 0.01, "d_m": 0.02, "ports": 3}, parent="stage_mxc")
+# Front panels (rack detail pass, spec 17 §3.3/§6 amended): the real features of each instrument
+# class, positions as fractions of the faceplate width / height (-0.5 … 0.5, x right, y up).
+# `connectors` / `connector_rows` are the unit's front-panel port list; the RackUnit generator
+# draws exactly these and the tests count them in the mesh.
+def _row(type, count, x0, x1, y, label, rows=1, dy=0.42):
+    return {"type": type, "count": count, "x0": x0, "x1": x1, "y": y, "label": label, "rows": rows, "dy": dy}
+PANELS = {
+    "mw_generator": {"finish": "anodised_black", "screen": {"x": -0.27, "y": 0.02, "w": 0.36, "h": 0.62},
+        "keypads": [{"x": 0.05, "y": 0.0, "rows": 3, "cols": 4}], "knobs": [{"x": 0.22, "y": 0.05, "r_mm": 14}],
+        "leds": [{"x": -0.47, "y": 0.32, "colour": "green"}, {"x": -0.47, "y": 0.10, "colour": "amber"}, {"x": 0.30, "y": 0.30, "colour": "blue"}],
+        "connectors": [{"type": "N", "x": 0.36, "y": -0.10, "label": "RF OUT"}, {"type": "BNC", "x": 0.44, "y": 0.18, "label": "REF IN"}, {"type": "BNC", "x": 0.44, "y": -0.28, "label": "PULSE IN"}]},
+    "control_chassis": {"finish": "anodised_black", "handles": True, "slots": {"count": 8, "x0": -0.36, "x1": 0.36, "sma": 4},
+        "leds": [{"x": -0.44, "y": 0.42, "colour": "green"}, {"x": -0.44, "y": 0.36, "colour": "amber"}],
+        "connectors": [{"type": "SMA", "x": 0.43, "y": 0.35, "label": "CLK IN"}, {"type": "SMA", "x": 0.43, "y": 0.22, "label": "TRIG IN"}],
+        "vents": {"x": -0.44, "y": -0.15, "w": 0.06, "h": 0.5, "rows": 8}},
+    "digitizer": {"finish": "anodised_black", "handles": True, "connector_rows": [_row("SMA", 8, -0.30, 0.22, -0.10, "CH")],
+        "connectors": [{"type": "BNC", "x": 0.34, "y": -0.10, "label": "TRIG"}, {"type": "SMA", "x": 0.42, "y": -0.10, "label": "CLK IN"}],
+        "leds": [{"x": -0.44, "y": 0.35, "colour": "green"}, {"x": -0.44, "y": 0.27, "colour": "amber"}],
+        "vents": {"x": 0.0, "y": 0.30, "w": 0.6, "h": 0.25, "rows": 3}},
+    "iq_mixer_board": {"finish": "light_grey", "leds": [{"x": 0.42, "y": 0.0, "colour": "green"}],
+        "connectors": [{"type": "SMA", "x": -0.30, "y": 0.0, "label": "LO"}, {"type": "SMA", "x": -0.15, "y": 0.0, "label": "RF"}, {"type": "SMA", "x": 0.0, "y": 0.0, "label": "IF"},
+                       {"type": "SMA", "x": 0.18, "y": 0.0, "label": "I"}, {"type": "SMA", "x": 0.30, "y": 0.0, "label": "Q"}]},
+    "dc_source": {"finish": "off_white", "screen": {"x": -0.28, "y": 0.05, "w": 0.30, "h": 0.55},
+        "keypads": [{"x": -0.02, "y": 0.0, "rows": 3, "cols": 3}], "knobs": [{"x": 0.12, "y": 0.05, "r_mm": 12}],
+        "leds": [{"x": -0.46, "y": 0.35, "colour": "green"}, {"x": -0.46, "y": 0.25, "colour": "amber"}],
+        "connectors": [{"type": "DSUB", "x": 0.36, "y": 0.22, "label": "CH 1-8"}, {"type": "DSUB", "x": 0.36, "y": -0.22, "label": "CH 9-16"}]},
+    "vna": {"finish": "light_grey", "handles": True, "screen": {"x": -0.18, "y": 0.05, "w": 0.52, "h": 0.78},
+        "keypads": [{"x": 0.24, "y": 0.12, "rows": 4, "cols": 4}], "knobs": [{"x": 0.40, "y": 0.15, "r_mm": 16}],
+        "leds": [{"x": 0.40, "y": -0.35, "colour": "green"}],
+        "connectors": [{"type": "N", "x": -0.20, "y": -0.42, "label": "PORT 1"}, {"type": "N", "x": 0.06, "y": -0.42, "label": "PORT 2"}]},
+    "spectrum_analyzer": {"finish": "light_grey", "handles": True, "screen": {"x": -0.18, "y": 0.05, "w": 0.52, "h": 0.78},
+        "keypads": [{"x": 0.24, "y": 0.10, "rows": 5, "cols": 3}], "knobs": [{"x": 0.40, "y": 0.18, "r_mm": 16}],
+        "leds": [{"x": 0.44, "y": -0.42, "colour": "green"}],
+        "connectors": [{"type": "N", "x": 0.38, "y": -0.32, "label": "RF IN"}, {"type": "BNC", "x": 0.26, "y": -0.32, "label": "REF IN"}]},
+    "oscilloscope": {"finish": "light_grey", "handles": True, "screen": {"x": -0.20, "y": 0.08, "w": 0.50, "h": 0.72},
+        "keypads": [{"x": 0.24, "y": -0.02, "rows": 2, "cols": 3}],
+        "knobs": [{"x": 0.22, "y": 0.25, "r_mm": 9}, {"x": 0.30, "y": 0.25, "r_mm": 9}, {"x": 0.38, "y": 0.25, "r_mm": 9}, {"x": 0.46, "y": 0.25, "r_mm": 9},
+                  {"x": 0.34, "y": 0.0, "r_mm": 12}, {"x": 0.44, "y": 0.0, "r_mm": 9}],
+        "leds": [{"x": 0.46, "y": 0.42, "colour": "green"}],
+        "connector_rows": [_row("BNC", 4, -0.36, 0.0, -0.40, "CH")], "connectors": [{"type": "BNC", "x": 0.42, "y": -0.40, "label": "AUX IN"}]},
+    "rt_amplifier": {"finish": "anodised_black", "leds": [{"x": 0.40, "y": 0.0, "colour": "green"}],
+        "connectors": [{"type": "SMA", "x": -0.15, "y": 0.0, "label": "IN"}, {"type": "SMA", "x": 0.15, "y": 0.0, "label": "OUT"}],
+        "vents": {"x": -0.35, "y": 0.0, "w": 0.12, "h": 0.5, "rows": 3}},
+    "ref_10mhz": {"finish": "blue_grey", "leds": [{"x": -0.44, "y": 0.0, "colour": "green"}, {"x": -0.41, "y": 0.0, "colour": "amber"}],
+        "connector_rows": [_row("BNC", 8, -0.30, 0.30, 0.0, "10 MHz OUT")]},
+    "clock_dist": {"finish": "blue_grey", "leds": [{"x": 0.44, "y": 0.0, "colour": "green"}],
+        "connectors": [{"type": "SMA", "x": -0.42, "y": 0.0, "label": "IN"}], "connector_rows": [_row("SMA", 12, -0.30, 0.36, 0.0, "OUT")]},
+    "trigger_unit": {"finish": "blue_grey", "screen": {"x": -0.34, "y": 0.0, "w": 0.14, "h": 0.6},
+        "keypads": [{"x": -0.18, "y": 0.0, "rows": 1, "cols": 4}], "leds": [{"x": -0.44, "y": 0.0, "colour": "green"}],
+        "connector_rows": [_row("BNC", 8, -0.06, 0.32, 0.0, "OUT")], "connectors": [{"type": "BNC", "x": 0.42, "y": 0.0, "label": "IN"}]},
+    "patch_panel": {"finish": "anodised_black", "nameplate": False, "connector_rows": [_row("SMA", 48, -0.42, 0.42, 0.0, "LINE", rows=2, dy=0.42)]},
+    "power_dist": {"finish": "anodised_black", "leds": [{"x": 0.30, "y": 0.0, "colour": "green"}],
+        "connector_rows": [_row("IEC", 8, -0.36, 0.16, 0.0, "OUTLET")], "keypads": [{"x": 0.40, "y": 0.0, "rows": 1, "cols": 2}]},
+}
+# Rack units stay at full detail to 6 m: the Rack bookmark is 2.4 m from the front panels.
+LOD_RACK = [{"max_m": 6.0, "detail": "full"}, {"max_m": 30.0, "detail": "simple"}, {"max_m": 1e9, "detail": "hidden"}]
 comp("rt_amplifier", "Room-temperature amplifier", "amplifier",
      "Final gain stage in the rack before the digitizer, about 30 dB with a 100 K noise temperature. Its noise contribution is divided by the HEMT gain and is negligible; its role is to bring the signal to the digitizer's full-scale range without saturating.",
      "Final gain stage; noise negligible after the HEMT.", ["friis"],
      [row("gain", "dB", [25, 35], binding="wiring.line[$line].rtamp.gain", cls="Model"), row("noise temperature", "K", [80, 150])],
-     [T07("8")], "Room-temperature amplifier before the digitizer.", {"generator": "RackUnit", "u": 1, "front": "amp"}, parent="rack_B")
+     [T07("8")], "Room-temperature amplifier before the digitizer.", {"generator": "RackUnit", "u": 1, "front": "amp", "front_panel": PANELS["rt_amplifier"]}, parent="rack_B", lod=LOD_RACK)
 comp("cable_tray", "Cable tray", "structure",
      "Ceiling-mounted tray carrying the bundle of room-temperature coax and control cables between the racks and the fridge top plate. Cable lengths here appear as fixed delays in the pulse schedule and must be matched between drive and readout paths, because a 1 m mismatch is 5 ns of skew, comparable to a gate rise time.",
      "Routes rack cables to the fridge; fixed delay.", [], [row("length", "m", [3, 8]), row("cable delay", "ns", [15, 40])],
@@ -736,20 +792,20 @@ comp("cable_tray", "Cable tray", "structure",
 # ---------------------------------------------------------------- 3.3 rack instruments (also instr::IInstrument, spec 12)
 def rack(id, name, cls, u, function, summary, eqs, rows, theory, tooltip, channels, extra_sheet=None, rack_id="A"):
     comp(id, name, "instrument", function, summary, eqs, rows, theory, tooltip,
-         {"generator": "RackUnit", "u": u, "front": cls}, parent=f"rack_{rack_id}",
+         {"generator": "RackUnit", "u": u, "front": cls, "front_panel": PANELS[id]}, parent=f"rack_{rack_id}", lod=LOD_RACK,
          instrument={"class": cls, "settings_schema": f"instr/{cls}.schema.json", "channels": channels}, model_name=name)
 rack("mw_generator", "Microwave signal generator, 20 GHz", "sg_mw", 2,
      "Continuous-wave local oscillator for one drive or readout up-conversion chain. Its frequency sets the carrier the AWG envelopes are mixed onto; its output power sets the mixer drive level; and its phase noise is imprinted on every pulse, appearing as dephasing at the qubit for offsets inside the Rabi bandwidth. All generators are locked to the 10 MHz reference.",
      "Carrier source; phase noise adds to qubit dephasing.", ["dbm_to_watts", "phase_noise", "iq_modulation"],
      [row("frequency", "GHz", [0.01, 20], binding="instr.gen[$i].f", cls="Model"), row("output power", "dBm", [-20, 20], binding="instr.gen[$i].P_dBm", cls="Model"), row("phase noise at 10 kHz", "dBc/Hz", [-120, -100]), row("output on", "", binding="instr.gen[$i].on", cls="Model")],
      [T07("5")], "Microwave generator: local oscillator for one chain.", ["f", "P_dBm", "on"])
-rack("control_chassis", "Control chassis (AWG + sequencer)", "awg", 6,
+rack("control_chassis", "Control chassis (AWG + sequencer)", "awg", 4,
      "Multi-channel arbitrary waveform generator with a hardware sequencer. It plays the I/Q envelopes of every pulse schedule at 1 GS/s with 14-bit resolution, steps through shots, applies real-time phase updates for virtual Z gates, and branches on digitizer results for feed-forward. Timing granularity (16 samples) and minimum pulse length come from its FPGA clock and are compile-time constraints.",
      "Plays pulse schedules; defines timing granularity and feed-forward latency.", ["iq_modulation", "gaussian_pulse", "adc_snr"],
      [row("channels", "", [8, 32]), row("sample rate", "GS/s", [1, 2]), row("resolution", "bit", [14, 16]), row("waveform memory", "MSa", [16, 512]), row("feedback latency", "ns", [150, 300]),
       row("channel waveform", "V", binding="instr.awg.ch[$k].waveform", cls="Exact"), row("running", "", binding="instr.awg.running", cls="Model"), row("current shot", "", binding="instr.seq.shot", cls="Exact")],
      [T07("5"), T07("7")], "AWG and sequencer: plays the compiled pulse schedule.", ["ch[k].waveform", "running", "seq.shot"])
-rack("digitizer", "Readout digitizer", "digitizer", 2,
+rack("digitizer", "Readout digitizer", "digitizer", 3,
      "Two-channel 1 GS/s analog-to-digital converter that captures the down-converted readout signal, demodulates it at the intermediate frequency with the calibrated integration weights, and returns one (I, Q) point per shot per qubit. The IQ clouds it produces are the physical observable from which state assignment, readout fidelity and the assignment matrix are derived.",
      "Demodulates readout to IQ points; source of all measured bits.", ["heterodyne_demod", "readout_snr", "adc_snr", "readout_confusion"],
      [row("sample rate", "GS/s", [0.5, 2]), row("resolution", "bit", [12, 14]), row("integration window", "µs", [0.2, 2]), row("IQ point", "", binding="instr.dig.ch[$k].iq", cls="Statistical"), row("trigger", "", binding="instr.dig.trigger", cls="Model")],
@@ -792,7 +848,7 @@ rack("trigger_unit", "Trigger and sequencing unit", "controller", 1,
      "Shot repetition trigger; sets the per-shot gap.", ["wall_time"], [row("trigger rate", "kHz", [1, 1000], binding="instr.trig.rate", cls="Model"), row("jitter", "ps", [0, 50])],
      [T07("7")], "Trigger unit: shot repetition and acquisition gating.", ["rate"], rack_id="B")
 comp("power_dist", "Rack power distribution", "infra", "Switched and filtered mains distribution for one rack with total-power monitoring. It is included because instrument power (about 2 kW per rack) is a real load on the laboratory's cooling and because a filtered feed reduces mains-borne noise into the DC sources.",
-     "Mains distribution; no physics role.", [], [row("total power", "W", binding="instr.rack.P_total", cls="Model"), row("outlets", "", [8, 16])], [], "Rack power distribution unit.", {"generator": "RackUnit", "u": 1, "front": "pdu"}, parent="rack_A")
+     "Mains distribution; no physics role.", [], [row("total power", "W", binding="instr.rack.P_total", cls="Model"), row("outlets", "", [8, 16])], [], "Rack power distribution unit.", {"generator": "RackUnit", "u": 1, "front": "pdu", "front_panel": PANELS["power_dist"]}, parent="rack_A", lod=LOD_RACK)
 # ------------------------------------------------- scenery with descriptors (spec 17 §1, §12)
 # These render as part of the room but had no descriptor, so they were drawn and never pickable.
 # Giving them one makes every visible node inspectable.
@@ -837,41 +893,68 @@ comp("pt_compressor", "Pulse-tube compressor", "cryocooler",
      {"generator": "Box", "w_m": 0.7, "h_m": 1.0, "d_m": 0.8}, lod=[{"max_m": 6.0, "detail": "full"}, {"max_m": 30.0, "detail": "simple"}, {"max_m": 1e9, "detail": "hidden"}], parent="room")
 
 comp("patch_panel", "Patch panel", "infra", "SMA bulkhead panel where the fridge lines terminate at the rack. Every line is labelled with its fridge feedthrough and its function; the compiler's channel-to-port map follows this panel, so a swapped cable here is the classic cause of driving the wrong qubit.",
-     "Physical line-to-channel mapping.", [], [row("ports", "", [24, 96])], [], "Patch panel: line-to-channel mapping.", {"generator": "RackUnit", "u": 2, "front": "patch"}, parent="rack_B")
+     "Physical line-to-channel mapping.", [], [row("ports", "", [24, 96]), row("rows of SMA bulkheads", "", [1, 2])], [], "Patch panel: line-to-channel mapping.", {"generator": "RackUnit", "u": 1, "front": "patch", "front_panel": PANELS["patch_panel"]}, parent="rack_B", lod=LOD_RACK)
+
+
+# ------------------------------------------------- rack detail pass: bench instruments, looms
+comp("cable_loom", "Rack cable loom", "structure",
+     "Bundle of the room-temperature coaxial and control cables (6–12 runs) that leaves the rear of an instrument rack, climbs through the brush strip in the rack roof and lies in the ceiling tray to the fridge top plate. Its length is a fixed delay in every pulse schedule: flexible coax has a velocity factor of about 0.7, so each metre adds 4.8 ns, and drive and readout paths whose looms differ by a metre are skewed by 5 ns, comparable to a gate rise time; the compiler's per-channel delay table absorbs the mismatch. The loom is also the path along which the rack's ground reaches the cryostat, which is why its screens are bonded only at the rack end.",
+     "Fixed cable delay per channel; single-point ground path to the fridge.", [],
+     [row("cables", "", [6, 12]), row("length", "m", [3, 8]), row("velocity factor", "", [0.66, 0.85]), row("delay", "ns", [15, 40])],
+     [T07("7")], "Cable loom from the rack to the ceiling tray: fixed channel delay.",
+     {"generator": "Tube", "r_m": 0.004, "bundle": 12, "bundle_pitch_m": 0.009, "path": "straight_1.0m"}, lod=LOD_RACK, parent="rack_enclosure")
+comp("microscope", "Stereo inspection microscope", "infra",
+     "Stereo zoom microscope (7–45×) on a boom stand over the assembly bench, used to inspect every wirebond, the junction-area wiring and the resonator surfaces before a package is sealed. A bond with a poor heel, a wire touching the ground plane, or a particle on the coplanar gap is visible here and invisible once the package is in the fridge; particles and resist residue on the metal edges are the two-level systems that set the internal quality factor and the qubit's T1 at millikelvin, so what this instrument finds is a coherence budget item rather than cosmetics.",
+     "Inspection of bonds and surfaces whose defects become TLS loss at millikelvin.", [],
+     [row("magnification", "", [7, 45]), row("working distance", "mm", [80, 120]), row("field of view", "mm", [5, 30]), row("ring-light power", "W", [3, 10])],
+     [T05("10")], "Stereo microscope on the bench: inspecting bonds and chip surfaces.",
+     {"generator": "Box", "w_m": 0.26, "h_m": 0.42, "d_m": 0.30}, lod=LOD_RACK, parent="bench")
+comp("wire_bonder", "Wedge wire bonder", "infra",
+     "Ultrasonic wedge bonder that stitches 25 µm aluminium wire from the chip's bond pads to the PCB launchers and across the ground plane. Each bond is a small inductor: a 1 mm loop adds about 1 nH, which in series with a 50 Ω line is a tenth of a wavelength at 8 GHz, so loop height and the number of parallel ground bonds set the return loss of every drive and readout line and, through ground discontinuities, the crosstalk between neighbouring lines. The bonder's power, force and time settings are logged per package because a heel crack that opens on cooldown is the classic cause of a line that worked warm and is dead at base temperature.",
+     "Bond-wire inductance and ground stitching set line matching and crosstalk.", [],
+     [row("wire diameter", "um", [17, 33]), row("bond inductance per mm", "nH", [0.8, 1.2]), row("ultrasonic power", "W", [0.5, 2.0]), row("bonds per package", "", [50, 400])],
+     [T07("11")], "Wedge wire bonder: 25 µm Al wires from chip pads to the launchers.",
+     {"generator": "Box", "w_m": 0.46, "h_m": 0.40, "d_m": 0.44}, lod=LOD_RACK, parent="bench")
+comp("sample_box", "Sample storage box", "infra",
+     "Nitrogen-purged storage box that holds packaged and bare chips between fabrication, bonding and installation. Superconducting films grow a native oxide and adsorb water within hours in laboratory air; both add two-level-system defects at the metal–air and substrate–air interfaces, which are the dominant dielectric loss in planar resonators and a limit on qubit T1. Keeping the chips dry and dark, and logging the hours of air exposure, is part of the coherence budget rather than housekeeping, and the box's serial position on the bench is where the current chip is shown in the bench view.",
+     "Limits air exposure, hence interface TLS growth, of stored chips.", [],
+     [row("purge gas", "", [0, 1]), row("relative humidity", "%", [0, 10]), row("capacity", "", [4, 24]), row("air exposure logged", "h", [0, 48])],
+     [T05("10")], "Dry storage for chips: interface TLS loss grows with air exposure.",
+     {"generator": "Box", "w_m": 0.14, "h_m": 0.04, "d_m": 0.14}, lod=LOD_RACK, parent="bench")
 
 # ---------------------------------------------------------------- 3.4 gas handling system
 comp("ghs_cabinet", "Gas handling system", "ghs",
      "Cabinet holding the pumps, valves, gauges and traps that store, circulate, and clean the 3He/4He mixture. Its mimic panel is the operator's view of the fridge state machine: pumping the vacuum can, pre-cooling with the pulse tube, condensing the mixture, running at base, and warming up. Every valve state below is a node of that state machine.",
      "Stores and circulates the helium mixture; hosts the cooldown state machine.", ["still_flow"],
      [row("mixture volume (STP)", "L", [20, 60]), row("3He fraction", "", [0.2, 0.3]), row("state", "", binding="cryo.ghs.state", cls="Model")],
-     [T08("1.3")], "Gas handling cabinet with the mixture circuit.", {"generator": "Box", "w_m": 0.8, "h_m": 1.9, "d_m": 0.7, "front": "valve_mimic"}, parent="room")
+     [T08("1.3")], "Gas handling cabinet with the mixture circuit.", {"generator": "Box", "w_m": 0.8, "h_m": 1.9, "d_m": 0.7, "front": "valve_mimic"}, parent="room", lod=LOD_RACK)
 comp("turbo_pump", "Turbomolecular pump", "ghs",
      "Backed by the scroll pump, it evacuates the outer vacuum can to below 1e-5 mbar before cooldown. Once cold, cryopumping on the 4 K surfaces maintains the vacuum and the turbo is valved off; its speed and the OVC pressure are the two numbers watched during the first hours of a cooldown.",
      "Evacuates the insulating vacuum.", ["turbo_pressure"],
      [row("pumping speed", "L/s", [60, 300]), row("rotor speed", "rpm", binding="cryo.pump.turbo.rpm", cls="Model"), row("OVC pressure", "mbar", binding="cryo.ovc.pressure", cls="Model")],
-     [T08("5")], "Turbo pump for the outer vacuum can.", {"generator": "Cylinder", "r_m": 0.06, "h_m": 0.15, "caps": True, "attachments": ["flange"]}, parent="ghs_cabinet")
+     [T08("5")], "Turbo pump for the outer vacuum can.", {"generator": "Cylinder", "r_m": 0.06, "h_m": 0.15, "caps": True, "attachments": ["flange"]}, parent="ghs_cabinet", lod=LOD_RACK)
 comp("scroll_pump", "Scroll pump", "ghs",
      "Dry backing pump for the turbo and for the still during circulation. An oil-free pump is essential because oil vapour would contaminate the mixture and block the condensing impedance within days. Its exhaust returns the 3He to the compressor or the dump tanks depending on the valve configuration.",
      "Backing and still pumping; oil-free.", [], [row("pumping speed", "m³/h", [10, 35]), row("running", "", binding="cryo.pump.scroll.on", cls="Model")],
-     [T08("5")], "Dry scroll pump backing the turbo and still.", {"generator": "Box", "w_m": 0.3, "h_m": 0.3, "d_m": 0.5}, parent="ghs_cabinet")
+     [T08("5")], "Dry scroll pump backing the turbo and still.", {"generator": "Box", "w_m": 0.3, "h_m": 0.3, "d_m": 0.5}, parent="ghs_cabinet", lod=LOD_RACK)
 comp("he3_compressor", "Mixture circulation compressor", "ghs",
      "Hermetic compressor that raises the still exhaust (a few mbar) to the condensing pressure (a few bar) so that the 3He can be re-condensed at 4 K. In cryogen-free systems the circulation rate it delivers, together with the still power, sets the mixing-chamber cooling power.",
      "Circulates 3He from the still back to the condenser.", ["still_flow", "cooling_power_mxc"],
      [row("throughput", "mmol/s", [0.5, 3], binding="cryo.flow.n3", cls="Model"), row("still pressure", "mbar", binding="cryo.flow.p_still", cls="Model")],
-     [T08("1.3")], "Compressor circulating the 3He.", {"generator": "Box", "w_m": 0.4, "h_m": 0.4, "d_m": 0.5}, parent="ghs_cabinet")
+     [T08("1.3")], "Compressor circulating the 3He.", {"generator": "Box", "w_m": 0.4, "h_m": 0.4, "d_m": 0.5}, parent="ghs_cabinet", lod=LOD_RACK)
 comp("ln2_trap", "Liquid-nitrogen cold trap", "ghs",
      "Charcoal-filled coil immersed in liquid nitrogen through which the circulating mixture passes before re-entering the fridge. It adsorbs air, water and oil that would otherwise freeze in the condensing impedance and block circulation, the most common cause of a slowly failing base temperature.",
      "Cleans the circulating gas of contaminants.", [], [row("trap temperature", "K", binding="cryo.trap.T", cls="Model"), row("LN2 level", "", binding="cryo.trap.level", cls="Model")],
-     [T08("1.3")], "LN2 cold trap cleaning the mixture.", {"generator": "Cylinder", "r_m": 0.12, "h_m": 0.4, "caps": True, "attachments": ["coil"]}, parent="ghs_cabinet")
+     [T08("1.3")], "LN2 cold trap cleaning the mixture.", {"generator": "Cylinder", "r_m": 0.12, "h_m": 0.4, "caps": True, "attachments": ["coil"]}, parent="ghs_cabinet", lod=LOD_RACK)
 comp("pressure_gauge", "Pressure gauge", "sensor",
      "Pirani, capacitance or piezo gauge on one node of the gas circuit (vacuum can, still, condensing line, dump tanks). Together the gauges give the operator the state of the circulation: a rising still pressure with falling flow means a blockage; a rising can pressure means a leak or warming shields.",
      "Pressure at one node of the gas circuit.", [], [row("range", "mbar", [1e-6, 3000]), row("pressure", "mbar", binding="cryo.gauge[$i].p", cls="Model")],
-     [T08("5")], "Pressure gauge on the gas circuit.", {"generator": "Cylinder", "r_m": 0.03, "h_m": 0.02, "caps": True, "front": "dial"}, parent="ghs_cabinet",
+     [T08("5")], "Pressure gauge on the gas circuit.", {"generator": "Cylinder", "r_m": 0.03, "h_m": 0.02, "caps": True, "front": "dial"}, parent="ghs_cabinet", lod=LOD_RACK,
      instrument={"class": "pressure_gauge", "settings_schema": "instr/gauge.schema.json", "channels": ["p"]}, model_name="Wide-range vacuum gauge")
 comp("flow_meter", "3He flow meter", "sensor",
      "Thermal mass-flow meter in the circulation loop reporting the 3He molar flow. It is the ṅ₃ in the cooling-power law, so the fridge dashboard shows it next to the mixing-chamber temperature and the cooling-power margin; a falling flow at constant still power is the signature of a blocked impedance.",
      "Measures the circulation rate ṅ₃.", ["cooling_power_mxc"], [row("range", "mmol/s", [0, 5]), row("flow", "mmol/s", binding="cryo.flow.n3", cls="Model")],
-     [T08("1.2")], "Flow meter for the 3He circulation.", {"generator": "Tube", "r_m": 0.01, "path": "straight_0.1m"}, parent="ghs_cabinet",
+     [T08("1.2")], "Flow meter for the 3He circulation.", {"generator": "Tube", "r_m": 0.01, "path": "straight_0.1m"}, parent="ghs_cabinet", lod=LOD_RACK,
      instrument={"class": "flow_meter", "settings_schema": "instr/flow.schema.json", "channels": ["n3"]}, model_name="Thermal mass-flow meter")
 comp("power_meter", "RF power meter", "instrument",
      "Diode or thermistor power head with its readout, used on the bench to set the absolute power leaving a generator or arriving at a fridge input before anything is connected to the qubit. It is the only instrument in the lab that measures power on an absolute scale rather than a ratio, so it is what anchors the attenuation budget: every dBm quoted for a drive line traces back to a head like this one. Calibration factor and frequency response are entered per head, and the reading is averaged over many RF cycles, so it reports average power, not the envelope.",
@@ -887,11 +970,11 @@ comp("power_meter", "RF power meter", "instrument",
 comp("valve", "Circuit valve", "ghs",
      "Pneumatic or manual valve on the gas circuit. The set of open valves defines the flow path: OVC pumping, mixture condensing, circulation, or recovery into the dump tanks. The sequencer opens and closes them in the order that never exposes the mixture to atmosphere or the impedance to contaminants.",
      "One switch of the gas-circuit topology.", [], [row("open", "", binding="cryo.valve[$i].open", cls="Model")],
-     [T08("1.3")], "Valve on the gas circuit.", {"generator": "Cylinder", "r_m": 0.015, "h_m": 0.02, "caps": True, "attachments": ["handle"]}, parent="ghs_cabinet")
+     [T08("1.3")], "Valve on the gas circuit.", {"generator": "Cylinder", "r_m": 0.015, "h_m": 0.02, "caps": True, "attachments": ["handle"], "label": True}, parent="ghs_cabinet", lod=LOD_RACK)
 comp("dump_tank", "Mixture dump tank", "ghs",
      "Storage vessel holding the helium mixture at a few bar when the fridge is warm. The mixture is the most expensive consumable of the system (3He), so recovery into the dumps is done before any warm-up and the dump pressure is logged as an inventory check.",
      "Stores the mixture when not circulating.", [], [row("volume", "L", [20, 60]), row("pressure", "bar", binding="cryo.dump[$i].p", cls="Model")],
-     [T08("1.3")], "Mixture storage tank.", {"generator": "Cylinder", "r_m": 0.15, "h_m": 0.6, "caps": True}, parent="ghs_cabinet")
+     [T08("1.3")], "Mixture storage tank.", {"generator": "Cylinder", "r_m": 0.15, "h_m": 0.6, "caps": True}, parent="ghs_cabinet", lod=LOD_RACK)
 
 # ---------------------------------------------------------------- 3.5 chip
 def chip(id, name, cat, function, summary, eqs, rows, theory, tooltip, geometry, parent="substrate"):

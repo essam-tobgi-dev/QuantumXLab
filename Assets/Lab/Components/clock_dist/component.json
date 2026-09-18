@@ -40,15 +40,45 @@
     "geometry": {
       "generator": "RackUnit",
       "u": 1,
-      "front": "controller"
+      "front": "controller",
+      "front_panel": {
+        "finish": "blue_grey",
+        "leds": [
+          {
+            "x": 0.44,
+            "y": 0.0,
+            "colour": "green"
+          }
+        ],
+        "connectors": [
+          {
+            "type": "SMA",
+            "x": -0.42,
+            "y": 0.0,
+            "label": "IN"
+          }
+        ],
+        "connector_rows": [
+          {
+            "type": "SMA",
+            "count": 12,
+            "x0": -0.3,
+            "x1": 0.36,
+            "y": 0.0,
+            "label": "OUT",
+            "rows": 1,
+            "dy": 0.42
+          }
+        ]
+      }
     },
     "lod": [
       {
-        "max_m": 2.0,
+        "max_m": 6.0,
         "detail": "full"
       },
       {
-        "max_m": 8.0,
+        "max_m": 30.0,
         "detail": "simple"
       },
       {

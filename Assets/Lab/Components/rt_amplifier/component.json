@@ -44,15 +44,46 @@
     "geometry": {
       "generator": "RackUnit",
       "u": 1,
-      "front": "amp"
+      "front": "amp",
+      "front_panel": {
+        "finish": "anodised_black",
+        "leds": [
+          {
+            "x": 0.4,
+            "y": 0.0,
+            "colour": "green"
+          }
+        ],
+        "connectors": [
+          {
+            "type": "SMA",
+            "x": -0.15,
+            "y": 0.0,
+            "label": "IN"
+          },
+          {
+            "type": "SMA",
+            "x": 0.15,
+            "y": 0.0,
+            "label": "OUT"
+          }
+        ],
+        "vents": {
+          "x": -0.35,
+          "y": 0.0,
+          "w": 0.12,
+          "h": 0.5,
+          "rows": 3
+        }
+      }
     },
     "lod": [
       {
-        "max_m": 2.0,
+        "max_m": 6.0,
         "detail": "full"
       },
       {
-        "max_m": 8.0,
+        "max_m": 30.0,
         "detail": "simple"
       },
       {

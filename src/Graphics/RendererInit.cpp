@@ -36,6 +36,8 @@ Status Renderer::init(const RendererDesc& d) {
     };
     QXL_TRY(load(pbr_, "pbr", "pbr.vert", "pbr.frag"));
     QXL_TRY(load(pbrInst_, "pbr_instanced", "pbr.vert", "pbr.frag", {"INSTANCED"}));
+    QXL_TRY(load(pbrTex_, "pbr_textured", "pbr.vert", "pbr.frag", {"TEXTURED"}));
+    QXL_TRY(load(pbrTexInst_, "pbr_textured_instanced", "pbr.vert", "pbr.frag", {"INSTANCED", "TEXTURED"}));
     QXL_TRY(load(shadow_, "shadow", "shadow.vert", "shadow.frag"));
     QXL_TRY(load(shadowInst_, "shadow_instanced", "shadow.vert", "shadow.frag", {"INSTANCED"}));
     QXL_TRY(load(idProg_, "id", "pbr.vert", "id.frag"));
@@ -99,6 +101,7 @@ Status Renderer::init(const RendererDesc& d) {
     if (!f) QXL_LOG_WARN(Gfx, "font not loaded ({}); text disabled", f.error().message);
     else { font_ = std::move(*f); text_.setFont(font_.get()); }
     cmaps_.ensure();
+    textures_ = std::make_unique<TextureLibrary>(d.textureRoot);
     resize(16, 16);
     drainGlErrors("Renderer::init");
     return {};

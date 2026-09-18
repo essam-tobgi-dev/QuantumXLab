@@ -7,6 +7,7 @@
 #include "Lab/Layout.hpp"
 #include "Lab/Materials.hpp"
 #include "Lab/Scene.hpp"
+#include <map>
 
 namespace qlab::lab {
 
@@ -33,6 +34,9 @@ struct NodeSpec {
     // When set, it replaces the descriptor's single-generator mesh at every level of detail, so a
     // prop can be inspectable without losing the shape the scene was designed around.
     const gfx::MeshData* authoredMesh = nullptr;
+    // Optional coarser authored mesh for the `simple` levels (a breadboard without its 2 000
+    // holes); the full authored mesh is used when absent.
+    const gfx::MeshData* authoredSimple = nullptr;
 };
 
 class SceneBuilder {
@@ -91,8 +95,23 @@ public:
     Status buildSampleStage();
     Status buildWiring(ComponentId root, const cryo::Wiring& wiring);
     Status buildRacks(ComponentId root);
+    // One rack: enclosure with 19-inch rails, units, rear loom (BuildRack.cpp).
+    Status buildRack(ComponentId root, const RackSpec& rack, std::map<std::string, int>& instanceOf,
+                     const std::vector<std::size_t>& outputLines);
     Status buildGasHandling(ComponentId root);
+    Status buildGhsPlant(ComponentId ghs, double W, double H, double D);
     Status buildProps(ComponentId root);
+    Status buildBenchInstruments(ComponentId bench);
+    // Door with a real opening, the compressor window and the safety signage (BuildRoomDetail.cpp).
+    Status buildDoorAndWindow(ComponentId room);
+    Status buildSignage(ComponentId room);
+    // Openings in the −X wall (spec 17 §2): the door leaf 0.9 × 2.1 m at z = 0.3 D, and a window
+    // onto the pulse-tube compressor when the layout puts it outside. z is the opening's centre.
+    struct WallOpening {
+        double z = 0.0, width = 0.0, y0 = 0.0, height = 0.0;
+    };
+    WallOpening doorOpening() const;
+    std::optional<WallOpening> windowOpening() const;
     Status buildChip(ComponentId parent, const hw::LoadedDevice& device, const ChipLayout& chip);
     Status buildIonLab(ComponentId root, const hw::LoadedDevice& device);
 

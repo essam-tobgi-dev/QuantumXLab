@@ -86,16 +86,59 @@
     "tooltip": "AWG and sequencer: plays the compiled pulse schedule.",
     "geometry": {
       "generator": "RackUnit",
-      "u": 6,
-      "front": "awg"
+      "u": 4,
+      "front": "awg",
+      "front_panel": {
+        "finish": "anodised_black",
+        "handles": true,
+        "slots": {
+          "count": 8,
+          "x0": -0.36,
+          "x1": 0.36,
+          "sma": 4
+        },
+        "leds": [
+          {
+            "x": -0.44,
+            "y": 0.42,
+            "colour": "green"
+          },
+          {
+            "x": -0.44,
+            "y": 0.36,
+            "colour": "amber"
+          }
+        ],
+        "connectors": [
+          {
+            "type": "SMA",
+            "x": 0.43,
+            "y": 0.35,
+            "label": "CLK IN"
+          },
+          {
+            "type": "SMA",
+            "x": 0.43,
+            "y": 0.22,
+            "label": "TRIG IN"
+          }
+        ],
+        "vents": {
+          "x": -0.44,
+          "y": -0.15,
+          "w": 0.06,
+          "h": 0.5,
+          "rows": 8
+        }
+      }
     },
     "lod": [
       {
-        "max_m": 2.0,
+        "max_m": 6.0,
         "detail": "full"
       },
       {
-        "max_m": 8.0,
+        "max_m": 30.0,
         "detail": "simple"
       },
       {

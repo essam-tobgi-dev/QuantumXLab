@@ -117,7 +117,7 @@ Status Application::initImGui() {
     // A lit room (spec 18 §4): a soft key light from above, the environment's irradiance and
     // reflections through the IBL, and the exposure the spec recommends for that environment
     // (E/π ≈ 1.4 from the panels: sunlit white ≈ 2 HDR at exposure 1). The constant ambient only serves the `ibl = false` path.
-    renderer_->setSun(glm::normalize(glm::vec3(-0.35f, -0.85f, -0.4f)), glm::vec3(1.0f, 0.98f, 0.94f), 3.0f);
+    renderer_->setSun(glm::normalize(glm::vec3(-0.35f, -0.85f, -0.4f)), glm::vec3(1.0f, 0.95f, 0.86f), 3.2f); // warm key against the cool panels
     renderer_->setAmbient(glm::vec3(0.22f));
     renderer_->setExposure(0.55f);
 

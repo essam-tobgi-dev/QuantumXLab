@@ -48,8 +48,8 @@ Result<ComponentId> SceneBuilder::addComponent(ComponentId parent, NodeSpec spec
         level.maxDistance_m = rule.maxDistance_m;
         level.detail = rule.detail;
         if (rule.detail != Detail::Hidden && spec.authoredMesh != nullptr) {
-            if (spec.authoredMesh->triangleCount() > 0)
-                level.mesh = scene_.meshes().add(gfx::MeshData(*spec.authoredMesh));
+            const gfx::MeshData* authored = rule.detail == Detail::Simple && spec.authoredSimple ? spec.authoredSimple : spec.authoredMesh;
+            if (authored->triangleCount() > 0) level.mesh = scene_.meshes().add(gfx::MeshData(*authored));
         } else if (rule.detail != Detail::Hidden) {
             auto mesh = generateMesh(generator, params, GenContext{rule.detail, spec.unitScale});
             if (!mesh) {
@@ -105,7 +105,7 @@ ComponentId SceneBuilder::addScenery(ComponentId parent, std::string instance, s
 ComponentId SceneBuilder::addProp(ComponentId parent, NodeSpec spec, const gfx::MeshData& fallback) {
     if (scene_.catalog().contains(spec.descriptor)) {
         // Keep the authored composite; the descriptor is what makes the prop inspectable.
-        if (fallback.triangleCount() > 0) spec.authoredMesh = &fallback;
+        if (fallback.triangleCount() > 0 && spec.authoredMesh == nullptr) spec.authoredMesh = &fallback;
         spec.cacheMesh = false;
         auto id = addComponent(parent, spec);
         if (id) return *id;

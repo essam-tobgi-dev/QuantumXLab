@@ -22,6 +22,8 @@ layout(std140) uniform MaterialUbo {
     vec4 uEmissive;      // rgb, w = strength
     vec4 uProps;         // metallic, roughness, ao, colormapMix
     vec4 uMisc;          // colormapValue, unlit flag
+    vec4 uTex;           // uv scale, triplanar flag, normal strength, textured flag
+    vec4 uTexGain;       // rgb 1/mean(albedo), w 1/mean(roughness)
 };
 layout(std140) uniform ObjectUbo {
     mat4 uModel;

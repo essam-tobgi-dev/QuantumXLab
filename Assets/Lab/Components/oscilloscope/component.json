@@ -57,15 +57,92 @@
     "geometry": {
       "generator": "RackUnit",
       "u": 4,
-      "front": "oscilloscope"
+      "front": "oscilloscope",
+      "front_panel": {
+        "finish": "light_grey",
+        "handles": true,
+        "screen": {
+          "x": -0.2,
+          "y": 0.08,
+          "w": 0.5,
+          "h": 0.72
+        },
+        "keypads": [
+          {
+            "x": 0.24,
+            "y": -0.02,
+            "rows": 2,
+            "cols": 3
+          }
+        ],
+        "knobs": [
+          {
+            "x": 0.22,
+            "y": 0.25,
+            "r_mm": 9
+          },
+          {
+            "x": 0.3,
+            "y": 0.25,
+            "r_mm": 9
+          },
+          {
+            "x": 0.38,
+            "y": 0.25,
+            "r_mm": 9
+          },
+          {
+            "x": 0.46,
+            "y": 0.25,
+            "r_mm": 9
+          },
+          {
+            "x": 0.34,
+            "y": 0.0,
+            "r_mm": 12
+          },
+          {
+            "x": 0.44,
+            "y": 0.0,
+            "r_mm": 9
+          }
+        ],
+        "leds": [
+          {
+            "x": 0.46,
+            "y": 0.42,
+            "colour": "green"
+          }
+        ],
+        "connector_rows": [
+          {
+            "type": "BNC",
+            "count": 4,
+            "x0": -0.36,
+            "x1": 0.0,
+            "y": -0.4,
+            "label": "CH",
+            "rows": 1,
+            "dy": 0.42
+          }
+        ],
+        "connectors": [
+          {
+            "type": "BNC",
+            "x": 0.42,
+            "y": -0.4,
+            "label": "AUX IN"
+          }
+        ]
+      }
     },
     "lod": [
       {
-        "max_m": 2.0,
+        "max_m": 6.0,
         "detail": "full"
       },
       {
-        "max_m": 8.0,
+        "max_m": 30.0,
         "detail": "simple"
       },
       {

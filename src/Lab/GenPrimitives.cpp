@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cmath>
 #include <glm/gtc/constants.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace qlab::lab::gen {
 
@@ -75,18 +76,30 @@ Result<MeshData> box(const GenParams& p, const GenContext& c) {
                                      {-0.15f * W, 0.1f * L}};
         mesh::appendColored(m, mesh::prism(arrow, y0, y1), kPanel);
     }
-    if (panel > 0.0f) { // GHS front panel with a valve mimic: light panel, dark flow lines, valve discs
-        float zf = size.z * 0.5f - panel * 0.5f;
-        mesh::appendColored(m, mesh::box({0.0f, 0.05f * size.y, zf}, {0.9f * size.x, 0.6f * size.y, panel * 0.5f}), kPanel);
-        for (int row = 0; row < 4; ++row) {
-            float y = size.y * (0.3f - 0.15f * static_cast<float>(row));
-            mesh::appendColored(m, mesh::box({0.0f, y, zf + panel * 0.3f}, {0.8f * size.x, 0.004f * size.y, panel * 0.4f}), kDark);
-            for (int k = 0; k < 5; ++k) {
-                float x = size.x * (0.16f * static_cast<float>(k) - 0.32f);
-                MeshData v = gfx::shapes::cylinder(0.025f * size.x, panel * 0.5f, 12, true);
-                mesh::appendColored(m, std::move(v), kDark, mesh::translate({x, y, zf + panel * 0.25f}) * mesh::alignY({0, 0, 1}));
-            }
+    if (panel > 0.0f) { // GHS front panel (spec 17 §3.4 amended): the mimic diagram of the mixture
+        // circuit under a row of gauges, a ventilation grille over the pump bay, the door seam
+        // and its handle. Valves and gauges are mounted by the builder on the same layout
+        // (Generators.hpp: ghsValveX/Y, ghsGaugeX).
+        const float W = size.x, H = size.y, zf = size.z * 0.5f - panel * 0.5f;
+        auto X = [&](double f) { return static_cast<float>(f) * W; };
+        auto Y = [&](double f) { return static_cast<float>(f) * H; };
+        const float top = Y(kGhsPanelTop), bot = Y(kGhsPanelBottom);
+        mesh::appendColored(m, mesh::box({0.0f, 0.5f * (top + bot), zf}, {0.92f * W, top - bot, 0.5f * panel}), kPanel);
+        mesh::appendColored(m, mesh::box({0.0f, Y(kGhsGaugeY), zf + 0.3f * panel}, {0.90f * W, 0.085f * H, 0.2f * panel}), kDark);
+        const float line = 0.005f * H, zl = zf + 0.3f * panel;
+        for (int row = 0; row < kGhsValveRows; ++row) // manifold lines
+            mesh::appendColored(m, mesh::box({0.0f, Y(ghsValveY(row)), zl}, {X(ghsValveX(kGhsValveCols - 1) - ghsValveX(0)) + 0.06f * W, line, 0.3f * panel}), kDark);
+        const float riserTop = Y(ghsValveY(0)) + 0.04f * H, riserBot = Y(ghsValveY(kGhsValveRows - 1)) - 0.04f * H;
+        for (int col = 0; col < kGhsValveCols; ++col) // branch risers joining the lines
+            mesh::appendColored(m, mesh::box({X(ghsValveX(col)), 0.5f * (riserTop + riserBot), zl}, {line, riserTop - riserBot, 0.3f * panel}), kDark);
+        // the flow meter's tapping and the two pump ports at the panel edges
+        mesh::appendColored(m, mesh::box({X(kGhsFlowMeterX), 0.5f * (Y(kGhsFlowMeterY) + Y(ghsValveY(1))), zl}, {line, std::abs(Y(kGhsFlowMeterY) - Y(ghsValveY(1))), 0.3f * panel}), kDark);
+        for (int k = 0; k < 7; ++k) { // grille over the pump bay
+            float y = Y(kGhsGrilleTop) - (static_cast<float>(k) + 0.5f) * 0.019f * H;
+            mesh::appendColored(m, mesh::box({0.0f, y, zf + 0.2f * panel}, {0.84f * W, 0.008f * H, 0.3f * panel}), kDark);
         }
+        mesh::appendColored(m, mesh::box({0.46f * W, 0.0f, zf + 0.1f * panel}, {0.004f * W, 0.96f * H, 0.3f * panel}), kDark); // door seam
+        mesh::appendColored(m, mesh::box({0.42f * W, 0.0f, zf + 0.6f * panel}, {0.012f * W, 0.10f * H, 0.6f * panel}), kPanel); // handle
     }
     return m;
 }
@@ -120,16 +133,37 @@ Result<MeshData> cylinder(const GenParams& p, const GenContext& c) {
         mesh::appendColored(m, gfx::shapes::cylinder(0.9f * r, h, 48, caps), body);
         for (int k = -1; k <= 1; ++k)
             mesh::appendColored(m, gfx::shapes::torus(0.95f * r, 0.05f * r, 48, 8), kGold, mesh::translate({0, 0.25f * h * static_cast<float>(k), 0}));
-    } else if (hasAtt("handle")) {
-        mesh::appendColored(m, gfx::shapes::cylinder(r, 0.6f * h, 32, caps), body, mesh::translate({0, -0.2f * h, 0}));
-        mesh::appendColored(m, gfx::shapes::cylinder(0.15f * r, 0.25f * h, 12, true), kDark, mesh::translate({0, 0.225f * h, 0}));
-        mesh::appendColored(m, mesh::box({0, 0.425f * h, 0}, {2.0f * r, 0.15f * h, 0.2f * r}), kDark);
+    } else if (hasAtt("handle")) { // panel valve: body, bonnet, stem and a three-spoke handwheel
+        mesh::appendColored(m, gfx::shapes::cylinder(r, 0.45f * h, 32, caps), body, mesh::translate({0, -0.275f * h, 0}));
+        mesh::appendColored(m, gfx::shapes::cylinder(0.45f * r, 0.25f * h, 16, true), body, mesh::translate({0, 0.075f * h, 0}));
+        mesh::appendColored(m, gfx::shapes::cylinder(0.12f * r, 0.35f * h, 8, true), kDark, mesh::translate({0, 0.30f * h, 0}));
+        const float ring = 0.09f * r, yWheel = 0.5f * h - ring;
+        mesh::appendColored(m, gfx::shapes::torus(0.88f * r, ring, 32, 8), kDark, mesh::translate({0, yWheel, 0}));
+        for (int k = 0; k < 3; ++k)
+            mesh::appendColored(m, mesh::box({0.44f * r, 0.0f, 0.0f}, {0.88f * r, 1.2f * ring, 1.2f * ring}), kDark,
+                                mesh::translate({0, yWheel, 0}) * glm::rotate(glm::mat4(1.0f), glm::radians(120.0f * static_cast<float>(k)), {0.0f, 1.0f, 0.0f}));
+        mesh::appendColored(m, gfx::shapes::cylinder(0.2f * r, 2.0f * ring, 12, true), kDark, mesh::translate({0, yWheel, 0}));
+        if (p.boolean("label", false)) { // engraved tag plate on the panel under the valve (local +z is "down" once mounted)
+            mesh::appendColored(m, mesh::box({0.0f, -0.48f * h, 1.7f * r}, {2.0f * r, 0.03f * h, 0.7f * r}), kPanel);
+            mesh::appendColored(m, mesh::box({0.0f, -0.46f * h, 1.7f * r}, {1.2f * r, 0.012f * h, 0.3f * r}), kDark);
+        }
     } else {
         mesh::appendColored(m, gfx::shapes::cylinder(r, h, 48, caps), body);
     }
-    if (p.string("front") == "dial") { // pressure-gauge dial face and needle on the +y cap
-        mesh::appendColored(m, mesh::disc(0.85f * r, 0.5f * h + 0.0f, 32, true), kPanel, mesh::translate({0, -0.01f * h, 0}));
-        mesh::appendColored(m, mesh::box({0.25f * r, 0.495f * h, 0}, {0.5f * r, 0.01f * h, 0.04f * r}), kDark);
+    if (p.string("front") == "dial") { // Bourdon / capacitance gauge dial on the +y cap: black bezel
+        // ring, white face, twelve scale ticks, hub and a needle at `needle_deg` (0 = 12 o'clock,
+        // clockwise positive; each gauge's reading sets it through an override)
+        const float yTop = 0.5f * h;
+        mesh::appendColored(m, mesh::annulus(0.84f * r, r, yTop + 0.0004f * r, 32, true), kDark);
+        mesh::appendColored(m, mesh::disc(0.84f * r, yTop + 0.0002f * r, 32, true), kPanel);
+        for (int k = 0; k < 12; ++k) {
+            float a = glm::radians(30.0f * static_cast<float>(k));
+            mesh::appendColored(m, mesh::box({0.72f * r * std::sin(a), yTop + 0.0008f * r, -0.72f * r * std::cos(a)}, {0.05f * r, 0.0008f * r, 0.05f * r}), kDark);
+        }
+        const float needle = static_cast<float>(p.number("needle_deg", -60.0));
+        mesh::appendColored(m, mesh::box({0.0f, 0.0f, -0.36f * r}, {0.035f * r, 0.001f * r, 0.72f * r}), kDark,
+                            mesh::translate({0, yTop + 0.0012f * r, 0}) * glm::rotate(glm::mat4(1.0f), glm::radians(-needle), {0.0f, 1.0f, 0.0f}));
+        mesh::appendColored(m, gfx::shapes::cylinder(0.07f * r, 0.003f * r, 12, true), kDark, mesh::translate({0, yTop + 0.0015f * r, 0}));
     }
     return m;
 }

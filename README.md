@@ -25,7 +25,10 @@ physical instrument would produce from the modelled signals.
   stages, still, heat exchangers, mixing chamber, flanged cans), every coaxial line, clamp,
   attenuator, amplifier and the chip down to individual qubits and junctions — where every part
   can be hovered for its explanation card, clicked, inspected, and read live off the running
-  simulation. Rendered with image-based lighting, ambient occlusion, soft shadows and bloom.
+  simulation. Rendered with image-based lighting, ambient occlusion, soft shadows, bloom and
+  CC0 PBR texture sets (brushed steel, blasted aluminium, gold, copper, epoxy, plaster, anodised
+  and powder-coated finishes); every rack instrument carries its real front panel — screen,
+  keypad, knobs, connectors in their real layout, LEDs, handles and nameplate.
 - **Learn.** A narrated guided tour (31 stops for the superconducting lab, 16 for the ion trap)
   flies through the machine in signal order — racks, fridge, stage by stage to the chip and the
   qubits, back up the readout chain — explaining each part's purpose and physics with the live
@@ -36,7 +39,7 @@ physical instrument would produce from the modelled signals.
 
 ## Status
 
-**Complete: 1 240 954 assertions across 781 test cases, all green under `ctest`**, built as one
+**Complete: 1 242 339 assertions across 793 test cases, all green under `ctest`**, built as one
 tree on macOS (Apple silicon, OpenGL 4.1). `quantumxlab --selftest` renders every workspace and
 checks all 30 shipped example programs against their expectations.
 

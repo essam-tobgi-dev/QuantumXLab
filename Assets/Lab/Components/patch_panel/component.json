@@ -23,22 +23,46 @@
           24,
           96
         ]
+      },
+      {
+        "field": "rows of SMA bulkheads",
+        "unit": "",
+        "typical": [
+          1,
+          2
+        ]
       }
     ],
     "theory": [],
     "tooltip": "Patch panel: line-to-channel mapping.",
     "geometry": {
       "generator": "RackUnit",
-      "u": 2,
-      "front": "patch"
+      "u": 1,
+      "front": "patch",
+      "front_panel": {
+        "finish": "anodised_black",
+        "nameplate": false,
+        "connector_rows": [
+          {
+            "type": "SMA",
+            "count": 48,
+            "x0": -0.42,
+            "x1": 0.42,
+            "y": 0.0,
+            "label": "LINE",
+            "rows": 2,
+            "dy": 0.42
+          }
+        ]
+      }
     },
     "lod": [
       {
-        "max_m": 2.0,
+        "max_m": 6.0,
         "detail": "full"
       },
       {
-        "max_m": 8.0,
+        "max_m": 30.0,
         "detail": "simple"
       },
       {

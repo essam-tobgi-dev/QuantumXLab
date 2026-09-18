@@ -72,7 +72,10 @@ TEST_CASE("every component node resolves to a descriptor and every group is geom
         }
     }
     CHECK(components > 400);
-    CHECK(scenery < 20);
+    // Scenery is the room shell and what has no physics role: floor, grid, two walls, skirting,
+    // door, window (frame, glass, wall sleeves), four ceiling lights, three safety signs, the
+    // task chair and the GHS pipework (rack detail pass) — 21 for sc_lab_standard.
+    CHECK(scenery < 26);
     // Every prop in the shipped layout now has a descriptor, so nothing is drawn un-inspectable
     // (spec 17 §12: every visible node answers a pick).
     for (const auto& d : scene.diagnostics()) {
@@ -207,9 +210,12 @@ TEST_CASE("the chip carries one node per qubit and stays inside the triangle bud
     CHECK(size.y == Catch::Approx(350e-6).epsilon(1e-6));
     // spec 24 §6 / 17 §12: 3 M triangles per frame. The whole scene at its finest level is well
     // under that; the fridge detail pass (chamfered plates with bolt circles, flanged cans with
-    // bolts, posts, braids, loom ribbons, T-slot frame) raised it from 392 k to ≈ 470 k, and
-    // 900 k is the ceiling this test holds it to.
-    CHECK(scene.stats().trianglesFinest < 900'000);
+    // bolts, posts, braids, loom ribbons, T-slot frame) raised it from 392 k to ≈ 470 k, and the
+    // rack detail pass (14 real front panels with ≈ 230 connectors, rails with the EIA hole
+    // pattern, looms, the GHS mimic with 20 handwheel valves and 6 dials, the breadboard's
+    // 2 000 holes, dewars, compressor, furniture) to ≈ 570 k. 800 k is the ceiling this test
+    // holds it to: the next pass must instance or LOD its parts rather than spend the margin.
+    CHECK(scene.stats().trianglesFinest < 800'000);
     CHECK(scene.stats().trianglesFinest < 3'000'000);
     CHECK(scene.stats().cacheHits > 100); // repeated parts share one mesh
     WARN(std::format("nodes {} ({} components), meshes {} ({} cache hits), triangles {} (unique {}), build {:.0f} ms",

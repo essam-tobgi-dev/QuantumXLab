@@ -90,14 +90,20 @@ Inter (UI), JetBrains Mono (code), and **Latin Modern Math** for equations (GUST
 `Assets/Fonts/GUST-FONT-LICENSE-LatinModernMath.txt`). ImGui is built with `IMGUI_USE_WCHAR32`
 because the italic and bold math alphabets are code points above U+FFFF.
 
+## Textures
+
+`Assets/Textures/<set>/{albedo,normal,roughness}.jpg` are CC0 sets from ambientCG (see
+`Assets/Textures/SOURCES.md`; `pcb` and `g10` are procedural), fetched and normalised by
+`Assets/Textures/fetch_textures.py`. Every generated mesh is textured triplanar in world space.
+
 ## Verified baseline (2026-09-18)
 
 The whole tree builds and passes as one project, verified the way CI runs it:
 
 ```bash
 cmake --preset debug && cmake --build --preset debug -j10 && ctest --preset debug
-# 100% tests passed out of 781          (480 s)
-# 1 240 954 assertions across 781 test cases
+# 100% tests passed out of 793          (370 s)
+# 1 242 339 assertions across 793 test cases
 python3 tools/check_includes.py   # 0 layering violations (spec 02 §1)
 python3 tools/check_xrefs.py      # 0 unresolved spec/theory references
 python3 tools/gen_assets.py       # assets regenerate identically
@@ -117,7 +123,7 @@ argument (a leading `--`, or a `;`, which splits the generated CMake list) is si
 | lang | 1 096 | 15 | | qec | 212 111 | 52 |
 | ir | 2 021 | 46 | | runtime | 1 654 | 47 |
 | qsim | 44 189 | 57 | | instr | 21 634 | 39 |
-| hardware | 2 935 | 37 | | lab | 159 506 | 54 |
-| gfx | 13 468 | 24 | | viz | 14 272 | 58 |
-| ui | 6 688 | 68 | | report | 20 156 | 37 |
-| app | 491 | 25 | | **total** | **1 240 954** | **781** |
+| hardware | 2 935 | 37 | | lab | 160 684 | 61 |
+| gfx | 13 645 | 28 | | viz | 14 272 | 58 |
+| ui | 6 718 | 69 | | report | 20 156 | 37 |
+| app | 491 | 25 | | **total** | **1 242 339** | **793** |

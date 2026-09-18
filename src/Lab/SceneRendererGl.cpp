@@ -2,9 +2,14 @@
 // re-evaluated wiring splines and cutaway-clipped cans), instancing of repeated parts, picking ids,
 // the selection label and the 3D overlays.
 #include "Lab/MeshOps.hpp"
+#include "Lab/RackPanel.hpp"
 #include "Lab/SceneRenderer.hpp"
+#include <algorithm>
+#include <cmath>
+#include <glm/trigonometric.hpp>
 #include <bit>
 #include <cmath>
+#include <glm/trigonometric.hpp>
 #include <map>
 
 namespace qlab::lab {
@@ -19,6 +24,11 @@ std::uint64_t materialKey(const gfx::Material& m) {
     mix(m.baseColor.a);
     mix(m.metallic);
     mix(m.roughness);
+    // Batches bind their texture set once (spec 18 §4): two materials that differ only by set
+    // must not share a batch.
+    for (const char c : m.textureSet) h = (h ^ static_cast<std::uint64_t>(static_cast<unsigned char>(c))) * 1099511628211ull;
+    mix(m.uvScale);
+    mix(m.normalStrength);
     return h;
 }
 } // namespace
@@ -106,6 +116,28 @@ void SceneRenderer::submit(gfx::Renderer& renderer, const Interaction& ui) {
         }
     }
     renderer.setSelection(ui.selected(), ui.hovered());
+    if (panelLabels_) { // nameplate labels of the rack units drawn at full detail and within range
+        for (const DrawItem& item : items_) {
+            if (item.lod != 0) continue;
+            const Node* n = scene_->node(item.id);
+            if (!n || n->group != Group::Rack || n->descriptorIndex < 0) continue;
+            const ComponentDescriptor& d = scene_->catalog().all()[static_cast<std::size_t>(n->descriptorIndex)];
+            if (d.generator != "RackUnit") continue;
+            const int u = std::max(1, static_cast<int>(std::lround(d.geometryNumber("u", 1))));
+            const double depth = d.geometry.contains("depth_m") ? d.geometryNumber("depth_m", kRackUnitDepth_m) : kRackUnitDepth_m;
+            const glm::dvec3 anchor = glm::dvec3(item.world * glm::dvec4(rackNameplateLocal(u, depth) + glm::dvec3(0.0, 0.006, 0.0), 1.0));
+            const double dist = glm::length(anchor - eye_);
+            if (dist > panelLabelRange_m) continue;
+            // A 9 px label on a unit that spans fewer pixels than that would overprint its
+            // neighbours (eight 1U boards in a row): compare angular sizes, viewport-independent
+            // for a 1000 px-tall view at the camera's field of view.
+            const double unitAngle = u * kRackUnit_m / std::max(dist, 1e-6);
+            const double labelAngle = 9.0 / 1000.0 * 2.0 * std::tan(glm::radians(renderer.camera().fovDeg()) * 0.5);
+            if (unitAngle < 1.6 * labelAngle) continue;
+            renderer.text().label3D(anchor, d.modelName.empty() ? d.name : d.modelName, 9.0f, {0.95f, 0.95f, 0.95f, 1.0f},
+                                    gfx::TextAnchor::BottomLeft, {0.0f, 0.0f});
+        }
+    }
     if (labels_ && ui.selected().value != 0) {
         if (const Node* n = scene_->node(ui.selected()); n && n->subtreeBounds.valid()) {
             glm::dvec3 top = n->subtreeBounds.center();

@@ -1,11 +1,13 @@
 #include "Graphics/Material.hpp"
 namespace qlab::gfx {
-MaterialUbo Material::toUbo() const {
+MaterialUbo Material::toUbo(const glm::vec3& albedoGain, float roughnessGain) const {
     MaterialUbo u{};
     u.baseColor = baseColor;
     u.emissive = glm::vec4(emissive, emissiveStrength);
     u.props = glm::vec4(metallic, roughness, ao, colormapMix);
     u.misc = glm::vec4(colormapValue, unlit ? 1.0f : 0.0f, 0, 0);
+    u.tex = glm::vec4(uvScale, triplanar ? 1.0f : 0.0f, normalStrength, textured() ? 1.0f : 0.0f);
+    u.texGain = normalizeMaps ? glm::vec4(albedoGain, roughnessGain) : glm::vec4(1.0f);
     return u;
 }
 Material Material::preset(std::string_view n) {

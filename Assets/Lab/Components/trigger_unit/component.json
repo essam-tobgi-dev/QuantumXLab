@@ -44,15 +44,59 @@
     "geometry": {
       "generator": "RackUnit",
       "u": 1,
-      "front": "controller"
+      "front": "controller",
+      "front_panel": {
+        "finish": "blue_grey",
+        "screen": {
+          "x": -0.34,
+          "y": 0.0,
+          "w": 0.14,
+          "h": 0.6
+        },
+        "keypads": [
+          {
+            "x": -0.18,
+            "y": 0.0,
+            "rows": 1,
+            "cols": 4
+          }
+        ],
+        "leds": [
+          {
+            "x": -0.44,
+            "y": 0.0,
+            "colour": "green"
+          }
+        ],
+        "connector_rows": [
+          {
+            "type": "BNC",
+            "count": 8,
+            "x0": -0.06,
+            "x1": 0.32,
+            "y": 0.0,
+            "label": "OUT",
+            "rows": 1,
+            "dy": 0.42
+          }
+        ],
+        "connectors": [
+          {
+            "type": "BNC",
+            "x": 0.42,
+            "y": 0.0,
+            "label": "IN"
+          }
+        ]
+      }
     },
     "lod": [
       {
-        "max_m": 2.0,
+        "max_m": 6.0,
         "detail": "full"
       },
       {
-        "max_m": 8.0,
+        "max_m": 30.0,
         "detail": "simple"
       },
       {

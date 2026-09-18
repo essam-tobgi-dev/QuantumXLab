@@ -27,8 +27,12 @@ bool subsequence(const std::string& needle, const std::string& haystack) {
 } // namespace
 
 void fitClipPlanes(gfx::Camera& camera) {
+    // Spec 18 §6. With a 24-bit depth buffer and no reversed-Z on GL 4.1 the resolution at the
+    // pivot distance d is about d²/(near · 2²⁴): near = d/200 gives 30 µm at a 2.4 m rack view
+    // (0.2 mm panel reliefs used to z-fight at d/1000) and 0.06 µm at the 5 mm chip view. The far
+    // plane only needs the room; a large far/near ratio costs nothing here.
     double d = std::max(camera.distance(), 1e-6);
-    camera.setClip(std::clamp(1e-3 * d, 1e-7, 0.05), std::max(50.0, 100.0 * d));
+    camera.setClip(std::clamp(5e-3 * d, 1e-7, 0.05), std::max(50.0, 50.0 * d));
 }
 
 Interaction::Interaction(Scene& scene, const BindingRegistry* bindings) : scene_(&scene), bindings_(bindings) {

@@ -1,0 +1,78 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T12:04:07Z"
+  },
+  "data": {
+    "id": "cable_loom",
+    "name": "Rack cable loom",
+    "category": "structure",
+    "parent": "rack_enclosure",
+    "function": "Bundle of the room-temperature coaxial and control cables (6–12 runs) that leaves the rear of an instrument rack, climbs through the brush strip in the rack roof and lies in the ceiling tray to the fridge top plate. Its length is a fixed delay in every pulse schedule: flexible coax has a velocity factor of about 0.7, so each metre adds 4.8 ns, and drive and readout paths whose looms differ by a metre are skewed by 5 ns, comparable to a gate rise time; the compiler's per-channel delay table absorbs the mismatch. The loom is also the path along which the rack's ground reaches the cryostat, which is why its screens are bonded only at the rack end.",
+    "physics": {
+      "summary": "Fixed cable delay per channel; single-point ground path to the fridge.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "cables",
+        "unit": "",
+        "typical": [
+          6,
+          12
+        ]
+      },
+      {
+        "field": "length",
+        "unit": "m",
+        "typical": [
+          3,
+          8
+        ]
+      },
+      {
+        "field": "velocity factor",
+        "unit": "",
+        "typical": [
+          0.66,
+          0.85
+        ]
+      },
+      {
+        "field": "delay",
+        "unit": "ns",
+        "typical": [
+          15,
+          40
+        ]
+      }
+    ],
+    "theory": [
+      "T07#7-sampling-quantization-timing"
+    ],
+    "tooltip": "Cable loom from the rack to the ceiling tray: fixed channel delay.",
+    "geometry": {
+      "generator": "Tube",
+      "r_m": 0.004,
+      "bundle": 12,
+      "bundle_pitch_m": 0.009,
+      "path": "straight_1.0m"
+    },
+    "lod": [
+      {
+        "max_m": 6.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 30.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

@@ -10,6 +10,7 @@
 #include "Graphics/Mesh.hpp"
 #include "Graphics/Shader.hpp"
 #include "Graphics/TextBatch.hpp"
+#include "Graphics/TextureLibrary.hpp"
 #include "Graphics/Ubo.hpp"
 #include <filesystem>
 #include <memory>
@@ -37,7 +38,7 @@ struct LodGroup {
 // shadowMs/mainMs are CPU submit times. postMs (resolve → SSAO → bloom → outline/tonemap), aoMs
 // and bloomMs are GPU times from timer queries and describe the PREVIOUS frame (spec 18 §11:
 // results are read a frame late so no query ever stalls the pipeline).
-struct FrameStats { int drawCalls = 0; std::size_t triangles = 0; double shadowMs = 0, mainMs = 0, postMs = 0, aoMs = 0, bloomMs = 0, resolveMs = 0; };
+struct FrameStats { int drawCalls = 0; int textureBinds = 0; std::size_t triangles = 0; double shadowMs = 0, mainMs = 0, postMs = 0, aoMs = 0, bloomMs = 0, resolveMs = 0; };
 
 struct RendererDesc {
     int samples = 4;
@@ -52,6 +53,7 @@ struct RendererDesc {
     bool bloom = true;
     float aoStrength = 0.8f;           // post: color *= mix(1, ao, aoStrength)
     float bloomStrength = 0.12f;       // post: color += bloom * bloomStrength
+    std::filesystem::path textureRoot; // texture sets (spec 18 §4); default: Assets/Textures
 };
 
 class Renderer {
@@ -77,6 +79,11 @@ public:
     // Presents the final image to the currently bound framebuffer at (x,y,w,h).
     void blitToScreen(int x, int y, int w, int h) const;
     const Texture2D& colorTexture() const { return postTex_; }
+    const Texture2D& hdrTexture() const { return resColor_; }   // resolved linear RGBA16F, before post
+    // Texture sets of the TEXTURED permutation (spec 18 §4): loaded on first use by set name.
+    TextureLibrary& textures() { return *textures_; }
+    void setTexturesEnabled(bool on) { texturesOn_ = on; }   // off: every material draws untextured
+    bool texturesEnabled() const { return texturesOn_; }
 
     ComponentId pick(int x, int y) const;              // pixel in viewport coords, y down; SYNCHRONOUS (stalls)
 
@@ -120,6 +127,8 @@ private:
     Status buildEnvironment();   // RendererEnv.cpp: env cubemap, prefiltered mips, irradiance, BRDF LUT
     void drawCubeFaces(const ShaderProgram& prog, TextureCube& target, int level, Framebuffer& fbo);
     void issuePick();   // after idPass: the queued pick → the pixel-pack buffer of this frame's slot
+    // Binds the item's texture set once per run of equal sets and fills the material UBO.
+    void bindMaterial(const Material& mat, const TextureSet*& bound);
     struct Item { const Mesh* mesh; Material mat; glm::mat4 model; ComponentId id; SubmitFlags flags; float depth; };
     struct InstItem { const Mesh* mesh; Material mat; std::vector<InstanceData> data; SubmitFlags flags; };
     std::vector<Item> opaque_, transparent_;
@@ -127,13 +136,14 @@ private:
     LineBatch lines_, linesNd_;
     TextBatch text_;
     std::unique_ptr<SdfFont> font_;
+    std::unique_ptr<TextureLibrary> textures_;
     ColormapTextures cmaps_;
     RendererDesc desc_;
     Camera cam_;
     int w_ = 0, h_ = 0;
     double time_ = 0;
     // GL resources
-    ShaderProgram pbr_, pbrInst_, shadow_, shadowInst_, idProg_, idInst_, line_, textSdf_, postProg_, outline_;
+    ShaderProgram pbr_, pbrInst_, pbrTex_, pbrTexInst_, shadow_, shadowInst_, idProg_, idInst_, line_, textSdf_, postProg_, outline_;
     ShaderProgram envLab_, envPrefilter_, envIrrProg_, brdfLutProg_, ssaoProg_, ssaoBlur_, ssaoUpsample_, bloomBright_, bloomBlur_;
     TextureCube envSrc_, envPrefiltered_, envIrradiance_;
     Texture2D brdfLut_;
@@ -143,6 +153,7 @@ private:
     Texture2D bloomA_, bloomB_;          // half-res R11G11B10F ping-pong
     TimerQuery postQuery_[4];      // consecutive GL_TIME_ELAPSED segments: resolve, SSAO, bloom, composite
     float envIntensity_ = 1.0f;
+    bool texturesOn_ = true;
     Buffer uboFrame_, uboLights_, uboMaterial_, uboObject_, uboSelection_;
     Framebuffer msaaFbo_, resolveFbo_, idFbo_, postFbo_, shadowFbo_;
     Texture2D msaaColor_, msaaDepth_, resColor_, resId_, idDepth_, postTex_, shadowDepth_;
