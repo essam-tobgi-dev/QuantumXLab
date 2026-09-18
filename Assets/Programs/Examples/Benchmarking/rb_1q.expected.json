@@ -1,0 +1,1 @@
+{ "statevector": null, "counts": null, "tolerance": "statistical", "unitary_digest": null, "shots": 512, "seed": 1, "note": "oracle: fitted r within 2 sigma of the calibration sx error (spec 25 §3)" }

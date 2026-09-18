@@ -1,0 +1,78 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "substrate",
+    "name": "Chip substrate",
+    "category": "chip",
+    "parent": "chip_package",
+    "function": "High-resistivity silicon (or sapphire) die on which the aluminium or niobium circuit is patterned. Its dielectric loss tangent and the two-level-system defects at its surfaces and interfaces set the internal quality factor of resonators and one of the T1 limits of the qubits; its permittivity sets the coplanar-waveguide phase velocity and hence every resonator length.",
+    "physics": {
+      "summary": "Dielectric host; loss and permittivity of the whole circuit.",
+      "equations": [
+        "resonator_length"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "size",
+        "unit": "mm",
+        "typical": [
+          5,
+          10
+        ]
+      },
+      {
+        "field": "thickness",
+        "unit": "mm",
+        "typical": [
+          0.3,
+          0.5
+        ]
+      },
+      {
+        "field": "relative permittivity",
+        "unit": "",
+        "typical": [
+          9.4,
+          11.9
+        ]
+      },
+      {
+        "field": "temperature",
+        "unit": "K",
+        "binding": "device.T_sample",
+        "class": "Numerical"
+      }
+    ],
+    "theory": [
+      "T05#1-the-quantized-lc-oscillator",
+      "T05#10-decoherence-mechanisms"
+    ],
+    "tooltip": "Silicon or sapphire substrate of the chip.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.008,
+      "h_m": 0.00035,
+      "d_m": 0.008
+    },
+    "lod": [
+      {
+        "max_m": 0.02,
+        "detail": "full"
+      },
+      {
+        "max_m": 0.2,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

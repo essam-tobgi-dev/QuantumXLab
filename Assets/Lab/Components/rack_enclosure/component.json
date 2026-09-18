@@ -1,0 +1,75 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "rack_enclosure",
+    "name": "19-inch instrument rack",
+    "category": "infra",
+    "parent": "room",
+    "function": "Welded 19-inch rack, 42 U high, that carries the room-temperature control electronics and presents them to the fridge through one patch panel. The rack is more than furniture: its bonded frame is the single-point ground for every chassis in it, so ground loops between instruments close here rather than through the coaxial screens, and its front-to-back airflow sets the temperature of the generators whose phase noise drifts with it. Rack A holds the control chassis, microwave sources, digitizer and mixer boards; rack B holds the test instruments and room-temperature amplifiers.",
+    "physics": {
+      "summary": "Single-point ground and thermal environment for the control electronics.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "height",
+        "unit": "U",
+        "typical": [
+          42,
+          42
+        ]
+      },
+      {
+        "field": "usable depth",
+        "unit": "mm",
+        "typical": [
+          800,
+          1000
+        ]
+      },
+      {
+        "field": "airflow",
+        "unit": "m^3/h",
+        "typical": [
+          200,
+          600
+        ]
+      },
+      {
+        "field": "ground bond",
+        "unit": "mohm",
+        "typical": [
+          0,
+          10
+        ]
+      }
+    ],
+    "theory": [],
+    "tooltip": "Instrument rack: mechanical support, single-point ground and airflow.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.6,
+      "h_m": 2.0,
+      "d_m": 0.9
+    },
+    "lod": [
+      {
+        "max_m": 6.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 30.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

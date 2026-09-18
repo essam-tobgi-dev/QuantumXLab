@@ -1,0 +1,1 @@
+{ "statevector": null, "counts": "uniform", "tolerance": "statistical", "unitary_digest": null, "shots": 4096, "seed": 1, "note": "|amplitude|^2 = 1/32 for every basis state" }

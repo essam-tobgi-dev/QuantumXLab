@@ -1,0 +1,97 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "support_post",
+    "name": "Stage support post",
+    "category": "structure",
+    "parent": "fridge_interior",
+    "function": "One of the six posts that carry each stage plate from the plate above it, standing on the bolt circle with a hex collar at both ends. Its material is chosen from the thermal conductivity integral Θ(T_c, T_h) of T08 §4: between 300 K and 4 K a thin-walled stainless tube (Ø 20 mm, 0.5 mm wall, A ≈ 31 mm²) conducts about 30 mW per post from 300 K to 50 K and 1.3 mW from 50 K to 4 K, which the pulse tube absorbs easily; below 4 K the same stainless would leak 5 µW per post into the still and 0.2 µW into the mixing chamber, so the posts there are G10 or Vespel rod (Ø 12 mm), whose Θ is 3–10 times smaller and whose conduction falls to tens of nanowatts, below the cooling margin of the mixing chamber. Length, section and material fix the load; the plates stay parallel because six posts over-constrain the ring.",
+    "physics": {
+      "summary": "Conduction path between stages; material chosen by the conductivity integral.",
+      "equations": [
+        "conduction_load"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "length",
+        "unit": "m",
+        "typical": [
+          0.1,
+          0.25
+        ]
+      },
+      {
+        "field": "diameter",
+        "unit": "mm",
+        "typical": [
+          12,
+          20
+        ]
+      },
+      {
+        "field": "wall",
+        "unit": "mm",
+        "typical": [
+          0.5,
+          6
+        ]
+      },
+      {
+        "field": "material",
+        "unit": ""
+      },
+      {
+        "field": "conducted heat",
+        "unit": "W",
+        "typical": [
+          1e-08,
+          0.03
+        ]
+      },
+      {
+        "field": "upper stage temperature",
+        "unit": "K",
+        "binding": "cryo.stage.$stage.T",
+        "class": "Numerical"
+      },
+      {
+        "field": "stage heat load",
+        "unit": "W",
+        "binding": "cryo.stage.$stage.P_load",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#4-heat-conduction-along-wiring",
+      "T08#3-stage-temperatures"
+    ],
+    "tooltip": "Stainless (above 4 K) or G10 (below) post carrying the stage plate.",
+    "geometry": {
+      "generator": "Post",
+      "d_m": 0.02,
+      "L_m": 0.22,
+      "wall_m": 0.0005,
+      "collar_m": 0.008
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

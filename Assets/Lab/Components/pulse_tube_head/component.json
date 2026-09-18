@@ -1,0 +1,93 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "pulse_tube_head",
+    "name": "Two-stage pulse-tube cryocooler",
+    "category": "cryocooler",
+    "parent": "top_plate_300K",
+    "function": "Cryogen-free pre-cooler mounted on the top plate. Compressed helium gas is cycled at 1.4 Hz through a regenerator and two pulse tubes; expansion cools the first stage to about 45 K (40 W capacity) and the second to about 3.5 K (1.5 W at 4.2 K). It provides all the cooling above 1 K and condenses the mixture; the dilution unit only works below the 4 K stage. It is also the dominant vibration source.",
+    "physics": {
+      "summary": "Provides the 45 K and 4 K cooling powers of the capacity map.",
+      "equations": [
+        "pt_capacity",
+        "cooldown_lumped"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "first-stage capacity",
+        "unit": "W",
+        "typical": [
+          35,
+          45
+        ]
+      },
+      {
+        "field": "second-stage capacity at 4.2 K",
+        "unit": "W",
+        "typical": [
+          1.0,
+          2.0
+        ]
+      },
+      {
+        "field": "operating frequency",
+        "unit": "Hz",
+        "typical": [
+          1.2,
+          1.5
+        ]
+      },
+      {
+        "field": "stage-1 temperature",
+        "unit": "K",
+        "binding": "cryo.pt.stage1.T",
+        "class": "Numerical"
+      },
+      {
+        "field": "stage-2 temperature",
+        "unit": "K",
+        "binding": "cryo.pt.stage2.T",
+        "class": "Numerical"
+      },
+      {
+        "field": "running",
+        "unit": "",
+        "binding": "cryo.pt.running",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#2-pulse-tube-pre-cooling"
+    ],
+    "tooltip": "Pulse-tube cryocooler: 45 K and 4 K pre-cooling.",
+    "geometry": {
+      "generator": "Cylinder",
+      "r_m": 0.06,
+      "h_m": 0.45,
+      "caps": true,
+      "attachments": [
+        "rotary_valve_box"
+      ]
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

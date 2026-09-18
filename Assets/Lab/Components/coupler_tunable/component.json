@@ -1,0 +1,67 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "coupler_tunable",
+    "name": "Tunable coupler",
+    "category": "coupler",
+    "parent": "substrate",
+    "function": "Transmon-like element between two qubits whose frequency, set by its own flux line, controls the effective coupling. Parked high it cancels the direct coupling to a few kHz of residual ZZ; pulsed toward the qubits it switches on a strong interaction for a 30–60 ns CZ or √iSWAP.",
+    "physics": {
+      "summary": "Switchable coupling with a zero-coupling idle point.",
+      "equations": [
+        "tunable_coupler",
+        "zz_interaction",
+        "cz_phase"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "idle frequency",
+        "unit": "GHz",
+        "binding": "device.edge[$e].f_c",
+        "class": "Model"
+      },
+      {
+        "field": "effective coupling",
+        "unit": "MHz",
+        "binding": "device.edge[$e].g_eff",
+        "class": "Model"
+      },
+      {
+        "field": "residual ZZ",
+        "unit": "kHz",
+        "binding": "device.edge[$e].zz",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T05#5.2-tunable-coupler",
+      "T05#9-flux-activated-cz-and-iswap"
+    ],
+    "tooltip": "Tunable coupler with its own flux control.",
+    "geometry": {
+      "generator": "Xmon",
+      "from": "device.edge[$e].coupler",
+      "scale": 0.6
+    },
+    "lod": [
+      {
+        "max_m": 0.02,
+        "detail": "full"
+      },
+      {
+        "max_m": 0.2,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

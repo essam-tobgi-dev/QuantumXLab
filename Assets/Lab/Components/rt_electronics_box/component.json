@@ -1,0 +1,74 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "rt_electronics_box",
+    "name": "Room-temperature control electronics",
+    "category": "infra",
+    "parent": "fridge_frame",
+    "function": "Enclosure on the frame holding the thermometry bridge, heater drivers and valve controller of the cryostat. The resistance bridge excites each RuO₂ and Cernox thermometer with a few nanoamps to microamps so that its self-heating stays far below the stage's cooling power (a 10 µW excitation would warm a 15 mK mixing chamber by several millikelvin), reads the resistance and converts it through the calibration curve; the heater drivers close the temperature loops on the still and mixing chamber. Keeping this box on the frame rather than in the rack shortens the loom, and its ground is the single-point ground of the insert.",
+    "physics": {
+      "summary": "Thermometry readout and heater drive; single-point ground of the insert.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "channels",
+        "unit": "",
+        "typical": [
+          8,
+          16
+        ]
+      },
+      {
+        "field": "excitation",
+        "unit": "A",
+        "typical": [
+          1e-09,
+          1e-05
+        ]
+      },
+      {
+        "field": "MXC temperature",
+        "unit": "K",
+        "binding": "cryo.stage.mxc.T",
+        "class": "Numerical"
+      },
+      {
+        "field": "still heater",
+        "unit": "mW",
+        "binding": "cryo.stage.still.P_heater",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#8-thermometry-vibration-and-magnetic-shielding"
+    ],
+    "tooltip": "Thermometry bridge and heater drivers on the frame.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.3,
+      "h_m": 0.2,
+      "d_m": 0.12,
+      "ports": 4
+    },
+    "lod": [
+      {
+        "max_m": 6.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 30.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

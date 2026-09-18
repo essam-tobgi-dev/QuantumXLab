@@ -1,0 +1,61 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "thermal_clamp",
+    "name": "Thermal clamp",
+    "category": "wiring",
+    "parent": "wiring",
+    "function": "Copper block bolted to a stage plate that grips the coax outer conductor. Without a clamp the line's outer conductor would run at an intermediate temperature and carry heat straight past the stage into the colder ones; with it, the conducted heat is intercepted here. Clamps are the cheapest and most effective wiring element in the thermal budget.",
+    "physics": {
+      "summary": "Anchors the outer conductor to the stage temperature.",
+      "equations": [
+        "conduction_load"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "contact length",
+        "unit": "mm",
+        "typical": [
+          10,
+          30
+        ]
+      },
+      {
+        "field": "clamp temperature",
+        "unit": "K",
+        "binding": "wiring.line[$line].clamp[$stage].T",
+        "class": "Numerical"
+      }
+    ],
+    "theory": [
+      "T08#4-heat-conduction-along-wiring"
+    ],
+    "tooltip": "Thermal clamp anchoring a line to this stage.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.02,
+      "h_m": 0.008,
+      "d_m": 0.015
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

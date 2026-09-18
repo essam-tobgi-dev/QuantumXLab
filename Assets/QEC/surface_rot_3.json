@@ -1,0 +1,176 @@
+{
+  "qxl": {
+    "kind": "qec.code",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "surface_rot_3",
+    "n": 9,
+    "k": 1,
+    "d": 3,
+    "family": "SurfaceRotated",
+    "stabilizers": [
+      "ZZIIIIIII",
+      "XXIXXIIII",
+      "IZZIZZIII",
+      "IIXIIXIII",
+      "IIIXIIXII",
+      "IIIZZIZZI",
+      "IIIIXXIXX",
+      "IIIIIIIZZ"
+    ],
+    "logical_x": [
+      "XXXIIIIII"
+    ],
+    "logical_z": [
+      "IIZIIZIIZ"
+    ],
+    "layout": {
+      "data": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "ancilla": [
+        {
+          "type": "Z",
+          "coord": [
+            0,
+            2
+          ],
+          "order": [
+            1,
+            0
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            2,
+            2
+          ],
+          "order": [
+            1,
+            4,
+            0,
+            3
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            2,
+            4
+          ],
+          "order": [
+            2,
+            1,
+            5,
+            4
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            2,
+            6
+          ],
+          "order": [
+            2,
+            5
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            4,
+            0
+          ],
+          "order": [
+            3,
+            6
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            4,
+            2
+          ],
+          "order": [
+            4,
+            3,
+            7,
+            6
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            4,
+            4
+          ],
+          "order": [
+            5,
+            8,
+            4,
+            7
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            6,
+            4
+          ],
+          "order": [
+            8,
+            7
+          ]
+        }
+      ]
+    },
+    "decoder": "lookup",
+    "theory": [
+      "T09#5.1-rotated-planar-layout",
+      "T09#5.2-syndrome-extraction-circuit"
+    ],
+    "notes": "Rotated planar layout; X checks on top/bottom boundaries, Z checks on left/right; CNOT order X: NW,NE,SW,SE; Z: NW,SW,NE,SE (Tomita–Svore).",
+    "convention": "Pauli strings are written left-to-right from qubit 0 (position i is qubit i)."
+  }
+}

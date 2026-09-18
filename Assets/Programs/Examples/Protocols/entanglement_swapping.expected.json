@@ -1,0 +1,1 @@
+{ "statevector": null, "counts": { "00": 0.5, "11": 0.5 }, "tolerance": "statistical", "unitary_digest": null, "shots": 2048, "seed": 1, "register": "c" }

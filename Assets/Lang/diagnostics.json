@@ -1,0 +1,430 @@
+{
+  "data": [
+    {
+      "hint": "remove the character or place it inside a comment",
+      "id": "QL1001",
+      "message": "invalid character '{}'",
+      "severity": "error"
+    },
+    {
+      "hint": "add the closing delimiter",
+      "id": "QL1002",
+      "message": "unterminated {}",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL1003",
+      "message": "malformed numeric literal '{}'",
+      "severity": "error"
+    },
+    {
+      "hint": "use ns, us, ms, s or dt",
+      "id": "QL1004",
+      "message": "unknown duration unit '{}'",
+      "severity": "error"
+    },
+    {
+      "hint": "the first statement must be 'OPENQASM 3.0;'",
+      "id": "QL2001",
+      "message": "missing or misplaced 'OPENQASM 3.0;' header{}",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL2002",
+      "message": "include '{}' cannot be resolved; only \"stdgates.inc\" is available",
+      "severity": "error"
+    },
+    {
+      "hint": "use 'OPENQASM 3.0;'",
+      "id": "QL2003",
+      "message": "unsupported OPENQASM version '{}'",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL2010",
+      "message": "expected {}, found {}",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL2011",
+      "message": "unexpected token '{}' at start of statement",
+      "severity": "error"
+    },
+    {
+      "hint": "gate bodies may contain only gate calls and barriers",
+      "id": "QL2012",
+      "message": "invalid statement inside gate body: {}",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL2013",
+      "message": "invalid pulse statement '{}' inside cal/defcal block",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL2014",
+      "message": "malformed {} pragma: {}",
+      "severity": "error"
+    },
+    {
+      "hint": "split the expression or block into smaller parts",
+      "id": "QL2015",
+      "message": "nesting deeper than {} levels",
+      "severity": "error"
+    },
+    {
+      "hint": "see spec 13 §7 for the list of qlab pragmas",
+      "id": "QL2050",
+      "message": "unknown pragma 'qlab.{}'",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL2051",
+      "message": "non-qlab pragma '{}' ignored",
+      "severity": "warning"
+    },
+    {
+      "hint": "move all qubit declarations before the first gate, measure or reset",
+      "id": "QL3001",
+      "message": "qubit '{}' declared after the first quantum statement",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3002",
+      "message": "program contains no quantum statements",
+      "severity": "warning"
+    },
+    {
+      "hint": "",
+      "id": "QL3010",
+      "message": "undeclared identifier '{}'",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3011",
+      "message": "redeclaration of '{}'",
+      "severity": "error"
+    },
+    {
+      "hint": "rename the local variable",
+      "id": "QL3012",
+      "message": "'{}' shadows a global declaration inside a block",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3020",
+      "message": "type mismatch: {}",
+      "severity": "error"
+    },
+    {
+      "hint": "use 'pragma qlab.layout physical' and only $k operands, or only declared qubits",
+      "id": "QL3021",
+      "message": "physical qubit '{}' mixed with virtual qubits",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3022",
+      "message": "index {} out of range for '{}' of size {}",
+      "severity": "error"
+    },
+    {
+      "hint": "assign it to a bit: 'c = measure q;'",
+      "id": "QL3030",
+      "message": "measurement result of '{}' is discarded",
+      "severity": "warning"
+    },
+    {
+      "hint": "",
+      "id": "QL3040",
+      "message": "compile-time constant required for {}",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3050",
+      "message": "'complex' type is not available to user code",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3060",
+      "message": "recursive {} '{}'",
+      "severity": "error"
+    },
+    {
+      "hint": "choose another name",
+      "id": "QL3061",
+      "message": "gate name '{}' shadows a stdgates gate",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3070",
+      "message": "pow with non-integer exponent on non-rotation gate '{}'",
+      "severity": "error"
+    },
+    {
+      "hint": "compare it: 'if (c == 3)'",
+      "id": "QL3080",
+      "message": "bit register '{}' used directly as a condition",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3090",
+      "message": "unbounded 'while' loop: condition depends on no measurement and is not foldable",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3095",
+      "message": "'switch' is not supported yet",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3096",
+      "message": "'stretch' is not supported yet",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3100",
+      "message": "external classical functions are not available; use 'def'",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3110",
+      "message": "defcal for '{}' defined after first use; earlier calls use the device calibration",
+      "severity": "warning"
+    },
+    {
+      "hint": "",
+      "id": "QL3120",
+      "message": "pulse amplitude {} exceeds full scale (|amp| must be <= 1)",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3121",
+      "message": "duration {} rounded to the device sample period",
+      "severity": "warning"
+    },
+    {
+      "hint": "",
+      "id": "QL3130",
+      "message": "frame '{}' is not attached to a declared physical qubit",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3140",
+      "message": "qubit '{}' appears twice in one operand list",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3150",
+      "message": "gate '{}' expects {} qubit operand(s), got {}",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3151",
+      "message": "gate '{}' expects {} parameter(s), got {}",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3160",
+      "message": "classical arithmetic on 'duration' with mismatched units: {}",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3170",
+      "message": "'{}' is not a gate",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3171",
+      "message": "'{}' is not a qubit operand",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3172",
+      "message": "cannot assign to '{}': {}",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3173",
+      "message": "'return' outside a subroutine",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3174",
+      "message": "'{}' outside a loop",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3175",
+      "message": "register operands of different sizes in one gate call",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3176",
+      "message": "'{}' has no member or index",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL3177",
+      "message": "gate body may not contain '{}'",
+      "severity": "error"
+    },
+    {
+      "hint": "add 'pragma qlab.sweep' or provide a value at run time",
+      "id": "QL3178",
+      "message": "input '{}' has no sweep or default",
+      "severity": "warning"
+    },
+    {
+      "hint": "",
+      "id": "QL4010",
+      "message": "'dt' duration used but no device is selected",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL4011",
+      "message": "input '{}' is unbound at compile time",
+      "severity": "error"
+    },
+    {
+      "hint": "raise qlab.unroll_bound or reduce the loop",
+      "id": "QL4020",
+      "message": "loop expands to {} statements; bound is {}",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL4030",
+      "message": "circuit violates the coupling map and routing is disabled",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL4040",
+      "message": "pulse-level execution requested above the Lindblad qubit cap ({})",
+      "severity": "error"
+    },
+    {
+      "hint": "use ancilla qubits and ccx ladders",
+      "id": "QL4050",
+      "message": "'{}' has {} controls; the ancilla-free decomposition is limited to 8",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL4060",
+      "message": "VF2 layout search exceeded its budget; falling back to the dense layout",
+      "severity": "info"
+    },
+    {
+      "hint": "",
+      "id": "QL4070",
+      "message": "gate '{}' cannot be decomposed to the native set of device '{}'",
+      "severity": "error"
+    },
+    {
+      "hint": "recalibrate the device or select another qubit/edge",
+      "id": "QL4080",
+      "message": "no calibration for '{}' on {}",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL4090",
+      "message": "schedule lasts {} but the device allows at most {}",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL5001",
+      "message": "input '{}' has no value at run time",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL5010",
+      "message": "the Lindblad backend supports at most {} qubits at {} levels",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL5011",
+      "message": "circuit needs {} qubits; the largest available backend supports {}",
+      "severity": "error"
+    },
+    {
+      "hint": "reduce shots, qubits or the backend's precision",
+      "id": "QL5012",
+      "message": "memory budget exceeded: {}",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL5020",
+      "message": "runtime loop reached its iteration bound ({}) on this shot",
+      "severity": "warning"
+    },
+    {
+      "hint": "",
+      "id": "QL5030",
+      "message": "sweep grid has {} points; at most {} are allowed",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL5040",
+      "message": "shot count {} is outside [1, 1e7]",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL5050",
+      "message": "custom noise file '{}' is invalid: {}",
+      "severity": "error"
+    },
+    {
+      "hint": "",
+      "id": "QL5060",
+      "message": "run cancelled; the partial result is kept",
+      "severity": "warning"
+    }
+  ],
+  "qxl": {
+    "app": "0.1.0",
+    "created": "2026-09-17T18:22:31Z",
+    "kind": "lang.diagnostics",
+    "schema": 1
+  }
+}

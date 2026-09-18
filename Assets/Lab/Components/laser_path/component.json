@@ -1,0 +1,62 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "laser_path",
+    "name": "Laser beam path",
+    "category": "ion_device",
+    "parent": "vacuum_chamber",
+    "function": "Beam delivering one wavelength to the chain: 369 nm for Doppler cooling and fluorescence detection of Yb+, 355 nm pulsed Raman beams for gates, 935 nm repump. Individual-addressing beams are focused to a few micrometres per ion; the global beam covers the chain.",
+    "physics": {
+      "summary": "Optical control and detection of the ions.",
+      "equations": [
+        "lamb_dicke",
+        "ms_hamiltonian"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "wavelength",
+        "unit": "nm",
+        "typical": [
+          355,
+          935
+        ]
+      },
+      {
+        "field": "beam on",
+        "unit": "",
+        "binding": "instr.laser[$i].on",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T06#3-laser-ion-interaction-in-the-lamb-dicke-regime"
+    ],
+    "tooltip": "Laser beam path to the trap.",
+    "geometry": {
+      "generator": "Cylinder",
+      "r_m": 0.001,
+      "h_m": 0.3,
+      "colour_from": "wavelength"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

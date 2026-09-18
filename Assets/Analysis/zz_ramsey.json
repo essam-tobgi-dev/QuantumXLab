@@ -1,0 +1,57 @@
+{
+  "qxl": {
+    "kind": "analysis.recipe",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "zz_ramsey",
+    "title": "ZZ coupling (conditional Ramsey)",
+    "theory": "T04#9.1-zz-crosstalk",
+    "program": "Assets/Programs/Calibration/zz_ramsey.qasm",
+    "sweep": {
+      "input": "t_delay",
+      "unit": "us",
+      "values": {
+        "linear": [
+          0.02,
+          20,
+          101
+        ]
+      },
+      "input2": "spectator",
+      "unit2": "",
+      "values2": [
+        0,
+        1
+      ]
+    },
+    "shots": 1000,
+    "extract": {
+      "channel": "zz.p1",
+      "y": "counts['1'] / shots",
+      "sigma": "binomial"
+    },
+    "fit": {
+      "model": "ramsey",
+      "report": [
+        "delta"
+      ]
+    },
+    "results": [
+      {
+        "label": "ζ/2π",
+        "measured": "fit.delta[1] - fit.delta[0]",
+        "model": "device.calibration.edge[e].zz",
+        "tolerance": 0.2
+      }
+    ],
+    "inputs": {
+      "detuning_MHz": {
+        "unit": "MHz",
+        "default": 0.2
+      }
+    }
+  }
+}

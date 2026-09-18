@@ -1,0 +1,70 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "sample_puck",
+    "name": "Sample puck",
+    "category": "sample",
+    "parent": "cold_finger",
+    "function": "Removable copper cylinder with SMA bulkheads that holds the chip package and mates to the cold finger. Pucks let a chip be exchanged without rewiring the fridge: the microwave lines terminate in a bulkhead plate and the puck plugs into it. Its temperature is the best available proxy for the chip temperature.",
+    "physics": {
+      "summary": "Exchangeable sample carrier; thermal and RF interface to the fridge.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "diameter",
+        "unit": "m",
+        "typical": [
+          0.04,
+          0.06
+        ]
+      },
+      {
+        "field": "ports",
+        "unit": "",
+        "typical": [
+          8,
+          24
+        ]
+      },
+      {
+        "field": "temperature",
+        "unit": "K",
+        "binding": "device.T_sample",
+        "class": "Numerical"
+      }
+    ],
+    "theory": [
+      "T08#9-from-stage-temperature-to-the-qubit"
+    ],
+    "tooltip": "Sample puck: exchangeable chip carrier.",
+    "geometry": {
+      "generator": "Cylinder",
+      "r_m": 0.025,
+      "h_m": 0.05,
+      "caps": true,
+      "attachments": [
+        "sma_bulkheads"
+      ]
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

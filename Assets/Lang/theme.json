@@ -1,0 +1,132 @@
+{
+  "qxl": {
+    "kind": "ui.theme",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "palettes": {
+      "dark": {
+        "bg.base": "#0F1115",
+        "bg.panel": "#161A20",
+        "bg.raised": "#1E232B",
+        "bg.viewport": "#0A0C10",
+        "border": "#2A3039",
+        "text.primary": "#E6E9EF",
+        "text.secondary": "#9AA3B2",
+        "text.disabled": "#5F6875",
+        "accent": "#4FA3FF",
+        "accent.soft": "#4FA3FF33",
+        "ok": "#3DD68C",
+        "warn": "#F5B841",
+        "err": "#FF5D5D",
+        "sim_only": "#C084FC",
+        "class.exact": "#3DD68C",
+        "class.numerical": "#4FA3FF",
+        "class.statistical": "#F5B841",
+        "class.model": "#FF9F43",
+        "class.illustrative": "#9AA3B2"
+      },
+      "light": {
+        "bg.base": "#F4F5F7",
+        "bg.panel": "#FFFFFF",
+        "bg.raised": "#EEF0F3",
+        "bg.viewport": "#DDE1E6",
+        "border": "#C9CED6",
+        "text.primary": "#1A1D22",
+        "text.secondary": "#5B6472",
+        "text.disabled": "#9AA3B2",
+        "accent": "#1F6FEB",
+        "accent.soft": "#1F6FEB22",
+        "ok": "#1B8F5A",
+        "warn": "#B7791F",
+        "err": "#C62828",
+        "sim_only": "#7C3AED",
+        "class.exact": "#1B8F5A",
+        "class.numerical": "#1F6FEB",
+        "class.statistical": "#B7791F",
+        "class.model": "#C2410C",
+        "class.illustrative": "#5B6472"
+      }
+    },
+    "default": "dark",
+    "qubit_colors": [
+      "#E69F00",
+      "#56B4E9",
+      "#009E73",
+      "#F0E442",
+      "#0072B2",
+      "#D55E00",
+      "#CC79A7",
+      "#999999"
+    ],
+    "qubit_color_rule": "index i uses qubit_colors[i % 8]; each wrap applies a lightness step of -12 %",
+    "phase_colormap": "twilight",
+    "phase_lut_entries": 256,
+    "phase_hue_rule": "H = (phi + pi) / (2 pi); phi = 0 maps to the accent, phi = pi to its complement",
+    "colormaps": {
+      "temperature": "inferno",
+      "population": "viridis",
+      "signed": "coolwarm"
+    },
+    "radius_px": {
+      "sm": 3,
+      "md": 5,
+      "lg": 8
+    },
+    "space_px": [
+      4,
+      8,
+      12,
+      16,
+      24,
+      32
+    ],
+    "typography": {
+      "ui": {
+        "font": "Inter",
+        "files": [
+          "Inter-Regular.ttf",
+          "Inter-SemiBold.ttf"
+        ],
+        "body_px": 13,
+        "secondary_px": 12,
+        "panel_title_px": 15,
+        "workspace_title_px": 20
+      },
+      "code": {
+        "font": "JetBrains Mono",
+        "files": [
+          "JetBrainsMono-Regular.ttf"
+        ],
+        "editor_px": 13,
+        "log_px": 12,
+        "readout_px": 16
+      },
+      "math": {
+        "font": "Inter",
+        "note": "STIX Two Math not vendored (download unavailable at build time); fallback renderer uses Inter — logged in SPEC_DEVIATIONS.md"
+      },
+      "icons": {
+        "set": "Lucide",
+        "sizes_px": [
+          16,
+          20
+        ]
+      },
+      "oversample": [
+        3,
+        1
+      ],
+      "hinting": false
+    },
+    "fidelity_badges": {
+      "Exact": "class.exact",
+      "Numerical": "class.numerical",
+      "Statistical": "class.statistical",
+      "Model": "class.model",
+      "Illustrative": "class.illustrative"
+    }
+  }
+}

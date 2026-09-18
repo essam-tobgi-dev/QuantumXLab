@@ -1,0 +1,93 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "dc_source",
+    "name": "Precision DC current source",
+    "category": "instrument",
+    "parent": "rack_A",
+    "function": "Low-noise multi-channel current source biasing the flux lines of tunable qubits and couplers. Through the mutual inductance M it sets the flux and thus the qubit frequency; its noise floor and drift appear directly as flux noise, so it is filtered at every stage and often battery-backed. A sweep of one channel produces the flux-spectroscopy arc.",
+    "physics": {
+      "summary": "Sets the static flux operating point of tunable elements.",
+      "equations": [
+        "flux_from_current",
+        "flux_tunability"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "channels",
+        "unit": "",
+        "typical": [
+          8,
+          64
+        ]
+      },
+      {
+        "field": "range",
+        "unit": "mA",
+        "typical": [
+          -10,
+          10
+        ]
+      },
+      {
+        "field": "resolution",
+        "unit": "nA",
+        "typical": [
+          1,
+          10
+        ]
+      },
+      {
+        "field": "current",
+        "unit": "mA",
+        "binding": "instr.dc.ch[$k].I",
+        "class": "Model"
+      },
+      {
+        "field": "voltage",
+        "unit": "V",
+        "binding": "instr.dc.ch[$k].V",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T05#4-flux-tunable-transmons"
+    ],
+    "tooltip": "DC source: flux bias for tunable qubits and couplers.",
+    "geometry": {
+      "generator": "RackUnit",
+      "u": 3,
+      "front": "dc_source"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ],
+    "model_name": "Precision DC current source",
+    "instrument": {
+      "class": "dc_source",
+      "settings_schema": "instr/dc_source.schema.json",
+      "channels": [
+        "ch[k].I",
+        "ch[k].V",
+        "sweep"
+      ]
+    }
+  }
+}

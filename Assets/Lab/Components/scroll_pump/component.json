@@ -1,0 +1,59 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "scroll_pump",
+    "name": "Scroll pump",
+    "category": "ghs",
+    "parent": "ghs_cabinet",
+    "function": "Dry backing pump for the turbo and for the still during circulation. An oil-free pump is essential because oil vapour would contaminate the mixture and block the condensing impedance within days. Its exhaust returns the 3He to the compressor or the dump tanks depending on the valve configuration.",
+    "physics": {
+      "summary": "Backing and still pumping; oil-free.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "pumping speed",
+        "unit": "m³/h",
+        "typical": [
+          10,
+          35
+        ]
+      },
+      {
+        "field": "running",
+        "unit": "",
+        "binding": "cryo.pump.scroll.on",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#5-radiation-and-other-loads"
+    ],
+    "tooltip": "Dry scroll pump backing the turbo and still.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.3,
+      "h_m": 0.3,
+      "d_m": 0.5
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

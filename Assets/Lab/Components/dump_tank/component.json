@@ -1,0 +1,59 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "dump_tank",
+    "name": "Mixture dump tank",
+    "category": "ghs",
+    "parent": "ghs_cabinet",
+    "function": "Storage vessel holding the helium mixture at a few bar when the fridge is warm. The mixture is the most expensive consumable of the system (3He), so recovery into the dumps is done before any warm-up and the dump pressure is logged as an inventory check.",
+    "physics": {
+      "summary": "Stores the mixture when not circulating.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "volume",
+        "unit": "L",
+        "typical": [
+          20,
+          60
+        ]
+      },
+      {
+        "field": "pressure",
+        "unit": "bar",
+        "binding": "cryo.dump[$i].p",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#1.3-the-circulation-loop"
+    ],
+    "tooltip": "Mixture storage tank.",
+    "geometry": {
+      "generator": "Cylinder",
+      "r_m": 0.15,
+      "h_m": 0.6,
+      "caps": true
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

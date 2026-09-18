@@ -1,0 +1,61 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "airbridge",
+    "name": "Airbridge",
+    "category": "chip",
+    "parent": "substrate",
+    "function": "Free-standing aluminium arch connecting the two ground planes across a coplanar gap. Every 200 μm along every line and at every crossing, bridges keep both grounds at the same potential and kill the parasitic slot-line mode that would otherwise couple distant qubits.",
+    "physics": {
+      "summary": "Ground stitching across CPW gaps; suppresses slot-line modes.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "pitch",
+        "unit": "µm",
+        "typical": [
+          100,
+          300
+        ]
+      },
+      {
+        "field": "height",
+        "unit": "µm",
+        "typical": [
+          2,
+          4
+        ]
+      }
+    ],
+    "theory": [
+      "T05#6.3-dispersive-readout"
+    ],
+    "tooltip": "Airbridge stitching the ground planes.",
+    "geometry": {
+      "generator": "Airbridge",
+      "span_um": 30,
+      "w_um": 10,
+      "h_um": 3
+    },
+    "lod": [
+      {
+        "max_m": 0.02,
+        "detail": "full"
+      },
+      {
+        "max_m": 0.2,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

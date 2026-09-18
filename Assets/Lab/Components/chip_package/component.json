@@ -1,0 +1,68 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "chip_package",
+    "name": "Chip package",
+    "category": "sample",
+    "parent": "sample_puck",
+    "function": "Copper enclosure with a printed-circuit board and a lid that forms a cavity around the chip. The cavity's lowest mode must lie well above the qubit and readout band, otherwise it mediates crosstalk and Purcell loss; the lid height and any interior posts set that frequency. The package also provides the ground reference for all on-chip coplanar waveguides.",
+    "physics": {
+      "summary": "Encloses the chip; its cavity mode must sit above the operating band.",
+      "equations": [
+        "purcell_decay"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "cavity mode",
+        "unit": "GHz",
+        "binding": "device.package.f_cavity",
+        "class": "Model"
+      },
+      {
+        "field": "temperature",
+        "unit": "K",
+        "binding": "device.T_sample",
+        "class": "Numerical"
+      },
+      {
+        "field": "interior size",
+        "unit": "mm",
+        "typical": [
+          10,
+          20
+        ]
+      }
+    ],
+    "theory": [
+      "T05#6.4-purcell-decay-and-the-purcell-filter"
+    ],
+    "tooltip": "Chip package with cavity and PCB.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.03,
+      "h_m": 0.01,
+      "d_m": 0.03,
+      "chamfer": 0.001
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

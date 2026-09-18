@@ -1,0 +1,62 @@
+{
+  "qxl": {
+    "kind": "analysis.recipe",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "state_tomography",
+    "title": "State tomography",
+    "theory": "T10#3-state-tomography",
+    "program": "Assets/Programs/Calibration/state_tomography.qasm",
+    "sweep": {
+      "input": "basis",
+      "unit": "",
+      "values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "labels": [
+        "XX",
+        "XY",
+        "XZ",
+        "YX",
+        "YY",
+        "YZ",
+        "ZX",
+        "ZY",
+        "ZZ"
+      ]
+    },
+    "shots": 2000,
+    "extract": {
+      "channel": "tomo.counts",
+      "y": "counts",
+      "sigma": "multinomial"
+    },
+    "fit": {
+      "model": "mle_state",
+      "report": [
+        "fidelity",
+        "purity"
+      ]
+    },
+    "results": [
+      {
+        "label": "Bell fidelity",
+        "measured": "fit.fidelity",
+        "model": "1",
+        "tolerance": 0.1
+      }
+    ],
+    "description": "The nine two-qubit Pauli settings of T10 §3.1 as basis = 3·b($0) + b($1), b = 0:X 1:Y 2:Z; `labels` gives the Pauli string of each index, leftmost letter on $0."
+  }
+}

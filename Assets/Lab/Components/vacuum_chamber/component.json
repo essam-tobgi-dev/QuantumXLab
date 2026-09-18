@@ -1,0 +1,60 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "vacuum_chamber",
+    "name": "Ultra-high-vacuum chamber",
+    "category": "ion_device",
+    "parent": "room",
+    "function": "Stainless octagon with viewports holding the trap at 1e-11 mbar. Collisions with background gas eject or heat ions, so pressure sets the chain lifetime; the chamber is baked and ion-pumped and often cooled to 4 K in newer systems to lower pressure further.",
+    "physics": {
+      "summary": "UHV environment; pressure sets chain lifetime.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "pressure",
+        "unit": "mbar",
+        "typical": [
+          1e-12,
+          1e-10
+        ]
+      },
+      {
+        "field": "viewports",
+        "unit": "",
+        "typical": [
+          6,
+          10
+        ]
+      }
+    ],
+    "theory": [
+      "T06#1-the-linear-paul-trap"
+    ],
+    "tooltip": "UHV chamber holding the ion trap.",
+    "geometry": {
+      "generator": "Octagon",
+      "r_m": 0.12,
+      "h_m": 0.1
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

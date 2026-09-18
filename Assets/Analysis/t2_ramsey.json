@@ -1,0 +1,59 @@
+{
+  "qxl": {
+    "kind": "analysis.recipe",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "t2_ramsey",
+    "title": "Ramsey T2*",
+    "theory": "T04#8.1-ramsey-t-2",
+    "program": "Assets/Programs/Calibration/t2_ramsey.qasm",
+    "sweep": {
+      "input": "t_delay",
+      "unit": "us",
+      "values": {
+        "linear": [
+          0.02,
+          60,
+          61
+        ]
+      }
+    },
+    "shots": 1000,
+    "extract": {
+      "channel": "ramsey.p1",
+      "y": "counts['1'] / shots",
+      "sigma": "binomial"
+    },
+    "fit": {
+      "model": "ramsey",
+      "report": [
+        "T2",
+        "delta",
+        "phi"
+      ]
+    },
+    "results": [
+      {
+        "label": "T2*",
+        "measured": "fit.T2",
+        "model": "device.calibration.qubit[q].T2_star",
+        "tolerance": 0.2
+      },
+      {
+        "label": "detuning",
+        "measured": "fit.delta",
+        "model": "input.detuning_MHz",
+        "tolerance": 0.05
+      }
+    ],
+    "inputs": {
+      "detuning_MHz": {
+        "unit": "MHz",
+        "default": 0.5
+      }
+    }
+  }
+}

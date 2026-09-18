@@ -1,0 +1,46 @@
+{
+  "qxl": {
+    "kind": "analysis.recipe",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "qubit_spectroscopy",
+    "title": "Qubit spectroscopy",
+    "theory": "T05#3.2-transmon-limit",
+    "program": "Assets/Programs/Calibration/qubit_spectroscopy.qasm",
+    "sweep": {
+      "input": "f_d",
+      "unit": "GHz",
+      "values": {
+        "linear": [
+          4.6,
+          5.4,
+          401
+        ]
+      }
+    },
+    "shots": 200,
+    "extract": {
+      "channel": "spec.p1",
+      "y": "counts['1'] / shots",
+      "sigma": "binomial"
+    },
+    "fit": {
+      "model": "lorentzian",
+      "report": [
+        "f0",
+        "fwhm"
+      ]
+    },
+    "results": [
+      {
+        "label": "f01",
+        "measured": "fit.f0",
+        "model": "device.calibration.qubit[q].f01",
+        "tolerance": 0.001
+      }
+    ]
+  }
+}

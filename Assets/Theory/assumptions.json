@@ -1,0 +1,41 @@
+{
+  "qxl": {
+    "kind": "theory.assumptions",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "assumptions": {
+      "transmon_regime": "E_J/E_C ≫ 1 (typically 30–100): charge dispersion exponentially suppressed, weak anharmonicity.",
+      "dispersive_regime": "|g/Δ| ≪ 1 and photon number well below n_crit = Δ²/4g².",
+      "rwa": "Rotating-wave approximation: counter-rotating terms dropped (drive/coupling ≪ transition frequency).",
+      "two_level": "Only the two lowest levels of each element are kept.",
+      "three_level": "Transmon truncated to |0⟩,|1⟩,|2⟩; higher levels neglected.",
+      "markov": "Bath correlation time much shorter than system time scales (Born–Markov, secular approximation).",
+      "independent_errors": "Gate errors on different gates and qubits are statistically independent.",
+      "average_gate_fidelities": "Each gate error is the average (Clifford-twirled) error rate from randomized benchmarking.",
+      "no_crosstalk": "Classical drive crosstalk and ZZ during idles neglected unless listed in the calibration.",
+      "calibration_static": "Calibration values are constant over the run (no drift).",
+      "queue_time_excluded": "Wall time excludes any scheduler or queue wait on a shared machine.",
+      "reset_policy_active": "Qubits are reset by measurement plus conditional X (active reset).",
+      "reset_policy_passive": "Qubits relax for 5·T1 between shots (passive reset).",
+      "lumped_thermal": "Each stage is one isothermal node with a single heat capacity.",
+      "steady_state": "Time derivatives set to zero: loads balance cooling power.",
+      "grey_body": "Radiative exchange between concentric shields with effective emissivity ε_eff = ε/(2−ε).",
+      "cable_loss_cold_end": "Distributed coax loss is lumped at the cold end of each segment.",
+      "phase_preserving_amp": "Amplifier is phase-preserving: at least half a photon of added noise (Caves bound).",
+      "matched_filter": "Readout integration weights equal the difference of the mean |0⟩/|1⟩ trajectories.",
+      "gaussian_iq": "IQ clouds are Gaussian with equal covariance for the two states.",
+      "lamb_dicke": "η²(2n̄+1) ≪ 1: laser–ion coupling expanded to first order in the motion.",
+      "single_mode_ms": "Mølmer–Sørensen gate drives one motional mode; spectator modes neglected.",
+      "code_capacity": "Errors only on data qubits between perfect syndrome measurements.",
+      "circuit_level_noise": "Every gate, idle, reset and measurement carries depolarizing/flip noise with probability p.",
+      "surface_code_scaling": "p_L ≈ A (p/p_th)^((d+1)/2) with A = 0.1, p_th = 1 % (circuit-level).",
+      "little_endian": "Qubit q[0] is the least significant bit of the basis-state index.",
+      "pure_state": "The state is pure; for mixed states use the density-operator form.",
+      "clifford_twirl": "The error channel is twirled to a depolarizing channel by random Cliffords.",
+      "ideal_pulse_shape": "Sample-rate quantization and mixer imperfections neglected."
+    }
+  }
+}

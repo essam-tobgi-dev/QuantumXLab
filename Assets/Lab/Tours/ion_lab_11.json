@@ -1,0 +1,205 @@
+{
+  "qxl": {
+    "kind": "lab.tour",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T12:00:00Z"
+  },
+  "data": {
+    "id": "ion_lab_11",
+    "title": "Guided tour: trapped-ion laboratory",
+    "layout": "ion_lab_11",
+    "steps": [
+      {
+        "id": "room",
+        "title": "The ion-trap laboratory",
+        "narration": "This laboratory holds a trapped-ion quantum computer: eleven ¹⁷¹Yb⁺ ions in a row, each a qubit, floating in ultra-high vacuum above a microfabricated trap. There is no refrigerator: the ions are cooled by laser light to a fraction of a millikelvin, and the qubit is stored in two hyperfine ground states 12.64 GHz apart that are first-order insensitive to magnetic field. Around the chamber stand the laser beam paths, an imaging objective with a photon-counting detector, and two racks that generate the RF trap drive, the gate waveforms and the timing. The tour follows the path from the trap to the detector.",
+        "theory": "T06#9-typical-parameters-2023-2025-systems",
+        "focus_instance": "laboratory",
+        "bookmark": "Overview",
+        "dwell_s": 10,
+        "view": {
+          "layers": {
+            "room": true,
+            "fridge_interior": true,
+            "chip_micro": true,
+            "rack": true
+          }
+        }
+      },
+      {
+        "id": "racks",
+        "title": "The instrument racks",
+        "narration": "The racks here do three jobs. A microwave generator drives the helical resonator that steps the trap RF up to hundreds of volts; the control chassis plays the amplitude and frequency envelopes that shape every laser pulse through acousto-optic modulators at 1 GS/s; and the 10 MHz reference locks the Raman beat note, the RF drive and the digitizer to one clock. Timing granularity of 16 samples and the microsecond latency of the sequencer are compile-time constraints on every gate schedule.",
+        "theory": "T07#7-sampling-quantization-timing",
+        "focus_instance": "rack_A.control_chassis",
+        "bookmark": "Rack",
+        "dwell_s": 9,
+        "highlight": [
+          "rack_A.mw_generator[0]",
+          "rack_B.ref_10mhz"
+        ]
+      },
+      {
+        "id": "chamber_outside",
+        "title": "The vacuum chamber from outside",
+        "narration": "On the optical table stands a stainless-steel octagon with viewports: the ultra-high-vacuum chamber that holds the trap. Everything that touches the ions passes through its windows as light, or through its feedthroughs as RF and DC voltages. Around it are the beam paths for cooling, repumping and gates, the quantization-field coils and the imaging objective looking down onto the chain.",
+        "theory": "T06#1-the-linear-paul-trap",
+        "focus_instance": "ion_chamber",
+        "dwell_s": 9,
+        "margin_factor": 1.4,
+        "azimuth_deg": 40,
+        "elevation_deg": 15
+      },
+      {
+        "id": "vacuum",
+        "title": "Ultra-high vacuum",
+        "narration": "The chamber is baked and ion-pumped to about 1e-11 mbar. At that pressure a background-gas molecule collides with a given ion roughly once per hour; a collision can heat the chain out of the Lamb–Dicke regime or eject an ion, and a lost ion ends every experiment until the chain is reloaded. Pressure therefore sets the lifetime of the chain, which is why newer systems cool the chamber to 4 K to freeze out residual gas and reach 1e-12 mbar or better.",
+        "theory": "T06#8-decoherence-and-drift",
+        "focus_instance": "vacuum_chamber",
+        "dwell_s": 9,
+        "margin_factor": 1.3,
+        "azimuth_deg": -30,
+        "elevation_deg": 20
+      },
+      {
+        "id": "trap",
+        "title": "The surface-electrode Paul trap",
+        "narration": "The trap is a microfabricated chip whose RF rails, driven at tens of MHz with a few hundred volts, create a ponderomotive pseudopotential Φ = q²|E_RF|²/(4 m Ω_RF²) that confines the ions radially about 50–100 µm above the surface; segmented DC electrodes shape the axial well. The Mathieu stability parameter q ≈ 2 q_e V_RF/(m Ω_RF² r₀²) must stay below about 0.3 for stable trapping, and the secular frequencies that result, radial 2–5 MHz and axial 0.2–1 MHz, are the harmonic-oscillator scales of every gate.",
+        "theory": "T06#1.1-rf-confinement-and-the-pseudopotential",
+        "focus_instance": "trap_chip",
+        "bookmark": "Trap",
+        "dwell_s": 12
+      },
+      {
+        "id": "modes",
+        "title": "The chain and its normal modes",
+        "narration": "Eleven ions repel each other by Coulomb force inside the axial well, settling into a line with a spacing of about 5 µm near the centre, set by the balance of confinement and repulsion. Small motion about the equilibrium decomposes into 33 normal modes: the centre-of-mass mode at the trap frequency, the stretch mode at √3 times it, and radial modes that are the bus for entangling gates. Each mode is a quantum harmonic oscillator whose phonon number, ideally near zero after sideband cooling, is shared by all ions.",
+        "theory": "T06#1.3-normal-modes",
+        "focus_instance": "trap_chip",
+        "dwell_s": 11,
+        "margin_factor": 1.3,
+        "azimuth_deg": 20,
+        "elevation_deg": 55
+      },
+      {
+        "id": "helical",
+        "title": "The helical RF resonator",
+        "narration": "The RF drive is stepped up from a few volts to a few hundred by a helical resonator with a quality factor of a few hundred, which also filters amplitude noise on the drive. Because the radial secular frequency is proportional to V_RF/Ω_RF, a 1e-4 fluctuation in amplitude shifts the mode by a fraction of a kilohertz, enough to detune a Mølmer–Sørensen gate that relies on the mode frequency being known to well below the gate's inverse duration. Active stabilisation of the RF amplitude is therefore standard.",
+        "theory": "T06#1.1-rf-confinement-and-the-pseudopotential",
+        "focus_instance": "helical_resonator",
+        "dwell_s": 8,
+        "margin_factor": 1.4,
+        "azimuth_deg": 60,
+        "elevation_deg": 20
+      },
+      {
+        "id": "coils",
+        "title": "The quantization-field coils",
+        "narration": "A coil pair produces a field of a few gauss that defines the quantization axis and splits the Zeeman sublevels so that optical pumping and detection address the right states. The qubit is the |F=0, m=0⟩ ↔ |F=1, m=0⟩ clock transition of the ²S₁/₂ ground state, 12.642 812 GHz apart, whose field dependence is only second order, 310 Hz/G²: this is why hyperfine clock qubits reach coherence times of seconds. Field noise still limits the Zeeman-sensitive transitions used during preparation.",
+        "theory": "T06#2-qubit-encodings",
+        "focus_instance": "magnetic_coils",
+        "dwell_s": 9,
+        "margin_factor": 1.3,
+        "azimuth_deg": -50,
+        "elevation_deg": 25
+      },
+      {
+        "id": "cooling",
+        "title": "The 369 nm cooling and detection beam",
+        "narration": "Light at 369.5 nm drives the ²S₁/₂ → ²P₁/₂ cycling transition of Yb⁺, with a natural linewidth Γ/2π ≈ 19.6 MHz. Red-detuned by about Γ/2 it Doppler-cools the chain to the Doppler limit T_D = ħΓ/2k_B ≈ 0.5 mK, a few tens of phonons per mode; resolved-sideband cooling on the Raman transition then reaches the motional ground state. The same beam, tuned to resonance, is the detection light: an ion in |F=1⟩ scatters photons, an ion in |F=0⟩ stays dark.",
+        "theory": "T06#4-cooling",
+        "focus_instance": "laser_path[0]",
+        "dwell_s": 10,
+        "margin_factor": 1.3,
+        "azimuth_deg": 30,
+        "elevation_deg": 20
+      },
+      {
+        "id": "repump",
+        "title": "The 935 nm repump",
+        "narration": "About one in two hundred decays from ²P₁/₂ falls into the metastable ²D₃/₂ level instead of the ground state, where the ion would go dark for 50 ms and stop cooling and scattering. The 935 nm beam pumps ²D₃/₂ to ³D[3/2]₁/₂, from which the ion returns to the ground state in nanoseconds. Without it, fluorescence detection would fail after a few hundred scattered photons.",
+        "theory": "T06#7.1-fluorescence",
+        "focus_instance": "laser_path[2]",
+        "dwell_s": 8,
+        "margin_factor": 1.3,
+        "azimuth_deg": -40,
+        "elevation_deg": 20
+      },
+      {
+        "id": "raman",
+        "title": "The 355 nm Raman gate beams",
+        "narration": "Gates are driven by a pulsed 355 nm laser whose frequency comb bridges the 12.64 GHz hyperfine splitting in a two-photon Raman transition, far detuned from the ²P levels to keep spontaneous scattering low. Two beams crossing at the ions give an effective wave vector Δk whose Lamb–Dicke parameter η = Δk √(ħ/2mω) ≈ 0.05–0.1 couples the spin to the motion: the sideband Rabi rate is η Ω, and η² (2n+1) ≪ 1 must hold for the gate to work. Individual-addressing beams are focused to a few micrometres per ion; the global beam covers the chain.",
+        "theory": "T06#3-laser-ion-interaction-in-the-lamb-dicke-regime",
+        "focus_instance": "laser_path[1]",
+        "dwell_s": 11,
+        "margin_factor": 1.3,
+        "azimuth_deg": 50,
+        "elevation_deg": 15
+      },
+      {
+        "id": "ms_gate",
+        "title": "The Mølmer–Sørensen gate",
+        "narration": "Entangling two ions uses a bichromatic drive: tones at ω₀ ± (ω_m + δ), symmetrically detuned from a motional sideband by δ, push the pair around a closed loop in the phase space of a shared mode. After t = 2π/δ the motion returns to where it started and the spins have acquired a geometric phase χ = (η Ω)²/δ · t that depends only on their joint state, realising exp(−i π/4 XX). Gate times are 100–300 µs with fidelities of 99.5–99.9 %; residual spin–motion entanglement and mode-frequency drift are the leading errors, which amplitude-modulated pulses closing every loop suppress.",
+        "theory": "T06#6.1-bichromatic-drive",
+        "focus_instance": "laser_path[1]",
+        "dwell_s": 11,
+        "margin_factor": 1.2,
+        "azimuth_deg": 70,
+        "elevation_deg": 35
+      },
+      {
+        "id": "objective",
+        "title": "The imaging objective",
+        "narration": "A high-numerical-aperture objective, NA ≈ 0.4–0.6, looks down on the chain and collects the 369 nm fluorescence of every ion onto the detector, one image spot per ion. Only a few per cent of the scattered photons reach the detector after solid angle, optics and quantum efficiency, so a bright ion yields of order ten counts in a 100 µs window at a scattering rate near Γ/2. Diffraction sets the spot size at about λ/2NA ≈ 0.4 µm, well below the 5 µm ion spacing, so neighbouring ions are resolved.",
+        "theory": "T06#7.1-fluorescence",
+        "focus_instance": "imaging_objective",
+        "dwell_s": 9,
+        "margin_factor": 1.3,
+        "azimuth_deg": 10,
+        "elevation_deg": 30
+      },
+      {
+        "id": "detector",
+        "title": "The photon-counting detector",
+        "narration": "A PMT array or EMCCD camera counts the photons of each ion during the detection window. The bright state gives a Poisson distribution with mean around ten, the dark state near zero plus background, and a threshold between them assigns the bit. Longer windows separate the distributions until off-resonant pumping starts flipping the state, so 100–300 µs is optimal, with assignment errors of a few 1e-3. Preparation by optical pumping into |F=0⟩ adds a comparable error: together these form the SPAM error the calibration reports.",
+        "theory": "T06#7.2-spam",
+        "focus_instance": "pmt_camera",
+        "dwell_s": 10,
+        "margin_factor": 1.3,
+        "azimuth_deg": -20,
+        "elevation_deg": 30
+      },
+      {
+        "id": "control",
+        "title": "Timing and control",
+        "narration": "Every pulse is timed by the sequencer against the common reference. Single-qubit gates are resonant Raman pulses of 1–10 µs with fidelities above 99.99 %, and Z rotations are free: they are phase updates of the Raman beat note applied in software. The digitizer records the photon counts per ion and returns the bits to the workstation, which compiles OpenQASM 3 programs onto the native gate set of this device, routing nothing because in a single chain every ion can be entangled with every other through the shared modes.",
+        "theory": "T06#5-single-qubit-gates",
+        "focus_instance": "rack_B.trigger_unit",
+        "bookmark": "Rack",
+        "dwell_s": 9,
+        "highlight": [
+          "rack_A.control_chassis",
+          "rack_A.digitizer"
+        ]
+      },
+      {
+        "id": "closing",
+        "title": "What limits the machine",
+        "narration": "Trapped ions offer coherence times of seconds, all-to-all connectivity inside a chain and the best two-qubit fidelities of any platform, but their gates are slow: microseconds for one qubit, hundreds of microseconds for two, so a deep circuit takes milliseconds per shot. Motional heating of a few quanta per second, laser intensity and phase noise, and mode-frequency drift bound the entangling fidelity. A chain beyond a few tens of ions has a mode spectrum too dense to address, which is why larger machines shuttle ions between zones in a QCCD architecture.",
+        "theory": "T06#10-scaling-beyond-one-chain-qccd",
+        "focus_instance": "laboratory",
+        "bookmark": "Overview",
+        "dwell_s": 12,
+        "view": {
+          "layers": {
+            "room": true,
+            "fridge_interior": true,
+            "chip_micro": true,
+            "rack": true
+          }
+        }
+      }
+    ]
+  }
+}

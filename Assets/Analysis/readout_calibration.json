@@ -1,0 +1,48 @@
+{
+  "qxl": {
+    "kind": "analysis.recipe",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "readout_calibration",
+    "title": "Readout calibration (IQ clouds)",
+    "theory": "T07#6-heterodyne-readout-and-demodulation",
+    "program": "Assets/Programs/Calibration/readout_calibration.qasm",
+    "sweep": {
+      "input": "prep",
+      "unit": "",
+      "values": [
+        0,
+        1
+      ]
+    },
+    "shots": 5000,
+    "extract": {
+      "channel": "instr.dig.ch[q].iq",
+      "y": "iq",
+      "sigma": "none"
+    },
+    "fit": {
+      "model": "gmm2",
+      "report": [
+        "mu0",
+        "mu1",
+        "sigma",
+        "F_ro"
+      ]
+    },
+    "results": [
+      {
+        "label": "assignment fidelity",
+        "measured": "fit.F_ro",
+        "model": "device.calibration.qubit[q].readout_fidelity",
+        "tolerance": 0.02
+      }
+    ],
+    "outputs": [
+      "assignment_matrix"
+    ]
+  }
+}

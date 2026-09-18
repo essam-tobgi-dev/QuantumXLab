@@ -1,0 +1,88 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "pt_regenerator",
+    "name": "Pulse-tube regenerator stage",
+    "category": "cryocooler",
+    "parent": "pulse_tube_head",
+    "function": "A pulse-tube cryocooler is a closed-cycle helium refrigerator with no moving parts at the cold end: a compressor pressurises and depressurises helium at 1.4 Hz through a regenerator packed with lead and rare-earth spheres, and the gas expanding in the pulse tube absorbs heat at the cold end. This stainless tube is one of its two stages, mounted through the plates above with its cold flange bolted to the stage plate: the first stage (Ø 40 mm) reaches about 45 K and lifts 40 W, the second (Ø 30 mm) about 4.2 K and 1.5 W (0.9 W at 3.5 K, no-load 2.8 K). Because the rotary valve and compressor sit remotely, the only vibration reaching the insert is the 1.4 Hz pressure cycle in the tube itself, which the copper braids to the plate decouple.",
+    "physics": {
+      "summary": "Two-stage pulse-tube stage: 40 W at 45 K, 1.5 W at 4.2 K.",
+      "equations": [
+        "cooldown_lumped"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "stage diameter",
+        "unit": "mm",
+        "typical": [
+          30,
+          40
+        ]
+      },
+      {
+        "field": "cooling power",
+        "unit": "W",
+        "typical": [
+          1.5,
+          40
+        ]
+      },
+      {
+        "field": "cycle frequency",
+        "unit": "Hz",
+        "typical": [
+          1.2,
+          1.5
+        ]
+      },
+      {
+        "field": "stage temperature",
+        "unit": "K",
+        "binding": "cryo.stage.$stage.T",
+        "class": "Numerical"
+      },
+      {
+        "field": "running",
+        "unit": "",
+        "binding": "cryo.pt.running",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#2-pulse-tube-pre-cooling",
+      "T08#8-thermometry-vibration-and-magnetic-shielding"
+    ],
+    "tooltip": "Pulse-tube stage tube ending on the 50 K or 4 K plate.",
+    "geometry": {
+      "generator": "Cylinder",
+      "r_m": 0.02,
+      "h_m": 0.25,
+      "caps": true,
+      "attachments": [
+        "flange"
+      ],
+      "flange_at": "bottom"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

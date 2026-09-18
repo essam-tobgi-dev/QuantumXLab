@@ -1,0 +1,99 @@
+{
+ "qxl": {
+  "kind": "wiring",
+  "schema": 1,
+  "app": "0.1.0",
+  "created": "2026-09-17T00:00:00Z"
+ },
+ "data": {
+  "device": "ion_chain_11",
+  "layout": "ion_lab_11",
+  "lines": [
+   {
+    "id": "raman_global",
+    "channel": "g",
+    "chain": "optical_raman_global"
+   },
+   {
+    "id": "raman_r0",
+    "channel": "r[0]",
+    "chain": "optical_raman_individual"
+   },
+   {
+    "id": "raman_r1",
+    "channel": "r[1]",
+    "chain": "optical_raman_individual"
+   },
+   {
+    "id": "raman_r2",
+    "channel": "r[2]",
+    "chain": "optical_raman_individual"
+   },
+   {
+    "id": "raman_r3",
+    "channel": "r[3]",
+    "chain": "optical_raman_individual"
+   },
+   {
+    "id": "raman_r4",
+    "channel": "r[4]",
+    "chain": "optical_raman_individual"
+   },
+   {
+    "id": "raman_r5",
+    "channel": "r[5]",
+    "chain": "optical_raman_individual"
+   },
+   {
+    "id": "raman_r6",
+    "channel": "r[6]",
+    "chain": "optical_raman_individual"
+   },
+   {
+    "id": "raman_r7",
+    "channel": "r[7]",
+    "chain": "optical_raman_individual"
+   },
+   {
+    "id": "raman_r8",
+    "channel": "r[8]",
+    "chain": "optical_raman_individual"
+   },
+   {
+    "id": "raman_r9",
+    "channel": "r[9]",
+    "chain": "optical_raman_individual"
+   },
+   {
+    "id": "raman_r10",
+    "channel": "r[10]",
+    "chain": "optical_raman_individual"
+   },
+   {
+    "id": "detect",
+    "channel": "detect",
+    "chain": "optical_detection"
+   },
+   {
+    "id": "pump",
+    "channel": "pump",
+    "chain": "optical_pumping"
+   },
+   {
+    "id": "trap_rf",
+    "channel": "rf",
+    "chain": "trap_rf_drive"
+   },
+   {
+    "id": "trap_dc",
+    "channel": "dc[0..29]",
+    "chain": "trap_dc_electrodes"
+   },
+   {
+    "id": "imaging",
+    "channel": "a[0..10]",
+    "chain": "optical_imaging"
+   }
+  ]
+ }
+}

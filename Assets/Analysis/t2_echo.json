@@ -1,0 +1,46 @@
+{
+  "qxl": {
+    "kind": "analysis.recipe",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "t2_echo",
+    "title": "Hahn-echo T2",
+    "theory": "T04#8.2-hahn-echo-t-2e-and-cpmg",
+    "program": "Assets/Programs/Calibration/t2_echo.qasm",
+    "sweep": {
+      "input": "t_echo",
+      "unit": "us",
+      "values": {
+        "log": [
+          0.1,
+          300,
+          41
+        ]
+      }
+    },
+    "shots": 1000,
+    "extract": {
+      "channel": "echo.p1",
+      "y": "counts['1'] / shots",
+      "sigma": "binomial"
+    },
+    "fit": {
+      "model": "echo",
+      "report": [
+        "T",
+        "n"
+      ]
+    },
+    "results": [
+      {
+        "label": "T2 echo",
+        "measured": "fit.T",
+        "model": "device.calibration.qubit[q].T2",
+        "tolerance": 0.15
+      }
+    ]
+  }
+}

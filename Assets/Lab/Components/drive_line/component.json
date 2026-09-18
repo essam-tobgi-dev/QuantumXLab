@@ -1,0 +1,62 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "drive_line",
+    "name": "XY drive line",
+    "category": "line",
+    "parent": "substrate",
+    "function": "Coplanar line ending in a small capacitor to the transmon pad. Its coupling ratio β = C_d/C_Σ is deliberately weak so that the 50 Ω line does not become a T1 channel, which is why tens of dBm at the generator become a few MHz of Rabi frequency after 60 dB of attenuation.",
+    "physics": {
+      "summary": "Weakly coupled drive port; converts line voltage to Rabi frequency.",
+      "equations": [
+        "rabi_from_power",
+        "drive_hamiltonian"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "coupling capacitance",
+        "unit": "fF",
+        "typical": [
+          0.05,
+          0.3
+        ]
+      },
+      {
+        "field": "Rabi frequency at full amplitude",
+        "unit": "MHz",
+        "binding": "device.qubit[$i].drive_amp",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T07#3-from-generator-power-to-rabi-frequency"
+    ],
+    "tooltip": "Drive line to one qubit.",
+    "geometry": {
+      "generator": "Cpw",
+      "from": "chip_layout.drive[$i]",
+      "w_um": 10,
+      "s_um": 6
+    },
+    "lod": [
+      {
+        "max_m": 0.02,
+        "detail": "full"
+      },
+      {
+        "max_m": 0.2,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

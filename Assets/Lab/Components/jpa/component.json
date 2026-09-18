@@ -1,0 +1,83 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "jpa",
+    "name": "Josephson parametric amplifier",
+    "category": "amplifier",
+    "parent": "stage_mxc",
+    "function": "Near-quantum-limited first amplifier: a SQUID-terminated resonator pumped at twice the signal frequency amplifies over a 20 MHz band with about 20 dB gain while adding close to the minimum half photon of noise. It sits at the mixing chamber behind the isolators; its narrow band means it is tuned to one feedline's resonators. Pump leakage back to the qubits must be blocked by the isolators.",
+    "physics": {
+      "summary": "Quantum-limited pre-amplification setting the measurement efficiency η.",
+      "equations": [
+        "quantum_limit",
+        "friis",
+        "readout_snr"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "gain",
+        "unit": "dB",
+        "typical": [
+          15,
+          25
+        ],
+        "binding": "wiring.line[$line].jpa.gain",
+        "class": "Model"
+      },
+      {
+        "field": "bandwidth",
+        "unit": "MHz",
+        "typical": [
+          10,
+          50
+        ]
+      },
+      {
+        "field": "noise temperature",
+        "unit": "K",
+        "binding": "wiring.line[$line].jpa.T_N",
+        "class": "Model"
+      },
+      {
+        "field": "pump on",
+        "unit": "",
+        "binding": "wiring.line[$line].jpa.pump_on",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T07#8-amplifier-chain-and-noise-temperature"
+    ],
+    "tooltip": "JPA: quantum-limited narrow-band amplifier.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.025,
+      "h_m": 0.015,
+      "d_m": 0.03,
+      "ports": [
+        "signal",
+        "pump"
+      ]
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

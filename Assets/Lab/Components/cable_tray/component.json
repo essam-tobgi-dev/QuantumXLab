@@ -1,0 +1,58 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "cable_tray",
+    "name": "Cable tray",
+    "category": "structure",
+    "parent": "room",
+    "function": "Ceiling-mounted tray carrying the bundle of room-temperature coax and control cables between the racks and the fridge top plate. Cable lengths here appear as fixed delays in the pulse schedule and must be matched between drive and readout paths, because a 1 m mismatch is 5 ns of skew, comparable to a gate rise time.",
+    "physics": {
+      "summary": "Routes rack cables to the fridge; fixed delay.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "length",
+        "unit": "m",
+        "typical": [
+          3,
+          8
+        ]
+      },
+      {
+        "field": "cable delay",
+        "unit": "ns",
+        "typical": [
+          15,
+          40
+        ]
+      }
+    ],
+    "theory": [],
+    "tooltip": "Cable tray from racks to the fridge.",
+    "geometry": {
+      "generator": "ExtrudedU",
+      "path": "ceiling",
+      "cables": 12
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

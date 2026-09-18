@@ -1,0 +1,46 @@
+{
+  "qxl": {
+    "kind": "analysis.recipe",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "drag_beta",
+    "title": "DRAG β calibration",
+    "theory": "T05#7-single-qubit-drive-and-drag",
+    "program": "Assets/Programs/Calibration/drag_beta.qasm",
+    "sweep": {
+      "input": "beta",
+      "unit": "",
+      "values": {
+        "linear": [
+          -2.0,
+          2.0,
+          41
+        ]
+      }
+    },
+    "shots": 500,
+    "extract": {
+      "channel": "drag.p1",
+      "y": "counts['1'] / shots",
+      "sigma": "binomial"
+    },
+    "fit": {
+      "model": "linear",
+      "report": [
+        "x0"
+      ]
+    },
+    "results": [
+      {
+        "label": "β",
+        "measured": "fit.x0",
+        "model": "device.pulses.sx.beta",
+        "tolerance": 0.2
+      }
+    ],
+    "notes": "Sequence (X90·Y180 − Y90·X180) is linear in β around the optimum; report the zero crossing."
+  }
+}

@@ -1,0 +1,605 @@
+{
+  "qxl": {
+    "kind": "theory.gates",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "gates": [
+      {
+        "name": "U",
+        "signature": "U(θ, φ, λ) q",
+        "description": "OpenQASM 3 primitive single-qubit gate; every single-qubit unitary up to global phase.",
+        "matrix_latex": "\\begin{pmatrix}\\cos\\frac\\theta2 & -e^{i\\lambda}\\sin\\frac\\theta2\\\\ e^{i\\varphi}\\sin\\frac\\theta2 & e^{i(\\varphi+\\lambda)}\\cos\\frac\\theta2\\end{pmatrix}",
+        "qubits": 1,
+        "params": [
+          "theta",
+          "phi",
+          "lambda"
+        ],
+        "decomposition": "rz(\\varphi+\\pi)\\,sx\\,rz(\\theta+\\pi)\\,sx\\,rz(\\lambda)",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "gphase",
+        "signature": "gphase(γ)",
+        "description": "Global phase e^{iγ}; physically irrelevant alone, matters inside controlled gates.",
+        "matrix_latex": "e^{i\\gamma}",
+        "qubits": 1,
+        "params": [
+          "gamma"
+        ],
+        "decomposition": "",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "id",
+        "signature": "id q",
+        "description": "Identity (explicit idle of one gate duration).",
+        "matrix_latex": "\\begin{pmatrix}1&0\\\\0&1\\end{pmatrix}",
+        "qubits": 1,
+        "params": [],
+        "decomposition": "",
+        "native_for": [
+          "transmon"
+        ],
+        "clifford": true,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "x",
+        "signature": "x q",
+        "description": "Pauli X (bit flip, π rotation about x).",
+        "matrix_latex": "\\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}",
+        "qubits": 1,
+        "params": [],
+        "decomposition": "U(\\pi,0,\\pi)",
+        "native_for": [
+          "transmon"
+        ],
+        "clifford": true,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "y",
+        "signature": "y q",
+        "description": "Pauli Y.",
+        "matrix_latex": "\\begin{pmatrix}0&-i\\\\i&0\\end{pmatrix}",
+        "qubits": 1,
+        "params": [],
+        "decomposition": "U(\\pi,\\pi/2,\\pi/2)",
+        "native_for": [],
+        "clifford": true,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "z",
+        "signature": "z q",
+        "description": "Pauli Z (phase flip).",
+        "matrix_latex": "\\begin{pmatrix}1&0\\\\0&-1\\end{pmatrix}",
+        "qubits": 1,
+        "params": [],
+        "decomposition": "p(\\pi)",
+        "native_for": [],
+        "clifford": true,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "h",
+        "signature": "h q",
+        "description": "Hadamard: maps Z basis to X basis.",
+        "matrix_latex": "\\frac{1}{\\sqrt2}\\begin{pmatrix}1&1\\\\1&-1\\end{pmatrix}",
+        "qubits": 1,
+        "params": [],
+        "decomposition": "rz(\\pi/2)\\,sx\\,rz(\\pi/2)",
+        "native_for": [],
+        "clifford": true,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "s",
+        "signature": "s q",
+        "description": "Phase gate √Z.",
+        "matrix_latex": "\\begin{pmatrix}1&0\\\\0&i\\end{pmatrix}",
+        "qubits": 1,
+        "params": [],
+        "decomposition": "p(\\pi/2)",
+        "native_for": [],
+        "clifford": true,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "sdg",
+        "signature": "sdg q",
+        "description": "Inverse phase gate.",
+        "matrix_latex": "\\begin{pmatrix}1&0\\\\0&-i\\end{pmatrix}",
+        "qubits": 1,
+        "params": [],
+        "decomposition": "p(-\\pi/2)",
+        "native_for": [],
+        "clifford": true,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "t",
+        "signature": "t q",
+        "description": "T gate (π/8): non-Clifford, counted for fault-tolerant cost.",
+        "matrix_latex": "\\begin{pmatrix}1&0\\\\0&e^{i\\pi/4}\\end{pmatrix}",
+        "qubits": 1,
+        "params": [],
+        "decomposition": "p(\\pi/4)",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "tdg",
+        "signature": "tdg q",
+        "description": "Inverse T gate.",
+        "matrix_latex": "\\begin{pmatrix}1&0\\\\0&e^{-i\\pi/4}\\end{pmatrix}",
+        "qubits": 1,
+        "params": [],
+        "decomposition": "p(-\\pi/4)",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "sx",
+        "signature": "sx q",
+        "description": "√X: the native 90° pulse of transmon devices.",
+        "matrix_latex": "\\frac12\\begin{pmatrix}1+i&1-i\\\\1-i&1+i\\end{pmatrix}",
+        "qubits": 1,
+        "params": [],
+        "decomposition": "",
+        "native_for": [
+          "transmon"
+        ],
+        "clifford": true,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "p",
+        "signature": "p(λ) q",
+        "description": "Phase rotation about Z (equal to rz up to global phase).",
+        "matrix_latex": "\\begin{pmatrix}1&0\\\\0&e^{i\\lambda}\\end{pmatrix}",
+        "qubits": 1,
+        "params": [
+          "lambda"
+        ],
+        "decomposition": "U(0,0,\\lambda)",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "rx",
+        "signature": "rx(θ) q",
+        "description": "Rotation about x.",
+        "matrix_latex": "\\begin{pmatrix}\\cos\\frac{\\theta}{2}&-i\\sin\\frac{\\theta}{2}\\\\-i\\sin\\frac{\\theta}{2}&\\cos\\frac{\\theta}{2}\\end{pmatrix}",
+        "qubits": 1,
+        "params": [
+          "theta"
+        ],
+        "decomposition": "rz(-\\pi/2)\\,sx\\,rz(\\theta-\\pi)\\,sx\\,rz(-\\pi/2)... (Euler)",
+        "native_for": [
+          "ion"
+        ],
+        "clifford": false,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "ry",
+        "signature": "ry(θ) q",
+        "description": "Rotation about y.",
+        "matrix_latex": "\\begin{pmatrix}\\cos\\frac{\\theta}{2}&-\\sin\\frac{\\theta}{2}\\\\\\sin\\frac{\\theta}{2}&\\cos\\frac{\\theta}{2}\\end{pmatrix}",
+        "qubits": 1,
+        "params": [
+          "theta"
+        ],
+        "decomposition": "rz(0)\\,sx\\,rz(\\theta+\\pi)\\,sx\\,rz(\\pi)... (Euler)",
+        "native_for": [
+          "ion"
+        ],
+        "clifford": false,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "rz",
+        "signature": "rz(θ) q",
+        "description": "Rotation about z; virtual (frame phase shift) on every shipped device, 0 ns.",
+        "matrix_latex": "\\begin{pmatrix}e^{-i\\theta/2}&0\\\\0&e^{i\\theta/2}\\end{pmatrix}",
+        "qubits": 1,
+        "params": [
+          "theta"
+        ],
+        "decomposition": "",
+        "native_for": [
+          "transmon",
+          "ion"
+        ],
+        "clifford": false,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "u1",
+        "signature": "u1(λ) q",
+        "description": "Legacy phase gate (= p).",
+        "matrix_latex": "\\begin{pmatrix}1&0\\\\0&e^{i\\lambda}\\end{pmatrix}",
+        "qubits": 1,
+        "params": [
+          "lambda"
+        ],
+        "decomposition": "p(\\lambda)",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "u2",
+        "signature": "u2(φ, λ) q",
+        "description": "Legacy OpenQASM 2 gate: U(pi/2, phi, lambda) with the stdgates.inc global phase gphase(-(phi+lambda)/2).",
+        "matrix_latex": "\\frac{1}{\\sqrt2}\\begin{pmatrix}e^{-i(\\varphi+\\lambda)/2}&-e^{i(\\lambda-\\varphi)/2}\\\\e^{i(\\varphi-\\lambda)/2}&e^{i(\\varphi+\\lambda)/2}\\end{pmatrix}",
+        "qubits": 1,
+        "params": [
+          "phi",
+          "lambda"
+        ],
+        "decomposition": "\\mathrm{gphase}(-(\\varphi+\\lambda)/2)\\,U(\\pi/2,\\varphi,\\lambda) = R_z(\\varphi)R_y(\\pi/2)R_z(\\lambda)",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "u3",
+        "signature": "u3(θ, φ, λ) q",
+        "description": "Legacy OpenQASM 2 gate: U(theta, phi, lambda) with the stdgates.inc global phase gphase(-(phi+lambda)/2).",
+        "matrix_latex": "\\begin{pmatrix}e^{-i(\\varphi+\\lambda)/2}\\cos\\frac{\\theta}{2}&-e^{i(\\lambda-\\varphi)/2}\\sin\\frac{\\theta}{2}\\\\e^{i(\\varphi-\\lambda)/2}\\sin\\frac{\\theta}{2}&e^{i(\\varphi+\\lambda)/2}\\cos\\frac{\\theta}{2}\\end{pmatrix}",
+        "qubits": 1,
+        "params": [
+          "theta",
+          "phi",
+          "lambda"
+        ],
+        "decomposition": "\\mathrm{gphase}(-(\\varphi+\\lambda)/2)\\,U(\\theta,\\varphi,\\lambda) = R_z(\\varphi)R_y(\\theta)R_z(\\lambda)",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "cx",
+        "signature": "cx c, t",
+        "description": "Controlled-NOT: flips t when c = 1. Basis |t c⟩ (little-endian).",
+        "matrix_latex": "\\begin{pmatrix}1&0&0&0\\\\0&0&0&1\\\\0&0&1&0\\\\0&1&0&0\\end{pmatrix}",
+        "qubits": 2,
+        "params": [],
+        "decomposition": "",
+        "native_for": [
+          "transmon"
+        ],
+        "clifford": true,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "CX",
+        "signature": "CX c, t",
+        "description": "Legacy spelling of cx.",
+        "matrix_latex": "\\text{as } cx",
+        "qubits": 2,
+        "params": [],
+        "decomposition": "cx",
+        "native_for": [],
+        "clifford": true,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "cy",
+        "signature": "cy c, t",
+        "description": "Controlled-Y.",
+        "matrix_latex": "\\text{diag-block}(I, Y)",
+        "qubits": 2,
+        "params": [],
+        "decomposition": "sdg t; cx c,t; s t",
+        "native_for": [],
+        "clifford": true,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "cz",
+        "signature": "cz a, b",
+        "description": "Controlled-Z: symmetric phase −1 on |11⟩.",
+        "matrix_latex": "\\mathrm{diag}(1,1,1,-1)",
+        "qubits": 2,
+        "params": [],
+        "decomposition": "h b; cx a,b; h b",
+        "native_for": [
+          "transmon_tunable",
+          "transmon_tunable_coupler"
+        ],
+        "clifford": true,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "cp",
+        "signature": "cp(λ) a, b",
+        "description": "Controlled phase.",
+        "matrix_latex": "\\mathrm{diag}(1,1,1,e^{i\\lambda})",
+        "qubits": 2,
+        "params": [
+          "lambda"
+        ],
+        "decomposition": "p(\\lambda/2) a; cx a,b; p(-\\lambda/2) b; cx a,b; p(\\lambda/2) b",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "crx",
+        "signature": "crx(θ) c, t",
+        "description": "Controlled RX.",
+        "matrix_latex": "\\text{diag-block}(I, R_x(\\theta))",
+        "qubits": 2,
+        "params": [
+          "theta"
+        ],
+        "decomposition": "ABC construction",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "cry",
+        "signature": "cry(θ) c, t",
+        "description": "Controlled RY.",
+        "matrix_latex": "\\text{diag-block}(I, R_y(\\theta))",
+        "qubits": 2,
+        "params": [
+          "theta"
+        ],
+        "decomposition": "ry(θ/2) t; cx c,t; ry(-θ/2) t; cx c,t",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "crz",
+        "signature": "crz(θ) c, t",
+        "description": "Controlled RZ.",
+        "matrix_latex": "\\text{diag-block}(I, R_z(\\theta))",
+        "qubits": 2,
+        "params": [
+          "theta"
+        ],
+        "decomposition": "rz(θ/2) t; cx c,t; rz(-θ/2) t; cx c,t",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "ch",
+        "signature": "ch c, t",
+        "description": "Controlled Hadamard.",
+        "matrix_latex": "\\text{diag-block}(I, H)",
+        "qubits": 2,
+        "params": [],
+        "decomposition": "s t; h t; t t; cx c,t; tdg t; h t; sdg t",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "swap",
+        "signature": "swap a, b",
+        "description": "Exchange two qubits.",
+        "matrix_latex": "\\begin{pmatrix}1&0&0&0\\\\0&0&1&0\\\\0&1&0&0\\\\0&0&0&1\\end{pmatrix}",
+        "qubits": 2,
+        "params": [],
+        "decomposition": "cx a,b; cx b,a; cx a,b",
+        "native_for": [],
+        "clifford": true,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "cu",
+        "signature": "cu(θ, φ, λ, γ) c, t",
+        "description": "Controlled U with global phase γ on the controlled branch.",
+        "matrix_latex": "\\text{diag-block}(I, e^{i\\gamma}U(\\theta,\\varphi,\\lambda))",
+        "qubits": 2,
+        "params": [
+          "theta",
+          "phi",
+          "lambda",
+          "gamma"
+        ],
+        "decomposition": "ABC construction",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "ccx",
+        "signature": "ccx a, b, t",
+        "description": "Toffoli.",
+        "matrix_latex": "\\text{8×8 permutation}: |11t\\rangle \\to |11\\bar t\\rangle",
+        "qubits": 3,
+        "params": [],
+        "decomposition": "6-CNOT, T-count 7 (T02 §3.2)",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "cswap",
+        "signature": "cswap c, a, b",
+        "description": "Fredkin (controlled swap).",
+        "matrix_latex": "\\text{8×8 permutation}",
+        "qubits": 3,
+        "params": [],
+        "decomposition": "cx b,a; ccx c,a,b; cx b,a",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "ecr",
+        "signature": "ecr c, t",
+        "description": "Echoed cross-resonance: √2/2 (IX − XY) in the |t c⟩ basis; native CR-device entangler.",
+        "matrix_latex": "\\frac{1}{\\sqrt2}\\begin{pmatrix}0&1&0&i\\\\1&0&-i&0\\\\0&i&0&1\\\\-i&0&1&0\\end{pmatrix}",
+        "qubits": 2,
+        "params": [],
+        "decomposition": "cx = (rz(-π/2) c; sx c...) ecr with single-qubit dressing (T02 §2.3)",
+        "native_for": [
+          "transmon"
+        ],
+        "clifford": true,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "siswap",
+        "signature": "siswap a, b",
+        "description": "√iSWAP: native for tunable-coupler devices.",
+        "matrix_latex": "\\begin{pmatrix}1&0&0&0\\\\0&\\frac{1}{\\sqrt2}&\\frac{i}{\\sqrt2}&0\\\\0&\\frac{i}{\\sqrt2}&\\frac{1}{\\sqrt2}&0\\\\0&0&0&1\\end{pmatrix}",
+        "qubits": 2,
+        "params": [],
+        "decomposition": "two siswap + single-qubit = cz",
+        "native_for": [
+          "transmon_tunable_coupler"
+        ],
+        "clifford": false,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "iswap",
+        "signature": "iswap a, b",
+        "description": "iSWAP.",
+        "matrix_latex": "\\begin{pmatrix}1&0&0&0\\\\0&0&i&0\\\\0&i&0&0\\\\0&0&0&1\\end{pmatrix}",
+        "qubits": 2,
+        "params": [],
+        "decomposition": "siswap a,b; siswap a,b",
+        "native_for": [],
+        "clifford": true,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "rxx",
+        "signature": "rxx(θ) a, b",
+        "description": "XX rotation exp(−iθ XX/2); rxx(π/2) is the Mølmer–Sørensen gate.",
+        "matrix_latex": "\\exp(-i\\tfrac{\\theta}{2}X\\otimes X)",
+        "qubits": 2,
+        "params": [
+          "theta"
+        ],
+        "decomposition": "h a; h b; cx a,b; rz(θ) b; cx a,b; h a; h b",
+        "native_for": [
+          "ion"
+        ],
+        "clifford": false,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "ms",
+        "signature": "ms(θ) a, b",
+        "description": "Mølmer–Sørensen gate (= rxx(θ)) via bichromatic sideband drive.",
+        "matrix_latex": "\\exp(-i\\tfrac{\\theta}{2}X\\otimes X)",
+        "qubits": 2,
+        "params": [
+          "theta"
+        ],
+        "decomposition": "",
+        "native_for": [
+          "ion"
+        ],
+        "clifford": false,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "ryy",
+        "signature": "ryy(θ) a, b",
+        "description": "YY rotation.",
+        "matrix_latex": "\\exp(-i\\tfrac{\\theta}{2}Y\\otimes Y)",
+        "qubits": 2,
+        "params": [
+          "theta"
+        ],
+        "decomposition": "rx(π/2) a,b; rxx? no: sdg,h conjugation of rzz",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "rzz",
+        "signature": "rzz(θ) a, b",
+        "description": "ZZ rotation.",
+        "matrix_latex": "\\exp(-i\\tfrac{\\theta}{2}Z\\otimes Z)",
+        "qubits": 2,
+        "params": [
+          "theta"
+        ],
+        "decomposition": "cx a,b; rz(θ) b; cx a,b",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#2.2-gate-table"
+      },
+      {
+        "name": "measure",
+        "signature": "measure q -> c",
+        "description": "Projective Z-basis measurement, result to a classical bit.",
+        "matrix_latex": "\\{|0\\rangle\\langle0|,\\ |1\\rangle\\langle1|\\}",
+        "qubits": 1,
+        "params": [],
+        "decomposition": "",
+        "native_for": [
+          "transmon",
+          "ion"
+        ],
+        "clifford": false,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "reset",
+        "signature": "reset q",
+        "description": "Return qubit to |0⟩ (active or passive per device policy).",
+        "matrix_latex": "\\rho \\to |0\\rangle\\langle0|",
+        "qubits": 1,
+        "params": [],
+        "decomposition": "",
+        "native_for": [
+          "transmon",
+          "ion"
+        ],
+        "clifford": false,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "barrier",
+        "signature": "barrier q...",
+        "description": "Scheduling barrier: no reordering across it.",
+        "matrix_latex": "-",
+        "qubits": 1,
+        "params": [],
+        "decomposition": "",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      },
+      {
+        "name": "delay",
+        "signature": "delay[t] q",
+        "description": "Explicit idle of duration t (subject to T1/T2 in the noise model).",
+        "matrix_latex": "\\exp(-i H_0 t/\\hbar)",
+        "qubits": 1,
+        "params": [],
+        "decomposition": "",
+        "native_for": [],
+        "clifford": false,
+        "theory": "T02#1.2-standard-gates-stdgates-inc-definitions"
+      }
+    ],
+    "convention": "little-endian; first listed qubit is the least significant bit; matrices in the |q_b q_a> basis for g q[a], q[b]"
+  }
+}

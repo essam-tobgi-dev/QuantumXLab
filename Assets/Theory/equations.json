@@ -1,0 +1,2458 @@
+{
+  "qxl": {
+    "kind": "theory.equations",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "equations": [
+      {
+        "id": "lc_hamiltonian",
+        "latex": "H = \\frac{Q^2}{2C} + \\frac{\\Phi^2}{2L},\\qquad \\hbar\\omega = \\frac{\\hbar}{\\sqrt{LC}}",
+        "plain": "H = Q^2/(2C) + Phi^2/(2L); omega = 1/sqrt(L C)",
+        "terms": [
+          {
+            "symbol": "Q",
+            "name": "Node charge",
+            "unit": "C"
+          },
+          {
+            "symbol": "\\Phi",
+            "name": "Node flux",
+            "unit": "Wb"
+          },
+          {
+            "symbol": "C",
+            "name": "Capacitance",
+            "unit": "F"
+          },
+          {
+            "symbol": "L",
+            "name": "Inductance",
+            "unit": "H"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T05#1-the-quantized-lc-oscillator",
+        "class": "Exact"
+      },
+      {
+        "id": "josephson_relations",
+        "latex": "I = I_c \\sin\\varphi,\\qquad V = \\frac{\\Phi_0}{2\\pi}\\dot\\varphi,\\qquad E_J = \\frac{\\Phi_0 I_c}{2\\pi}",
+        "plain": "I = Ic sin(phi); V = Phi0/(2 pi) dphi/dt; EJ = Phi0 Ic/(2 pi)",
+        "terms": [
+          {
+            "symbol": "I_c",
+            "name": "Critical current",
+            "unit": "nA",
+            "binding": "device.qubit[$i].Ic"
+          },
+          {
+            "symbol": "\\varphi",
+            "name": "Phase difference",
+            "unit": "rad"
+          },
+          {
+            "symbol": "E_J",
+            "name": "Josephson energy (E/h)",
+            "unit": "GHz",
+            "binding": "device.qubit[$i].EJ"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T05#2-the-josephson-junction",
+        "class": "Exact"
+      },
+      {
+        "id": "josephson_inductance",
+        "latex": "L_J = \\frac{\\Phi_0}{2\\pi I_c\\cos\\varphi}",
+        "plain": "LJ = Phi0/(2 pi Ic cos(phi))",
+        "terms": [
+          {
+            "symbol": "L_J",
+            "name": "Josephson inductance",
+            "unit": "nH"
+          },
+          {
+            "symbol": "I_c",
+            "name": "Critical current",
+            "unit": "nA",
+            "binding": "device.qubit[$i].Ic"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T05#2-the-josephson-junction",
+        "class": "Exact"
+      },
+      {
+        "id": "transmon_hamiltonian",
+        "latex": "H = 4E_C(\\hat n - n_g)^2 - E_J\\cos\\hat\\varphi,\\qquad E_C = \\frac{e^2}{2C_\\Sigma}",
+        "plain": "H = 4 EC (n - ng)^2 - EJ cos(phi); EC = e^2/(2 C_Sigma)",
+        "terms": [
+          {
+            "symbol": "E_C",
+            "name": "Charging energy (E/h)",
+            "unit": "GHz",
+            "binding": "device.qubit[$i].EC"
+          },
+          {
+            "symbol": "E_J",
+            "name": "Josephson energy (E/h)",
+            "unit": "GHz",
+            "binding": "device.qubit[$i].EJ"
+          },
+          {
+            "symbol": "n_g",
+            "name": "Offset charge",
+            "unit": "2e"
+          },
+          {
+            "symbol": "C_\\Sigma",
+            "name": "Total shunt capacitance",
+            "unit": "fF"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T05#3.1-charge-basis-matrix-what-the-simulator-diagonalizes",
+        "class": "Numerical"
+      },
+      {
+        "id": "transmon_frequency",
+        "latex": "\\hbar\\omega_{01} \\simeq \\sqrt{8E_JE_C} - E_C,\\qquad \\hbar\\alpha \\simeq -E_C",
+        "plain": "f01 ~ sqrt(8 EJ EC) - EC; alpha ~ -EC",
+        "terms": [
+          {
+            "symbol": "\\omega_{01}",
+            "name": "Qubit transition frequency",
+            "unit": "GHz",
+            "binding": "device.qubit[$i].f01"
+          },
+          {
+            "symbol": "\\alpha",
+            "name": "Anharmonicity",
+            "unit": "MHz",
+            "binding": "device.qubit[$i].alpha"
+          },
+          {
+            "symbol": "E_J",
+            "name": "Josephson energy",
+            "unit": "GHz",
+            "binding": "device.qubit[$i].EJ"
+          },
+          {
+            "symbol": "E_C",
+            "name": "Charging energy",
+            "unit": "GHz",
+            "binding": "device.qubit[$i].EC"
+          }
+        ],
+        "assumptions": [
+          "transmon_regime"
+        ],
+        "theory": "T05#3.2-transmon-limit",
+        "class": "Model"
+      },
+      {
+        "id": "charge_dispersion",
+        "latex": "\\epsilon_m \\simeq (-1)^m E_C\\,\\frac{2^{4m+5}}{m!}\\sqrt{\\frac{2}{\\pi}}\\left(\\frac{E_J}{2E_C}\\right)^{\\frac m2+\\frac34} e^{-\\sqrt{8E_J/E_C}}",
+        "plain": "eps_m ~ (-1)^m EC 2^(4m+5)/m! sqrt(2/pi) (EJ/(2EC))^(m/2+3/4) exp(-sqrt(8 EJ/EC))",
+        "terms": [
+          {
+            "symbol": "\\epsilon_m",
+            "name": "Charge dispersion of level m",
+            "unit": "kHz"
+          },
+          {
+            "symbol": "E_J",
+            "name": "Josephson energy",
+            "unit": "GHz",
+            "binding": "device.qubit[$i].EJ"
+          },
+          {
+            "symbol": "E_C",
+            "name": "Charging energy",
+            "unit": "GHz",
+            "binding": "device.qubit[$i].EC"
+          }
+        ],
+        "assumptions": [
+          "transmon_regime"
+        ],
+        "theory": "T05#3.2-transmon-limit",
+        "class": "Model"
+      },
+      {
+        "id": "duffing",
+        "latex": "H = \\hbar\\omega\\,a^\\dagger a + \\frac{\\hbar\\alpha}{2}\\,a^\\dagger a^\\dagger a a",
+        "plain": "H = hbar omega a†a + hbar alpha/2 a†a†aa",
+        "terms": [
+          {
+            "symbol": "\\omega",
+            "name": "Qubit frequency",
+            "unit": "GHz",
+            "binding": "device.qubit[$i].f01"
+          },
+          {
+            "symbol": "\\alpha",
+            "name": "Anharmonicity",
+            "unit": "MHz",
+            "binding": "device.qubit[$i].alpha"
+          }
+        ],
+        "assumptions": [
+          "three_level"
+        ],
+        "theory": "T05#3.4-duffing-kerr-approximation",
+        "class": "Exact"
+      },
+      {
+        "id": "flux_tunability",
+        "latex": "E_J(\\Phi) = E_{J\\Sigma}\\left|\\cos\\frac{\\pi\\Phi}{\\Phi_0}\\right|\\sqrt{1 + d^2\\tan^2\\frac{\\pi\\Phi}{\\Phi_0}}",
+        "plain": "EJ(Phi) = EJ_sum |cos(pi Phi/Phi0)| sqrt(1 + d^2 tan^2(pi Phi/Phi0))",
+        "terms": [
+          {
+            "symbol": "\\Phi",
+            "name": "External flux",
+            "unit": "Φ0",
+            "binding": "device.qubit[$i].phi_ext"
+          },
+          {
+            "symbol": "E_{J\\Sigma}",
+            "name": "Sum of junction energies",
+            "unit": "GHz"
+          },
+          {
+            "symbol": "d",
+            "name": "Junction asymmetry",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T05#4-flux-tunable-transmons",
+        "class": "Model"
+      },
+      {
+        "id": "flux_from_current",
+        "latex": "\\Phi = M I",
+        "plain": "Phi = M I",
+        "terms": [
+          {
+            "symbol": "\\Phi",
+            "name": "Flux through the SQUID loop",
+            "unit": "Φ0",
+            "binding": "device.qubit[$i].phi_ext"
+          },
+          {
+            "symbol": "M",
+            "name": "Mutual inductance",
+            "unit": "pH"
+          },
+          {
+            "symbol": "I",
+            "name": "Flux-line current",
+            "unit": "mA",
+            "binding": "instr.dc.ch[$k].I"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T05#4-flux-tunable-transmons",
+        "class": "Model"
+      },
+      {
+        "id": "capacitive_coupling",
+        "latex": "H_{\\rm int} = \\hbar g\\,(a^\\dagger b + a b^\\dagger),\\qquad g \\approx \\frac{1}{2}\\frac{C_g}{\\sqrt{C_1 C_2}}\\sqrt{\\omega_1\\omega_2}",
+        "plain": "H_int = hbar g (a†b + ab†); g ~ Cg/(2 sqrt(C1 C2)) sqrt(omega1 omega2)",
+        "terms": [
+          {
+            "symbol": "g",
+            "name": "Exchange coupling",
+            "unit": "MHz",
+            "binding": "device.edge[$e].J"
+          },
+          {
+            "symbol": "C_g",
+            "name": "Coupling capacitance",
+            "unit": "fF"
+          }
+        ],
+        "assumptions": [
+          "rwa"
+        ],
+        "theory": "T05#5.1-direct-capacitive-coupling",
+        "class": "Model"
+      },
+      {
+        "id": "tunable_coupler",
+        "latex": "\\tilde g = g_{12} + \\frac{g_{1c}g_{2c}}{2}\\left(\\frac{1}{\\Delta_1} + \\frac{1}{\\Delta_2}\\right)",
+        "plain": "g_eff = g12 + g1c g2c/2 (1/Delta1 + 1/Delta2)",
+        "terms": [
+          {
+            "symbol": "\\tilde g",
+            "name": "Effective coupling",
+            "unit": "MHz",
+            "binding": "device.edge[$e].g_eff"
+          },
+          {
+            "symbol": "g_{1c}",
+            "name": "Qubit-1–coupler coupling",
+            "unit": "MHz"
+          },
+          {
+            "symbol": "g_{2c}",
+            "name": "Qubit-2–coupler coupling",
+            "unit": "MHz"
+          },
+          {
+            "symbol": "\\Delta_1",
+            "name": "ω1 − ωc",
+            "unit": "MHz"
+          },
+          {
+            "symbol": "\\Delta_2",
+            "name": "ω2 − ωc",
+            "unit": "MHz"
+          }
+        ],
+        "assumptions": [
+          "dispersive_regime"
+        ],
+        "theory": "T05#5.2-tunable-coupler",
+        "class": "Model"
+      },
+      {
+        "id": "zz_interaction",
+        "latex": "H_{ZZ} = \\frac{\\hbar\\zeta}{4}\\,Z\\otimes Z,\\qquad \\zeta = \\frac{2g^2(\\alpha_1+\\alpha_2)}{(\\Delta_{12}+\\alpha_1)(\\Delta_{12}-\\alpha_2)}",
+        "plain": "H_ZZ = hbar zeta/4 ZZ; zeta = 2 g^2 (alpha1+alpha2)/((Delta12+alpha1)(Delta12-alpha2))",
+        "terms": [
+          {
+            "symbol": "\\zeta",
+            "name": "ZZ rate",
+            "unit": "kHz",
+            "binding": "device.edge[$e].zz"
+          },
+          {
+            "symbol": "g",
+            "name": "Exchange coupling",
+            "unit": "MHz",
+            "binding": "device.edge[$e].J"
+          },
+          {
+            "symbol": "\\Delta_{12}",
+            "name": "ω1 − ω2",
+            "unit": "MHz"
+          },
+          {
+            "symbol": "\\alpha_1",
+            "name": "Anharmonicity 1",
+            "unit": "MHz"
+          },
+          {
+            "symbol": "\\alpha_2",
+            "name": "Anharmonicity 2",
+            "unit": "MHz"
+          }
+        ],
+        "assumptions": [
+          "dispersive_regime"
+        ],
+        "theory": "T05#5.4-the-zz-interaction",
+        "class": "Model"
+      },
+      {
+        "id": "jaynes_cummings",
+        "latex": "H = \\hbar\\omega_r a^\\dagger a - \\frac{\\hbar\\omega_q}{2}\\sigma_z + \\hbar g\\,(a^\\dagger\\sigma^- + a\\sigma^+)",
+        "plain": "H = hbar omega_r a†a - hbar omega_q/2 sigma_z + hbar g (a† sigma- + a sigma+)",
+        "terms": [
+          {
+            "symbol": "\\omega_r",
+            "name": "Resonator frequency",
+            "unit": "GHz",
+            "binding": "device.res[$i].f_r"
+          },
+          {
+            "symbol": "\\omega_q",
+            "name": "Qubit frequency",
+            "unit": "GHz",
+            "binding": "device.qubit[$i].f01"
+          },
+          {
+            "symbol": "g",
+            "name": "Qubit–resonator coupling",
+            "unit": "MHz",
+            "binding": "device.res[$i].g"
+          }
+        ],
+        "assumptions": [
+          "rwa",
+          "two_level"
+        ],
+        "theory": "T05#6.1-jaynes-cummings-model",
+        "class": "Exact"
+      },
+      {
+        "id": "dispersive_shift",
+        "latex": "\\chi = \\frac{g^2}{\\Delta}\\frac{\\alpha}{\\Delta+\\alpha}",
+        "plain": "chi = g^2/Delta * alpha/(Delta+alpha)",
+        "terms": [
+          {
+            "symbol": "\\chi",
+            "name": "Dispersive shift",
+            "unit": "MHz",
+            "binding": "device.res[$i].chi"
+          },
+          {
+            "symbol": "g",
+            "name": "Qubit–resonator coupling",
+            "unit": "MHz",
+            "binding": "device.res[$i].g"
+          },
+          {
+            "symbol": "\\Delta",
+            "name": "Qubit–resonator detuning ω_q − ω_r",
+            "unit": "MHz",
+            "binding": "device.res[$i].Delta"
+          },
+          {
+            "symbol": "\\alpha",
+            "name": "Transmon anharmonicity",
+            "unit": "MHz",
+            "binding": "device.qubit[$i].alpha"
+          }
+        ],
+        "assumptions": [
+          "dispersive_regime"
+        ],
+        "theory": "T05#6.2-dispersive-regime",
+        "class": "Model"
+      },
+      {
+        "id": "dispersive_hamiltonian",
+        "latex": "H_{\\rm disp} = \\hbar(\\omega_r - \\chi\\sigma_z)\\,a^\\dagger a - \\frac{\\hbar}{2}(\\omega_q+\\chi)\\sigma_z",
+        "plain": "H = hbar (omega_r - chi sigma_z) a†a - hbar/2 (omega_q + chi) sigma_z",
+        "terms": [
+          {
+            "symbol": "\\chi",
+            "name": "Dispersive shift",
+            "unit": "MHz",
+            "binding": "device.res[$i].chi"
+          },
+          {
+            "symbol": "\\omega_r",
+            "name": "Resonator frequency",
+            "unit": "GHz",
+            "binding": "device.res[$i].f_r"
+          }
+        ],
+        "assumptions": [
+          "dispersive_regime"
+        ],
+        "theory": "T05#6.2-dispersive-regime",
+        "class": "Exact"
+      },
+      {
+        "id": "critical_photon_number",
+        "latex": "n_{\\rm crit} = \\frac{\\Delta^2}{4g^2}",
+        "plain": "n_crit = Delta^2/(4 g^2)",
+        "terms": [
+          {
+            "symbol": "n_{\\rm crit}",
+            "name": "Critical photon number",
+            "unit": "",
+            "binding": "device.res[$i].n_crit"
+          },
+          {
+            "symbol": "\\Delta",
+            "name": "Detuning",
+            "unit": "MHz",
+            "binding": "device.res[$i].Delta"
+          },
+          {
+            "symbol": "g",
+            "name": "Coupling",
+            "unit": "MHz",
+            "binding": "device.res[$i].g"
+          }
+        ],
+        "assumptions": [
+          "dispersive_regime"
+        ],
+        "theory": "T05#6.2-dispersive-regime",
+        "class": "Model"
+      },
+      {
+        "id": "readout_optimum",
+        "latex": "2\\chi = \\kappa",
+        "plain": "2 chi = kappa",
+        "terms": [
+          {
+            "symbol": "\\chi",
+            "name": "Dispersive shift",
+            "unit": "MHz",
+            "binding": "device.res[$i].chi"
+          },
+          {
+            "symbol": "\\kappa",
+            "name": "Resonator linewidth",
+            "unit": "MHz",
+            "binding": "device.res[$i].kappa"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T05#6.3-dispersive-readout",
+        "class": "Model"
+      },
+      {
+        "id": "purcell_decay",
+        "latex": "\\gamma_P = \\kappa\\frac{g^2}{\\Delta^2}",
+        "plain": "gamma_P = kappa g^2/Delta^2",
+        "terms": [
+          {
+            "symbol": "\\gamma_P",
+            "name": "Purcell decay rate",
+            "unit": "kHz",
+            "binding": "device.res[$i].gamma_P"
+          },
+          {
+            "symbol": "\\kappa",
+            "name": "Resonator linewidth",
+            "unit": "MHz",
+            "binding": "device.res[$i].kappa"
+          },
+          {
+            "symbol": "g",
+            "name": "Coupling",
+            "unit": "MHz",
+            "binding": "device.res[$i].g"
+          },
+          {
+            "symbol": "\\Delta",
+            "name": "Detuning",
+            "unit": "MHz",
+            "binding": "device.res[$i].Delta"
+          }
+        ],
+        "assumptions": [
+          "dispersive_regime"
+        ],
+        "theory": "T05#6.4-purcell-decay-and-the-purcell-filter",
+        "class": "Model"
+      },
+      {
+        "id": "resonator_length",
+        "latex": "L = \\frac{c}{4 f_r\\sqrt{\\varepsilon_{\\rm eff}}}",
+        "plain": "L = c/(4 f_r sqrt(eps_eff))",
+        "terms": [
+          {
+            "symbol": "L",
+            "name": "Electrical length of the λ/4 resonator",
+            "unit": "mm"
+          },
+          {
+            "symbol": "f_r",
+            "name": "Resonance frequency",
+            "unit": "GHz",
+            "binding": "device.res[$i].f_r"
+          },
+          {
+            "symbol": "\\varepsilon_{\\rm eff}",
+            "name": "Effective permittivity",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T05#6.3-dispersive-readout",
+        "class": "Model"
+      },
+      {
+        "id": "drive_hamiltonian",
+        "latex": "H_d = \\frac{\\hbar\\Omega(t)}{2}\\left(\\cos\\phi\\,\\sigma_x + \\sin\\phi\\,\\sigma_y\\right)",
+        "plain": "H_d = hbar Omega/2 (cos(phi) sigma_x + sin(phi) sigma_y)",
+        "terms": [
+          {
+            "symbol": "\\Omega",
+            "name": "Rabi frequency",
+            "unit": "MHz",
+            "binding": "device.qubit[$i].drive_amp"
+          },
+          {
+            "symbol": "\\phi",
+            "name": "Drive phase",
+            "unit": "rad"
+          }
+        ],
+        "assumptions": [
+          "rwa",
+          "two_level"
+        ],
+        "theory": "T05#7-single-qubit-drive-and-drag",
+        "class": "Exact"
+      },
+      {
+        "id": "drag",
+        "latex": "\\Omega_y(t) = -\\frac{\\dot\\Omega_x(t)}{\\alpha}",
+        "plain": "Omega_y = -dOmega_x/dt / alpha",
+        "terms": [
+          {
+            "symbol": "\\Omega_y",
+            "name": "Quadrature (DRAG) envelope",
+            "unit": "MHz"
+          },
+          {
+            "symbol": "\\alpha",
+            "name": "Anharmonicity",
+            "unit": "MHz",
+            "binding": "device.qubit[$i].alpha"
+          }
+        ],
+        "assumptions": [
+          "three_level"
+        ],
+        "theory": "T05#7-single-qubit-drive-and-drag",
+        "class": "Model"
+      },
+      {
+        "id": "cross_resonance",
+        "latex": "H_{CR} = \\frac{\\hbar}{2}\\left(\\nu_{ZX}\\,ZX + \\nu_{ZI}\\,ZI + \\nu_{IX}\\,IX + \\ldots\\right),\\qquad \\nu_{ZX} = -\\frac{J\\Omega}{\\Delta_{ct}}\\frac{\\alpha_c}{\\Delta_{ct}+\\alpha_c}",
+        "plain": "H_CR = hbar/2 (nu_ZX ZX + nu_ZI ZI + nu_IX IX + ...); nu_ZX = -J Omega/Delta_ct * alpha_c/(Delta_ct+alpha_c)",
+        "terms": [
+          {
+            "symbol": "\\nu_{ZX}",
+            "name": "ZX rate",
+            "unit": "MHz",
+            "binding": "device.edge[$e].nu_zx"
+          },
+          {
+            "symbol": "J",
+            "name": "Exchange coupling",
+            "unit": "MHz",
+            "binding": "device.edge[$e].J"
+          },
+          {
+            "symbol": "\\Omega",
+            "name": "Drive amplitude on control",
+            "unit": "MHz"
+          },
+          {
+            "symbol": "\\Delta_{ct}",
+            "name": "ω_c − ω_t",
+            "unit": "MHz"
+          },
+          {
+            "symbol": "\\alpha_c",
+            "name": "Control anharmonicity",
+            "unit": "MHz"
+          }
+        ],
+        "assumptions": [
+          "dispersive_regime",
+          "rwa"
+        ],
+        "theory": "T05#8-the-cross-resonance-gate",
+        "class": "Model"
+      },
+      {
+        "id": "cz_phase",
+        "latex": "\\phi_{ZZ} = \\int\\left(\\omega_{11} - \\omega_{01} - \\omega_{10}\\right)dt = \\pi",
+        "plain": "phi_ZZ = ∫ (omega_11 - omega_01 - omega_10) dt = pi",
+        "terms": [
+          {
+            "symbol": "\\phi_{ZZ}",
+            "name": "Conditional phase",
+            "unit": "rad"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T05#9-flux-activated-cz-and-iswap",
+        "class": "Numerical"
+      },
+      {
+        "id": "frequency_collisions",
+        "latex": "|f_i - f_j| \\ge \\delta_1,\\quad |f_i + \\tfrac{\\alpha_i}{2} - f_j| \\ge \\delta_2,\\quad |2f_i + \\alpha_i - 2f_j| \\ge \\delta_3",
+        "plain": "|fi - fj| >= d1; |fi + ai/2 - fj| >= d2; |2fi + ai - 2fj| >= d3",
+        "terms": [
+          {
+            "symbol": "f_i",
+            "name": "Qubit frequency",
+            "unit": "GHz",
+            "binding": "device.qubit[$i].f01"
+          },
+          {
+            "symbol": "\\alpha_i",
+            "name": "Anharmonicity",
+            "unit": "MHz",
+            "binding": "device.qubit[$i].alpha"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T05#12-frequency-allocation-and-collisions",
+        "class": "Model"
+      },
+      {
+        "id": "lindblad",
+        "latex": "\\dot\\rho = -\\frac{i}{\\hbar}[H,\\rho] + \\sum_k\\left(L_k\\rho L_k^\\dagger - \\tfrac12\\{L_k^\\dagger L_k,\\rho\\}\\right)",
+        "plain": "drho/dt = -i/hbar [H, rho] + sum_k (L_k rho L_k† - 1/2 {L_k† L_k, rho})",
+        "terms": [
+          {
+            "symbol": "\\rho",
+            "name": "Density operator",
+            "unit": ""
+          },
+          {
+            "symbol": "H",
+            "name": "System Hamiltonian",
+            "unit": "J"
+          },
+          {
+            "symbol": "L_k",
+            "name": "Collapse (jump) operators",
+            "unit": "√Hz"
+          }
+        ],
+        "assumptions": [
+          "markov"
+        ],
+        "theory": "T04#2.1-statement",
+        "class": "Numerical"
+      },
+      {
+        "id": "amplitude_damping_kraus",
+        "latex": "K_0 = \\begin{pmatrix}1 & 0\\\\ 0 & \\sqrt{1-\\gamma}\\end{pmatrix},\\quad K_1 = \\begin{pmatrix}0 & \\sqrt{\\gamma}\\\\ 0 & 0\\end{pmatrix},\\quad \\gamma = 1 - e^{-t/T_1}",
+        "plain": "K0 = [[1,0],[0,sqrt(1-gamma)]]; K1 = [[0,sqrt(gamma)],[0,0]]; gamma = 1 - exp(-t/T1)",
+        "terms": [
+          {
+            "symbol": "\\gamma",
+            "name": "Decay probability",
+            "unit": ""
+          },
+          {
+            "symbol": "T_1",
+            "name": "Energy relaxation time",
+            "unit": "µs",
+            "binding": "device.qubit[$i].T1"
+          },
+          {
+            "symbol": "t",
+            "name": "Elapsed time",
+            "unit": "ns"
+          }
+        ],
+        "assumptions": [
+          "markov"
+        ],
+        "theory": "T04#3.1-zero-temperature",
+        "class": "Exact"
+      },
+      {
+        "id": "thermal_rates",
+        "latex": "\\gamma_\\uparrow = \\gamma\\,n_{th},\\qquad \\gamma_\\downarrow = \\gamma\\,(n_{th}+1),\\qquad p_1^{ss} = \\frac{n_{th}}{2n_{th}+1}",
+        "plain": "gamma_up = gamma n_th; gamma_down = gamma (n_th+1); p1_ss = n_th/(2 n_th + 1)",
+        "terms": [
+          {
+            "symbol": "n_{th}",
+            "name": "Thermal photon number at the qubit frequency",
+            "unit": "",
+            "binding": "device.qubit[$i].n_th"
+          },
+          {
+            "symbol": "p_1^{ss}",
+            "name": "Steady-state excited population",
+            "unit": "",
+            "binding": "device.qubit[$i].pop_e"
+          }
+        ],
+        "assumptions": [
+          "markov"
+        ],
+        "theory": "T04#3.2-finite-temperature-generalized-amplitude-damping",
+        "class": "Model"
+      },
+      {
+        "id": "phase_damping_kraus",
+        "latex": "K_0 = \\sqrt{1-\\lambda/2}\\,I,\\quad K_1 = \\sqrt{\\lambda/2}\\,Z,\\qquad \\lambda = 1 - e^{-2t/T_\\varphi}",
+        "plain": "K0 = sqrt(1-lambda/2) I; K1 = sqrt(lambda/2) Z; lambda = 1 - exp(-2t/T_phi)",
+        "terms": [
+          {
+            "symbol": "T_\\varphi",
+            "name": "Pure dephasing time",
+            "unit": "µs",
+            "binding": "device.qubit[$i].Tphi"
+          },
+          {
+            "symbol": "\\lambda",
+            "name": "Dephasing parameter",
+            "unit": ""
+          }
+        ],
+        "assumptions": [
+          "markov"
+        ],
+        "theory": "T04#4.1-pure-dephasing-t-varphi",
+        "class": "Exact"
+      },
+      {
+        "id": "t2_relation",
+        "latex": "\\frac{1}{T_2} = \\frac{1}{2T_1} + \\frac{1}{T_\\varphi}",
+        "plain": "1/T2 = 1/(2 T1) + 1/T_phi",
+        "terms": [
+          {
+            "symbol": "T_2",
+            "name": "Coherence time",
+            "unit": "µs",
+            "binding": "device.qubit[$i].T2"
+          },
+          {
+            "symbol": "T_1",
+            "name": "Relaxation time",
+            "unit": "µs",
+            "binding": "device.qubit[$i].T1"
+          },
+          {
+            "symbol": "T_\\varphi",
+            "name": "Pure dephasing time",
+            "unit": "µs",
+            "binding": "device.qubit[$i].Tphi"
+          }
+        ],
+        "assumptions": [
+          "markov"
+        ],
+        "theory": "T04#4.2-bloch-equations-and-the-t-2-relation",
+        "class": "Exact"
+      },
+      {
+        "id": "thermal_relaxation_fidelity",
+        "latex": "F_{\\rm avg}^{\\rm therm}(\\tau) = \\frac12 + \\frac{2e^{-\\tau/T_2} + e^{-\\tau/T_1}}{6}",
+        "plain": "F_avg = 1/2 + (2 exp(-tau/T2) + exp(-tau/T1))/6",
+        "terms": [
+          {
+            "symbol": "\\tau",
+            "name": "Gate or idle duration",
+            "unit": "ns"
+          },
+          {
+            "symbol": "T_1",
+            "name": "Relaxation time",
+            "unit": "µs",
+            "binding": "device.qubit[$i].T1"
+          },
+          {
+            "symbol": "T_2",
+            "name": "Coherence time",
+            "unit": "µs",
+            "binding": "device.qubit[$i].T2"
+          }
+        ],
+        "assumptions": [
+          "markov"
+        ],
+        "theory": "T04#4.3-the-thermal-relaxation-channel-used-per-gate",
+        "class": "Model"
+      },
+      {
+        "id": "depolarizing",
+        "latex": "\\mathcal E(\\rho) = (1-p)\\rho + p\\,\\frac{I}{d}",
+        "plain": "E(rho) = (1-p) rho + p I/d",
+        "terms": [
+          {
+            "symbol": "p",
+            "name": "Depolarizing probability",
+            "unit": ""
+          },
+          {
+            "symbol": "d",
+            "name": "Hilbert-space dimension",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T04#5.1-definitions",
+        "class": "Exact"
+      },
+      {
+        "id": "avg_fidelity_depolarizing",
+        "latex": "\\bar F = 1 - p\\,\\frac{d-1}{d}\\quad\\Longleftrightarrow\\quad p = \\frac{d}{d-1}\\,r,\\qquad r = 1-\\bar F",
+        "plain": "F_avg = 1 - p (d-1)/d;  p = d/(d-1) r",
+        "terms": [
+          {
+            "symbol": "\\bar F",
+            "name": "Average gate fidelity",
+            "unit": ""
+          },
+          {
+            "symbol": "r",
+            "name": "Average error rate (RB)",
+            "unit": "",
+            "binding": "device.qubit[$i].error_1q"
+          },
+          {
+            "symbol": "p",
+            "name": "Depolarizing probability",
+            "unit": ""
+          }
+        ],
+        "assumptions": [
+          "clifford_twirl"
+        ],
+        "theory": "T04#5.2-relation-to-fidelity",
+        "class": "Exact"
+      },
+      {
+        "id": "mcwf_jump",
+        "latex": "\\delta p_k = \\delta t\\,\\langle\\psi|L_k^\\dagger L_k|\\psi\\rangle,\\qquad |\\psi\\rangle \\to \\frac{L_k|\\psi\\rangle}{\\sqrt{\\delta p_k/\\delta t}}",
+        "plain": "dp_k = dt <psi|L_k† L_k|psi>; on jump psi -> L_k psi / norm",
+        "terms": [
+          {
+            "symbol": "\\delta p_k",
+            "name": "Jump probability in one step",
+            "unit": ""
+          },
+          {
+            "symbol": "L_k",
+            "name": "Jump operator",
+            "unit": "√Hz"
+          }
+        ],
+        "assumptions": [
+          "markov"
+        ],
+        "theory": "T04#7-quantum-trajectories-monte-carlo-wave-function",
+        "class": "Statistical"
+      },
+      {
+        "id": "ramsey_decay",
+        "latex": "P_1(t) = \\frac12\\left[1 + e^{-t/T_2^*}\\cos(2\\pi\\delta t + \\phi)\\right]",
+        "plain": "P1 = 1/2 (1 + exp(-t/T2*) cos(2 pi delta t + phi))",
+        "terms": [
+          {
+            "symbol": "T_2^*",
+            "name": "Ramsey dephasing time",
+            "unit": "µs",
+            "binding": "device.qubit[$i].T2star"
+          },
+          {
+            "symbol": "\\delta",
+            "name": "Detuning",
+            "unit": "MHz"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T04#8.1-ramsey-t-2",
+        "class": "Model"
+      },
+      {
+        "id": "zz_phase",
+        "latex": "U_{ZZ}(t) = e^{-i\\zeta t\\,ZZ/4}",
+        "plain": "U = exp(-i zeta t ZZ/4)",
+        "terms": [
+          {
+            "symbol": "\\zeta",
+            "name": "ZZ rate",
+            "unit": "kHz",
+            "binding": "device.edge[$e].zz"
+          },
+          {
+            "symbol": "t",
+            "name": "Idle time",
+            "unit": "ns"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T04#9.1-zz-crosstalk",
+        "class": "Exact"
+      },
+      {
+        "id": "readout_confusion",
+        "latex": "\\vec p_{\\rm meas} = M^{\\!\\top}\\vec p_{\\rm true},\\qquad M_{ij} = P(\\text{read } j\\mid\\text{prepared } i)",
+        "plain": "p_meas = M^T p_true; M_ij = P(read j | prepared i)",
+        "terms": [
+          {
+            "symbol": "M",
+            "name": "Assignment matrix",
+            "unit": "",
+            "binding": "device.qubit[$i].assignment"
+          },
+          {
+            "symbol": "\\vec p",
+            "name": "Outcome probabilities",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T04#10.1-readout-confusion-matrix",
+        "class": "Model"
+      },
+      {
+        "id": "measurement_dephasing",
+        "latex": "\\Gamma_m = \\frac{8\\chi^2\\bar n}{\\kappa}\\quad(\\chi\\ll\\kappa)",
+        "plain": "Gamma_m = 8 chi^2 n / kappa",
+        "terms": [
+          {
+            "symbol": "\\Gamma_m",
+            "name": "Measurement-induced dephasing rate",
+            "unit": "MHz"
+          },
+          {
+            "symbol": "\\bar n",
+            "name": "Resonator photon number",
+            "unit": "",
+            "binding": "device.res[$i].n_photons"
+          },
+          {
+            "symbol": "\\chi",
+            "name": "Dispersive shift",
+            "unit": "MHz",
+            "binding": "device.res[$i].chi"
+          },
+          {
+            "symbol": "\\kappa",
+            "name": "Resonator linewidth",
+            "unit": "MHz",
+            "binding": "device.res[$i].kappa"
+          }
+        ],
+        "assumptions": [
+          "dispersive_regime"
+        ],
+        "theory": "T04#10.4-measurement-induced-dephasing",
+        "class": "Model"
+      },
+      {
+        "id": "rotating_frame",
+        "latex": "H' = U H U^\\dagger + i\\hbar\\,\\dot U U^\\dagger,\\qquad U = e^{i\\omega_d t\\,\\sigma_z/2}",
+        "plain": "H' = U H U† + i hbar dU/dt U†",
+        "terms": [
+          {
+            "symbol": "\\omega_d",
+            "name": "Drive (frame) frequency",
+            "unit": "GHz"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T07#1-the-rotating-frame-and-the-rotating-wave-approximation",
+        "class": "Exact"
+      },
+      {
+        "id": "rabi_generalized",
+        "latex": "P_1(t) = \\frac{\\Omega^2}{\\Omega^2+\\delta^2}\\sin^2\\!\\left(\\frac{\\sqrt{\\Omega^2+\\delta^2}}{2}t\\right)",
+        "plain": "P1 = Omega^2/(Omega^2+delta^2) sin^2(sqrt(Omega^2+delta^2) t/2)",
+        "terms": [
+          {
+            "symbol": "\\Omega",
+            "name": "Rabi frequency",
+            "unit": "MHz",
+            "binding": "device.qubit[$i].drive_amp"
+          },
+          {
+            "symbol": "\\delta",
+            "name": "Detuning ω_d − ω_q",
+            "unit": "MHz"
+          }
+        ],
+        "assumptions": [
+          "rwa",
+          "two_level"
+        ],
+        "theory": "T07#2-rabi-oscillations-and-bloch-equations",
+        "class": "Exact"
+      },
+      {
+        "id": "rabi_from_power",
+        "latex": "V = \\sqrt{2 Z_0 P},\\qquad \\hbar\\Omega = 2\\beta e V\\,|\\langle 0|\\hat n|1\\rangle|",
+        "plain": "V = sqrt(2 Z0 P); hbar Omega = 2 beta e V |<0|n|1>|",
+        "terms": [
+          {
+            "symbol": "P",
+            "name": "Power at the chip",
+            "unit": "dBm",
+            "binding": "wiring.line[$line].P_chip"
+          },
+          {
+            "symbol": "Z_0",
+            "name": "Line impedance",
+            "unit": "Ω"
+          },
+          {
+            "symbol": "\\beta",
+            "name": "Drive-line coupling ratio C_d/C_Σ",
+            "unit": ""
+          },
+          {
+            "symbol": "\\Omega",
+            "name": "Rabi frequency",
+            "unit": "MHz",
+            "binding": "device.qubit[$i].drive_amp"
+          }
+        ],
+        "assumptions": [
+          "rwa"
+        ],
+        "theory": "T07#3-from-generator-power-to-rabi-frequency",
+        "class": "Model"
+      },
+      {
+        "id": "area_theorem",
+        "latex": "\\theta = \\int_0^{\\tau}\\Omega(t)\\,dt",
+        "plain": "theta = ∫ Omega dt",
+        "terms": [
+          {
+            "symbol": "\\theta",
+            "name": "Rotation angle",
+            "unit": "rad"
+          },
+          {
+            "symbol": "\\Omega",
+            "name": "Rabi envelope",
+            "unit": "MHz"
+          },
+          {
+            "symbol": "\\tau",
+            "name": "Pulse duration",
+            "unit": "ns"
+          }
+        ],
+        "assumptions": [
+          "rwa",
+          "two_level"
+        ],
+        "theory": "T07#4-pulse-shapes-and-their-spectra",
+        "class": "Exact"
+      },
+      {
+        "id": "dbm_to_watts",
+        "latex": "P[\\mathrm W] = 10^{(P[\\mathrm{dBm}]-30)/10}",
+        "plain": "P_W = 10^((P_dBm - 30)/10)",
+        "terms": [
+          {
+            "symbol": "P",
+            "name": "Power",
+            "unit": "dBm",
+            "binding": "instr.gen[$i].P_dBm"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T07#3-from-generator-power-to-rabi-frequency",
+        "class": "Exact"
+      },
+      {
+        "id": "iq_modulation",
+        "latex": "s(t) = I(t)\\cos\\omega_{LO}t - Q(t)\\sin\\omega_{LO}t",
+        "plain": "s = I cos(w_LO t) - Q sin(w_LO t)",
+        "terms": [
+          {
+            "symbol": "I",
+            "name": "In-phase envelope",
+            "unit": "V",
+            "binding": "instr.awg.ch[$k].waveform"
+          },
+          {
+            "symbol": "Q",
+            "name": "Quadrature envelope",
+            "unit": "V"
+          },
+          {
+            "symbol": "\\omega_{LO}",
+            "name": "Local-oscillator frequency",
+            "unit": "GHz",
+            "binding": "instr.gen[$i].f"
+          }
+        ],
+        "assumptions": [
+          "ideal_pulse_shape"
+        ],
+        "theory": "T07#5-iq-modulation-up-conversion-and-frames",
+        "class": "Exact"
+      },
+      {
+        "id": "heterodyne_demod",
+        "latex": "I + iQ = \\frac{1}{T}\\int_0^{T} s(t)\\,w(t)\\,e^{-i\\omega_{IF}t}\\,dt",
+        "plain": "I+iQ = 1/T ∫ s(t) w(t) exp(-i w_IF t) dt",
+        "terms": [
+          {
+            "symbol": "\\omega_{IF}",
+            "name": "Intermediate frequency",
+            "unit": "MHz"
+          },
+          {
+            "symbol": "w",
+            "name": "Integration weights",
+            "unit": ""
+          },
+          {
+            "symbol": "T",
+            "name": "Integration time",
+            "unit": "µs"
+          }
+        ],
+        "assumptions": [
+          "matched_filter"
+        ],
+        "theory": "T07#6-heterodyne-readout-and-demodulation",
+        "class": "Exact"
+      },
+      {
+        "id": "readout_snr",
+        "latex": "\\mathrm{SNR} = |\\alpha_0 - \\alpha_1|\\sqrt{2\\eta\\kappa\\tau},\\qquad P_{\\rm err} = \\tfrac12\\,\\mathrm{erfc}\\!\\left(\\frac{\\mathrm{SNR}}{2\\sqrt2}\\right)",
+        "plain": "SNR = |a0 - a1| sqrt(2 eta kappa tau); P_err = 1/2 erfc(SNR/(2 sqrt 2))",
+        "terms": [
+          {
+            "symbol": "\\alpha_0",
+            "name": "Pointer amplitude for |0⟩",
+            "unit": ""
+          },
+          {
+            "symbol": "\\alpha_1",
+            "name": "Pointer amplitude for |1⟩",
+            "unit": ""
+          },
+          {
+            "symbol": "\\eta",
+            "name": "Measurement efficiency",
+            "unit": "",
+            "binding": "wiring.readout.eta"
+          },
+          {
+            "symbol": "\\kappa",
+            "name": "Resonator linewidth",
+            "unit": "MHz",
+            "binding": "device.res[$i].kappa"
+          },
+          {
+            "symbol": "\\tau",
+            "name": "Integration time",
+            "unit": "µs"
+          }
+        ],
+        "assumptions": [
+          "gaussian_iq",
+          "matched_filter"
+        ],
+        "theory": "T07#6-heterodyne-readout-and-demodulation",
+        "class": "Model"
+      },
+      {
+        "id": "adc_snr",
+        "latex": "\\mathrm{SNR}_{\\rm q} \\approx 6.02\\,N + 1.76\\ \\mathrm{dB}",
+        "plain": "SNR = 6.02 N + 1.76 dB",
+        "terms": [
+          {
+            "symbol": "N",
+            "name": "Converter bits",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T07#7-sampling-quantization-timing",
+        "class": "Model"
+      },
+      {
+        "id": "friis",
+        "latex": "T_{\\rm sys} = T_1 + \\frac{T_2}{G_1} + \\frac{T_3}{G_1G_2} + \\cdots",
+        "plain": "T_sys = T1 + T2/G1 + T3/(G1 G2) + ...",
+        "terms": [
+          {
+            "symbol": "T_{\\rm sys}",
+            "name": "System noise temperature",
+            "unit": "K",
+            "binding": "wiring.line[$line].T_sys"
+          },
+          {
+            "symbol": "T_1",
+            "name": "Noise temperature of the first stage",
+            "unit": "K"
+          },
+          {
+            "symbol": "G_1",
+            "name": "Gain of the first stage",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T07#8-amplifier-chain-and-noise-temperature",
+        "class": "Model"
+      },
+      {
+        "id": "quantum_limit",
+        "latex": "T_N^{\\min} = \\frac{\\hbar\\omega}{2k_B}\\quad(\\text{phase-preserving})",
+        "plain": "T_N,min = hbar omega/(2 k_B)",
+        "terms": [
+          {
+            "symbol": "T_N",
+            "name": "Amplifier noise temperature",
+            "unit": "K",
+            "binding": "wiring.line[$line].jpa.T_N"
+          },
+          {
+            "symbol": "\\omega",
+            "name": "Signal frequency",
+            "unit": "GHz"
+          }
+        ],
+        "assumptions": [
+          "phase_preserving_amp"
+        ],
+        "theory": "T07#8-amplifier-chain-and-noise-temperature",
+        "class": "Exact"
+      },
+      {
+        "id": "thermal_photon_number",
+        "latex": "n_{th}(f,T) = \\frac{1}{e^{hf/k_BT} - 1}",
+        "plain": "n = 1/(exp(h f/(k_B T)) - 1)",
+        "terms": [
+          {
+            "symbol": "f",
+            "name": "Frequency",
+            "unit": "GHz"
+          },
+          {
+            "symbol": "T",
+            "name": "Temperature",
+            "unit": "K",
+            "binding": "cryo.stage.$stage.T"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T07#9-thermal-photons-and-the-attenuation-chain",
+        "class": "Exact"
+      },
+      {
+        "id": "attn_noise_cascade",
+        "latex": "n_{\\rm out} = \\frac{n_{\\rm in}}{A} + \\left(1 - \\frac1A\\right) n_{th}(f, T_s)",
+        "plain": "n_out = n_in/A + (1 - 1/A) n_th(f, T_s)",
+        "terms": [
+          {
+            "symbol": "A",
+            "name": "Linear attenuation 10^{A_dB/10}",
+            "unit": "",
+            "binding": "static.A_dB"
+          },
+          {
+            "symbol": "T_s",
+            "name": "Stage temperature",
+            "unit": "K",
+            "binding": "cryo.stage.$stage.T"
+          },
+          {
+            "symbol": "n_{\\rm out}",
+            "name": "Output photon number",
+            "unit": "",
+            "binding": "wiring.line[$line].attn[$k].n_th"
+          }
+        ],
+        "assumptions": [
+          "cable_loss_cold_end"
+        ],
+        "theory": "T07#9-thermal-photons-and-the-attenuation-chain",
+        "class": "Model"
+      },
+      {
+        "id": "attn_dissipation",
+        "latex": "P_{\\rm diss} = P_{\\rm in}\\left(1 - 10^{-A/10}\\right)",
+        "plain": "P_diss = P_in (1 - 10^(-A/10))",
+        "terms": [
+          {
+            "symbol": "P_{\\rm in}",
+            "name": "Input power",
+            "unit": "W"
+          },
+          {
+            "symbol": "A",
+            "name": "Attenuation",
+            "unit": "dB",
+            "binding": "static.A_dB"
+          },
+          {
+            "symbol": "P_{\\rm diss}",
+            "name": "Dissipated power",
+            "unit": "W",
+            "binding": "wiring.line[$line].attn[$k].P_diss"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T07#9-thermal-photons-and-the-attenuation-chain",
+        "class": "Model"
+      },
+      {
+        "id": "effective_temperature",
+        "latex": "T_{\\rm eff} = \\frac{hf}{k_B\\ln(1 + 1/n)}",
+        "plain": "T_eff = h f/(k_B ln(1 + 1/n))",
+        "terms": [
+          {
+            "symbol": "n",
+            "name": "Photon number",
+            "unit": ""
+          },
+          {
+            "symbol": "f",
+            "name": "Frequency",
+            "unit": "GHz"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T07#9-thermal-photons-and-the-attenuation-chain",
+        "class": "Exact"
+      },
+      {
+        "id": "thermal_population",
+        "latex": "P_1 = \\frac{1}{1 + e^{hf/k_BT_{\\rm eff}}}",
+        "plain": "P1 = 1/(1 + exp(h f/(k_B T_eff)))",
+        "terms": [
+          {
+            "symbol": "P_1",
+            "name": "Excited-state population",
+            "unit": "",
+            "binding": "device.qubit[$i].pop_e"
+          },
+          {
+            "symbol": "T_{\\rm eff}",
+            "name": "Effective qubit temperature",
+            "unit": "mK",
+            "binding": "device.qubit[$i].T_eff"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T07#10-qubit-thermal-population-and-effective-temperature",
+        "class": "Model"
+      },
+      {
+        "id": "lpf_cutoff",
+        "latex": "f_c = \\frac{1}{2\\pi RC}",
+        "plain": "f_c = 1/(2 pi R C)",
+        "terms": [
+          {
+            "symbol": "f_c",
+            "name": "Cutoff frequency",
+            "unit": "MHz",
+            "binding": "static.f_c"
+          },
+          {
+            "symbol": "R",
+            "name": "Resistance",
+            "unit": "Ω"
+          },
+          {
+            "symbol": "C",
+            "name": "Capacitance",
+            "unit": "nF"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T07#11-flux-bias-lines-filters-and-crosstalk",
+        "class": "Model"
+      },
+      {
+        "id": "cooling_power_mxc",
+        "latex": "\\dot Q_{\\rm mc} = 84\\,\\dot n_3\\,T_{\\rm mc}^2 - \\dot Q_0",
+        "plain": "Q_mc = 84 n3 T_mc^2 - Q0",
+        "terms": [
+          {
+            "symbol": "\\dot Q_{\\rm mc}",
+            "name": "Mixing-chamber cooling power",
+            "unit": "µW",
+            "binding": "cryo.stage.mxc.P_cool"
+          },
+          {
+            "symbol": "\\dot n_3",
+            "name": "³He circulation rate",
+            "unit": "mmol/s",
+            "binding": "cryo.flow.n3"
+          },
+          {
+            "symbol": "T_{\\rm mc}",
+            "name": "Mixing-chamber temperature",
+            "unit": "mK",
+            "binding": "cryo.stage.mxc.T"
+          }
+        ],
+        "assumptions": [
+          "steady_state"
+        ],
+        "theory": "T08#1.2-cooling-power",
+        "class": "Model"
+      },
+      {
+        "id": "cooling_power_general",
+        "latex": "\\dot Q = \\dot n_3\\left(95\\,T_{\\rm mc}^2 - 11\\,T_{\\rm ex}^2\\right)",
+        "plain": "Q = n3 (95 T_mc^2 - 11 T_ex^2)",
+        "terms": [
+          {
+            "symbol": "T_{\\rm ex}",
+            "name": "Temperature of ³He entering the mixing chamber",
+            "unit": "mK",
+            "binding": "cryo.hx.step[3].T"
+          },
+          {
+            "symbol": "\\dot n_3",
+            "name": "Circulation rate",
+            "unit": "mmol/s",
+            "binding": "cryo.flow.n3"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T08#1.2-cooling-power",
+        "class": "Model"
+      },
+      {
+        "id": "still_flow",
+        "latex": "\\dot n_3 \\approx \\frac{\\dot Q_{\\rm still}}{L_3(T_{\\rm still})}",
+        "plain": "n3 ~ Q_still / L3(T_still)",
+        "terms": [
+          {
+            "symbol": "\\dot Q_{\\rm still}",
+            "name": "Still heater power",
+            "unit": "mW",
+            "binding": "cryo.stage.still.P_heater"
+          },
+          {
+            "symbol": "L_3",
+            "name": "Latent heat of ³He",
+            "unit": "J/mol"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T08#1.3-the-circulation-loop",
+        "class": "Model"
+      },
+      {
+        "id": "pt_capacity",
+        "latex": "\\dot Q_{\\rm PT2}(T) \\approx 1.5\\,\\mathrm W \\cdot \\frac{T - 2.8\\,\\mathrm K}{4.2\\,\\mathrm K - 2.8\\,\\mathrm K}",
+        "plain": "Q_PT2 ~ 1.5 W (T - 2.8 K)/(1.4 K)",
+        "terms": [
+          {
+            "symbol": "\\dot Q_{\\rm PT2}",
+            "name": "Second-stage cooling power",
+            "unit": "W",
+            "binding": "cryo.stage.s4.P_cool"
+          },
+          {
+            "symbol": "T",
+            "name": "Second-stage temperature",
+            "unit": "K",
+            "binding": "cryo.pt.stage2.T"
+          }
+        ],
+        "assumptions": [
+          "lumped_thermal"
+        ],
+        "theory": "T08#2-pulse-tube-pre-cooling",
+        "class": "Model"
+      },
+      {
+        "id": "conduction_load",
+        "latex": "\\dot Q = \\frac{A}{L}\\int_{T_c}^{T_h} k(T)\\,dT",
+        "plain": "Q = A/L ∫ k(T) dT",
+        "terms": [
+          {
+            "symbol": "A",
+            "name": "Conductor cross-section",
+            "unit": "mm²"
+          },
+          {
+            "symbol": "L",
+            "name": "Segment length",
+            "unit": "m",
+            "binding": "static.length_m"
+          },
+          {
+            "symbol": "k",
+            "name": "Thermal conductivity",
+            "unit": "W/(m·K)"
+          },
+          {
+            "symbol": "\\dot Q",
+            "name": "Conducted heat",
+            "unit": "W",
+            "binding": "wiring.line[$line].seg[$j].P_cond"
+          }
+        ],
+        "assumptions": [
+          "steady_state"
+        ],
+        "theory": "T08#4-heat-conduction-along-wiring",
+        "class": "Model"
+      },
+      {
+        "id": "radiation_load",
+        "latex": "\\dot Q = \\sigma A\\,\\varepsilon_{\\rm eff}\\left(T_h^4 - T_c^4\\right),\\qquad \\varepsilon_{\\rm eff} = \\frac{\\varepsilon}{2-\\varepsilon}",
+        "plain": "Q = sigma A eps_eff (Th^4 - Tc^4)",
+        "terms": [
+          {
+            "symbol": "\\sigma",
+            "name": "Stefan–Boltzmann constant",
+            "unit": "W/(m²·K⁴)"
+          },
+          {
+            "symbol": "A",
+            "name": "Shield area",
+            "unit": "m²"
+          },
+          {
+            "symbol": "\\varepsilon",
+            "name": "Emissivity",
+            "unit": ""
+          },
+          {
+            "symbol": "T_h",
+            "name": "Warmer shield temperature",
+            "unit": "K"
+          }
+        ],
+        "assumptions": [
+          "grey_body"
+        ],
+        "theory": "T08#5-radiation-and-other-loads",
+        "class": "Model"
+      },
+      {
+        "id": "cooldown_lumped",
+        "latex": "C(T)\\,\\dot T = \\dot Q_{\\rm cool}(T) - \\dot Q_{\\rm load}(T)",
+        "plain": "C(T) dT/dt = Q_cool - Q_load",
+        "terms": [
+          {
+            "symbol": "C",
+            "name": "Stage heat capacity",
+            "unit": "J/K"
+          },
+          {
+            "symbol": "\\dot Q_{\\rm cool}",
+            "name": "Cooling power",
+            "unit": "W",
+            "binding": "cryo.stage.$stage.P_cool"
+          },
+          {
+            "symbol": "\\dot Q_{\\rm load}",
+            "name": "Heat load",
+            "unit": "W",
+            "binding": "cryo.stage.$stage.P_load"
+          }
+        ],
+        "assumptions": [
+          "lumped_thermal"
+        ],
+        "theory": "T08#7-cooldown-dynamics",
+        "class": "Numerical"
+      },
+      {
+        "id": "debye_heat_capacity",
+        "latex": "C_V = 9Nk_B\\left(\\frac{T}{\\Theta_D}\\right)^3\\int_0^{\\Theta_D/T}\\frac{x^4e^x}{(e^x-1)^2}dx",
+        "plain": "Debye C_V",
+        "terms": [
+          {
+            "symbol": "\\Theta_D",
+            "name": "Debye temperature",
+            "unit": "K"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T08#7-cooldown-dynamics",
+        "class": "Model"
+      },
+      {
+        "id": "kapitza",
+        "latex": "R_K \\propto T^{-3}",
+        "plain": "R_K ~ T^-3",
+        "terms": [
+          {
+            "symbol": "R_K",
+            "name": "Kapitza boundary resistance",
+            "unit": "K/W"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T08#1.3-the-circulation-loop",
+        "class": "Model"
+      },
+      {
+        "id": "ruo2_thermometer",
+        "latex": "R(T) = R_0\\exp\\left[(T_0/T)^{1/4}\\right]",
+        "plain": "R = R0 exp((T0/T)^(1/4))",
+        "terms": [
+          {
+            "symbol": "R",
+            "name": "Sensor resistance",
+            "unit": "kΩ",
+            "binding": "cryo.thermo[$i].R"
+          },
+          {
+            "symbol": "T",
+            "name": "Temperature",
+            "unit": "mK",
+            "binding": "cryo.stage.$stage.T"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T08#8-thermometry-vibration-and-magnetic-shielding",
+        "class": "Model"
+      },
+      {
+        "id": "turbo_pressure",
+        "latex": "p(t) = p_{\\rm base} + (p_0 - p_{\\rm base})e^{-S t/V}",
+        "plain": "p = p_base + (p0 - p_base) exp(-S t/V)",
+        "terms": [
+          {
+            "symbol": "S",
+            "name": "Pumping speed",
+            "unit": "L/s"
+          },
+          {
+            "symbol": "V",
+            "name": "Pumped volume",
+            "unit": "L"
+          },
+          {
+            "symbol": "p",
+            "name": "OVC pressure",
+            "unit": "mbar",
+            "binding": "cryo.ovc.pressure"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T08#1.3-the-circulation-loop",
+        "class": "Model"
+      },
+      {
+        "id": "paul_pseudopotential",
+        "latex": "\\Phi_{ps} = \\frac{q^2V_{RF}^2}{4m\\Omega_{RF}^2r_0^4}\\,r^2",
+        "plain": "Phi_ps = q^2 V_RF^2/(4 m Omega_RF^2 r0^4) r^2",
+        "terms": [
+          {
+            "symbol": "V_{RF}",
+            "name": "RF amplitude",
+            "unit": "V",
+            "binding": "instr.rf.V"
+          },
+          {
+            "symbol": "\\Omega_{RF}",
+            "name": "RF drive frequency",
+            "unit": "MHz"
+          },
+          {
+            "symbol": "r_0",
+            "name": "Electrode–axis distance",
+            "unit": "µm"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T06#1.1-rf-confinement-and-the-pseudopotential",
+        "class": "Model"
+      },
+      {
+        "id": "chain_equilibrium",
+        "latex": "u_m - \\sum_{n\\ne m}\\frac{\\mathrm{sgn}(m-n)}{(u_m-u_n)^2} = 0,\\qquad \\ell^3 = \\frac{e^2}{4\\pi\\varepsilon_0 m\\omega_z^2}",
+        "plain": "u_m - sum sgn(m-n)/(u_m-u_n)^2 = 0",
+        "terms": [
+          {
+            "symbol": "\\omega_z",
+            "name": "Axial COM frequency",
+            "unit": "MHz",
+            "binding": "device.trap.omega_z"
+          },
+          {
+            "symbol": "\\ell",
+            "name": "Length scale",
+            "unit": "µm"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T06#1.2-equilibrium-positions-of-a-chain",
+        "class": "Numerical"
+      },
+      {
+        "id": "normal_modes",
+        "latex": "\\omega_p = \\omega_z\\sqrt{\\mu_p},\\qquad \\omega_{\\rm COM} = \\omega_z,\\quad \\omega_{\\rm br} = \\sqrt3\\,\\omega_z",
+        "plain": "omega_p = omega_z sqrt(mu_p)",
+        "terms": [
+          {
+            "symbol": "\\mu_p",
+            "name": "Hessian eigenvalue",
+            "unit": ""
+          },
+          {
+            "symbol": "\\omega_z",
+            "name": "Axial frequency",
+            "unit": "MHz",
+            "binding": "device.trap.omega_z"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T06#1.3-normal-modes",
+        "class": "Numerical"
+      },
+      {
+        "id": "lamb_dicke",
+        "latex": "\\eta = k\\cos\\theta\\sqrt{\\frac{\\hbar}{2m\\omega}}",
+        "plain": "eta = k cos(theta) sqrt(hbar/(2 m omega))",
+        "terms": [
+          {
+            "symbol": "\\eta",
+            "name": "Lamb–Dicke parameter",
+            "unit": "",
+            "binding": "device.trap.eta"
+          },
+          {
+            "symbol": "k",
+            "name": "Laser wavenumber",
+            "unit": "1/µm"
+          },
+          {
+            "symbol": "\\omega",
+            "name": "Mode frequency",
+            "unit": "MHz"
+          }
+        ],
+        "assumptions": [
+          "lamb_dicke"
+        ],
+        "theory": "T06#3-laser-ion-interaction-in-the-lamb-dicke-regime",
+        "class": "Exact"
+      },
+      {
+        "id": "ms_hamiltonian",
+        "latex": "H_{MS} = \\hbar g\\,S_\\phi\\left(a e^{-i\\delta t} + a^\\dagger e^{i\\delta t}\\right),\\qquad g = \\frac{\\eta\\Omega}{2}",
+        "plain": "H_MS = hbar g S_phi (a e^{-i delta t} + a† e^{i delta t})",
+        "terms": [
+          {
+            "symbol": "g",
+            "name": "Spin–motion coupling",
+            "unit": "kHz"
+          },
+          {
+            "symbol": "\\delta",
+            "name": "Symmetric detuning from the sideband",
+            "unit": "kHz"
+          },
+          {
+            "symbol": "\\Omega",
+            "name": "Carrier Rabi frequency",
+            "unit": "MHz"
+          }
+        ],
+        "assumptions": [
+          "lamb_dicke",
+          "single_mode_ms"
+        ],
+        "theory": "T06#6.1-bichromatic-drive",
+        "class": "Exact"
+      },
+      {
+        "id": "ms_closure",
+        "latex": "\\tau = \\frac{2\\pi K}{\\delta},\\qquad \\Phi(\\tau) = \\frac{g^2\\tau}{\\delta} = \\frac{\\pi}{8}\\ \\Rightarrow\\ XX(\\pi/4)",
+        "plain": "tau = 2 pi K/delta; Phi = g^2 tau/delta",
+        "terms": [
+          {
+            "symbol": "\\tau",
+            "name": "Gate duration",
+            "unit": "µs",
+            "binding": "device.edge[$e].t_ms"
+          },
+          {
+            "symbol": "K",
+            "name": "Number of phase-space loops",
+            "unit": ""
+          }
+        ],
+        "assumptions": [
+          "single_mode_ms"
+        ],
+        "theory": "T06#6.2-exact-solution",
+        "class": "Model"
+      },
+      {
+        "id": "fluorescence_threshold",
+        "latex": "P(n\\ge n_{\\rm th}\\mid\\text{dark}) = 1 - \\sum_{n<n_{\\rm th}}\\frac{\\lambda_d^n e^{-\\lambda_d}}{n!}",
+        "plain": "Poisson threshold error",
+        "terms": [
+          {
+            "symbol": "\\lambda_d",
+            "name": "Mean dark counts",
+            "unit": ""
+          },
+          {
+            "symbol": "n_{\\rm th}",
+            "name": "Threshold count",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T06#7.1-fluorescence",
+        "class": "Statistical"
+      },
+      {
+        "id": "heating_rate",
+        "latex": "\\bar n(t) = \\bar n_0 + \\dot{\\bar n}\\,t",
+        "plain": "n(t) = n0 + ndot t",
+        "terms": [
+          {
+            "symbol": "\\dot{\\bar n}",
+            "name": "Motional heating rate",
+            "unit": "quanta/s",
+            "binding": "device.trap.heating"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T06#8-decoherence-and-drift",
+        "class": "Model"
+      },
+      {
+        "id": "stabilizer_condition",
+        "latex": "S|\\psi\\rangle = |\\psi\\rangle\\ \\forall S\\in\\mathcal S,\\qquad E\\text{ detectable}\\iff \\exists S: \\{E,S\\}=0",
+        "plain": "S psi = psi for all S in stabilizer; E detectable iff anticommutes with some S",
+        "terms": [
+          {
+            "symbol": "S",
+            "name": "Stabilizer generator",
+            "unit": ""
+          },
+          {
+            "symbol": "E",
+            "name": "Error operator",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T09#2.3-error-detection-and-correction-conditions",
+        "class": "Exact"
+      },
+      {
+        "id": "surface_logical_error",
+        "latex": "p_L \\approx A\\left(\\frac{p}{p_{th}}\\right)^{(d+1)/2},\\qquad A = 0.1,\\ p_{th} = 10^{-2}",
+        "plain": "p_L ~ A (p/p_th)^((d+1)/2)",
+        "terms": [
+          {
+            "symbol": "p_L",
+            "name": "Logical error per cycle",
+            "unit": ""
+          },
+          {
+            "symbol": "p",
+            "name": "Physical error rate",
+            "unit": "",
+            "binding": "device.error_2q_mean"
+          },
+          {
+            "symbol": "d",
+            "name": "Code distance",
+            "unit": ""
+          }
+        ],
+        "assumptions": [
+          "surface_code_scaling",
+          "circuit_level_noise"
+        ],
+        "theory": "T09#7-threshold-and-logical-error-scaling",
+        "class": "Model"
+      },
+      {
+        "id": "surface_qubits",
+        "latex": "n_{\\rm phys} = 2d^2 - 1\\ \\text{per logical qubit}",
+        "plain": "n = 2 d^2 - 1",
+        "terms": [
+          {
+            "symbol": "d",
+            "name": "Code distance",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T09#5.1-rotated-planar-layout",
+        "class": "Exact"
+      },
+      {
+        "id": "distillation_15to1",
+        "latex": "p_{\\rm out} \\approx 35\\,p_{\\rm in}^3",
+        "plain": "p_out ~ 35 p_in^3",
+        "terms": [
+          {
+            "symbol": "p_{\\rm in}",
+            "name": "Input magic-state error",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T09#8.3-magic-states-and-distillation",
+        "class": "Model"
+      },
+      {
+        "id": "qec_resources",
+        "latex": "N_{\\rm phys} = Q_L(2d^2-1)\\cdot 1.5 + N_{\\rm fact},\\qquad T = N_T\\cdot d\\,t_c",
+        "plain": "N_phys = Q_L (2d^2-1) 1.5 + N_fact; T = N_T d t_c",
+        "terms": [
+          {
+            "symbol": "Q_L",
+            "name": "Logical qubits",
+            "unit": ""
+          },
+          {
+            "symbol": "N_T",
+            "name": "T count",
+            "unit": ""
+          },
+          {
+            "symbol": "t_c",
+            "name": "Syndrome cycle time",
+            "unit": "µs",
+            "binding": "static.qec.cycle_time"
+          }
+        ],
+        "assumptions": [
+          "surface_code_scaling"
+        ],
+        "theory": "T09#9-resource-estimation-recipe",
+        "class": "Model"
+      },
+      {
+        "id": "avg_fidelity_from_entanglement",
+        "latex": "\\bar F = \\frac{dF_e + 1}{d+1}",
+        "plain": "F_avg = (d F_e + 1)/(d+1)",
+        "terms": [
+          {
+            "symbol": "F_e",
+            "name": "Entanglement fidelity",
+            "unit": ""
+          },
+          {
+            "symbol": "d",
+            "name": "Dimension",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T10#1-fidelity-measures",
+        "class": "Exact"
+      },
+      {
+        "id": "rb_decay",
+        "latex": "F(m) = A\\,p^m + B,\\qquad r = (1-p)\\frac{d-1}{d}",
+        "plain": "F(m) = A p^m + B; r = (1-p)(d-1)/d",
+        "terms": [
+          {
+            "symbol": "m",
+            "name": "Sequence length (Cliffords)",
+            "unit": ""
+          },
+          {
+            "symbol": "p",
+            "name": "Depolarizing parameter",
+            "unit": ""
+          },
+          {
+            "symbol": "r",
+            "name": "Error per Clifford",
+            "unit": "",
+            "binding": "device.qubit[$i].error_1q"
+          }
+        ],
+        "assumptions": [
+          "clifford_twirl"
+        ],
+        "theory": "T10#2-randomized-benchmarking",
+        "class": "Statistical"
+      },
+      {
+        "id": "interleaved_rb",
+        "latex": "r_{\\rm gate} = \\left(1 - \\frac{p_{\\rm int}}{p_{\\rm ref}}\\right)\\frac{d-1}{d}",
+        "plain": "r_gate = (1 - p_int/p_ref)(d-1)/d",
+        "terms": [
+          {
+            "symbol": "p_{\\rm int}",
+            "name": "Interleaved decay",
+            "unit": ""
+          },
+          {
+            "symbol": "p_{\\rm ref}",
+            "name": "Reference decay",
+            "unit": ""
+          }
+        ],
+        "assumptions": [
+          "clifford_twirl"
+        ],
+        "theory": "T10#2-randomized-benchmarking",
+        "class": "Statistical"
+      },
+      {
+        "id": "state_tomography_inversion",
+        "latex": "\\rho = \\frac{1}{2^n}\\sum_{P}\\langle P\\rangle\\,P",
+        "plain": "rho = 2^-n sum_P <P> P",
+        "terms": [
+          {
+            "symbol": "P",
+            "name": "Pauli string",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T10#3-state-tomography",
+        "class": "Statistical"
+      },
+      {
+        "id": "xeb",
+        "latex": "F_{\\rm XEB} = 2^n\\langle p(x)\\rangle_{\\rm samples} - 1",
+        "plain": "F_XEB = 2^n <p(x)> - 1",
+        "terms": [
+          {
+            "symbol": "p(x)",
+            "name": "Ideal probability of sampled bitstring",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T10#5-cross-entropy-benchmarking",
+        "class": "Statistical"
+      },
+      {
+        "id": "wall_time",
+        "latex": "T_{\\rm run} = T_{\\rm load} + N_{\\rm shots}\\left(T_{\\rm reset} + T_{\\rm circ} + T_{\\rm ro} + T_{\\rm gap}\\right)",
+        "plain": "T_run = T_load + N (T_reset + T_circ + T_ro + T_gap)",
+        "terms": [
+          {
+            "symbol": "T_{\\rm circ}",
+            "name": "Scheduled critical path",
+            "unit": "µs",
+            "binding": "run.T_circ"
+          },
+          {
+            "symbol": "T_{\\rm ro}",
+            "name": "Readout duration",
+            "unit": "µs"
+          },
+          {
+            "symbol": "T_{\\rm gap}",
+            "name": "Repetition overhead",
+            "unit": "µs"
+          },
+          {
+            "symbol": "N_{\\rm shots}",
+            "name": "Shots",
+            "unit": "",
+            "binding": "run.shots"
+          }
+        ],
+        "assumptions": [
+          "queue_time_excluded",
+          "calibration_static"
+        ],
+        "theory": "T12#1-wall-time-model",
+        "class": "Model"
+      },
+      {
+        "id": "fidelity_estimate",
+        "latex": "F_{\\rm est} \\approx \\prod_g (1-\\epsilon_g)\\prod_{q}\\prod_{\\rm idle}\\left[1 - \\epsilon_{\\rm idle}(t)\\right]\\prod_q F_{\\rm ro}(q)",
+        "plain": "F_est ~ prod (1-eps_g) prod (1-eps_idle) prod F_ro",
+        "terms": [
+          {
+            "symbol": "\\epsilon_g",
+            "name": "Gate error",
+            "unit": ""
+          },
+          {
+            "symbol": "\\epsilon_{\\rm idle}",
+            "name": "Idle thermal-relaxation infidelity",
+            "unit": ""
+          },
+          {
+            "symbol": "F_{\\rm ro}",
+            "name": "Readout assignment fidelity",
+            "unit": ""
+          }
+        ],
+        "assumptions": [
+          "independent_errors",
+          "average_gate_fidelities",
+          "no_crosstalk"
+        ],
+        "theory": "T12#5-algorithm-scaling-on-hardware",
+        "class": "Model"
+      },
+      {
+        "id": "classical_cost",
+        "latex": "M = 16\\cdot 2^n\\ \\text{bytes},\\qquad t \\approx N_{\\rm gates}\\,2^n\\,c_{\\rm gate}",
+        "plain": "M = 16 2^n bytes; t ~ N_gates 2^n c_gate",
+        "terms": [
+          {
+            "symbol": "n",
+            "name": "Qubits",
+            "unit": "",
+            "binding": "run.n_qubits"
+          },
+          {
+            "symbol": "c_{\\rm gate}",
+            "name": "Per-amplitude gate cost on this host",
+            "unit": "ns",
+            "binding": "static.host.c_gate"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T12#4-fidelity-estimate-from-calibration",
+        "class": "Model"
+      },
+      {
+        "id": "bloch_vector",
+        "latex": "\\vec r = \\left(\\mathrm{Tr}\\,\\rho X,\\ \\mathrm{Tr}\\,\\rho Y,\\ \\mathrm{Tr}\\,\\rho Z\\right),\\qquad |\\vec r| \\le 1",
+        "plain": "r = (Tr rho X, Tr rho Y, Tr rho Z)",
+        "terms": [
+          {
+            "symbol": "\\vec r",
+            "name": "Bloch vector",
+            "unit": "",
+            "binding": "device.qubit[$i].bloch"
+          },
+          {
+            "symbol": "\\rho",
+            "name": "Reduced density operator",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T01#7.1-single-qubit-density-operator-and-the-bloch-ball",
+        "class": "Exact"
+      },
+      {
+        "id": "partial_trace",
+        "latex": "\\rho_A = \\mathrm{Tr}_B\\,\\rho = \\sum_j (I\\otimes\\langle j|)\\,\\rho\\,(I\\otimes|j\\rangle)",
+        "plain": "rho_A = Tr_B rho",
+        "terms": [
+          {
+            "symbol": "\\rho_A",
+            "name": "Reduced state",
+            "unit": ""
+          }
+        ],
+        "assumptions": [
+          "little_endian"
+        ],
+        "theory": "T01#7.2-partial-trace",
+        "class": "Exact"
+      },
+      {
+        "id": "von_neumann_entropy",
+        "latex": "S(\\rho) = -\\mathrm{Tr}\\,\\rho\\log_2\\rho",
+        "plain": "S = -Tr rho log2 rho",
+        "terms": [
+          {
+            "symbol": "S",
+            "name": "Entropy",
+            "unit": "bit"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T01#8-entropies-and-distances",
+        "class": "Exact"
+      },
+      {
+        "id": "mutual_information",
+        "latex": "I(A{:}B) = S_A + S_B - S_{AB}",
+        "plain": "I(A:B) = S_A + S_B - S_AB",
+        "terms": [
+          {
+            "symbol": "S_A",
+            "name": "Entropy of subsystem A",
+            "unit": "bit"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T01#8-entropies-and-distances",
+        "class": "Exact"
+      },
+      {
+        "id": "concurrence",
+        "latex": "C(\\rho) = \\max\\left(0,\\ \\lambda_1-\\lambda_2-\\lambda_3-\\lambda_4\\right),\\qquad \\lambda_i = \\sqrt{\\mathrm{eig}\\left(\\rho\\,(Y\\otimes Y)\\rho^*(Y\\otimes Y)\\right)}\\downarrow",
+        "plain": "C = max(0, l1 - l2 - l3 - l4)",
+        "terms": [
+          {
+            "symbol": "C",
+            "name": "Concurrence",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T01#8-entropies-and-distances",
+        "class": "Exact"
+      },
+      {
+        "id": "schmidt",
+        "latex": "|\\psi\\rangle = \\sum_k \\sqrt{\\lambda_k}\\,|u_k\\rangle_A|v_k\\rangle_B",
+        "plain": "psi = sum sqrt(lambda_k) u_k v_k",
+        "terms": [
+          {
+            "symbol": "\\lambda_k",
+            "name": "Schmidt coefficients",
+            "unit": ""
+          }
+        ],
+        "assumptions": [
+          "pure_state"
+        ],
+        "theory": "T01#7.3-schmidt-decomposition",
+        "class": "Exact"
+      },
+      {
+        "id": "wigner",
+        "latex": "W(\\alpha) = \\frac{2}{\\pi}\\,\\mathrm{Tr}\\!\\left[D(\\alpha)\\rho D^\\dagger(\\alpha)\\,\\Pi\\right],\\qquad \\Pi = (-1)^{a^\\dagger a}",
+        "plain": "W(alpha) = 2/pi Tr[D(alpha) rho D†(alpha) Pi]",
+        "terms": [
+          {
+            "symbol": "\\alpha",
+            "name": "Phase-space point",
+            "unit": ""
+          },
+          {
+            "symbol": "D",
+            "name": "Displacement operator",
+            "unit": ""
+          },
+          {
+            "symbol": "\\Pi",
+            "name": "Parity operator",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T01#7-density-operators",
+        "class": "Exact"
+      },
+      {
+        "id": "born_rule",
+        "latex": "P(x) = |\\langle x|\\psi\\rangle|^2 = |a_x|^2",
+        "plain": "P(x) = |a_x|^2",
+        "terms": [
+          {
+            "symbol": "a_x",
+            "name": "Amplitude of basis state x",
+            "unit": ""
+          }
+        ],
+        "assumptions": [
+          "little_endian"
+        ],
+        "theory": "T01#5.2-computational-basis-measurement-of-a-register-born-rule",
+        "class": "Exact"
+      },
+      {
+        "id": "fidelity_pure",
+        "latex": "F(\\psi,\\phi) = |\\langle\\psi|\\phi\\rangle|^2",
+        "plain": "F = |<psi|phi>|^2",
+        "terms": [
+          {
+            "symbol": "F",
+            "name": "State fidelity",
+            "unit": ""
+          }
+        ],
+        "assumptions": [
+          "pure_state"
+        ],
+        "theory": "T01#8-entropies-and-distances",
+        "class": "Exact"
+      },
+      {
+        "id": "hellinger",
+        "latex": "H^2(p,q) = 1 - \\sum_x\\sqrt{p(x)q(x)}",
+        "plain": "H^2 = 1 - sum sqrt(p q)",
+        "terms": [
+          {
+            "symbol": "p, q",
+            "name": "Outcome distributions",
+            "unit": ""
+          }
+        ],
+        "assumptions": [],
+        "theory": "T01#8-entropies-and-distances",
+        "class": "Statistical"
+      },
+      {
+        "id": "vna_s21_notch",
+        "latex": "S_{21}(f) = a e^{i\\alpha}e^{-2\\pi i f\\tau}\\left[1 - \\frac{Q_l/|Q_c|\\,e^{i\\phi}}{1 + 2iQ_l\\,(f-f_r)/f_r}\\right]",
+        "plain": "S21 = a e^{i alpha} e^{-2 pi i f tau} [1 - (Ql/|Qc|) e^{i phi}/(1 + 2i Ql (f-fr)/fr)]",
+        "terms": [
+          {
+            "symbol": "f_r",
+            "name": "Resonance frequency",
+            "unit": "GHz",
+            "binding": "device.res[$i].f_r"
+          },
+          {
+            "symbol": "Q_l",
+            "name": "Loaded quality factor",
+            "unit": ""
+          },
+          {
+            "symbol": "Q_c",
+            "name": "Coupling quality factor",
+            "unit": ""
+          },
+          {
+            "symbol": "\\phi",
+            "name": "Impedance-mismatch phase",
+            "unit": "rad"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T05#6.3-dispersive-readout",
+        "class": "Model"
+      },
+      {
+        "id": "q_loaded",
+        "latex": "\\frac{1}{Q_l} = \\frac{1}{Q_i} + \\frac{1}{Q_c},\\qquad \\kappa = \\frac{2\\pi f_r}{Q_l}",
+        "plain": "1/Ql = 1/Qi + 1/Qc; kappa = 2 pi fr/Ql",
+        "terms": [
+          {
+            "symbol": "Q_i",
+            "name": "Internal quality factor",
+            "unit": ""
+          },
+          {
+            "symbol": "Q_c",
+            "name": "Coupling quality factor",
+            "unit": ""
+          },
+          {
+            "symbol": "\\kappa",
+            "name": "Linewidth",
+            "unit": "MHz",
+            "binding": "device.res[$i].kappa"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T05#6.3-dispersive-readout",
+        "class": "Model"
+      },
+      {
+        "id": "gaussian_pulse",
+        "latex": "\\Omega(t) = A\\exp\\!\\left[-\\frac{(t-\\tau/2)^2}{2\\sigma^2}\\right]",
+        "plain": "Omega = A exp(-(t - tau/2)^2/(2 sigma^2))",
+        "terms": [
+          {
+            "symbol": "A",
+            "name": "Amplitude",
+            "unit": ""
+          },
+          {
+            "symbol": "\\sigma",
+            "name": "Width",
+            "unit": "ns"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T07#4-pulse-shapes-and-their-spectra",
+        "class": "Exact"
+      },
+      {
+        "id": "phase_noise",
+        "latex": "\\mathcal L(f) = 10\\log_{10}\\frac{S_\\phi(f)}{2}\\ \\ [\\mathrm{dBc/Hz}]",
+        "plain": "L(f) = 10 log10(S_phi/2)",
+        "terms": [
+          {
+            "symbol": "\\mathcal L",
+            "name": "Single-sideband phase noise",
+            "unit": "dBc/Hz",
+            "binding": "instr.gen[$i].phase_noise"
+          }
+        ],
+        "assumptions": [],
+        "theory": "T07#5-iq-modulation-up-conversion-and-frames",
+        "class": "Model"
+      }
+    ]
+  }
+}

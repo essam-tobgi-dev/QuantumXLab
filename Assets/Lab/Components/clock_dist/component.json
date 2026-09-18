@@ -1,0 +1,66 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "clock_dist",
+    "name": "Clock distribution",
+    "category": "instrument",
+    "parent": "rack_B",
+    "function": "Fans the 10 MHz reference and the sample clocks out to every instrument with matched cable lengths so that channels start on the same edge. Skew between channels shows up as a fixed phase offset between qubits and is calibrated out by the compiler's per-channel delay table.",
+    "physics": {
+      "summary": "Distributes reference and sample clocks.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "outputs",
+        "unit": "",
+        "typical": [
+          8,
+          16
+        ]
+      },
+      {
+        "field": "skew",
+        "unit": "ps",
+        "typical": [
+          0,
+          100
+        ]
+      }
+    ],
+    "theory": [
+      "T07#7-sampling-quantization-timing"
+    ],
+    "tooltip": "Clock distribution amplifier.",
+    "geometry": {
+      "generator": "RackUnit",
+      "u": 1,
+      "front": "controller"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ],
+    "model_name": "Clock distribution",
+    "instrument": {
+      "class": "controller",
+      "settings_schema": "instr/controller.schema.json",
+      "channels": []
+    }
+  }
+}

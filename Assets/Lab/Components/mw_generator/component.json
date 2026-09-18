@@ -1,0 +1,92 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "mw_generator",
+    "name": "Microwave signal generator, 20 GHz",
+    "category": "instrument",
+    "parent": "rack_A",
+    "function": "Continuous-wave local oscillator for one drive or readout up-conversion chain. Its frequency sets the carrier the AWG envelopes are mixed onto; its output power sets the mixer drive level; and its phase noise is imprinted on every pulse, appearing as dephasing at the qubit for offsets inside the Rabi bandwidth. All generators are locked to the 10 MHz reference.",
+    "physics": {
+      "summary": "Carrier source; phase noise adds to qubit dephasing.",
+      "equations": [
+        "dbm_to_watts",
+        "phase_noise",
+        "iq_modulation"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "frequency",
+        "unit": "GHz",
+        "typical": [
+          0.01,
+          20
+        ],
+        "binding": "instr.gen[$i].f",
+        "class": "Model"
+      },
+      {
+        "field": "output power",
+        "unit": "dBm",
+        "typical": [
+          -20,
+          20
+        ],
+        "binding": "instr.gen[$i].P_dBm",
+        "class": "Model"
+      },
+      {
+        "field": "phase noise at 10 kHz",
+        "unit": "dBc/Hz",
+        "typical": [
+          -120,
+          -100
+        ]
+      },
+      {
+        "field": "output on",
+        "unit": "",
+        "binding": "instr.gen[$i].on",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T07#5-iq-modulation-up-conversion-and-frames"
+    ],
+    "tooltip": "Microwave generator: local oscillator for one chain.",
+    "geometry": {
+      "generator": "RackUnit",
+      "u": 2,
+      "front": "sg_mw"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ],
+    "model_name": "Microwave signal generator, 20 GHz",
+    "instrument": {
+      "class": "sg_mw",
+      "settings_schema": "instr/sg_mw.schema.json",
+      "channels": [
+        "f",
+        "P_dBm",
+        "on"
+      ]
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "bias_tee",
+    "name": "Bias tee",
+    "category": "wiring",
+    "parent": "stage_mxc",
+    "function": "Combines a DC or slow flux bias with a fast pulse on one line: the capacitor passes the RF, the inductor passes the DC. Used on flux lines so that a single coax carries both the static operating point of a tunable qubit and its fast CZ pulses.",
+    "physics": {
+      "summary": "Merges DC bias and RF pulses onto one line.",
+      "equations": [
+        "flux_from_current"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "RF band",
+        "unit": "GHz",
+        "typical": [
+          0.01,
+          12
+        ]
+      },
+      {
+        "field": "DC current rating",
+        "unit": "mA",
+        "typical": [
+          10,
+          100
+        ]
+      }
+    ],
+    "theory": [
+      "T05#4-flux-tunable-transmons"
+    ],
+    "tooltip": "Bias tee merging DC flux bias with fast pulses.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.02,
+      "h_m": 0.01,
+      "d_m": 0.02,
+      "ports": 3
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

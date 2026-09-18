@@ -1,0 +1,162 @@
+{
+  "qxl": {
+    "kind": "lab.routing",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "sc_lab_standard",
+    "layout": "sc_lab_standard",
+    "stage_order": [
+      "rt",
+      "s50",
+      "s4",
+      "still",
+      "cp",
+      "mxc"
+    ],
+    "feedthrough_ring": {
+      "radius_m": 0.24,
+      "count": 96,
+      "start_angle_deg": 0.0
+    },
+    "line_bundles": [
+      {
+        "kind": "xy",
+        "sector_deg": [
+          0,
+          120
+        ],
+        "radius_m": {
+          "rt": 0.24,
+          "s50": 0.2,
+          "s4": 0.18,
+          "still": 0.16,
+          "cp": 0.15,
+          "mxc": 0.14
+        }
+      },
+      {
+        "kind": "flux",
+        "sector_deg": [
+          120,
+          180
+        ],
+        "radius_m": {
+          "rt": 0.24,
+          "s50": 0.2,
+          "s4": 0.18,
+          "still": 0.16,
+          "cp": 0.15,
+          "mxc": 0.14
+        }
+      },
+      {
+        "kind": "readout_in",
+        "sector_deg": [
+          180,
+          240
+        ],
+        "radius_m": {
+          "rt": 0.24,
+          "s50": 0.2,
+          "s4": 0.18,
+          "still": 0.16,
+          "cp": 0.15,
+          "mxc": 0.14
+        }
+      },
+      {
+        "kind": "readout_out",
+        "sector_deg": [
+          240,
+          300
+        ],
+        "radius_m": {
+          "rt": 0.24,
+          "s50": 0.2,
+          "s4": 0.18,
+          "still": 0.16,
+          "cp": 0.15,
+          "mxc": 0.14
+        }
+      },
+      {
+        "kind": "pump",
+        "sector_deg": [
+          300,
+          330
+        ],
+        "radius_m": {
+          "rt": 0.24,
+          "s50": 0.2,
+          "s4": 0.18,
+          "still": 0.16,
+          "cp": 0.15,
+          "mxc": 0.14
+        }
+      },
+      {
+        "kind": "dc",
+        "sector_deg": [
+          330,
+          360
+        ],
+        "radius_m": {
+          "rt": 0.24,
+          "s50": 0.2,
+          "s4": 0.18,
+          "still": 0.16,
+          "cp": 0.15,
+          "mxc": 0.14
+        }
+      }
+    ],
+    "element_slots": {
+      "attn": {
+        "stage_offset_m": [
+          0.0,
+          -0.04,
+          0.0
+        ]
+      },
+      "clamp": {
+        "stage_offset_m": [
+          0.0,
+          -0.015,
+          0.0
+        ]
+      },
+      "filter": {
+        "stage_offset_m": [
+          0.0,
+          -0.06,
+          0.0
+        ]
+      },
+      "iso": {
+        "stage_offset_m": [
+          0.05,
+          -0.05,
+          0.0
+        ]
+      },
+      "amp": {
+        "stage_offset_m": [
+          0.08,
+          -0.06,
+          0.0
+        ]
+      }
+    },
+    "segment_lengths_m": {
+      "rt-s50": 0.25,
+      "s50-s4": 0.2,
+      "s4-still": 0.15,
+      "still-cp": 0.1,
+      "cp-mxc": 0.1
+    },
+    "rack_to_fridge_cable_m": 6.0
+  }
+}

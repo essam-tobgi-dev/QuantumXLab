@@ -1,0 +1,63 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "imaging_objective",
+    "name": "Imaging objective",
+    "category": "ion_device",
+    "parent": "vacuum_chamber",
+    "function": "High-numerical-aperture lens collecting fluorescence from each ion onto the detector array. Collection efficiency (a few per cent) and detection time together set the state-detection error through the Poisson statistics of the collected photons; a longer window lowers the error until off-resonant pumping starts to flip the state.",
+    "physics": {
+      "summary": "Collects fluorescence for state detection.",
+      "equations": [
+        "fluorescence_threshold"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "numerical aperture",
+        "unit": "",
+        "typical": [
+          0.3,
+          0.6
+        ]
+      },
+      {
+        "field": "collection efficiency",
+        "unit": "",
+        "typical": [
+          0.01,
+          0.05
+        ]
+      }
+    ],
+    "theory": [
+      "T06#7.1-fluorescence"
+    ],
+    "tooltip": "Objective collecting ion fluorescence.",
+    "geometry": {
+      "generator": "Cylinder",
+      "r_m": 0.02,
+      "h_m": 0.05,
+      "caps": true
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

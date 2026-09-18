@@ -1,0 +1,10279 @@
+{
+ "qxl": {
+  "kind": "pulses",
+  "schema": 1,
+  "app": "0.1.0",
+  "created": "2026-09-17T00:00:00Z"
+ },
+ "data": {
+  "device": "ion_chain_32",
+  "frames": {
+   "g": {
+    "frequency_ghz": "device.ion.f_qubit_ghz",
+    "channel": "g"
+   },
+   "r0": {
+    "frequency_ghz": "cal.qubits.0.f01_ghz",
+    "channel": "r[0]"
+   },
+   "r1": {
+    "frequency_ghz": "cal.qubits.1.f01_ghz",
+    "channel": "r[1]"
+   },
+   "r2": {
+    "frequency_ghz": "cal.qubits.2.f01_ghz",
+    "channel": "r[2]"
+   },
+   "r3": {
+    "frequency_ghz": "cal.qubits.3.f01_ghz",
+    "channel": "r[3]"
+   },
+   "r4": {
+    "frequency_ghz": "cal.qubits.4.f01_ghz",
+    "channel": "r[4]"
+   },
+   "r5": {
+    "frequency_ghz": "cal.qubits.5.f01_ghz",
+    "channel": "r[5]"
+   },
+   "r6": {
+    "frequency_ghz": "cal.qubits.6.f01_ghz",
+    "channel": "r[6]"
+   },
+   "r7": {
+    "frequency_ghz": "cal.qubits.7.f01_ghz",
+    "channel": "r[7]"
+   },
+   "r8": {
+    "frequency_ghz": "cal.qubits.8.f01_ghz",
+    "channel": "r[8]"
+   },
+   "r9": {
+    "frequency_ghz": "cal.qubits.9.f01_ghz",
+    "channel": "r[9]"
+   },
+   "r10": {
+    "frequency_ghz": "cal.qubits.10.f01_ghz",
+    "channel": "r[10]"
+   },
+   "r11": {
+    "frequency_ghz": "cal.qubits.11.f01_ghz",
+    "channel": "r[11]"
+   },
+   "r12": {
+    "frequency_ghz": "cal.qubits.12.f01_ghz",
+    "channel": "r[12]"
+   },
+   "r13": {
+    "frequency_ghz": "cal.qubits.13.f01_ghz",
+    "channel": "r[13]"
+   },
+   "r14": {
+    "frequency_ghz": "cal.qubits.14.f01_ghz",
+    "channel": "r[14]"
+   },
+   "r15": {
+    "frequency_ghz": "cal.qubits.15.f01_ghz",
+    "channel": "r[15]"
+   },
+   "r16": {
+    "frequency_ghz": "cal.qubits.16.f01_ghz",
+    "channel": "r[16]"
+   },
+   "r17": {
+    "frequency_ghz": "cal.qubits.17.f01_ghz",
+    "channel": "r[17]"
+   },
+   "r18": {
+    "frequency_ghz": "cal.qubits.18.f01_ghz",
+    "channel": "r[18]"
+   },
+   "r19": {
+    "frequency_ghz": "cal.qubits.19.f01_ghz",
+    "channel": "r[19]"
+   },
+   "r20": {
+    "frequency_ghz": "cal.qubits.20.f01_ghz",
+    "channel": "r[20]"
+   },
+   "r21": {
+    "frequency_ghz": "cal.qubits.21.f01_ghz",
+    "channel": "r[21]"
+   },
+   "r22": {
+    "frequency_ghz": "cal.qubits.22.f01_ghz",
+    "channel": "r[22]"
+   },
+   "r23": {
+    "frequency_ghz": "cal.qubits.23.f01_ghz",
+    "channel": "r[23]"
+   },
+   "r24": {
+    "frequency_ghz": "cal.qubits.24.f01_ghz",
+    "channel": "r[24]"
+   },
+   "r25": {
+    "frequency_ghz": "cal.qubits.25.f01_ghz",
+    "channel": "r[25]"
+   },
+   "r26": {
+    "frequency_ghz": "cal.qubits.26.f01_ghz",
+    "channel": "r[26]"
+   },
+   "r27": {
+    "frequency_ghz": "cal.qubits.27.f01_ghz",
+    "channel": "r[27]"
+   },
+   "r28": {
+    "frequency_ghz": "cal.qubits.28.f01_ghz",
+    "channel": "r[28]"
+   },
+   "r29": {
+    "frequency_ghz": "cal.qubits.29.f01_ghz",
+    "channel": "r[29]"
+   },
+   "r30": {
+    "frequency_ghz": "cal.qubits.30.f01_ghz",
+    "channel": "r[30]"
+   },
+   "r31": {
+    "frequency_ghz": "cal.qubits.31.f01_ghz",
+    "channel": "r[31]"
+   }
+  },
+  "templates": {
+   "ms_bichromatic": {
+    "description": "Bichromatic Raman drive at f_q \u00b1 (f_mode + delta) on both ions; gaussian_square envelope with 10 us edges; closed loop delta*T = 2*pi*K (T06 \u00a76).",
+    "mode": {
+     "axis": "radial",
+     "index": 0
+    },
+    "K": 1,
+    "T_us": 250.0,
+    "delta_khz": 4.0,
+    "edge_us": 10.0,
+    "amp_rule": "Omega = sqrt(theta*delta/(eta_i*eta_j*T))  [rad/s]  (T06 (6.5): theta = eta_i*eta_j*Omega^2*T/delta)"
+   },
+   "raman_pi_half": {
+    "wf": "gaussian_square",
+    "T_us": 10.0,
+    "edge_us": 1.0,
+    "amp": 0.5
+   }
+  },
+  "defcals": [
+   {
+    "gate": "rx",
+    "qubits": [
+     0
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[0]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     0
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[0]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     0
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[0]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     0
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[0]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     0
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     1
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[1]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     1
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[1]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     1
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[1]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     1
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[1]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     1
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     2
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[2]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     2
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[2]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     2
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[2]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     2
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[2]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     2
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     3
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[3]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     3
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[3]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     3
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[3]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     3
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[3]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     3
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     4
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[4]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     4
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[4]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     4
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[4]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     4
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[4]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     4
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     5
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[5]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     5
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[5]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     5
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[5]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     5
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[5]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     5
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     6
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[6]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     6
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[6]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     6
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[6]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     6
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[6]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     6
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     7
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[7]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     7
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[7]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     7
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[7]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     7
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[7]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     7
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     8
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[8]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     8
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[8]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     8
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[8]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     8
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[8]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     8
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     9
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[9]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     9
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[9]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     9
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[9]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     9
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[9]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     9
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     10
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[10]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     10
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[10]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     10
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[10]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     10
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[10]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     10
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     11
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[11]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     11
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[11]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     11
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[11]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     11
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[11]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     11
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     12
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[12]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     12
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[12]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     12
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[12]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     12
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[12]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     12
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[13]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[13]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[13]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     13
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[13]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     13
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[14]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[14]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[14]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     14
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[14]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     14
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[15]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[15]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[15]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     15
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[15]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     15
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[16]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[16]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[16]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     16
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[16]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     16
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[17]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[17]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[17]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     17
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[17]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     17
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[18]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[18]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[18]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     18
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[18]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     18
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[19]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[19]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[19]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     19
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[19]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     19
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[20]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[20]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[20]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     20
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[20]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     20
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[21]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[21]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[21]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     21
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[21]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     21
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[22]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[22]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[22]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     22
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[22]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     22
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[23]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[23]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[23]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     23
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[23]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     23
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[24]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[24]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[24]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     24
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[24]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     24
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[25]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[25]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[25]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     25
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[25]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     25
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[26]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[26]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[26]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     26
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[26]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     26
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[27]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[27]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[27]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     27
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[27]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     27
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[28]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[28]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[28]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     28
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[28]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     28
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[29]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[29]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[29]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     29
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[29]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     29
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[30]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[30]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[30]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     30
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[30]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     30
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rx",
+    "qubits": [
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[31]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ry",
+    "qubits": [
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "r[31]",
+       "wf": "gaussian_square",
+       "T_ns": 10000,
+       "edge_ns": 1000,
+       "amp": "0.5*theta/(pi/2)",
+       "phase": 1.5707963268
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "r[31]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     31
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "detect",
+       "wf": "constant",
+       "T_ns": 300000,
+       "amp": 1.0
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[31]",
+       "T_ns": 300000,
+       "kind": "photon_count",
+       "threshold": "device.readout"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     31
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "pump",
+       "wf": "constant",
+       "T_ns": 10000,
+       "amp": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     1
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-1",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     2
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-2",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     3
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-3",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     4
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-4",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     5
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-5",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     6
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-6",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     7
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-7",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     8
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-8",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     9
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-9",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     10
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-10",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     11
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-11",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     12
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-12",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-13",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-14",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-15",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     0,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.0-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     2
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-2",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     3
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-3",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     4
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-4",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     5
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-5",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     6
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-6",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     7
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-7",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     8
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-8",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     9
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-9",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     10
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-10",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     11
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-11",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     12
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-12",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-13",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-14",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-15",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     1,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.1-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     3
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-3",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     4
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-4",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     5
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-5",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     6
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-6",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     7
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-7",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     8
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-8",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     9
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-9",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     10
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-10",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     11
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-11",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     12
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-12",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-13",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-14",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-15",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     2,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.2-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     4
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-4",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     5
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-5",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     6
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-6",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     7
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-7",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     8
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-8",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     9
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-9",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     10
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-10",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     11
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-11",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     12
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-12",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-13",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-14",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-15",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     3,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.3-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     5
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-5",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     6
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-6",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     7
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-7",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     8
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-8",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     9
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-9",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     10
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-10",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     11
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-11",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     12
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-12",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-13",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-14",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-15",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     4,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.4-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     6
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-6",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     7
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-7",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     8
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-8",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     9
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-9",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     10
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-10",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     11
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-11",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     12
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-12",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-13",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-14",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-15",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     5,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.5-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     7
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-7",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     8
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-8",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     9
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-9",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     10
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-10",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     11
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-11",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     12
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-12",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-13",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-14",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-15",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     6,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.6-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     8
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-8",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     9
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-9",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     10
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-10",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     11
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-11",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     12
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-12",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-13",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-14",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-15",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     7,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.7-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     9
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-9",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     10
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-10",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     11
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-11",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     12
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-12",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-13",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-14",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-15",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     8,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.8-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     10
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-10",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     11
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-11",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     12
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-12",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-13",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-14",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-15",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     9,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.9-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     11
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-11",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     12
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-12",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-13",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-14",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-15",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     10,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.10-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     12
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-12",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-13",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-14",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-15",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     11,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.11-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     13
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-13",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-14",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-15",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     12,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.12-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     14
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-14",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-15",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     13,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.13-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     15
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-15",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     14,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.14-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     16
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-16",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     15,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.15-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     16,
+     17
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.16-17",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     16,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.16-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     16,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.16-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     16,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.16-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     16,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.16-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     16,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.16-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     16,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.16-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     16,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.16-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     16,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.16-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     16,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.16-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     16,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.16-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     16,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.16-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     16,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.16-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     16,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.16-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     16,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.16-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     17,
+     18
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.17-18",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     17,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.17-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     17,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.17-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     17,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.17-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     17,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.17-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     17,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.17-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     17,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.17-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     17,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.17-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     17,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.17-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     17,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.17-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     17,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.17-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     17,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.17-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     17,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.17-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     17,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.17-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     18,
+     19
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.18-19",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     18,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.18-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     18,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.18-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     18,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.18-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     18,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.18-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     18,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.18-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     18,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.18-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     18,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.18-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     18,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.18-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     18,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.18-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     18,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.18-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     18,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.18-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     18,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.18-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     19,
+     20
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.19-20",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     19,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.19-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     19,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.19-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     19,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.19-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     19,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.19-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     19,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.19-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     19,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.19-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     19,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.19-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     19,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.19-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     19,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.19-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     19,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.19-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     19,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.19-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     20,
+     21
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.20-21",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     20,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.20-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     20,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.20-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     20,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.20-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     20,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.20-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     20,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.20-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     20,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.20-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     20,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.20-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     20,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.20-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     20,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.20-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     20,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.20-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     21,
+     22
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.21-22",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     21,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.21-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     21,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.21-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     21,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.21-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     21,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.21-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     21,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.21-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     21,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.21-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     21,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.21-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     21,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.21-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     21,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.21-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     22,
+     23
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.22-23",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     22,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.22-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     22,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.22-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     22,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.22-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     22,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.22-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     22,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.22-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     22,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.22-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     22,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.22-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     22,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.22-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     23,
+     24
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.23-24",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     23,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.23-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     23,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.23-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     23,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.23-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     23,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.23-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     23,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.23-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     23,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.23-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     23,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.23-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     24,
+     25
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.24-25",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     24,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.24-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     24,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.24-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     24,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.24-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     24,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.24-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     24,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.24-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     24,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.24-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     25,
+     26
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.25-26",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     25,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.25-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     25,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.25-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     25,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.25-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     25,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.25-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     25,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.25-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     26,
+     27
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.26-27",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     26,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.26-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     26,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.26-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     26,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.26-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     26,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.26-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     27,
+     28
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.27-28",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     27,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.27-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     27,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.27-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     27,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.27-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     28,
+     29
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.28-29",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     28,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.28-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     28,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.28-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     29,
+     30
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.29-30",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     29,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.29-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   },
+   {
+    "gate": "ms",
+    "qubits": [
+     30,
+     31
+    ],
+    "params": [
+     "theta"
+    ],
+    "ref": "ms_bichromatic",
+    "params_from": "cal.edges.30-31",
+    "omega_rad_s_at_pi_2": 157079.6,
+    "omega_over_2pi_khz": 25.0
+   }
+  ]
+ }
+}

@@ -1,0 +1,85 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "pt_compressor",
+    "name": "Pulse-tube compressor",
+    "category": "cryocooler",
+    "parent": "room",
+    "function": "Helium compressor that drives the pulse-tube cryocooler, standing outside the lab because it dissipates several kilowatts and is the loudest object in the system. It supplies high-pressure helium through flexible lines to the rotary valve on the cold head; the valve switches the gas between high and low pressure at about 1.4 Hz, and that cycle is both the cooling power of the 45 K and 4 K stages and the dominant mechanical vibration reaching the qubits. Stopping it starts the warm-up.",
+    "physics": {
+      "summary": "Supplies the pressure wave that produces the 45 K and 4 K cooling power (T08).",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "input power",
+        "unit": "kW",
+        "typical": [
+          5,
+          12
+        ]
+      },
+      {
+        "field": "helium pressure",
+        "unit": "bar",
+        "typical": [
+          16,
+          22
+        ]
+      },
+      {
+        "field": "cycle frequency",
+        "unit": "Hz",
+        "typical": [
+          1.0,
+          2.0
+        ]
+      },
+      {
+        "field": "cooling water",
+        "unit": "L/min",
+        "typical": [
+          5,
+          15
+        ]
+      },
+      {
+        "field": "sound level",
+        "unit": "dB(A)",
+        "typical": [
+          65,
+          80
+        ]
+      }
+    ],
+    "theory": [
+      "T08#2-pulse-tube-pre-cooling"
+    ],
+    "tooltip": "Pulse-tube compressor: 1.4 Hz pressure wave, kilowatts of input power.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.7,
+      "h_m": 1.0,
+      "d_m": 0.8
+    },
+    "lod": [
+      {
+        "max_m": 6.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 30.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

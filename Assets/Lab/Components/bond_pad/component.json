@@ -1,0 +1,59 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "bond_pad",
+    "name": "Bond pad and wirebond",
+    "category": "chip",
+    "parent": "substrate",
+    "function": "Large pad at the chip edge with an aluminium wirebond arcing to the PCB launcher. The bond's inductance of about 1 nH per millimetre is the main impedance discontinuity at the chip boundary; several bonds in parallel are used on the readout lines to keep reflections low.",
+    "physics": {
+      "summary": "Chip-to-PCB transition; bond inductance limits matching.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "pitch",
+        "unit": "µm",
+        "typical": [
+          150,
+          250
+        ]
+      },
+      {
+        "field": "bond inductance",
+        "unit": "nH",
+        "typical": [
+          0.5,
+          2
+        ]
+      }
+    ],
+    "theory": [
+      "T05#6.3-dispersive-readout"
+    ],
+    "tooltip": "Bond pad with wirebond to the PCB.",
+    "geometry": {
+      "generator": "WirebondArc",
+      "h_um": 300
+    },
+    "lod": [
+      {
+        "max_m": 0.02,
+        "detail": "full"
+      },
+      {
+        "max_m": 0.2,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

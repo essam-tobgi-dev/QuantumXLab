@@ -1,0 +1,3424 @@
+{
+ "qxl": {
+  "kind": "calibration",
+  "schema": 1,
+  "app": "0.1.0",
+  "created": "2026-09-17T00:00:00Z"
+ },
+ "data": {
+  "device": "sc_heavyhex_27",
+  "timestamp": "2026-09-17T00:00:00Z",
+  "qubits": {
+   "0": {
+    "f01_ghz": [
+     4.935765,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -329.8211,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     131.2896,
+     6.564479,
+     "t1"
+    ],
+    "t2_echo_us": [
+     112.3269,
+     8.986155,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     59.20211,
+     4.144148,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.008911795,
+     0.001336769,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0004272442,
+     5.554174e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.002102307,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.986932,
+      0.013068
+     ],
+     [
+      0.019837,
+      0.980163
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.00024,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.6304448,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.875055,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.443644e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "1": {
+    "f01_ghz": [
+     5.051672,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -320.3699,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     229.4331,
+     11.47165,
+     "t1"
+    ],
+    "t2_echo_us": [
+     86.81355,
+     6.945084,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     42.94031,
+     3.005822,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01324087,
+     0.001986131,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.000286734,
+     3.727542e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.002785681,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.981157,
+      0.018843
+     ],
+     [
+      0.020421,
+      0.979579
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.04421,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.6123846,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.87669,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.842509e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "2": {
+    "f01_ghz": [
+     5.128549,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -325.0649,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     119.3374,
+     5.966868,
+     "t1"
+    ],
+    "t2_echo_us": [
+     71.69777,
+     5.735822,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     56.77222,
+     3.974055,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.009562153,
+     0.001434323,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0002030959,
+     2.640247e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.004809752,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.984154,
+      0.015846
+     ],
+     [
+      0.028756,
+      0.971244
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.09129,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.540975,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.799764,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.339151e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "3": {
+    "f01_ghz": [
+     5.306107,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -322.4431,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     83.42706,
+     4.171353,
+     "t1"
+    ],
+    "t2_echo_us": [
+     94.23863,
+     7.53909,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     61.69244,
+     4.318471,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01135157,
+     0.001702736,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0004629511,
+     6.018364e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.006526363,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.975222,
+      0.024778
+     ],
+     [
+      0.04106,
+      0.95894
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.13656,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.5859612,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     4.139138,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.338076e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "4": {
+    "f01_ghz": [
+     4.875092,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -331.3573,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     111.073,
+     5.553651,
+     "t1"
+    ],
+    "t2_echo_us": [
+     65.89059,
+     5.271248,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     52.11058,
+     3.64774,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.02254926,
+     0.003382388,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0003718367,
+     4.833877e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.00300476,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.966959,
+      0.033041
+     ],
+     [
+      0.026665,
+      0.973335
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.18025,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.5467946,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     4.076642,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.028641e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "5": {
+    "f01_ghz": [
+     5.163852,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -328.4264,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     232.7171,
+     11.63585,
+     "t1"
+    ],
+    "t2_echo_us": [
+     131.6188,
+     10.5295,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     69.91833,
+     4.894283,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01679531,
+     0.002519296,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0002641497,
+     3.433946e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.004744203,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.973774,
+      0.026226
+     ],
+     [
+      0.027623,
+      0.972377
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.227,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.5320639,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     4.393796,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.548648e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "6": {
+    "f01_ghz": [
+     4.97478,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -328.0626,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     96.26717,
+     4.813358,
+     "t1"
+    ],
+    "t2_echo_us": [
+     114.388,
+     9.151043,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     46.53333,
+     3.257333,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01136764,
+     0.001705146,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0003466718,
+     4.506733e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.002866937,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.977183,
+      0.022817
+     ],
+     [
+      0.021774,
+      0.978226
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.26943,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.7592566,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.546519,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     3.207148e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "7": {
+    "f01_ghz": [
+     4.784924,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -336.3467,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     216.8108,
+     10.84054,
+     "t1"
+    ],
+    "t2_echo_us": [
+     155.03,
+     12.4024,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     122.6293,
+     8.584054,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01321904,
+     0.001982856,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0002595846,
+     3.3746e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.006202317,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.985825,
+      0.014175
+     ],
+     [
+      0.033288,
+      0.966712
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.00123,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.733643,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.507595,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.19853e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "8": {
+    "f01_ghz": [
+     5.283468,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -335.6148,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     115.5359,
+     5.776793,
+     "t1"
+    ],
+    "t2_echo_us": [
+     67.36948,
+     5.389558,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     44.25122,
+     3.097585,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01256339,
+     0.001884508,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0003119796,
+     4.055735e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.003391827,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.990474,
+      0.009526
+     ],
+     [
+      0.029211,
+      0.970789
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.04699,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.5445093,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.241526,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.075497e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "9": {
+    "f01_ghz": [
+     5.194421,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -332.7248,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     111.2516,
+     5.562579,
+     "t1"
+    ],
+    "t2_echo_us": [
+     103.772,
+     8.301762,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     52.91734,
+     3.704213,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.008507892,
+     0.001276184,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0003030482,
+     3.939627e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.00503527,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.967346,
+      0.032654
+     ],
+     [
+      0.024064,
+      0.975936
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.09104,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.5543011,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.9159,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.075359e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "10": {
+    "f01_ghz": [
+     4.914926,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -335.2331,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     108.9834,
+     5.449169,
+     "t1"
+    ],
+    "t2_echo_us": [
+     165.2257,
+     13.21806,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     104.156,
+     7.290922,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01432701,
+     0.002149051,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0002449494,
+     3.184343e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.005445188,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.980868,
+      0.019132
+     ],
+     [
+      0.029538,
+      0.970462
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.13477,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.6853899,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.960544,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.624852e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "11": {
+    "f01_ghz": [
+     5.144877,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -315.4141,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     126.6637,
+     6.333187,
+     "t1"
+    ],
+    "t2_echo_us": [
+     82.04796,
+     6.563837,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     33.58053,
+     2.350637,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01274658,
+     0.001911987,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0003642943,
+     4.735825e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.00410405,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.979506,
+      0.020494
+     ],
+     [
+      0.020249,
+      0.979751
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.18092,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.5438894,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.730805,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.779231e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "12": {
+    "f01_ghz": [
+     5.050059,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -330.057,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     241.5065,
+     12.07532,
+     "t1"
+    ],
+    "t2_echo_us": [
+     103.5514,
+     8.28411,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     77.77388,
+     5.444171,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01332185,
+     0.001998277,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0003620692,
+     4.706899e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.00541201,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.976516,
+      0.023484
+     ],
+     [
+      0.025716,
+      0.974284
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.22389,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.5382407,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     4.638988,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.514618e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "13": {
+    "f01_ghz": [
+     4.943346,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -325.7025,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     142.5889,
+     7.129443,
+     "t1"
+    ],
+    "t2_echo_us": [
+     110.2168,
+     8.817346,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     61.87234,
+     4.331064,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.009175764,
+     0.001376365,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0003697352,
+     4.806558e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.001975095,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.986316,
+      0.013684
+     ],
+     [
+      0.010886,
+      0.989114
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.26919,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.5079295,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.802035,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.839786e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "14": {
+    "f01_ghz": [
+     5.026736,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -330.3327,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     107.8812,
+     5.394062,
+     "t1"
+    ],
+    "t2_echo_us": [
+     108.7257,
+     8.698059,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     69.82186,
+     4.88753,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.02442118,
+     0.003663177,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.000363559,
+     4.726267e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.003620634,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.975414,
+      0.024586
+     ],
+     [
+      0.028429,
+      0.971571
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.00119,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.5290908,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     4.026233,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.903282e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "15": {
+    "f01_ghz": [
+     5.165561,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -334.5752,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     124.867,
+     6.243348,
+     "t1"
+    ],
+    "t2_echo_us": [
+     192.1405,
+     15.37124,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     77.00182,
+     5.390127,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01649606,
+     0.00247441,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0003078316,
+     4.00181e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.00378363,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.987602,
+      0.012398
+     ],
+     [
+      0.022201,
+      0.977799
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.04486,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.6956819,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     4.258136,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.785266e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "16": {
+    "f01_ghz": [
+     4.832623,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -331.5179,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     114.9682,
+     5.748411,
+     "t1"
+    ],
+    "t2_echo_us": [
+     69.55789,
+     5.564631,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     48.16522,
+     3.371565,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01537789,
+     0.002306684,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0005649113,
+     7.343847e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.006430994,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.976613,
+      0.023387
+     ],
+     [
+      0.039947,
+      0.960053
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.09062,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.6910697,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.913511,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.450285e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "17": {
+    "f01_ghz": [
+     5.140423,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -328.3333,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     154.1335,
+     7.706673,
+     "t1"
+    ],
+    "t2_echo_us": [
+     73.88544,
+     5.910835,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     59.07584,
+     4.135309,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01332442,
+     0.001998663,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0005135696,
+     6.676405e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.006837406,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.978514,
+      0.021486
+     ],
+     [
+      0.014374,
+      0.985626
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.13511,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.5795715,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.952984,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     2.731065e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "18": {
+    "f01_ghz": [
+     5.283735,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -329.953,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     146.1922,
+     7.309612,
+     "t1"
+    ],
+    "t2_echo_us": [
+     219.3718,
+     17.54975,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     147.93,
+     10.3551,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01065028,
+     0.001597542,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0004300067,
+     5.590087e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.002525395,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.974933,
+      0.025067
+     ],
+     [
+      0.016878,
+      0.983122
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.18075,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.6199644,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.935046,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     2.072503e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "19": {
+    "f01_ghz": [
+     4.751088,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -335.148,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     226.372,
+     11.3186,
+     "t1"
+    ],
+    "t2_echo_us": [
+     130.1511,
+     10.41209,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     63.42089,
+     4.439462,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01634007,
+     0.002451011,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0004564972,
+     5.934464e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.005013154,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.971578,
+      0.028422
+     ],
+     [
+      0.022757,
+      0.977243
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.22494,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.5878531,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.687772,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.170092e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "20": {
+    "f01_ghz": [
+     4.929848,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -321.8465,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     247.6802,
+     12.38401,
+     "t1"
+    ],
+    "t2_echo_us": [
+     130.3177,
+     10.42542,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     80.42599,
+     5.62982,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01543305,
+     0.002314958,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0002662397,
+     3.461116e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.00340234,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.976318,
+      0.023682
+     ],
+     [
+      0.035619,
+      0.964381
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.27,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.6411861,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.527068,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.422057e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "21": {
+    "f01_ghz": [
+     5.195736,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -330.7875,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     173.0892,
+     8.65446,
+     "t1"
+    ],
+    "t2_echo_us": [
+     105.0692,
+     8.405535,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     51.04813,
+     3.573369,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01585476,
+     0.002378214,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0004367438,
+     5.677669e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.001921232,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.980763,
+      0.019237
+     ],
+     [
+      0.033553,
+      0.966447
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.00062,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.4706871,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.536591,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.642297e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "22": {
+    "f01_ghz": [
+     4.894091,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -330.8656,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     77.58671,
+     3.879335,
+     "t1"
+    ],
+    "t2_echo_us": [
+     55.7357,
+     4.458856,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     24.14648,
+     1.690253,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01402649,
+     0.002103974,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0004408721,
+     5.731337e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.004265141,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.980389,
+      0.019611
+     ],
+     [
+      0.027538,
+      0.972462
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.04644,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.623184,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.711195,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.741028e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "23": {
+    "f01_ghz": [
+     5.258835,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -335.2463,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     216.3686,
+     10.81843,
+     "t1"
+    ],
+    "t2_echo_us": [
+     72.61129,
+     5.808903,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     56.6459,
+     3.965213,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.0190257,
+     0.002853855,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0003992059,
+     5.189676e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.004521737,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.97189,
+      0.02811
+     ],
+     [
+      0.025362,
+      0.974638
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.09053,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.6035695,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     4.626798,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.098993e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "24": {
+    "f01_ghz": [
+     5.136188,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -330.8799,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     199.1205,
+     9.956025,
+     "t1"
+    ],
+    "t2_echo_us": [
+     89.42578,
+     7.154062,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     49.10088,
+     3.437062,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01715418,
+     0.002573127,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0004405312,
+     5.726905e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.003526252,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.970956,
+      0.029044
+     ],
+     [
+      0.015927,
+      0.984073
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.137,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.66154,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     4.185933,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.896504e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "25": {
+    "f01_ghz": [
+     5.03082,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -332.5734,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     144.2763,
+     7.213813,
+     "t1"
+    ],
+    "t2_echo_us": [
+     102.8851,
+     8.230806,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     51.42509,
+     3.599756,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01270587,
+     0.00190588,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0003890411,
+     5.057534e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.00292959,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.978054,
+      0.021946
+     ],
+     [
+      0.013195,
+      0.986805
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.17918,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.6935068,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     3.901426,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.599e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   },
+   "26": {
+    "f01_ghz": [
+     4.928817,
+     2e-05,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     -325.3614,
+     0.5,
+     "two_photon_spectroscopy"
+    ],
+    "t1_us": [
+     143.8611,
+     7.193057,
+     "t1"
+    ],
+    "t2_echo_us": [
+     74.84517,
+     5.987614,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     35.98033,
+     2.518623,
+     "ramsey"
+    ],
+    "thermal_population": [
+     0.01504236,
+     0.002256353,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0005902077,
+     7.672699e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     32,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.003232999,
+     0.001,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.980392,
+      0.019608
+     ],
+     [
+      0.029628,
+      0.970372
+     ]
+    ],
+    "readout_duration_ns": [
+     640,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "readout_f_ghz": [
+     7.22391,
+     5e-05,
+     "resonator_spectroscopy"
+    ],
+    "readout_chi_mhz": [
+     -0.6542589,
+     0.03,
+     "dispersive_shift"
+    ],
+    "readout_kappa_mhz": [
+     4.149884,
+     0.2,
+     "resonator_spectroscopy"
+    ],
+    "leakage_1q": [
+     1.332154e-05,
+     4.5e-06,
+     "leakage_rb"
+    ]
+   }
+  },
+  "edges": {
+   "0-1": {
+    "gate_error_2q": [
+     0.005962318,
+     0.0004769854,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001836517,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -28.38668,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.138646,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "1-2": {
+    "gate_error_2q": [
+     0.00598686,
+     0.0004789488,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001044372,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -71.16025,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.090864,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "1-4": {
+    "gate_error_2q": [
+     0.007393993,
+     0.0005915194,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0002297836,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -58.08439,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     2.796754,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "2-3": {
+    "gate_error_2q": [
+     0.01125794,
+     0.0009006355,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001058383,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -79.80783,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.211464,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "3-5": {
+    "gate_error_2q": [
+     0.006896845,
+     0.0005517476,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0002497982,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -56.7474,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     2.932612,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "4-7": {
+    "gate_error_2q": [
+     0.007850721,
+     0.0006280576,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001239555,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -76.02087,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.45332,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "5-8": {
+    "gate_error_2q": [
+     0.008560036,
+     0.0006848029,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001375945,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -69.00398,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.283236,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "6-7": {
+    "gate_error_2q": [
+     0.008459249,
+     0.0006767399,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     8.590446e-05,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -53.43136,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.118575,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "7-10": {
+    "gate_error_2q": [
+     0.007016788,
+     0.0005613431,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001375755,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -75.21698,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     2.959232,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "8-9": {
+    "gate_error_2q": [
+     0.01056293,
+     0.0008450342,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001113283,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -77.84677,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.231311,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "8-11": {
+    "gate_error_2q": [
+     0.007558589,
+     0.0006046871,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     9.649262e-05,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -60.73115,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     2.955272,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "10-12": {
+    "gate_error_2q": [
+     0.009724783,
+     0.0007779826,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     9.408159e-05,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -65.40112,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.395892,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "11-14": {
+    "gate_error_2q": [
+     0.006681471,
+     0.0005345176,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0002074226,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -55.58571,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.332774,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "12-13": {
+    "gate_error_2q": [
+     0.007360398,
+     0.0005888318,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001879161,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -54.53913,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.058111,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "12-15": {
+    "gate_error_2q": [
+     0.006399342,
+     0.0005119474,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001545404,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -86.8365,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.127271,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "13-14": {
+    "gate_error_2q": [
+     0.007430075,
+     0.000594406,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     7.363801e-05,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -54.30789,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     2.993909,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "14-16": {
+    "gate_error_2q": [
+     0.004879642,
+     0.0003903714,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001692289,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -52.00347,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.521669,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "15-18": {
+    "gate_error_2q": [
+     0.007765582,
+     0.0006212465,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.000146248,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -55.52386,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.278829,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "16-19": {
+    "gate_error_2q": [
+     0.01072421,
+     0.0008579371,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001131287,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -71.07869,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.369038,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "17-18": {
+    "gate_error_2q": [
+     0.008047919,
+     0.0006438335,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     8.746493e-05,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -40.57319,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.160106,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "18-21": {
+    "gate_error_2q": [
+     0.005032653,
+     0.0004026122,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001169431,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -72.72252,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     2.996132,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "19-20": {
+    "gate_error_2q": [
+     0.01023028,
+     0.0008184227,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001484501,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -57.82071,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.202615,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "19-22": {
+    "gate_error_2q": [
+     0.008619971,
+     0.0006895977,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001689023,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -54.94866,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     2.908211,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "21-23": {
+    "gate_error_2q": [
+     0.009108881,
+     0.0007287105,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001559602,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -56.41176,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.663023,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "22-25": {
+    "gate_error_2q": [
+     0.008820689,
+     0.0007056551,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0002803019,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -69.26518,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.072928,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "23-24": {
+    "gate_error_2q": [
+     0.006882006,
+     0.0005505605,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001303461,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -56.23564,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     2.971249,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "24-25": {
+    "gate_error_2q": [
+     0.005316932,
+     0.0004253546,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001603223,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -69.44496,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.485564,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   },
+   "25-26": {
+    "gate_error_2q": [
+     0.006345593,
+     0.0005076475,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0001378993,
+     4.5e-05,
+     "leakage_rb"
+    ],
+    "zz_khz": [
+     -46.00986,
+     3.0,
+     "zz_ramsey"
+    ],
+    "duration_ns": [
+     380,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     3.050633,
+     0.2,
+     "model"
+    ],
+    "native_gate": "cx"
+   }
+  }
+ }
+}

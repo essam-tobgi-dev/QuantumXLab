@@ -1,0 +1,87 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "mixing_chamber",
+    "name": "Mixing chamber",
+    "category": "circulation",
+    "parent": "stage_mxc",
+    "function": "Vessel on the mixing-chamber plate where the concentrated 3He arriving from the heat exchangers crosses the phase boundary into the dilute phase (6.6 % 3He in 4He at zero temperature). The enthalpy of the dilute phase is higher, so each mole crossing absorbs 84 T² J, giving the cooling power Q̇ = 84 ṅ₃ T² − Q̇_load: at ṅ₃ = 0.5 mmol/s and 20 mK that is about 17 µW. The chamber is sintered silver inside to keep the Kapitza resistance to the copper body small, and the plate bolted to its base is the coldest surface of the fridge, from which the sample stage and the final attenuators take their temperature.",
+    "physics": {
+      "summary": "Enthalpy of mixing across the phase boundary; the cold source of the fridge.",
+      "equations": [
+        "cooling_power_mxc",
+        "kapitza"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "volume",
+        "unit": "cm³",
+        "typical": [
+          20,
+          60
+        ]
+      },
+      {
+        "field": "dilute-phase 3He fraction",
+        "unit": "",
+        "typical": [
+          0.06,
+          0.07
+        ]
+      },
+      {
+        "field": "temperature",
+        "unit": "K",
+        "binding": "cryo.stage.mxc.T",
+        "class": "Numerical"
+      },
+      {
+        "field": "cooling power",
+        "unit": "W",
+        "binding": "cryo.stage.mxc.P_cool",
+        "class": "Model"
+      },
+      {
+        "field": "3He flow",
+        "unit": "mmol/s",
+        "binding": "cryo.flow.n3",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#1.2-cooling-power",
+      "T08#1.1-the-3he-4he-mixture"
+    ],
+    "tooltip": "Mixing chamber: phase boundary of the 3He–4He mixture.",
+    "geometry": {
+      "generator": "Cylinder",
+      "r_m": 0.025,
+      "h_m": 0.06,
+      "caps": true,
+      "attachments": [
+        "flange"
+      ],
+      "flange_at": "bottom"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

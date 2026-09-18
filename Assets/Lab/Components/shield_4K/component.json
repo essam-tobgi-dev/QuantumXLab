@@ -1,0 +1,83 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "shield_4K",
+    "name": "4 K radiation shield",
+    "category": "shield",
+    "parent": "stage_4K",
+    "function": "Thin-walled can bolted to the s4 stage that intercepts thermal radiation from the next warmer shield. Radiation scales as T⁴, so the outermost shield does the heavy lifting while the inner ones mainly block stray infrared that would otherwise create quasiparticles in the superconducting films. Shields are removed from the outside in when the fridge is opened.",
+    "physics": {
+      "summary": "Radiation shield; reduces the T⁴ radiative load on the stage it is anchored to.",
+      "equations": [
+        "radiation_load"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "radius",
+        "unit": "m",
+        "typical": [
+          0.215,
+          0.23500000000000001
+        ]
+      },
+      {
+        "field": "height",
+        "unit": "m",
+        "typical": [
+          0.8999999999999999,
+          1.0
+        ]
+      },
+      {
+        "field": "emissivity",
+        "unit": "",
+        "typical": [
+          0.02,
+          0.1
+        ]
+      },
+      {
+        "field": "temperature",
+        "unit": "K",
+        "binding": "cryo.stage.s4.T",
+        "class": "Numerical"
+      }
+    ],
+    "theory": [
+      "T08#4-heat-conduction-along-wiring"
+    ],
+    "tooltip": "4 K radiation shield: radiation shield.",
+    "geometry": {
+      "generator": "Can",
+      "r_m": 0.225,
+      "h_m": 0.95,
+      "t_m": 0.002,
+      "base": "dished",
+      "open": "top",
+      "flange": true,
+      "flange_t_m": 0.008,
+      "flange_w_m": 0.012,
+      "flange_bolts": 24
+    },
+    "lod": [
+      {
+        "max_m": 4.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 12.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

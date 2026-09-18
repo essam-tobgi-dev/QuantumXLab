@@ -1,0 +1,456 @@
+{
+  "qxl": {
+    "kind": "qec.code",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "surface_rot_5",
+    "n": 25,
+    "k": 1,
+    "d": 5,
+    "family": "SurfaceRotated",
+    "stabilizers": [
+      "ZZIIIIIIIIIIIIIIIIIIIIIII",
+      "IIZZIIIIIIIIIIIIIIIIIIIII",
+      "XXIIIXXIIIIIIIIIIIIIIIIII",
+      "IZZIIIZZIIIIIIIIIIIIIIIII",
+      "IIXXIIIXXIIIIIIIIIIIIIIII",
+      "IIIZZIIIZZIIIIIIIIIIIIIII",
+      "IIIIXIIIIXIIIIIIIIIIIIIII",
+      "IIIIIXIIIIXIIIIIIIIIIIIII",
+      "IIIIIZZIIIZZIIIIIIIIIIIII",
+      "IIIIIIXXIIIXXIIIIIIIIIIII",
+      "IIIIIIIZZIIIZZIIIIIIIIIII",
+      "IIIIIIIIXXIIIXXIIIIIIIIII",
+      "IIIIIIIIIIXXIIIXXIIIIIIII",
+      "IIIIIIIIIIIZZIIIZZIIIIIII",
+      "IIIIIIIIIIIIXXIIIXXIIIIII",
+      "IIIIIIIIIIIIIZZIIIZZIIIII",
+      "IIIIIIIIIIIIIIXIIIIXIIIII",
+      "IIIIIIIIIIIIIIIXIIIIXIIII",
+      "IIIIIIIIIIIIIIIZZIIIZZIII",
+      "IIIIIIIIIIIIIIIIXXIIIXXII",
+      "IIIIIIIIIIIIIIIIIZZIIIZZI",
+      "IIIIIIIIIIIIIIIIIIXXIIIXX",
+      "IIIIIIIIIIIIIIIIIIIIIZZII",
+      "IIIIIIIIIIIIIIIIIIIIIIIZZ"
+    ],
+    "logical_x": [
+      "XXXXXIIIIIIIIIIIIIIIIIIII"
+    ],
+    "logical_z": [
+      "IIIIZIIIIZIIIIZIIIIZIIIIZ"
+    ],
+    "layout": {
+      "data": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          1,
+          9
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          3,
+          7
+        ],
+        [
+          3,
+          9
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          5,
+          7
+        ],
+        [
+          5,
+          9
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          7,
+          3
+        ],
+        [
+          7,
+          5
+        ],
+        [
+          7,
+          7
+        ],
+        [
+          7,
+          9
+        ],
+        [
+          9,
+          1
+        ],
+        [
+          9,
+          3
+        ],
+        [
+          9,
+          5
+        ],
+        [
+          9,
+          7
+        ],
+        [
+          9,
+          9
+        ]
+      ],
+      "ancilla": [
+        {
+          "type": "Z",
+          "coord": [
+            0,
+            2
+          ],
+          "order": [
+            1,
+            0
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            0,
+            6
+          ],
+          "order": [
+            3,
+            2
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            2,
+            2
+          ],
+          "order": [
+            1,
+            6,
+            0,
+            5
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            2,
+            4
+          ],
+          "order": [
+            2,
+            1,
+            7,
+            6
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            2,
+            6
+          ],
+          "order": [
+            3,
+            8,
+            2,
+            7
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            2,
+            8
+          ],
+          "order": [
+            4,
+            3,
+            9,
+            8
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            2,
+            10
+          ],
+          "order": [
+            4,
+            9
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            4,
+            0
+          ],
+          "order": [
+            5,
+            10
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            4,
+            2
+          ],
+          "order": [
+            6,
+            5,
+            11,
+            10
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            4,
+            4
+          ],
+          "order": [
+            7,
+            12,
+            6,
+            11
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            4,
+            6
+          ],
+          "order": [
+            8,
+            7,
+            13,
+            12
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            4,
+            8
+          ],
+          "order": [
+            9,
+            14,
+            8,
+            13
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            6,
+            2
+          ],
+          "order": [
+            11,
+            16,
+            10,
+            15
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            6,
+            4
+          ],
+          "order": [
+            12,
+            11,
+            17,
+            16
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            6,
+            6
+          ],
+          "order": [
+            13,
+            18,
+            12,
+            17
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            6,
+            8
+          ],
+          "order": [
+            14,
+            13,
+            19,
+            18
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            6,
+            10
+          ],
+          "order": [
+            14,
+            19
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            8,
+            0
+          ],
+          "order": [
+            15,
+            20
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            8,
+            2
+          ],
+          "order": [
+            16,
+            15,
+            21,
+            20
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            8,
+            4
+          ],
+          "order": [
+            17,
+            22,
+            16,
+            21
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            8,
+            6
+          ],
+          "order": [
+            18,
+            17,
+            23,
+            22
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            8,
+            8
+          ],
+          "order": [
+            19,
+            24,
+            18,
+            23
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            10,
+            4
+          ],
+          "order": [
+            22,
+            21
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            10,
+            8
+          ],
+          "order": [
+            24,
+            23
+          ]
+        }
+      ]
+    },
+    "decoder": "union_find",
+    "theory": [
+      "T09#5.1-rotated-planar-layout",
+      "T09#5.2-syndrome-extraction-circuit"
+    ],
+    "notes": "Rotated planar layout; X checks on top/bottom boundaries, Z checks on left/right; CNOT order X: NW,NE,SW,SE; Z: NW,SW,NE,SE (Tomita–Svore).",
+    "convention": "Pauli strings are written left-to-right from qubit 0 (position i is qubit i)."
+  }
+}

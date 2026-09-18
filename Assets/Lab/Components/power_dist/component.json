@@ -1,0 +1,56 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "power_dist",
+    "name": "Rack power distribution",
+    "category": "infra",
+    "parent": "rack_A",
+    "function": "Switched and filtered mains distribution for one rack with total-power monitoring. It is included because instrument power (about 2 kW per rack) is a real load on the laboratory's cooling and because a filtered feed reduces mains-borne noise into the DC sources.",
+    "physics": {
+      "summary": "Mains distribution; no physics role.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "total power",
+        "unit": "W",
+        "binding": "instr.rack.P_total",
+        "class": "Model"
+      },
+      {
+        "field": "outlets",
+        "unit": "",
+        "typical": [
+          8,
+          16
+        ]
+      }
+    ],
+    "theory": [],
+    "tooltip": "Rack power distribution unit.",
+    "geometry": {
+      "generator": "RackUnit",
+      "u": 1,
+      "front": "pdu"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

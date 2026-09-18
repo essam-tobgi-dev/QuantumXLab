@@ -1,0 +1,74 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "mag_shield_mumetal",
+    "name": "μ-metal magnetic shield",
+    "category": "shield",
+    "parent": "stage_mxc",
+    "function": "High-permeability nickel–iron can around the sample stage that diverts the Earth's field and stray fields from pumps and motors. Residual fields below about 1 μT at the chip are required: a SQUID loop of 100 μm² sees 0.05 Φ₀ per μT, and static flux offsets shift tunable qubits off their sweet spots while low-frequency fluctuations add dephasing.",
+    "physics": {
+      "summary": "Static field attenuation to the μT level.",
+      "equations": [
+        "flux_tunability"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "shielding factor",
+        "unit": "",
+        "typical": [
+          100,
+          1000
+        ]
+      },
+      {
+        "field": "residual field target",
+        "unit": "µT",
+        "typical": [
+          0,
+          1
+        ]
+      },
+      {
+        "field": "radius",
+        "unit": "m",
+        "typical": [
+          0.05,
+          0.08
+        ]
+      }
+    ],
+    "theory": [
+      "T05#4-flux-tunable-transmons",
+      "T08#8-thermometry-vibration-and-magnetic-shielding"
+    ],
+    "tooltip": "μ-metal can: attenuates static magnetic fields.",
+    "geometry": {
+      "generator": "Can",
+      "r_m": 0.06,
+      "h_m": 0.2,
+      "t_m": 0.001,
+      "base": "flat",
+      "open": "top"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

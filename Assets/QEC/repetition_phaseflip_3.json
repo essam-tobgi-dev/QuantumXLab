@@ -1,0 +1,71 @@
+{
+  "qxl": {
+    "kind": "qec.code",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "repetition_phaseflip_3",
+    "n": 3,
+    "k": 1,
+    "d": 3,
+    "family": "Repetition",
+    "stabilizers": [
+      "XXI",
+      "IXX"
+    ],
+    "logical_x": [
+      "XII"
+    ],
+    "logical_z": [
+      "ZZZ"
+    ],
+    "layout": {
+      "data": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "ancilla": [
+        {
+          "type": "X",
+          "coord": [
+            0.5,
+            1
+          ],
+          "order": [
+            0,
+            1
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            1.5,
+            1
+          ],
+          "order": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "decoder": "lookup",
+    "theory": [
+      "T09#4.2-three-qubit-phase-flip-code"
+    ],
+    "notes": "Hadamard-conjugated repetition code; corrects one Z error.",
+    "convention": "Pauli strings are written left-to-right from qubit 0 (position i is qubit i)."
+  }
+}

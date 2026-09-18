@@ -1,0 +1,79 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "thermal_braid",
+    "name": "Copper thermal braid",
+    "category": "cryocooler",
+    "parent": "pt_regenerator",
+    "function": "Bundle of oxygen-free copper braids linking the pulse-tube stage flange to the stage plate. Copper with a residual resistivity ratio of 100 conducts about 1000 times better than stainless at 4 K (Θ(4 K, 50 K) ≈ 4.6·10⁴ W/m against 1.4·10² W/m), so a few braids of 20 mm² total section pass the full 1.5 W with a temperature drop of a few tens of millikelvin; being flexible they also stop the 1.4 Hz pulse-tube motion (micrometre amplitude) from shaking the plate and, through the wiring, the mixing chamber. The trade is stiffness against conductance: more strands mean a smaller ΔT but a stiffer link.",
+    "physics": {
+      "summary": "High-conductance flexible link; vibration decoupling of the pulse tube.",
+      "equations": [
+        "conduction_load"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "section",
+        "unit": "mm²",
+        "typical": [
+          10,
+          40
+        ]
+      },
+      {
+        "field": "length",
+        "unit": "mm",
+        "typical": [
+          40,
+          100
+        ]
+      },
+      {
+        "field": "temperature drop",
+        "unit": "mK",
+        "typical": [
+          10,
+          100
+        ]
+      },
+      {
+        "field": "stage temperature",
+        "unit": "K",
+        "binding": "cryo.stage.$stage.T",
+        "class": "Numerical"
+      }
+    ],
+    "theory": [
+      "T08#2-pulse-tube-pre-cooling",
+      "T08#4-heat-conduction-along-wiring"
+    ],
+    "tooltip": "OFHC copper braid between the pulse-tube stage and its plate.",
+    "geometry": {
+      "generator": "Tube",
+      "r_m": 0.0025,
+      "bundle": 5,
+      "bundle_pitch_m": 0.0055,
+      "path": "straight_0.06m"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "qxl": {
+    "kind": "analysis.recipe",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "rb_2q",
+    "title": "Two-qubit randomized benchmarking",
+    "theory": "T10#2-randomized-benchmarking",
+    "program": "Assets/Programs/Calibration/rb_2q.qasm",
+    "sweep": {
+      "input": "m",
+      "unit": "",
+      "values": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128
+      ]
+    },
+    "shots": 200,
+    "extract": {
+      "channel": "rb2.p00",
+      "y": "counts['00'] / shots",
+      "sigma": "binomial",
+      "average_over": "sequences",
+      "sequences": 20
+    },
+    "fit": {
+      "model": "rb_decay",
+      "report": [
+        "p",
+        "r"
+      ],
+      "d": 4
+    },
+    "results": [
+      {
+        "label": "error per 2q Clifford",
+        "measured": "fit.r",
+        "model": "device.calibration.edge[e].error_2q * 1.5",
+        "tolerance": 0.3
+      }
+    ]
+  }
+}

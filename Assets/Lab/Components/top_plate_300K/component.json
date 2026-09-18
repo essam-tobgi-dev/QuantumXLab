@@ -1,0 +1,79 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "top_plate_300K",
+    "name": "300 K top plate",
+    "category": "stage",
+    "parent": "fridge_frame",
+    "function": "Room-temperature flange of the insert. Every wire, coaxial line, pumping line and the pulse-tube head pass through it, so its feedthrough ring is the vacuum boundary of the cryostat. It is also the warm end of every conduction heat path into the fridge: the conductive load on the 50 K stage is set by the temperature difference from this plate.",
+    "physics": {
+      "summary": "Warm boundary of all conduction paths; vacuum seal.",
+      "equations": [
+        "conduction_load"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "radius",
+        "unit": "m",
+        "typical": [
+          0.28,
+          0.32
+        ]
+      },
+      {
+        "field": "thickness",
+        "unit": "m",
+        "typical": [
+          0.015,
+          0.025
+        ]
+      },
+      {
+        "field": "feedthroughs",
+        "unit": "",
+        "typical": [
+          48,
+          200
+        ]
+      },
+      {
+        "field": "temperature",
+        "unit": "K",
+        "binding": "cryo.stage.rt.T",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#3-stage-temperatures"
+    ],
+    "tooltip": "Room-temperature top flange with all feedthroughs.",
+    "geometry": {
+      "generator": "Plate",
+      "r_m": 0.3,
+      "t_m": 0.02,
+      "holes": "feedthrough_ring",
+      "kf_ports": 2,
+      "viewport": true
+    },
+    "lod": [
+      {
+        "max_m": 6.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 30.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

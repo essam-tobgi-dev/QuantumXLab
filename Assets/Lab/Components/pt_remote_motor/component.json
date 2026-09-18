@@ -1,0 +1,51 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "pt_remote_motor",
+    "name": "Pulse-tube rotary-valve motor",
+    "category": "cryocooler",
+    "parent": "fridge_frame",
+    "function": "The valve motor that switches the pulse tube between high and low pressure is mounted on the frame, not the cold head, so that its 1.4 Hz mechanical cycle reaches the insert only through a flexible line. This reduces vibration-induced flux noise and microphonic modulation of readout lines by more than an order of magnitude compared with a head-mounted valve.",
+    "physics": {
+      "summary": "Vibration isolation of the valve drive.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "cycle frequency",
+        "unit": "Hz",
+        "binding": "cryo.pt.freq",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#8-thermometry-vibration-and-magnetic-shielding"
+    ],
+    "tooltip": "Remote rotary valve for the pulse tube.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.2,
+      "h_m": 0.15,
+      "d_m": 0.2
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

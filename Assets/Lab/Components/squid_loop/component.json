@@ -1,0 +1,75 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "squid_loop",
+    "name": "SQUID loop",
+    "category": "qubit",
+    "parent": "substrate",
+    "function": "Two junctions in a loop, giving a flux-tunable effective E_J. Applying flux through the loop moves the qubit frequency by up to a gigahertz, enabling flux-activated CZ gates and frequency parking, at the price of first-order flux-noise sensitivity away from the sweet spot at integer flux quanta.",
+    "physics": {
+      "summary": "Flux tunability of E_J; sweet spot at Φ = 0.",
+      "equations": [
+        "flux_tunability",
+        "flux_from_current"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "loop area",
+        "unit": "µm²",
+        "typical": [
+          20,
+          200
+        ]
+      },
+      {
+        "field": "asymmetry d",
+        "unit": "",
+        "typical": [
+          0,
+          0.3
+        ]
+      },
+      {
+        "field": "external flux",
+        "unit": "Φ0",
+        "binding": "device.qubit[$i].phi_ext",
+        "class": "Model"
+      },
+      {
+        "field": "f01",
+        "unit": "GHz",
+        "binding": "device.qubit[$i].f01",
+        "class": "Numerical"
+      }
+    ],
+    "theory": [
+      "T05#4-flux-tunable-transmons"
+    ],
+    "tooltip": "SQUID loop: flux-tunable junction pair.",
+    "geometry": {
+      "generator": "SquidLoop",
+      "area_um2": 60,
+      "w_um": 1.0
+    },
+    "lod": [
+      {
+        "max_m": 0.02,
+        "detail": "full"
+      },
+      {
+        "max_m": 0.2,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

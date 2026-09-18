@@ -1,0 +1,59 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "flip_chip_bump",
+    "name": "Flip-chip indium bump",
+    "category": "chip",
+    "parent": "substrate",
+    "function": "Indium sphere bonding a qubit die to a wiring die face-to-face. Bumps carry ground and signals between the two chips and set their 5–10 μm separation; used instead of wirebonds when the routing density of a large lattice exceeds what one layer allows.",
+    "physics": {
+      "summary": "Vertical interconnect for two-die packaging.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "pitch",
+        "unit": "µm",
+        "typical": [
+          50,
+          200
+        ]
+      },
+      {
+        "field": "gap",
+        "unit": "µm",
+        "typical": [
+          5,
+          10
+        ]
+      }
+    ],
+    "theory": [
+      "T05#6.3-dispersive-readout"
+    ],
+    "tooltip": "Indium bump for flip-chip packaging.",
+    "geometry": {
+      "generator": "Sphere",
+      "r_um": 10
+    },
+    "lod": [
+      {
+        "max_m": 0.02,
+        "detail": "full"
+      },
+      {
+        "max_m": 0.2,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

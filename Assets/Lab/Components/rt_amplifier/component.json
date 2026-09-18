@@ -1,0 +1,64 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "rt_amplifier",
+    "name": "Room-temperature amplifier",
+    "category": "amplifier",
+    "parent": "rack_B",
+    "function": "Final gain stage in the rack before the digitizer, about 30 dB with a 100 K noise temperature. Its noise contribution is divided by the HEMT gain and is negligible; its role is to bring the signal to the digitizer's full-scale range without saturating.",
+    "physics": {
+      "summary": "Final gain stage; noise negligible after the HEMT.",
+      "equations": [
+        "friis"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "gain",
+        "unit": "dB",
+        "typical": [
+          25,
+          35
+        ],
+        "binding": "wiring.line[$line].rtamp.gain",
+        "class": "Model"
+      },
+      {
+        "field": "noise temperature",
+        "unit": "K",
+        "typical": [
+          80,
+          150
+        ]
+      }
+    ],
+    "theory": [
+      "T07#8-amplifier-chain-and-noise-temperature"
+    ],
+    "tooltip": "Room-temperature amplifier before the digitizer.",
+    "geometry": {
+      "generator": "RackUnit",
+      "u": 1,
+      "front": "amp"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

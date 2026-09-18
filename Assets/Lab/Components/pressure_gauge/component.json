@@ -1,0 +1,68 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "pressure_gauge",
+    "name": "Pressure gauge",
+    "category": "sensor",
+    "parent": "ghs_cabinet",
+    "function": "Pirani, capacitance or piezo gauge on one node of the gas circuit (vacuum can, still, condensing line, dump tanks). Together the gauges give the operator the state of the circulation: a rising still pressure with falling flow means a blockage; a rising can pressure means a leak or warming shields.",
+    "physics": {
+      "summary": "Pressure at one node of the gas circuit.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "range",
+        "unit": "mbar",
+        "typical": [
+          1e-06,
+          3000
+        ]
+      },
+      {
+        "field": "pressure",
+        "unit": "mbar",
+        "binding": "cryo.gauge[$i].p",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#5-radiation-and-other-loads"
+    ],
+    "tooltip": "Pressure gauge on the gas circuit.",
+    "geometry": {
+      "generator": "Cylinder",
+      "r_m": 0.03,
+      "h_m": 0.02,
+      "caps": true,
+      "front": "dial"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ],
+    "model_name": "Wide-range vacuum gauge",
+    "instrument": {
+      "class": "pressure_gauge",
+      "settings_schema": "instr/gauge.schema.json",
+      "channels": [
+        "p"
+      ]
+    }
+  }
+}

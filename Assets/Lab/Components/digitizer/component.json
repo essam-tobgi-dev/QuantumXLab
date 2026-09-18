@@ -1,0 +1,96 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "digitizer",
+    "name": "Readout digitizer",
+    "category": "instrument",
+    "parent": "rack_A",
+    "function": "Two-channel 1 GS/s analog-to-digital converter that captures the down-converted readout signal, demodulates it at the intermediate frequency with the calibrated integration weights, and returns one (I, Q) point per shot per qubit. The IQ clouds it produces are the physical observable from which state assignment, readout fidelity and the assignment matrix are derived.",
+    "physics": {
+      "summary": "Demodulates readout to IQ points; source of all measured bits.",
+      "equations": [
+        "heterodyne_demod",
+        "readout_snr",
+        "adc_snr",
+        "readout_confusion"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "sample rate",
+        "unit": "GS/s",
+        "typical": [
+          0.5,
+          2
+        ]
+      },
+      {
+        "field": "resolution",
+        "unit": "bit",
+        "typical": [
+          12,
+          14
+        ]
+      },
+      {
+        "field": "integration window",
+        "unit": "µs",
+        "typical": [
+          0.2,
+          2
+        ]
+      },
+      {
+        "field": "IQ point",
+        "unit": "",
+        "binding": "instr.dig.ch[$k].iq",
+        "class": "Statistical"
+      },
+      {
+        "field": "trigger",
+        "unit": "",
+        "binding": "instr.dig.trigger",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T07#6-heterodyne-readout-and-demodulation",
+      "T07#7-sampling-quantization-timing"
+    ],
+    "tooltip": "Digitizer: readout demodulation to IQ points.",
+    "geometry": {
+      "generator": "RackUnit",
+      "u": 2,
+      "front": "digitizer"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ],
+    "model_name": "Readout digitizer",
+    "instrument": {
+      "class": "digitizer",
+      "settings_schema": "instr/digitizer.schema.json",
+      "channels": [
+        "ch[k].iq",
+        "trigger",
+        "histogram"
+      ]
+    }
+  }
+}

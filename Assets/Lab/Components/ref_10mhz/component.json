@@ -1,0 +1,66 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "ref_10mhz",
+    "name": "10 MHz frequency reference",
+    "category": "instrument",
+    "parent": "rack_B",
+    "function": "Oven-controlled or rubidium 10 MHz reference that every generator, AWG and digitizer locks to. Without a common reference the frames of drive and readout drift apart and virtual-Z phases become meaningless within milliseconds; the lock indicator is a precondition for any run.",
+    "physics": {
+      "summary": "Common frequency reference for all instruments.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "stability",
+        "unit": "",
+        "typical": [
+          1e-11,
+          1e-09
+        ]
+      },
+      {
+        "field": "locked",
+        "unit": "",
+        "binding": "instr.ref.locked",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T07#5-iq-modulation-up-conversion-and-frames"
+    ],
+    "tooltip": "10 MHz reference: phase coherence between instruments.",
+    "geometry": {
+      "generator": "RackUnit",
+      "u": 1,
+      "front": "controller"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ],
+    "model_name": "10 MHz frequency reference",
+    "instrument": {
+      "class": "controller",
+      "settings_schema": "instr/controller.schema.json",
+      "channels": [
+        "locked"
+      ]
+    }
+  }
+}

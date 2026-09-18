@@ -1,0 +1,86 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "spectrum_analyzer",
+    "name": "Spectrum analyzer, 26 GHz",
+    "category": "instrument",
+    "parent": "rack_B",
+    "function": "Displays the power spectrum of an AWG or mixer output at the resolution bandwidth chosen. It is how mixer calibration is verified (carrier leakage and image sideband as separate lines), how a DRAG pulse's sideband suppression is checked, and how spurs from the generator are found before they land on a qubit transition.",
+    "physics": {
+      "summary": "Power spectrum of control signals; verifies mixer calibration and pulse spectra.",
+      "equations": [
+        "iq_modulation",
+        "gaussian_pulse"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "frequency range",
+        "unit": "GHz",
+        "typical": [
+          0.001,
+          26
+        ]
+      },
+      {
+        "field": "resolution bandwidth",
+        "unit": "kHz",
+        "typical": [
+          0.001,
+          3000
+        ]
+      },
+      {
+        "field": "displayed noise floor",
+        "unit": "dBm/Hz",
+        "typical": [
+          -160,
+          -140
+        ]
+      },
+      {
+        "field": "trace",
+        "unit": "",
+        "binding": "instr.sa.trace",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T07#5-iq-modulation-up-conversion-and-frames"
+    ],
+    "tooltip": "Spectrum analyzer for control-signal spectra.",
+    "geometry": {
+      "generator": "RackUnit",
+      "u": 4,
+      "front": "spectrum_analyzer"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ],
+    "model_name": "Spectrum analyzer, 26 GHz",
+    "instrument": {
+      "class": "spectrum_analyzer",
+      "settings_schema": "instr/spectrum_analyzer.schema.json",
+      "channels": [
+        "trace",
+        "markers"
+      ]
+    }
+  }
+}

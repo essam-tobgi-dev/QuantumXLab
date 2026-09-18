@@ -1,0 +1,13 @@
+{
+ "statevector": null,
+ "counts": {
+  "0": 0.0005,
+  "1": 0.9995
+ },
+ "tolerance": 0.02,
+ "unitary_digest": null,
+ "shots": 1024,
+ "seed": 1,
+ "backend": "lindblad",
+ "note": "The oracle runs the ideal backend (spec 25 §2), so this is the pulse's own fidelity: a pi-area DRAG pulse leaves P(1) = 0.9995 and P(0) = 0.0005 (16384 shots resolve it; 1024 do not). On the calibrated-noise backend the same program reads about 0.955, the readout assignment error of sc_fixed_5 setting the ceiling."
+}

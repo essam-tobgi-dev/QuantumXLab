@@ -1,0 +1,71 @@
+{
+  "qxl": {
+    "kind": "qec.code",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "repetition_bitflip_3",
+    "n": 3,
+    "k": 1,
+    "d": 3,
+    "family": "Repetition",
+    "stabilizers": [
+      "ZZI",
+      "IZZ"
+    ],
+    "logical_x": [
+      "XXX"
+    ],
+    "logical_z": [
+      "ZII"
+    ],
+    "layout": {
+      "data": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "ancilla": [
+        {
+          "type": "Z",
+          "coord": [
+            0.5,
+            1
+          ],
+          "order": [
+            0,
+            1
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            1.5,
+            1
+          ],
+          "order": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "decoder": "lookup",
+    "theory": [
+      "T09#4.1-three-qubit-bit-flip-code"
+    ],
+    "notes": "Corrects one X error; distance 1 against Z.",
+    "convention": "Pauli strings are written left-to-right from qubit 0 (position i is qubit i)."
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "control_chassis",
+    "name": "Control chassis (AWG + sequencer)",
+    "category": "instrument",
+    "parent": "rack_A",
+    "function": "Multi-channel arbitrary waveform generator with a hardware sequencer. It plays the I/Q envelopes of every pulse schedule at 1 GS/s with 14-bit resolution, steps through shots, applies real-time phase updates for virtual Z gates, and branches on digitizer results for feed-forward. Timing granularity (16 samples) and minimum pulse length come from its FPGA clock and are compile-time constraints.",
+    "physics": {
+      "summary": "Plays pulse schedules; defines timing granularity and feed-forward latency.",
+      "equations": [
+        "iq_modulation",
+        "gaussian_pulse",
+        "adc_snr"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "channels",
+        "unit": "",
+        "typical": [
+          8,
+          32
+        ]
+      },
+      {
+        "field": "sample rate",
+        "unit": "GS/s",
+        "typical": [
+          1,
+          2
+        ]
+      },
+      {
+        "field": "resolution",
+        "unit": "bit",
+        "typical": [
+          14,
+          16
+        ]
+      },
+      {
+        "field": "waveform memory",
+        "unit": "MSa",
+        "typical": [
+          16,
+          512
+        ]
+      },
+      {
+        "field": "feedback latency",
+        "unit": "ns",
+        "typical": [
+          150,
+          300
+        ]
+      },
+      {
+        "field": "channel waveform",
+        "unit": "V",
+        "binding": "instr.awg.ch[$k].waveform",
+        "class": "Exact"
+      },
+      {
+        "field": "running",
+        "unit": "",
+        "binding": "instr.awg.running",
+        "class": "Model"
+      },
+      {
+        "field": "current shot",
+        "unit": "",
+        "binding": "instr.seq.shot",
+        "class": "Exact"
+      }
+    ],
+    "theory": [
+      "T07#5-iq-modulation-up-conversion-and-frames",
+      "T07#7-sampling-quantization-timing"
+    ],
+    "tooltip": "AWG and sequencer: plays the compiled pulse schedule.",
+    "geometry": {
+      "generator": "RackUnit",
+      "u": 6,
+      "front": "awg"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ],
+    "model_name": "Control chassis (AWG + sequencer)",
+    "instrument": {
+      "class": "awg",
+      "settings_schema": "instr/awg.schema.json",
+      "channels": [
+        "ch[k].waveform",
+        "running",
+        "seq.shot"
+      ]
+    }
+  }
+}

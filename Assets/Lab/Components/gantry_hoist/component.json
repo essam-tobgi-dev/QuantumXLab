@@ -1,0 +1,64 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "gantry_hoist",
+    "name": "Gantry hoist",
+    "category": "structure",
+    "parent": "fridge_frame",
+    "function": "Motorised trolley on the frame's top beams that lowers and raises the outer vacuum can and the radiation shields. Opening the fridge is a multi-hour operation: the can must be lowered fully before any stage is accessible, and every shield is removed in order from the outside in. The simulator drives this with the cryo.ovc.lowered value.",
+    "physics": {
+      "summary": "Mechanical; no thermal role.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "span",
+        "unit": "m",
+        "typical": [
+          1.2,
+          1.6
+        ]
+      },
+      {
+        "field": "travel",
+        "unit": "m",
+        "typical": [
+          1.4,
+          1.8
+        ]
+      },
+      {
+        "field": "lowered fraction",
+        "unit": "",
+        "binding": "cryo.ovc.lowered",
+        "class": "Illustrative"
+      }
+    ],
+    "theory": [],
+    "tooltip": "Hoist that lowers the vacuum can and shields.",
+    "geometry": {
+      "generator": "Frame",
+      "span_m": 1.4,
+      "travel_m": 1.6
+    },
+    "lod": [
+      {
+        "max_m": 6.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 30.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

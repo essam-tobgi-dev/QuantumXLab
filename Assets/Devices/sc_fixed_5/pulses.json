@@ -1,0 +1,726 @@
+{
+ "qxl": {
+  "kind": "pulses",
+  "schema": 1,
+  "app": "0.1.0",
+  "created": "2026-09-17T00:00:00Z"
+ },
+ "data": {
+  "device": "sc_fixed_5",
+  "frames": {
+   "d0": {
+    "frequency_ghz": "cal.qubits.0.f01_ghz",
+    "channel": "d[0]"
+   },
+   "m0": {
+    "frequency_ghz": "cal.qubits.0.readout_f_ghz",
+    "channel": "m[0]"
+   },
+   "d1": {
+    "frequency_ghz": "cal.qubits.1.f01_ghz",
+    "channel": "d[1]"
+   },
+   "m1": {
+    "frequency_ghz": "cal.qubits.1.readout_f_ghz",
+    "channel": "m[1]"
+   },
+   "d2": {
+    "frequency_ghz": "cal.qubits.2.f01_ghz",
+    "channel": "d[2]"
+   },
+   "m2": {
+    "frequency_ghz": "cal.qubits.2.readout_f_ghz",
+    "channel": "m[2]"
+   },
+   "d3": {
+    "frequency_ghz": "cal.qubits.3.f01_ghz",
+    "channel": "d[3]"
+   },
+   "m3": {
+    "frequency_ghz": "cal.qubits.3.readout_f_ghz",
+    "channel": "m[3]"
+   },
+   "d4": {
+    "frequency_ghz": "cal.qubits.4.f01_ghz",
+    "channel": "d[4]"
+   },
+   "m4": {
+    "frequency_ghz": "cal.qubits.4.readout_f_ghz",
+    "channel": "m[4]"
+   },
+   "u0_1": {
+    "frequency_ghz": "cal.qubits.1.f01_ghz",
+    "channel": "u[0,1]"
+   },
+   "u1_2": {
+    "frequency_ghz": "cal.qubits.2.f01_ghz",
+    "channel": "u[1,2]"
+   },
+   "u1_3": {
+    "frequency_ghz": "cal.qubits.3.f01_ghz",
+    "channel": "u[1,3]"
+   },
+   "u3_4": {
+    "frequency_ghz": "cal.qubits.4.f01_ghz",
+    "channel": "u[3,4]"
+   }
+  },
+  "templates": {
+   "cr_echo": {
+    "description": "Echoed cross-resonance with active cancellation tone (spec 10 \u00a76.3, T05 \u00a78)",
+    "wf": "gaussian_square",
+    "sigma_ns": 16,
+    "rise_ns": 32,
+    "T_cr_rule": "cal.edges.c-t.duration_ns/2 - T_x",
+    "corrections": [
+     "rz(-pi/2) c",
+     "sx t",
+     "rz t"
+    ]
+   },
+   "cr_echo_bare": {
+    "description": "ecr: steps 1-4 of cr_echo without the single-qubit corrections"
+   },
+   "cz_adiabatic": {
+    "description": "Slepian flux pulse detuning the higher-frequency qubit toward |11>-|20> (spec 10 \u00a76.4)",
+    "wf": "slepian",
+    "T_ns": 40,
+    "phase_target_rad": 3.14159265,
+    "leakage_max": 0.001
+   },
+   "siswap_resonant": {
+    "description": "Coupler flux pulse bringing the pair into resonance for T = pi/(4 g_eff) (spec 10 \u00a76.5)",
+    "wf": "gaussian_square",
+    "edge_ns": 5,
+    "T_ns": 32
+   },
+   "measure_dispersive": {
+    "wf": "gaussian_square",
+    "sigma_ns": 20,
+    "rise_ns": 40,
+    "acquire_delay_ns": 100,
+    "weights": "matched",
+    "amp": 0.1
+   },
+   "reset_active": {
+    "kind": "measure_conditional_x",
+    "feedforward_ns": 200
+   }
+  },
+  "defcals": [
+   {
+    "gate": "sx",
+    "qubits": [
+     0
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "d[0]",
+       "wf": "drag",
+       "T_ns": 32,
+       "sigma_ns": 8.0,
+       "beta_ns": 0.2481,
+       "amp": 0.1747
+      }
+     }
+    ]
+   },
+   {
+    "gate": "x",
+    "qubits": [
+     0
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "d[0]",
+       "wf": "drag",
+       "T_ns": 32,
+       "sigma_ns": 8.0,
+       "beta_ns": 0.2481,
+       "amp": 0.3494
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     0
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "d[0]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "id",
+    "qubits": [
+     0
+    ],
+    "instructions": [
+     {
+      "delay": {
+       "ch": "d[0]",
+       "T_ns": 32
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     0
+    ],
+    "ref": "measure_dispersive",
+    "instructions": [
+     {
+      "play": {
+       "ch": "m[0]",
+       "wf": "gaussian_square",
+       "T_ns": 700,
+       "sigma_ns": 20,
+       "rise_ns": 40,
+       "amp": 0.1
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[0]",
+       "delay_ns": 100,
+       "T_ns": 700,
+       "weights": "matched"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     0
+    ],
+    "ref": "reset_active"
+   },
+   {
+    "gate": "sx",
+    "qubits": [
+     1
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "d[1]",
+       "wf": "drag",
+       "T_ns": 32,
+       "sigma_ns": 8.0,
+       "beta_ns": 0.2443,
+       "amp": 0.1856
+      }
+     }
+    ]
+   },
+   {
+    "gate": "x",
+    "qubits": [
+     1
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "d[1]",
+       "wf": "drag",
+       "T_ns": 32,
+       "sigma_ns": 8.0,
+       "beta_ns": 0.2443,
+       "amp": 0.3712
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     1
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "d[1]",
+       "value": "-theta"
+      }
+     },
+     {
+      "shift_phase": {
+       "ch": "u[0,1]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "id",
+    "qubits": [
+     1
+    ],
+    "instructions": [
+     {
+      "delay": {
+       "ch": "d[1]",
+       "T_ns": 32
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     1
+    ],
+    "ref": "measure_dispersive",
+    "instructions": [
+     {
+      "play": {
+       "ch": "m[1]",
+       "wf": "gaussian_square",
+       "T_ns": 700,
+       "sigma_ns": 20,
+       "rise_ns": 40,
+       "amp": 0.1
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[1]",
+       "delay_ns": 100,
+       "T_ns": 700,
+       "weights": "matched"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     1
+    ],
+    "ref": "reset_active"
+   },
+   {
+    "gate": "sx",
+    "qubits": [
+     2
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "d[2]",
+       "wf": "drag",
+       "T_ns": 32,
+       "sigma_ns": 8.0,
+       "beta_ns": 0.2423,
+       "amp": 0.1905
+      }
+     }
+    ]
+   },
+   {
+    "gate": "x",
+    "qubits": [
+     2
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "d[2]",
+       "wf": "drag",
+       "T_ns": 32,
+       "sigma_ns": 8.0,
+       "beta_ns": 0.2423,
+       "amp": 0.381
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     2
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "d[2]",
+       "value": "-theta"
+      }
+     },
+     {
+      "shift_phase": {
+       "ch": "u[1,2]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "id",
+    "qubits": [
+     2
+    ],
+    "instructions": [
+     {
+      "delay": {
+       "ch": "d[2]",
+       "T_ns": 32
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     2
+    ],
+    "ref": "measure_dispersive",
+    "instructions": [
+     {
+      "play": {
+       "ch": "m[2]",
+       "wf": "gaussian_square",
+       "T_ns": 700,
+       "sigma_ns": 20,
+       "rise_ns": 40,
+       "amp": 0.1
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[2]",
+       "delay_ns": 100,
+       "T_ns": 700,
+       "weights": "matched"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     2
+    ],
+    "ref": "reset_active"
+   },
+   {
+    "gate": "sx",
+    "qubits": [
+     3
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "d[3]",
+       "wf": "drag",
+       "T_ns": 32,
+       "sigma_ns": 8.0,
+       "beta_ns": 0.245,
+       "amp": 0.1831
+      }
+     }
+    ]
+   },
+   {
+    "gate": "x",
+    "qubits": [
+     3
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "d[3]",
+       "wf": "drag",
+       "T_ns": 32,
+       "sigma_ns": 8.0,
+       "beta_ns": 0.245,
+       "amp": 0.3662
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     3
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "d[3]",
+       "value": "-theta"
+      }
+     },
+     {
+      "shift_phase": {
+       "ch": "u[1,3]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "id",
+    "qubits": [
+     3
+    ],
+    "instructions": [
+     {
+      "delay": {
+       "ch": "d[3]",
+       "T_ns": 32
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     3
+    ],
+    "ref": "measure_dispersive",
+    "instructions": [
+     {
+      "play": {
+       "ch": "m[3]",
+       "wf": "gaussian_square",
+       "T_ns": 700,
+       "sigma_ns": 20,
+       "rise_ns": 40,
+       "amp": 0.1
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[3]",
+       "delay_ns": 100,
+       "T_ns": 700,
+       "weights": "matched"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     3
+    ],
+    "ref": "reset_active"
+   },
+   {
+    "gate": "sx",
+    "qubits": [
+     4
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "d[4]",
+       "wf": "drag",
+       "T_ns": 32,
+       "sigma_ns": 8.0,
+       "beta_ns": 0.2501,
+       "amp": 0.1785
+      }
+     }
+    ]
+   },
+   {
+    "gate": "x",
+    "qubits": [
+     4
+    ],
+    "instructions": [
+     {
+      "play": {
+       "ch": "d[4]",
+       "wf": "drag",
+       "T_ns": 32,
+       "sigma_ns": 8.0,
+       "beta_ns": 0.2501,
+       "amp": 0.357
+      }
+     }
+    ]
+   },
+   {
+    "gate": "rz",
+    "qubits": [
+     4
+    ],
+    "params": [
+     "theta"
+    ],
+    "instructions": [
+     {
+      "shift_phase": {
+       "ch": "d[4]",
+       "value": "-theta"
+      }
+     },
+     {
+      "shift_phase": {
+       "ch": "u[3,4]",
+       "value": "-theta"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "id",
+    "qubits": [
+     4
+    ],
+    "instructions": [
+     {
+      "delay": {
+       "ch": "d[4]",
+       "T_ns": 32
+      }
+     }
+    ]
+   },
+   {
+    "gate": "measure",
+    "qubits": [
+     4
+    ],
+    "ref": "measure_dispersive",
+    "instructions": [
+     {
+      "play": {
+       "ch": "m[4]",
+       "wf": "gaussian_square",
+       "T_ns": 700,
+       "sigma_ns": 20,
+       "rise_ns": 40,
+       "amp": 0.1
+      }
+     },
+     {
+      "acquire": {
+       "ch": "a[4]",
+       "delay_ns": 100,
+       "T_ns": 700,
+       "weights": "matched"
+      }
+     }
+    ]
+   },
+   {
+    "gate": "reset",
+    "qubits": [
+     4
+    ],
+    "ref": "reset_active"
+   },
+   {
+    "gate": "cx",
+    "qubits": [
+     0,
+     1
+    ],
+    "ref": "cr_echo",
+    "params_from": "cal.edges.0-1",
+    "amp_cr": 0.434,
+    "amp_cancel": 0.04903,
+    "phase_cancel_rad": -0.1006
+   },
+   {
+    "gate": "ecr",
+    "qubits": [
+     0,
+     1
+    ],
+    "ref": "cr_echo_bare",
+    "params_from": "cal.edges.0-1"
+   },
+   {
+    "gate": "cx",
+    "qubits": [
+     1,
+     2
+    ],
+    "ref": "cr_echo",
+    "params_from": "cal.edges.1-2",
+    "amp_cr": 0.4499,
+    "amp_cancel": 0.03397,
+    "phase_cancel_rad": 0.0748
+   },
+   {
+    "gate": "ecr",
+    "qubits": [
+     1,
+     2
+    ],
+    "ref": "cr_echo_bare",
+    "params_from": "cal.edges.1-2"
+   },
+   {
+    "gate": "cx",
+    "qubits": [
+     1,
+     3
+    ],
+    "ref": "cr_echo",
+    "params_from": "cal.edges.1-3",
+    "amp_cr": 0.4586,
+    "amp_cancel": 0.03394,
+    "phase_cancel_rad": 0.1212
+   },
+   {
+    "gate": "ecr",
+    "qubits": [
+     1,
+     3
+    ],
+    "ref": "cr_echo_bare",
+    "params_from": "cal.edges.1-3"
+   },
+   {
+    "gate": "cx",
+    "qubits": [
+     3,
+     4
+    ],
+    "ref": "cr_echo",
+    "params_from": "cal.edges.3-4",
+    "amp_cr": 0.4132,
+    "amp_cancel": 0.03616,
+    "phase_cancel_rad": 0.02173
+   },
+   {
+    "gate": "ecr",
+    "qubits": [
+     3,
+     4
+    ],
+    "ref": "cr_echo_bare",
+    "params_from": "cal.edges.3-4"
+   }
+  ]
+ }
+}

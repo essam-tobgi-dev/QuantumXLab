@@ -1,0 +1,60 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "pump_line",
+    "name": "Parametric-amplifier pump line",
+    "category": "wiring",
+    "parent": "wiring",
+    "function": "Dedicated input line delivering the strong pump tone (tens of dBm at the generator, about −60 dBm at the amplifier) to the JPA or TWPA through a directional coupler. Its 40 dB of attenuation is chosen for pump power rather than qubit noise, and the pump power dissipated at the mixing chamber is a noticeable part of the base-stage budget.",
+    "physics": {
+      "summary": "Delivers the pump tone to the parametric amplifier.",
+      "equations": [
+        "attn_dissipation"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "total attenuation",
+        "unit": "dB",
+        "typical": [
+          30,
+          50
+        ]
+      },
+      {
+        "field": "pump power at amplifier",
+        "unit": "dBm",
+        "binding": "wiring.pump.P",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T07#8-amplifier-chain-and-noise-temperature"
+    ],
+    "tooltip": "Pump line for the parametric amplifier.",
+    "geometry": {
+      "generator": "Tube",
+      "r_m": 0.00043,
+      "path": "rt_to_jpa"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

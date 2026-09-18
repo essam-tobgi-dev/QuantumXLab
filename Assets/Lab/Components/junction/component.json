@@ -1,0 +1,67 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "junction",
+    "name": "Josephson junction",
+    "category": "qubit",
+    "parent": "substrate",
+    "function": "Aluminium/aluminium-oxide/aluminium tunnel junction of about 100×100 nm² forming the non-linear inductor of the transmon. Its critical current sets E_J; because the qubit frequency goes as √(8E_J E_C), a 1 % spread in junction resistance across a wafer becomes a 0.5 % (25 MHz) spread in frequency, which is why frequency plans need collision checks.",
+    "physics": {
+      "summary": "Non-linear inductance; E_J from the critical current.",
+      "equations": [
+        "josephson_relations",
+        "josephson_inductance"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "area",
+        "unit": "µm²",
+        "typical": [
+          0.01,
+          0.05
+        ]
+      },
+      {
+        "field": "Josephson energy E_J/h",
+        "unit": "GHz",
+        "binding": "device.qubit[$i].EJ",
+        "class": "Model"
+      },
+      {
+        "field": "external flux",
+        "unit": "Φ0",
+        "binding": "device.qubit[$i].phi_ext",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T05#2-the-josephson-junction"
+    ],
+    "tooltip": "Josephson junction: the transmon's non-linear inductor.",
+    "geometry": {
+      "generator": "Junction",
+      "w_lead_um": 1.0,
+      "overlap_um": 0.15
+    },
+    "lod": [
+      {
+        "max_m": 0.02,
+        "detail": "full"
+      },
+      {
+        "max_m": 0.2,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

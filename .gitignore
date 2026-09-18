@@ -1,0 +1,13 @@
+build/
+exports/
+imgui.ini
+.DS_Store
+*.qxlab.autosave
+compile_commands.json
+.cache/
+.deps/
+.briefs/
+
+# Specification material is kept out of the repository (owner decision, 2026-09-18)
+specs/
+SPEC_DEVIATIONS.md

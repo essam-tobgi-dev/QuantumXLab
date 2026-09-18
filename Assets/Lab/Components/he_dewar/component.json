@@ -1,0 +1,66 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "he_dewar",
+    "name": "Liquid-helium dewar",
+    "category": "infra",
+    "parent": "room",
+    "function": "Storage dewar for the liquid helium used to pre-cool the cryostat and to top up the mixture reservoir. A cryogen-free system needs it only during maintenance, which is the point: the pulse tube replaced a standing helium supply, and the dewars remain for the rare occasions when the mixture must be recovered or the insert warmed and re-cooled quickly. Boil-off is continuous, so a dewar left connected is a slow leak of an expensive gas.",
+    "physics": {
+      "summary": "Cryogen storage for pre-cooling and mixture recovery.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "capacity",
+        "unit": "L",
+        "typical": [
+          100,
+          250
+        ]
+      },
+      {
+        "field": "boil-off",
+        "unit": "%/day",
+        "typical": [
+          0.5,
+          2.0
+        ]
+      },
+      {
+        "field": "helium price",
+        "unit": "USD/L",
+        "typical": [
+          10,
+          50
+        ]
+      }
+    ],
+    "theory": [],
+    "tooltip": "Helium dewar: pre-cooling and mixture recovery.",
+    "geometry": {
+      "generator": "Cylinder",
+      "r_m": 0.25,
+      "h_m": 1.3
+    },
+    "lod": [
+      {
+        "max_m": 6.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 30.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

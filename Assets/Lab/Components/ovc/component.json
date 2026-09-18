@@ -1,0 +1,89 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "ovc",
+    "name": "Outer vacuum can (OVC)",
+    "category": "vacuum",
+    "parent": "top_plate_300K",
+    "function": "Brushed stainless-steel can sealed to the top plate by an O-ring under a 48-bolt flange; it holds the insulating vacuum (below 1e-5 mbar cold). Without it, gas conduction and convection would dump kilowatts into the 50 K stage. The dished (2:1 ellipsoidal) base resists the 1 bar external load. Its pressure is the first quantity checked before starting a cooldown and the first to move when a leak or a warm-up begins.",
+    "physics": {
+      "summary": "Insulating vacuum; removes gas conduction as a heat path.",
+      "equations": [
+        "turbo_pressure"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "radius",
+        "unit": "m",
+        "typical": [
+          0.26,
+          0.3
+        ]
+      },
+      {
+        "field": "height",
+        "unit": "m",
+        "typical": [
+          1.3,
+          1.4
+        ]
+      },
+      {
+        "field": "wall",
+        "unit": "mm",
+        "typical": [
+          5,
+          8
+        ]
+      },
+      {
+        "field": "pressure",
+        "unit": "mbar",
+        "binding": "cryo.ovc.pressure",
+        "class": "Model"
+      },
+      {
+        "field": "lowered fraction",
+        "unit": "",
+        "binding": "cryo.ovc.lowered",
+        "class": "Illustrative"
+      }
+    ],
+    "theory": [
+      "T08#5-radiation-and-other-loads"
+    ],
+    "tooltip": "Outer vacuum can: the insulating vacuum boundary.",
+    "geometry": {
+      "generator": "Can",
+      "r_m": 0.28,
+      "h_m": 1.35,
+      "t_m": 0.006,
+      "base": "dished",
+      "open": "top",
+      "flange": true,
+      "flange_t_m": 0.012,
+      "flange_w_m": 0.015,
+      "flange_bolts": 48
+    },
+    "lod": [
+      {
+        "max_m": 6.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 30.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

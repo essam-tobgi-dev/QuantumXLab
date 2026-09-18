@@ -1,0 +1,67 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "workstation",
+    "name": "Control workstation",
+    "category": "infra",
+    "parent": "room",
+    "function": "The classical computer that runs QuantumXLab itself: it compiles the program, uploads waveforms to the control chassis, receives the demodulated shot records and stores the calibration set. Its latency matters only for feed-forward experiments, where the decision must return to the chassis inside the qubit coherence time; everything else is batch traffic over the control link. Nothing in the quantum stack depends on its clock, which is why the timing reference is a separate rack unit.",
+    "physics": {
+      "summary": "Classical control host; no role in the quantum signal path.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "control link",
+        "unit": "Gb/s",
+        "typical": [
+          1,
+          10
+        ]
+      },
+      {
+        "field": "feed-forward latency",
+        "unit": "us",
+        "typical": [
+          1,
+          100
+        ]
+      },
+      {
+        "field": "storage per run",
+        "unit": "MB",
+        "typical": [
+          1,
+          500
+        ]
+      }
+    ],
+    "theory": [],
+    "tooltip": "Workstation: compiles programs and stores results.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 1.6,
+      "h_m": 0.75,
+      "d_m": 0.8
+    },
+    "lod": [
+      {
+        "max_m": 6.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 30.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

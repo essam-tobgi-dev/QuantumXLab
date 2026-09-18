@@ -1,0 +1,46 @@
+{
+  "qxl": {
+    "kind": "analysis.recipe",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "process_tomography",
+    "title": "Process tomography",
+    "theory": "T10#4-process-tomography",
+    "program": "Assets/Programs/Calibration/process_tomography.qasm",
+    "sweep": {
+      "input": "config",
+      "unit": "",
+      "values": {
+        "linear": [
+          0,
+          143,
+          144
+        ]
+      }
+    },
+    "shots": 1000,
+    "extract": {
+      "channel": "qpt.counts",
+      "y": "counts",
+      "sigma": "multinomial"
+    },
+    "fit": {
+      "model": "mle_process",
+      "report": [
+        "process_fidelity",
+        "avg_fidelity"
+      ]
+    },
+    "results": [
+      {
+        "label": "cx average fidelity",
+        "measured": "fit.avg_fidelity",
+        "model": "1 - device.calibration.edge[e].error_2q",
+        "tolerance": 0.05
+      }
+    ]
+  }
+}

@@ -1,0 +1,1 @@
+{ "statevector": null, "counts": null, "tolerance": "statistical", "unitary_digest": null, "shots": 1024, "seed": 1, "note": "oracle: sz_ == 0000 always; sx_ uniform over 16 values (spec 25 §6)" }

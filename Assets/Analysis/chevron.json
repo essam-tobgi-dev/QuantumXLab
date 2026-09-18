@@ -1,0 +1,53 @@
+{
+  "qxl": {
+    "kind": "analysis.recipe",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "chevron",
+    "title": "Rabi chevron",
+    "theory": "T07#2-rabi-oscillations-and-bloch-equations",
+    "program": "Assets/Programs/Calibration/rabi_time.qasm",
+    "sweep": {
+      "input": "t_pulse",
+      "unit": "ns",
+      "values": {
+        "linear": [
+          8,
+          400,
+          50
+        ]
+      },
+      "input2": "detuning",
+      "unit2": "MHz",
+      "values2": {
+        "linear": [
+          -20,
+          20,
+          41
+        ]
+      }
+    },
+    "shots": 300,
+    "extract": {
+      "channel": "chevron.p1",
+      "y": "counts['1'] / shots",
+      "sigma": "binomial"
+    },
+    "fit": {
+      "model": "none",
+      "report": []
+    },
+    "results": [
+      {
+        "label": "resonance",
+        "measured": "extract.argmax_detuning",
+        "model": "0",
+        "tolerance": 1.0
+      }
+    ],
+    "heatmap": true
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "mag_shield_al",
+    "name": "Superconducting aluminium shield",
+    "category": "shield",
+    "parent": "mag_shield_mumetal",
+    "function": "Aluminium can inside the μ-metal shield. Below its critical temperature of 1.2 K it becomes superconducting and expels or freezes in the field present at the transition, so the field at the chip becomes constant in time even if the external field drifts. It must be cooled in the lowest possible field, which is why it sits inside the μ-metal can.",
+    "physics": {
+      "summary": "Flux freezing below T_c = 1.2 K stabilises the field at the chip.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "critical temperature",
+        "unit": "K",
+        "typical": [
+          1.1,
+          1.3
+        ]
+      },
+      {
+        "field": "superconducting",
+        "unit": "",
+        "binding": "cryo.stage.mxc.T",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T05#4-flux-tunable-transmons"
+    ],
+    "tooltip": "Superconducting Al can: freezes the field at the chip.",
+    "geometry": {
+      "generator": "Can",
+      "r_m": 0.055,
+      "h_m": 0.19,
+      "t_m": 0.002,
+      "base": "flat",
+      "open": "top"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

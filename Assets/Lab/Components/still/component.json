@@ -1,0 +1,94 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "still",
+    "name": "Still",
+    "category": "circulation",
+    "parent": "stage_still",
+    "function": "Evaporator on the still plate held at 0.7–0.9 K. The dilute phase enters from the mixing chamber and, because the vapour pressure of 3He is about a thousand times that of 4He at this temperature, the vapour pumped off the still is over 95 % 3He even though the liquid is only a few percent 3He. That selective evaporation is what drives the circulation: the osmotic pressure difference pulls 3He across the phase boundary in the mixing chamber to replace what leaves. The still heater sets the evaporation rate (a few hundred µW to a few mW), and with it the circulation rate ṅ₃ and, through the cooling power 84 ṅ₃ T², the base temperature. A film burner on its neck stops the superfluid 4He film creeping up the pumping line.",
+    "physics": {
+      "summary": "Selective evaporation of 3He drives the circulation.",
+      "equations": [
+        "still_flow"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "temperature",
+        "unit": "K",
+        "typical": [
+          0.7,
+          0.9
+        ]
+      },
+      {
+        "field": "3He fraction in vapour",
+        "unit": "",
+        "typical": [
+          0.9,
+          0.99
+        ]
+      },
+      {
+        "field": "volume",
+        "unit": "cm³",
+        "typical": [
+          50,
+          150
+        ]
+      },
+      {
+        "field": "temperature (live)",
+        "unit": "K",
+        "binding": "cryo.stage.still.T",
+        "class": "Numerical"
+      },
+      {
+        "field": "3He flow",
+        "unit": "mmol/s",
+        "binding": "cryo.flow.n3",
+        "class": "Model"
+      },
+      {
+        "field": "heater power",
+        "unit": "mW",
+        "binding": "cryo.stage.still.P_heater",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#1.3-the-circulation-loop",
+      "T08#1.1-the-3he-4he-mixture"
+    ],
+    "tooltip": "Still: evaporates 3He from the dilute phase at about 0.8 K.",
+    "geometry": {
+      "generator": "Cylinder",
+      "r_m": 0.03,
+      "h_m": 0.04,
+      "caps": true,
+      "attachments": [
+        "flange"
+      ],
+      "flange_at": "bottom"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

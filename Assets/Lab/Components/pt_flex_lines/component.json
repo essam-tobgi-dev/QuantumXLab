@@ -1,0 +1,64 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "pt_flex_lines",
+    "name": "Pulse-tube helium flex lines",
+    "category": "cryocooler",
+    "parent": "pulse_tube_head",
+    "function": "Stainless flexible lines carrying high- and low-pressure helium between the remote compressor and the pulse-tube head. Their length and routing are chosen to decouple compressor vibration; the pressures they carry are monitored because a loss of pressure difference is the first sign of compressor failure and leads to a warm-up of the 4 K stage within hours.",
+    "physics": {
+      "summary": "Helium supply to the pulse tube; no thermal role in the insert.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "length",
+        "unit": "m",
+        "typical": [
+          10,
+          20
+        ]
+      },
+      {
+        "field": "high pressure",
+        "unit": "bar",
+        "binding": "cryo.pt.p_high",
+        "class": "Model"
+      },
+      {
+        "field": "low pressure",
+        "unit": "bar",
+        "binding": "cryo.pt.p_low",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#2-pulse-tube-pre-cooling"
+    ],
+    "tooltip": "Helium lines from the compressor to the pulse-tube head.",
+    "geometry": {
+      "generator": "Tube",
+      "r_m": 0.012,
+      "path": "spline_to_wall"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

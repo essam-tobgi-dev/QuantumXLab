@@ -1,0 +1,59 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "bench",
+    "name": "Assembly bench",
+    "category": "infra",
+    "parent": "room",
+    "function": "Static-safe bench where the sample package is wirebonded and the fridge wiring is assembled and tested before it is installed. Work done here determines much of the machine's performance: a bond wire with the wrong loop height adds inductance in series with the drive line, and a coaxial connector torqued incorrectly changes its attenuation by a fraction of a decibel, which shifts the photon number reaching the qubit.",
+    "physics": {
+      "summary": "Assembly and inspection; sets wiring quality before installation.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "surface resistance",
+        "unit": "ohm",
+        "typical": [
+          1000000.0,
+          1000000000.0
+        ]
+      },
+      {
+        "field": "working area",
+        "unit": "m^2",
+        "typical": [
+          1,
+          3
+        ]
+      }
+    ],
+    "theory": [],
+    "tooltip": "Bench: sample packaging and wiring assembly.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 1.8,
+      "h_m": 0.9,
+      "d_m": 0.8
+    },
+    "lod": [
+      {
+        "max_m": 6.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 30.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

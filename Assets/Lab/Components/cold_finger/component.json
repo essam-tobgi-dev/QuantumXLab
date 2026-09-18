@@ -1,0 +1,61 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "cold_finger",
+    "name": "Cold finger",
+    "category": "structure",
+    "parent": "stage_mxc",
+    "function": "Gold-plated copper post extending from the mixing-chamber plate down into the magnetic shields, carrying the sample puck. Gold plating avoids the oxide layer that would add thermal contact resistance; the bolted joint is torqued to specification because at 15 mK the thermal conductance of a joint is dominated by its contact pressure.",
+    "physics": {
+      "summary": "Thermal link from the mixing chamber to the sample.",
+      "equations": [
+        "conduction_load"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "length",
+        "unit": "m",
+        "typical": [
+          0.1,
+          0.2
+        ]
+      },
+      {
+        "field": "temperature",
+        "unit": "K",
+        "binding": "cryo.stage.mxc.T",
+        "class": "Numerical"
+      }
+    ],
+    "theory": [
+      "T08#3-stage-temperatures"
+    ],
+    "tooltip": "Copper cold finger carrying the sample puck.",
+    "geometry": {
+      "generator": "Cylinder",
+      "r_m": 0.02,
+      "h_m": 0.15,
+      "caps": true
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

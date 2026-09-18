@@ -1,0 +1,113 @@
+{
+ "qxl": {
+  "kind": "wiring",
+  "schema": 1,
+  "app": "0.1.0",
+  "created": "2026-09-17T00:00:00Z"
+ },
+ "data": {
+  "device": "sc_fixed_5",
+  "layout": "sc_lab_standard",
+  "lines": [
+   {
+    "id": "drive_q0",
+    "channel": "d[0]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q1",
+    "channel": "d[1]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q2",
+    "channel": "d[2]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q3",
+    "channel": "d[3]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q4",
+    "channel": "d[4]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "ro_in_f0",
+    "channel": "m[0..4]",
+    "chain": "readout_in_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 10,
+     "CP": 20,
+     "MXC": 20
+    },
+    "lpf_ghz": 10.0
+   },
+   {
+    "id": "ro_out_f0",
+    "channel": "a[0..4]",
+    "chain": "readout_out_std",
+    "preamp": "twpa",
+    "isolators": 2,
+    "hemt": {
+     "gain_db": 38,
+     "noise_k": 2.5,
+     "dissipation_mw": 12
+    },
+    "rt_amp": {
+     "gain_db": 30,
+     "noise_k": 80
+    }
+   },
+   {
+    "id": "pump_f0",
+    "channel": "pump[0]",
+    "chain": "pump_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "dc_loom_0",
+    "channel": "dc[0..11]",
+    "chain": "dc_loom_std"
+   }
+  ]
+ }
+}

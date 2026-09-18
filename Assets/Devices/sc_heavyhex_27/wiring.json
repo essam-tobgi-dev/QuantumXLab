@@ -1,0 +1,472 @@
+{
+ "qxl": {
+  "kind": "wiring",
+  "schema": 1,
+  "app": "0.1.0",
+  "created": "2026-09-17T00:00:00Z"
+ },
+ "data": {
+  "device": "sc_heavyhex_27",
+  "layout": "sc_lab_standard",
+  "lines": [
+   {
+    "id": "drive_q0",
+    "channel": "d[0]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q1",
+    "channel": "d[1]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q2",
+    "channel": "d[2]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q3",
+    "channel": "d[3]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q4",
+    "channel": "d[4]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q5",
+    "channel": "d[5]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q6",
+    "channel": "d[6]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q7",
+    "channel": "d[7]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q8",
+    "channel": "d[8]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q9",
+    "channel": "d[9]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q10",
+    "channel": "d[10]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q11",
+    "channel": "d[11]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q12",
+    "channel": "d[12]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q13",
+    "channel": "d[13]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q14",
+    "channel": "d[14]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q15",
+    "channel": "d[15]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q16",
+    "channel": "d[16]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q17",
+    "channel": "d[17]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q18",
+    "channel": "d[18]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q19",
+    "channel": "d[19]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q20",
+    "channel": "d[20]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q21",
+    "channel": "d[21]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q22",
+    "channel": "d[22]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q23",
+    "channel": "d[23]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q24",
+    "channel": "d[24]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q25",
+    "channel": "d[25]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "drive_q26",
+    "channel": "d[26]",
+    "chain": "drive_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "ro_in_f0",
+    "channel": "m[0..6]",
+    "chain": "readout_in_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 10,
+     "CP": 20,
+     "MXC": 20
+    },
+    "lpf_ghz": 10.0
+   },
+   {
+    "id": "ro_out_f0",
+    "channel": "a[0..6]",
+    "chain": "readout_out_std",
+    "preamp": "twpa",
+    "isolators": 2,
+    "hemt": {
+     "gain_db": 38,
+     "noise_k": 2.5,
+     "dissipation_mw": 12
+    },
+    "rt_amp": {
+     "gain_db": 30,
+     "noise_k": 80
+    }
+   },
+   {
+    "id": "pump_f0",
+    "channel": "pump[0]",
+    "chain": "pump_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "ro_in_f1",
+    "channel": "m[7..13]",
+    "chain": "readout_in_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 10,
+     "CP": 20,
+     "MXC": 20
+    },
+    "lpf_ghz": 10.0
+   },
+   {
+    "id": "ro_out_f1",
+    "channel": "a[7..13]",
+    "chain": "readout_out_std",
+    "preamp": "twpa",
+    "isolators": 2,
+    "hemt": {
+     "gain_db": 38,
+     "noise_k": 2.5,
+     "dissipation_mw": 12
+    },
+    "rt_amp": {
+     "gain_db": 30,
+     "noise_k": 80
+    }
+   },
+   {
+    "id": "pump_f1",
+    "channel": "pump[1]",
+    "chain": "pump_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "ro_in_f2",
+    "channel": "m[14..20]",
+    "chain": "readout_in_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 10,
+     "CP": 20,
+     "MXC": 20
+    },
+    "lpf_ghz": 10.0
+   },
+   {
+    "id": "ro_out_f2",
+    "channel": "a[14..20]",
+    "chain": "readout_out_std",
+    "preamp": "twpa",
+    "isolators": 2,
+    "hemt": {
+     "gain_db": 38,
+     "noise_k": 2.5,
+     "dissipation_mw": 12
+    },
+    "rt_amp": {
+     "gain_db": 30,
+     "noise_k": 80
+    }
+   },
+   {
+    "id": "pump_f2",
+    "channel": "pump[2]",
+    "chain": "pump_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "ro_in_f3",
+    "channel": "m[21..26]",
+    "chain": "readout_in_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 10,
+     "CP": 20,
+     "MXC": 20
+    },
+    "lpf_ghz": 10.0
+   },
+   {
+    "id": "ro_out_f3",
+    "channel": "a[21..26]",
+    "chain": "readout_out_std",
+    "preamp": "twpa",
+    "isolators": 2,
+    "hemt": {
+     "gain_db": 38,
+     "noise_k": 2.5,
+     "dissipation_mw": 12
+    },
+    "rt_amp": {
+     "gain_db": 30,
+     "noise_k": 80
+    }
+   },
+   {
+    "id": "pump_f3",
+    "channel": "pump[3]",
+    "chain": "pump_std",
+    "attenuation_db": {
+     "PT2": 20,
+     "STILL": 0,
+     "CP": 0,
+     "MXC": 20
+    }
+   },
+   {
+    "id": "dc_loom_0",
+    "channel": "dc[0..11]",
+    "chain": "dc_loom_std"
+   }
+  ]
+ }
+}

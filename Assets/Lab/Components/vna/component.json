@@ -1,0 +1,101 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "vna",
+    "name": "Vector network analyzer, 2-port 9 GHz",
+    "category": "instrument",
+    "parent": "rack_B",
+    "function": "Measures complex transmission S21 of a readout feedline against frequency. Each resonator appears as a notch whose depth and width give the loaded, internal and coupling quality factors; the notch moves by 2χ when the qubit is excited, which is how the dispersive shift is measured. Power sweeps reveal the punch-out from the dressed to the bare resonator frequency.",
+    "physics": {
+      "summary": "Resonator spectroscopy: f_r, Q_i, Q_c, and 2χ from S21.",
+      "equations": [
+        "vna_s21_notch",
+        "q_loaded",
+        "dispersive_shift"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "frequency range",
+        "unit": "GHz",
+        "typical": [
+          0.01,
+          9
+        ]
+      },
+      {
+        "field": "dynamic range",
+        "unit": "dB",
+        "typical": [
+          100,
+          130
+        ]
+      },
+      {
+        "field": "IF bandwidth",
+        "unit": "Hz",
+        "typical": [
+          1,
+          100000
+        ]
+      },
+      {
+        "field": "trace",
+        "unit": "",
+        "binding": "instr.vna.trace",
+        "class": "Model"
+      },
+      {
+        "field": "span",
+        "unit": "GHz",
+        "binding": "instr.vna.span",
+        "class": "Model"
+      },
+      {
+        "field": "power",
+        "unit": "dBm",
+        "binding": "instr.vna.P",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T05#6.3-dispersive-readout",
+      "T07#6-heterodyne-readout-and-demodulation"
+    ],
+    "tooltip": "VNA: S21 of the feedline; resonator fits.",
+    "geometry": {
+      "generator": "RackUnit",
+      "u": 4,
+      "front": "vna"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ],
+    "model_name": "Vector network analyzer, 2-port 9 GHz",
+    "instrument": {
+      "class": "vna",
+      "settings_schema": "instr/vna.schema.json",
+      "channels": [
+        "s21",
+        "s21_phase",
+        "circle"
+      ]
+    }
+  }
+}

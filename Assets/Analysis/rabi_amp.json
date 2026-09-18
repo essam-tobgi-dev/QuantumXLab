@@ -1,0 +1,45 @@
+{
+  "qxl": {
+    "kind": "analysis.recipe",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "rabi_amp",
+    "title": "Rabi amplitude calibration",
+    "theory": "T07#3-from-generator-power-to-rabi-frequency",
+    "program": "Assets/Programs/Calibration/rabi_amp.qasm",
+    "sweep": {
+      "input": "amp",
+      "unit": "",
+      "values": {
+        "linear": [
+          0.0,
+          1.0,
+          51
+        ]
+      }
+    },
+    "shots": 500,
+    "extract": {
+      "channel": "rabi.p1",
+      "y": "counts['1'] / shots",
+      "sigma": "binomial"
+    },
+    "fit": {
+      "model": "rabi_amp",
+      "report": [
+        "a_pi"
+      ]
+    },
+    "results": [
+      {
+        "label": "π amplitude",
+        "measured": "fit.a_pi",
+        "model": "device.pulses.x.amp",
+        "tolerance": 0.05
+      }
+    ]
+  }
+}

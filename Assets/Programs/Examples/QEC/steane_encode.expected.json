@@ -1,0 +1,1 @@
+{ "statevector": null, "counts": "codewords", "tolerance": "statistical", "unitary_digest": null, "shots": 1024, "seed": 1, "note": "every observed bitstring is in the Hamming [7,4] code (even parity on the three checks)" }

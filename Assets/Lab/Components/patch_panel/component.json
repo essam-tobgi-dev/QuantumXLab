@@ -1,0 +1,50 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "patch_panel",
+    "name": "Patch panel",
+    "category": "infra",
+    "parent": "rack_B",
+    "function": "SMA bulkhead panel where the fridge lines terminate at the rack. Every line is labelled with its fridge feedthrough and its function; the compiler's channel-to-port map follows this panel, so a swapped cable here is the classic cause of driving the wrong qubit.",
+    "physics": {
+      "summary": "Physical line-to-channel mapping.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "ports",
+        "unit": "",
+        "typical": [
+          24,
+          96
+        ]
+      }
+    ],
+    "theory": [],
+    "tooltip": "Patch panel: line-to-channel mapping.",
+    "geometry": {
+      "generator": "RackUnit",
+      "u": 2,
+      "front": "patch"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

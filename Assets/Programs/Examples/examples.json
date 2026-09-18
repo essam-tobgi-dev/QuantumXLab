@@ -1,0 +1,13 @@
+{ "qxl": { "kind": "program.examples", "schema": 1, "app": "0.1.0", "created": "2026-09-17T00:00:00Z" },
+  "data": [
+    { "category": "Basics", "programs": ["bell", "ghz_5", "superposition_1q", "phase_kickback"] },
+    { "category": "Protocols", "programs": ["teleportation", "superdense_coding", "entanglement_swapping"] },
+    { "category": "Oracles", "programs": ["deutsch_jozsa_4", "bernstein_vazirani_8", "simon_6"] },
+    { "category": "Fourier", "programs": ["qft_5", "iqft_5", "qpe_t_gate", "qpe_rz"] },
+    { "category": "Search", "programs": ["grover_3", "grover_6_two_marked"] },
+    { "category": "Factoring", "programs": ["shor_15_order_finding"] },
+    { "category": "Variational", "programs": ["vqe_h2", "qaoa_maxcut_4"] },
+    { "category": "Benchmarking", "programs": ["rb_1q", "rb_2q", "interleaved_rb_cx", "qst_bell", "qpt_x"] },
+    { "category": "QEC", "programs": ["repetition_3_memory", "surface_d3_cycle", "steane_encode"] },
+    { "category": "Pulse", "programs": ["defcal_x_custom", "drag_beta_scan", "cross_resonance_echo"] }
+  ] }

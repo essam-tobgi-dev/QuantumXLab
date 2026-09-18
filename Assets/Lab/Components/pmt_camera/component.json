@@ -1,0 +1,61 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "pmt_camera",
+    "name": "Photon-counting detector array",
+    "category": "ion_device",
+    "parent": "vacuum_chamber",
+    "function": "PMT array or EMCCD camera counting fluorescence photons per ion during the detection window. The bright and dark count distributions and the threshold between them define the readout error, typically a few 1e-3 after 100–300 µs; the per-ion bright flag from the last detection is bound here.",
+    "physics": {
+      "summary": "Photon counting for state readout.",
+      "equations": [
+        "fluorescence_threshold"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "detection time",
+        "unit": "µs",
+        "typical": [
+          100,
+          1000
+        ]
+      },
+      {
+        "field": "bright",
+        "unit": "",
+        "binding": "device.ion[$i].bright",
+        "class": "Statistical"
+      }
+    ],
+    "theory": [
+      "T06#7.1-fluorescence"
+    ],
+    "tooltip": "PMT/camera detector for ion fluorescence.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.05,
+      "h_m": 0.05,
+      "d_m": 0.08
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

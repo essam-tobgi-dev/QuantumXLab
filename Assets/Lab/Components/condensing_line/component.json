@@ -1,0 +1,67 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "condensing_line",
+    "name": "Condensing line",
+    "category": "circulation",
+    "parent": "stage_4K",
+    "function": "Capillary that returns the 3He-rich mixture from the room-temperature gas handling system into the fridge. It is thermally anchored at 4 K where the gas liquefies, then passes a flow impedance so that Joule–Thomson expansion cools it further before it enters the still heat exchanger. The circulation rate through it is what sets the cooling power at the mixing chamber.",
+    "physics": {
+      "summary": "Return path of the circulating 3He; condensation at 4 K.",
+      "equations": [
+        "still_flow",
+        "cooling_power_mxc"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "inner diameter",
+        "unit": "mm",
+        "typical": [
+          0.5,
+          1.5
+        ]
+      },
+      {
+        "field": "circulation rate",
+        "unit": "mmol/s",
+        "binding": "cryo.flow.n3",
+        "class": "Model"
+      },
+      {
+        "field": "inlet temperature",
+        "unit": "K",
+        "binding": "cryo.line.condense.T_in",
+        "class": "Numerical"
+      }
+    ],
+    "theory": [
+      "T08#1.3-the-circulation-loop"
+    ],
+    "tooltip": "Condensing line: 3He return into the fridge.",
+    "geometry": {
+      "generator": "Tube",
+      "r_m": 0.0005,
+      "path": "s4_to_still"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "ground_plane",
+    "name": "Superconducting ground plane",
+    "category": "chip",
+    "parent": "substrate",
+    "function": "Continuous superconducting film covering the die except where qubits, resonators and lines are etched. It provides the return path of every coplanar waveguide; slots in it must be stitched with airbridges or bumps so that spurious slot-line modes do not couple qubits to each other across the chip.",
+    "physics": {
+      "summary": "Return conductor for all coplanar structures.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "film",
+        "unit": "",
+        "typical": [
+          0,
+          0
+        ]
+      },
+      {
+        "field": "thickness",
+        "unit": "nm",
+        "typical": [
+          100,
+          200
+        ]
+      }
+    ],
+    "theory": [
+      "T05#6.3-dispersive-readout"
+    ],
+    "tooltip": "Ground plane film with etched circuit.",
+    "geometry": {
+      "generator": "PlateWithHoles",
+      "from": "chip_layout"
+    },
+    "lod": [
+      {
+        "max_m": 0.02,
+        "detail": "full"
+      },
+      {
+        "max_m": 0.2,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

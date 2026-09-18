@@ -1,0 +1,70 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "circulator",
+    "name": "Cryogenic circulator",
+    "category": "wiring",
+    "parent": "stage_mxc",
+    "function": "Three-port ferrite device routing the readout probe tone into the feedline and the reflected or transmitted signal out to the amplifier chain, used for reflection-mode readout or to couple a JPA pump. Ports rotate signals cyclically; terminating one port with a 50 Ω load turns it into an isolator.",
+    "physics": {
+      "summary": "Separates incoming probe and outgoing signal paths.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "band",
+        "unit": "GHz",
+        "typical": [
+          4,
+          8
+        ]
+      },
+      {
+        "field": "isolation",
+        "unit": "dB",
+        "typical": [
+          18,
+          22
+        ]
+      },
+      {
+        "field": "insertion loss",
+        "unit": "dB",
+        "typical": [
+          0.3,
+          0.8
+        ]
+      }
+    ],
+    "theory": [
+      "T07#8-amplifier-chain-and-noise-temperature"
+    ],
+    "tooltip": "Circulator: 3-port non-reciprocal router.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.03,
+      "h_m": 0.02,
+      "d_m": 0.04,
+      "ports": 3
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

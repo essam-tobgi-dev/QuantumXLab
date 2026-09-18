@@ -1,0 +1,53 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "magnetic_coils",
+    "name": "Quantization-field coils",
+    "category": "ion_device",
+    "parent": "vacuum_chamber",
+    "function": "Coil pair producing the few-gauss field that defines the quantization axis and splits the Zeeman levels. Clock-state qubits are first-order insensitive to it, which is why hyperfine clock qubits reach coherence times of seconds; field noise still limits the coherence of Zeeman-sensitive transitions used for some gates and for state preparation.",
+    "physics": {
+      "summary": "Defines the quantization axis.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "field",
+        "unit": "G",
+        "typical": [
+          3,
+          10
+        ]
+      }
+    ],
+    "theory": [
+      "T06#2-qubit-encodings"
+    ],
+    "tooltip": "Coils for the quantization field.",
+    "geometry": {
+      "generator": "Torus",
+      "r_m": 0.15,
+      "tube_r_m": 0.01,
+      "count": 2
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

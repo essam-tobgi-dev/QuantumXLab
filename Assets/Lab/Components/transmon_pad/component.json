@@ -1,0 +1,102 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "transmon_pad",
+    "name": "Transmon capacitor (Xmon cross)",
+    "category": "qubit",
+    "parent": "substrate",
+    "function": "The shunt capacitor of one transmon: a cross or pad pair whose capacitance to ground C_Σ sets the charging energy E_C and, with the junction's E_J, the qubit frequency and anharmonicity. Its geometry also sets the coupling capacitances to the readout resonator, the neighbours and the drive line; the surface participation of its edges is where most dielectric loss lives.",
+    "physics": {
+      "summary": "Sets E_C, the qubit frequency and all capacitive couplings.",
+      "equations": [
+        "transmon_hamiltonian",
+        "transmon_frequency",
+        "duffing",
+        "bloch_vector"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "arm length",
+        "unit": "µm",
+        "typical": [
+          100,
+          300
+        ]
+      },
+      {
+        "field": "charging energy E_C/h",
+        "unit": "MHz",
+        "typical": [
+          200,
+          350
+        ],
+        "binding": "device.qubit[$i].EC",
+        "class": "Model"
+      },
+      {
+        "field": "f01",
+        "unit": "GHz",
+        "binding": "device.qubit[$i].f01",
+        "class": "Model"
+      },
+      {
+        "field": "T1",
+        "unit": "µs",
+        "binding": "device.qubit[$i].T1",
+        "class": "Model"
+      },
+      {
+        "field": "T2",
+        "unit": "µs",
+        "binding": "device.qubit[$i].T2",
+        "class": "Model"
+      },
+      {
+        "field": "excited population",
+        "unit": "",
+        "binding": "device.qubit[$i].pop_e",
+        "class": "Model"
+      },
+      {
+        "field": "Bloch vector",
+        "unit": "",
+        "binding": "device.qubit[$i].bloch",
+        "class": "Exact"
+      },
+      {
+        "field": "drive amplitude",
+        "unit": "MHz",
+        "binding": "device.qubit[$i].drive_amp",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T05#3-cooper-pair-box-and-the-transmon"
+    ],
+    "tooltip": "Transmon: the qubit's shunt capacitor.",
+    "geometry": {
+      "generator": "Xmon",
+      "from": "device.qubit[$i]"
+    },
+    "lod": [
+      {
+        "max_m": 0.02,
+        "detail": "full"
+      },
+      {
+        "max_m": 0.2,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

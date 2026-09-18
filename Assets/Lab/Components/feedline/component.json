@@ -1,0 +1,65 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "feedline",
+    "name": "Readout feedline",
+    "category": "resonator",
+    "parent": "substrate",
+    "function": "Through coplanar waveguide crossing the chip, past which up to eight readout resonators hang. One input line and one output line serve all of them by frequency multiplexing; the probe tones for every qubit on the feedline travel down it together and the transmitted signal carries all their resonator responses.",
+    "physics": {
+      "summary": "Multiplexed readout bus for up to eight resonators.",
+      "equations": [
+        "vna_s21_notch"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "resonators per feedline",
+        "unit": "",
+        "typical": [
+          4,
+          10
+        ]
+      },
+      {
+        "field": "probe power at chip",
+        "unit": "dBm",
+        "typical": [
+          -135,
+          -115
+        ],
+        "binding": "wiring.readout.P",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T05#6.3-dispersive-readout"
+    ],
+    "tooltip": "Feedline: multiplexed readout bus.",
+    "geometry": {
+      "generator": "Cpw",
+      "from": "chip_layout.feedline[$i]",
+      "w_um": 10,
+      "s_um": 6
+    },
+    "lod": [
+      {
+        "max_m": 0.02,
+        "detail": "full"
+      },
+      {
+        "max_m": 0.2,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

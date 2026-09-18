@@ -1,0 +1,76 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "fridge_frame",
+    "name": "Refrigerator support frame",
+    "category": "structure",
+    "parent": "room",
+    "function": "Aluminium T-slot extrusion frame (40 × 40 profile, corner brackets, levelling feet) that carries the whole cryostat: the 300 K top plate rests on rubber isolation blocks on its upper cross beams and the vacuum can is lowered from it on the gantry. Its stiffness sets the lowest mechanical resonance of the insert, which matters because the pulse-tube head vibrates at 1.4 Hz and its harmonics couple into wiring and, through flux, into tunable qubits.",
+    "physics": {
+      "summary": "Mechanical support; sets vibration transfer from the pulse tube to the insert.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "width",
+        "unit": "m",
+        "typical": [
+          1.2,
+          1.6
+        ]
+      },
+      {
+        "field": "depth",
+        "unit": "m",
+        "typical": [
+          1.2,
+          1.6
+        ]
+      },
+      {
+        "field": "height",
+        "unit": "m",
+        "typical": [
+          2.4,
+          2.8
+        ]
+      },
+      {
+        "field": "first mechanical resonance",
+        "unit": "Hz",
+        "typical": [
+          8,
+          20
+        ]
+      }
+    ],
+    "theory": [],
+    "tooltip": "Support frame for the cryostat insert and vacuum can.",
+    "geometry": {
+      "generator": "Frame",
+      "width_m": 1.4,
+      "depth_m": 1.4,
+      "height_m": 2.6,
+      "profile_mm": 40
+    },
+    "lod": [
+      {
+        "max_m": 6.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 30.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

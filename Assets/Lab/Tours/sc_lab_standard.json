@@ -1,0 +1,622 @@
+{
+  "qxl": {
+    "kind": "lab.tour",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T12:00:00Z"
+  },
+  "data": {
+    "id": "sc_lab_standard",
+    "title": "Guided tour: superconducting laboratory",
+    "layout": "sc_lab_standard",
+    "steps": [
+      {
+        "id": "room",
+        "title": "The laboratory",
+        "narration": "This is a superconducting quantum-computing laboratory: a 7 × 6 m room around one dilution refrigerator, two instrument racks, a gas-handling system and a workstation. Everything here serves one 27-qubit transmon chip the size of a fingernail, held at about 10 mK inside the fridge. The signal path runs from the racks (which synthesise and digitise microwave pulses at 4–8 GHz) down the fridge wiring to the chip, and back up through amplifiers to the digitizer. The tour follows that path in signal order, stopping at every component to explain what it is for and what limits it.",
+        "theory": "T08#1-dilution-refrigeration",
+        "focus_instance": "laboratory",
+        "bookmark": "Overview",
+        "dwell_s": 10,
+        "view": {
+          "xray": false,
+          "cutaway": false,
+          "cans": true,
+          "explode": 0.0,
+          "layers": {
+            "room": true,
+            "fridge_exterior": true,
+            "fridge_interior": true,
+            "wiring": true,
+            "rack": true,
+            "ghs": true,
+            "chip": true,
+            "chip_micro": true
+          }
+        }
+      },
+      {
+        "id": "racks",
+        "title": "The instrument racks",
+        "narration": "Rack A generates and digitises the signals. The control chassis plays the I and Q envelopes of every pulse at 1 GS/s with 14-bit resolution; an IQ mixer multiplies them with a continuous-wave local oscillator from a 20 GHz generator, placing each pulse at f_LO + f_IF in the 4–8 GHz band. The digitizer captures the down-converted readout signal and demodulates it into one (I, Q) point per shot and qubit. Rack B holds the 10 MHz reference every instrument locks to, plus a VNA, spectrum analyser and oscilloscope for calibration. Without the common reference the drive and readout frames drift apart within milliseconds and virtual-Z phases lose their meaning.",
+        "theory": "T07#5-iq-modulation-up-conversion-and-frames",
+        "focus_instance": "rack_A.control_chassis",
+        "bookmark": "Rack",
+        "dwell_s": 10,
+        "highlight": [
+          "rack_A.mw_generator[0]",
+          "rack_A.iq_mixer_board[0]",
+          "rack_A.digitizer"
+        ]
+      },
+      {
+        "id": "fridge_outside",
+        "title": "The dilution refrigerator, closed",
+        "narration": "From outside the fridge is an aluminium vacuum can hanging from a welded support frame, with the pulse-tube cryocooler head on its top plate. The outer vacuum can holds an insulating vacuum below 1e-5 mbar when cold: without it, gas conduction and convection would dump kilowatts into the 50 K stage. Room-temperature black-body radiation, sigma·T^4 ≈ 460 W/m² at 300 K, is intercepted by nested shields inside. The frame's stiffness sets the lowest mechanical resonance of the insert, which matters because the pulse tube vibrates at 1.4 Hz and its harmonics reach the wiring.",
+        "theory": "T08#5-radiation-and-other-loads",
+        "focus_instance": "ovc",
+        "dwell_s": 10,
+        "margin_factor": 1.5,
+        "azimuth_deg": 40,
+        "elevation_deg": 12,
+        "view": {
+          "xray": false,
+          "cutaway": false,
+          "cans": true,
+          "explode": 0.0
+        },
+        "highlight": [
+          "fridge_frame",
+          "pulse_tube_head"
+        ]
+      },
+      {
+        "id": "open",
+        "title": "Opening the fridge: the chandelier",
+        "narration": "With the cans removed the insert appears: six gold-plated copper plates hanging from the 300 K top plate, each colder than the one above. From the top: the 50 K stage, the 4 K stage, the still at about 0.8 K, the cold plate near 100 mK and the mixing chamber at about 10 mK. Every plate is an isotherm of a thermal network; every wire passing through is anchored to it so the heat conducted from above is intercepted there, not carried to the colder stages. The temperature colormap on the plates is live: it reads the thermometers of the simulated fridge.",
+        "theory": "T08#3-stage-temperatures",
+        "focus_instance": "fridge_interior",
+        "dwell_s": 12,
+        "margin_factor": 1.25,
+        "azimuth_deg": 35,
+        "elevation_deg": 8,
+        "view": {
+          "cans": false,
+          "cutaway": true,
+          "xray": false,
+          "explode": 0.0
+        }
+      },
+      {
+        "id": "top_plate",
+        "title": "The 300 K top plate and its feedthroughs",
+        "narration": "The top plate is the room-temperature flange and the vacuum boundary of the cryostat. Every coaxial line, DC loom, pumping line and the pulse-tube head pass through its feedthrough ring: hermetic SMA bulkheads carry one microwave line each from the rack cable into the vacuum. It is also the warm end of every conduction path: the load on the 50 K stage from a coax of thermal conductivity κ(T), cross-section A and length L is ∫κ dT · A/L between 300 K and 50 K. A leaking feedthrough is the most common cause of a slowly rising OVC pressure.",
+        "theory": "T08#4-heat-conduction-along-wiring",
+        "focus_instance": "top_plate_300K",
+        "dwell_s": 10,
+        "azimuth_deg": 30,
+        "elevation_deg": 25,
+        "view": {
+          "cans": true,
+          "cutaway": true,
+          "xray": true
+        },
+        "highlight": [
+          "drive_q0.bulkhead",
+          "ro_out_f0.bulkhead",
+          "dc_loom_0.bulkhead"
+        ]
+      },
+      {
+        "id": "pulse_tube",
+        "title": "The pulse-tube cryocooler",
+        "narration": "The two-stage pulse tube provides all the cooling above 1 K without liquid cryogens. Helium compressed outside the room is switched between high and low pressure by a rotary valve at about 1.4 Hz; the expansion in a regenerator and two pulse tubes cools the first stage to about 45 K with 40 W of capacity and the second to about 3.5 K with 1.5 W at 4.2 K. Its cold head also condenses the incoming ³He/⁴He mixture, so the dilution unit only works below the 4 K stage. It is the dominant vibration source of the machine, which is why the motor is mounted remotely.",
+        "theory": "T08#2-pulse-tube-pre-cooling",
+        "focus_instance": "pulse_tube_head",
+        "dwell_s": 10,
+        "azimuth_deg": 60,
+        "elevation_deg": 20,
+        "view": {
+          "cans": true,
+          "cutaway": true,
+          "xray": false
+        },
+        "highlight": [
+          "pt_flex_lines",
+          "pt_remote_motor"
+        ]
+      },
+      {
+        "id": "stage_50K",
+        "title": "The 50 K stage",
+        "narration": "The first plate, cooled by the pulse tube's first stage to about 45 K, carries the outer radiation shield and therefore absorbs almost all the 300 K radiation, roughly 460 W/m² of incoming flux reduced by the emissivity of polished aluminium. Every line is clamped here so that the ~1 W per hundred coaxial lines conducted from the top plate is deposited at 45 K, where 40 W of cooling is cheap, rather than at 4 K where only 1.5 W exists. A Cernox thermometer reads the plate; its value drives the colormap.",
+        "theory": "T08#3-stage-temperatures",
+        "focus_instance": "stage_50K",
+        "dwell_s": 9,
+        "azimuth_deg": 20,
+        "elevation_deg": 18,
+        "highlight": [
+          "shield_50K",
+          "drive_q0.clamp_PT1",
+          "thermometer_cernox.s50"
+        ]
+      },
+      {
+        "id": "stage_4K",
+        "title": "The 4 K stage and the HEMT amplifiers",
+        "narration": "The 4 K plate is cooled by the pulse tube's second stage, 1.5 W at 4.2 K. Three things happen here: the first 20 dB of drive attenuation is dissipated, the HEMT amplifiers of the readout lines sit on it, and the returning ³He is condensed in the condensing line before it passes a flow impedance into the still. Why 4 K: it is the coldest temperature a closed-cycle cryocooler reaches, cold enough to liquefy helium and to run semiconductor amplifiers, but far above the 20 mK the qubits need. A HEMT dissipates 10–20 mW, so a hundred readout lines would already consume this stage's entire budget.",
+        "theory": "T08#1.3-the-circulation-loop",
+        "focus_instance": "stage_4K",
+        "dwell_s": 10,
+        "azimuth_deg": -30,
+        "elevation_deg": 18,
+        "highlight": [
+          "ro_out_f0.hemt",
+          "condensing_line",
+          "drive_q0.att_PT2"
+        ]
+      },
+      {
+        "id": "still",
+        "title": "The still",
+        "narration": "Below about 0.87 K a ³He/⁴He mixture separates into a ³He-rich concentrated phase floating on a dilute phase that keeps 6.6 % ³He even at absolute zero. The still is a small vessel held at 0.7–0.9 K by its heater, where ³He evaporates preferentially from the dilute phase because its vapour pressure is far higher than ⁴He's at that temperature. Pumping the still therefore removes ³He, and osmotic pressure pulls more ³He across the phase boundary in the mixing chamber below. The still heater power, typically 10–30 mW, sets the circulation rate ṅ₃ and with it the cooling power of the whole unit.",
+        "theory": "T08#1.1-the-3he-4he-mixture",
+        "focus_instance": "stage_still",
+        "dwell_s": 11,
+        "azimuth_deg": 25,
+        "elevation_deg": 15,
+        "highlight": [
+          "still_heater.still",
+          "hx_continuous",
+          "thermometer_ruo2.still"
+        ]
+      },
+      {
+        "id": "cold_plate",
+        "title": "The cold plate and the heat exchangers",
+        "narration": "Between the still and the mixing chamber the incoming concentrated ³He is cooled by the outgoing dilute stream: first in a continuous tube-in-tube counterflow exchanger, then in sintered-silver step exchangers. Below about 50 mK the Kapitza boundary resistance between helium and metal grows as T⁻³, so square metres of sintered surface in a few cubic centimetres are needed to keep the returning ³He within a few millikelvin of the mixing chamber. The cold plate is an intermediate anchor at about 100 mK cooled by the dilute stream; the readout-in attenuators and, in the 60 dB drive variant, a third 20 dB pad sit here.",
+        "theory": "T08#1.3-the-circulation-loop",
+        "focus_instance": "stage_cp",
+        "dwell_s": 10,
+        "azimuth_deg": -20,
+        "elevation_deg": 15,
+        "highlight": [
+          "hx_step[0]",
+          "ro_in_f0.att_CP"
+        ]
+      },
+      {
+        "id": "mxc",
+        "title": "The mixing chamber",
+        "narration": "In the mixing chamber circulating ³He crosses the phase boundary from the concentrated into the dilute phase, and because ³He in the dilute phase has a higher enthalpy, each mole absorbs heat: the enthalpy of mixing. The cooling power is Q̇ ≈ 84 ṅ₃ T² W for ṅ₃ in mol/s and T in kelvin, so 1 mmol/s gives about 840 µW at 100 mK but only 34 µW at 20 mK. Every microwatt of wiring, attenuator or amplifier-pump load therefore raises the base temperature as √(Q̇/84 ṅ₃), and that temperature sets the residual excited-state population of every qubit through exp(−hf/k_B T). The heater lets the operator measure that curve.",
+        "theory": "T08#1.2-cooling-power",
+        "focus_instance": "stage_mxc",
+        "dwell_s": 12,
+        "azimuth_deg": 35,
+        "elevation_deg": 12,
+        "highlight": [
+          "mxc_heater.mxc",
+          "cold_finger"
+        ]
+      },
+      {
+        "id": "drive_line",
+        "title": "The drive line and its attenuators",
+        "narration": "A drive line carries the qubit pulses from the rack to one transmon, and along the way it must throw away the room-temperature thermal noise it brings in. A 5 GHz mode at 300 K holds about 1250 thermal photons; at 4 K about 16; at 20 mK essentially none. An attenuator of A at temperature T_s replaces the incoming noise with its own: n_out = n_in/A + (1 − 1/A) n(T_s). With 20 dB at 4 K and 20 dB at the mixing chamber the line still delivers about 0.3 thermal photons, an effective 160 mK; the standard 60 dB chain adds 20 dB at the cold plate and reaches 4e-3 photons, about 40 mK. The dissipated drive power is a heat load on each stage, which is why the pads are distributed and not all at base.",
+        "theory": "T07#9-thermal-photons-and-the-attenuation-chain",
+        "focus_instance": "line[0].rt",
+        "dwell_s": 12,
+        "azimuth_deg": 35,
+        "elevation_deg": 10,
+        "view": {
+          "xray": true,
+          "cutaway": true,
+          "cans": true
+        },
+        "highlight": [
+          "drive_q0.att_PT2",
+          "drive_q0.att_MXC",
+          "drive_q0.clamp_STILL",
+          "drive_q0.clamp_CP"
+        ]
+      },
+      {
+        "id": "att_mxc",
+        "title": "The last attenuator at base",
+        "narration": "The final 20 dB pad sits on the mixing chamber plate, so its own emission is at the coldest temperature in the machine. It is followed by a low-pass filter that stops anything above the 8 GHz band. What arrives at the qubit is a drive of order 100 pW: a 20 ns π pulse needs a Rabi rate of 25 MHz, which for a typical drive-line coupling means about −70 dBm at the chip, a −10 dBm rack output minus 60 dB of attenuation. The noise that arrives with it sets the qubit's effective temperature, and a residual population of 1 % corresponds to about 50 mK at 5 GHz.",
+        "theory": "T07#10-qubit-thermal-population-and-effective-temperature",
+        "focus_instance": "drive_q0.att_MXC",
+        "dwell_s": 9,
+        "azimuth_deg": 50,
+        "elevation_deg": 20,
+        "highlight": [
+          "drive_q0.lpf_MXC"
+        ]
+      },
+      {
+        "id": "ir_filter",
+        "title": "Infrared filters",
+        "narration": "The last element before the chip is an Eccosorb filter: a short coax section filled with a lossy, magnetically loaded epoxy that absorbs radiation above roughly 10 GHz while passing 4–8 GHz with 1–3 dB loss. Stray infrared photons with energy above the superconducting gap of aluminium, 2Δ ≈ 90 GHz·h, break Cooper pairs in the films; the resulting quasiparticles tunnel across the junction and limit T₁ and shift resonator frequencies. Every line entering the sample space, including the readout-in and the TWPA pump lines, ends in one of these.",
+        "theory": "T05#10-decoherence-mechanisms",
+        "focus_instance": "drive_q0.ir_filter",
+        "dwell_s": 9,
+        "azimuth_deg": 70,
+        "elevation_deg": 20,
+        "highlight": [
+          "ro_in_f0.ir_filter",
+          "pump_f0.ir_filter"
+        ]
+      },
+      {
+        "id": "isolators",
+        "title": "The readout line up: isolators",
+        "narration": "Now the signal path turns around: the readout signal leaving the chip is a few photons per microsecond and must be amplified without letting anything travel back. Two ferrite isolators at the mixing chamber pass the signal towards the amplifier with about 0.5 dB loss each and attenuate the reverse direction by 20 dB each, 40 dB in series. That blocks the amplifier's own noise and any reflected pump power, which would otherwise populate the readout resonator and dephase the qubit through the ac-Stark shift. Every decibel of loss before the first amplifier lowers the measurement efficiency η directly.",
+        "theory": "T07#8-amplifier-chain-and-noise-temperature",
+        "focus_instance": "ro_out_f0.iso_MXC_1",
+        "dwell_s": 10,
+        "azimuth_deg": -40,
+        "elevation_deg": 20,
+        "view": {
+          "xray": true,
+          "cutaway": true,
+          "cans": true
+        },
+        "highlight": [
+          "ro_out_f0.iso_MXC_2"
+        ]
+      },
+      {
+        "id": "twpa",
+        "title": "The travelling-wave parametric amplifier",
+        "narration": "The first amplifier is a Josephson travelling-wave parametric amplifier: a metre-long chain of thousands of junctions in which a strong pump, injected through the directional coupler, transfers energy to a co-propagating signal by four-wave mixing. It gives about 20 dB of gain over roughly 3 GHz, so one output line serves all eight resonators on a feedline, and it adds close to the quantum limit of half a photon, an added-noise temperature of ħω/2k_B ≈ 0.12 K at 5 GHz (real devices reach 0.5–1 K). The price is pump power dissipated at the mixing chamber and the need for the isolators to keep that pump away from the qubits.",
+        "theory": "T07#8-amplifier-chain-and-noise-temperature",
+        "focus_instance": "ro_out_f0.twpa",
+        "dwell_s": 10,
+        "azimuth_deg": -60,
+        "elevation_deg": 15,
+        "highlight": [
+          "pump_f0.directional_coupler",
+          "pump_f0.pump_line"
+        ]
+      },
+      {
+        "id": "hemt",
+        "title": "The HEMT and the Friis formula",
+        "narration": "At 4 K a high-electron-mobility transistor amplifier adds about 40 dB of gain with a noise temperature of 2–4 K over 4–8 GHz. The Friis formula, T_sys = T₁ + T₂/G₁ + T₃/(G₁G₂) + …, says the first amplifier sets the system noise: behind the TWPA's 100× gain the HEMT contributes only 0.03 K, but without a parametric amplifier the HEMT's 3 K would dominate and the measurement efficiency would fall to a few per cent. Its 10–20 mW dissipation is the largest single load on the 4 K stage, which is what limits the number of readout lines a fridge can carry.",
+        "theory": "T07#8-amplifier-chain-and-noise-temperature",
+        "focus_instance": "ro_out_f0.hemt",
+        "dwell_s": 10,
+        "azimuth_deg": -30,
+        "elevation_deg": 20
+      },
+      {
+        "id": "dc_loom",
+        "title": "Flux lines and DC looms",
+        "narration": "Slow signals travel on a loom of twisted phosphor-bronze pairs rather than on coax: 24 pairs conduct less heat than one coaxial line, and RC low-pass filters at 4 K (10 kHz) and at the mixing chamber (1 kHz) keep room-temperature noise off the thermometers and heaters. On a tunable-transmon device the same route carries flux-bias currents to SQUID loops, where a mutual inductance of about 2 pH turns microamps into flux offsets, and flux noise of a few µΦ₀/√Hz becomes dephasing away from the sweet spot. This heavy-hex device is fixed-frequency, so its loom serves only the sensors and heaters.",
+        "theory": "T07#11-flux-bias-lines-filters-and-crosstalk",
+        "focus_instance": "line[39].rt",
+        "dwell_s": 10,
+        "azimuth_deg": 110,
+        "elevation_deg": 10,
+        "highlight": [
+          "dc_loom_0.rc_PT2",
+          "dc_loom_0.rc_MXC"
+        ]
+      },
+      {
+        "id": "shields",
+        "title": "The magnetic shields",
+        "narration": "Around the sample space hang two magnetic shields. The outer μ-metal can, a high-permeability nickel–iron alloy, diverts the Earth's 50 µT field and the stray fields of pumps and motors; the inner aluminium can goes superconducting below 1.2 K and freezes whatever field remains by the Meissner effect. Residual fields below about 1 µT are required: a SQUID loop of 100 µm² sees 0.05 Φ₀ per µT, and even on a fixed-frequency device trapped flux vortices in the ground plane add microwave loss. Vibration from the pulse tube moving the chip through any field gradient is a second reason to shield well.",
+        "theory": "T08#8-thermometry-vibration-and-magnetic-shielding",
+        "focus_instance": "mag_shield_mumetal",
+        "dwell_s": 9,
+        "azimuth_deg": 40,
+        "elevation_deg": 10,
+        "view": {
+          "xray": true,
+          "cutaway": true,
+          "cans": true
+        },
+        "highlight": [
+          "mag_shield_al"
+        ]
+      },
+      {
+        "id": "puck",
+        "title": "The sample puck and the cold finger",
+        "narration": "The chip package sits in a removable copper puck that plugs into a bulkhead plate on the cold finger, so a chip can be exchanged without rewiring the fridge. The puck's temperature is the best proxy for the chip's, but not the same thing: the electron temperature of the aluminium films decouples from the phonons below about 50 mK, and the qubit's effective temperature, inferred from its residual excited population, is typically 40–60 mK even when the plate reads 10 mK. That gap is set by the wiring noise we followed down the drive line, not by the refrigerator.",
+        "theory": "T08#9-from-stage-temperature-to-the-qubit",
+        "focus_instance": "sample_puck",
+        "dwell_s": 9,
+        "azimuth_deg": 20,
+        "elevation_deg": 15,
+        "view": {
+          "xray": true,
+          "cutaway": true,
+          "cans": true
+        },
+        "highlight": [
+          "cold_finger",
+          "chip_package"
+        ]
+      },
+      {
+        "id": "package",
+        "title": "The chip package",
+        "narration": "The package is a copper enclosure with an interposer PCB and a lid that forms a cavity around the chip. The cavity's lowest mode must lie well above the 4–8 GHz band: a 10 mm box resonates near 15 GHz, and any mode closer than that would mediate crosstalk between distant qubits and open a Purcell decay path. Wire bonds or bumps tie the chip's ground plane to the package every few hundred micrometres to suppress slot-line modes, and every coplanar line on the chip uses the package as its ground reference.",
+        "theory": "T05#6.4-purcell-decay-and-the-purcell-filter",
+        "focus_instance": "chip_package",
+        "dwell_s": 9,
+        "margin_factor": 1.4,
+        "azimuth_deg": 30,
+        "elevation_deg": 35,
+        "view": {
+          "layers": {
+            "room": false,
+            "fridge_exterior": false,
+            "fridge_interior": false,
+            "wiring": false,
+            "rack": false,
+            "ghs": false,
+            "chip": true,
+            "chip_micro": true
+          },
+          "xray": false,
+          "cutaway": false
+        },
+        "highlight": [
+          "package_cavity",
+          "pcb"
+        ]
+      },
+      {
+        "id": "substrate",
+        "title": "The chip: substrate and films",
+        "narration": "The chip is an 8 × 10 mm die of high-resistivity silicon carrying a patterned aluminium film about 100 nm thick. Every element on it is a piece of coplanar waveguide: an LC oscillator whose inductance and capacitance per unit length follow from the gap geometry and the substrate's permittivity, ε_r ≈ 11.7, which sets the phase velocity to about c/2.5 and hence every resonator length. The dielectric loss tangent of the substrate and the two-level-system defects at its surfaces and interfaces set the internal quality factor of the resonators, around 10⁶, and one of the T₁ limits of the qubits.",
+        "theory": "T05#1-the-quantized-lc-oscillator",
+        "focus_instance": "substrate",
+        "bookmark": "Chip",
+        "dwell_s": 10,
+        "view": {
+          "layers": {
+            "room": false,
+            "fridge_exterior": false,
+            "fridge_interior": false,
+            "wiring": false,
+            "rack": false,
+            "ghs": false,
+            "chip": true,
+            "chip_micro": true
+          }
+        },
+        "highlight": [
+          "ground_plane"
+        ]
+      },
+      {
+        "id": "transmon",
+        "title": "A transmon qubit",
+        "narration": "A transmon is a capacitor shunting a Josephson junction. The cross-shaped pad has a capacitance to ground C_Σ of about 80 fF, giving a charging energy E_C = e²/2C_Σ of about 250 MHz·h; the junction supplies a Josephson energy E_J of 15–20 GHz·h. With E_J/E_C ≈ 60–80 the lowest transition sits at f₀₁ ≈ (√(8 E_J E_C) − E_C)/h, around 5 GHz, while charge noise is exponentially suppressed. The anharmonicity α ≈ −E_C of −250 MHz is what makes the two lowest levels addressable as a qubit; a 20 ns pulse has a bandwidth of 50 MHz, comfortably inside it. The pad's edges hold most of the surface dielectric loss, and its geometry sets every coupling capacitance.",
+        "theory": "T05#3-cooper-pair-box-and-the-transmon",
+        "focus_instance": "q[0]",
+        "dwell_s": 12,
+        "margin_factor": 1.5,
+        "azimuth_deg": 20,
+        "elevation_deg": 50,
+        "view": {
+          "layers": {
+            "room": false,
+            "fridge_exterior": false,
+            "fridge_interior": false,
+            "wiring": false,
+            "rack": false,
+            "ghs": false,
+            "chip": true,
+            "chip_micro": true
+          }
+        },
+        "highlight": [
+          "q[0].junction"
+        ]
+      },
+      {
+        "id": "junction",
+        "title": "The Josephson junction",
+        "narration": "The junction is an Al/AlOₓ/Al tunnel barrier of roughly 100 × 100 nm², a nanometre of oxide between two superconductors. It is a non-linear, dissipationless inductor: I = I_c sin φ gives L_J = Φ₀/(2π I_c cos φ), and E_J = Φ₀ I_c/2π, so a critical current of 30 nA means E_J/h ≈ 15 GHz. The Ambegaokar–Baratoff relation I_c R_n = πΔ/2e ≈ 280 µV ties E_J to the room-temperature resistance, about 9 kΩ here, so junctions are selected by resistance: since f₀₁ ∝ √E_J, a 1 % spread in R_n becomes a 0.5 % spread in frequency, 25 MHz at 5 GHz, which is why a frequency plan needs collision checks.",
+        "theory": "T05#2-the-josephson-junction",
+        "focus_instance": "q[0].junction",
+        "dwell_s": 10,
+        "margin_factor": 2.0,
+        "azimuth_deg": 30,
+        "elevation_deg": 55,
+        "view": {
+          "layers": {
+            "room": false,
+            "fridge_exterior": false,
+            "fridge_interior": false,
+            "wiring": false,
+            "rack": false,
+            "ghs": false,
+            "chip": true,
+            "chip_micro": true
+          }
+        }
+      },
+      {
+        "id": "resonator",
+        "title": "The readout resonator",
+        "narration": "Each qubit is read through a quarter-wave coplanar resonator near 7 GHz, capacitively coupled at its open end to the transmon and at the other end to the feedline. Detuned by Δ ≈ 1–2 GHz from the qubit with a coupling g/2π ≈ 50–100 MHz, the pair is in the dispersive regime: the resonator frequency shifts by ±χ, with χ ≈ (g²/Δ)·α/(Δ + α), typically 0.5–1 MHz, depending on the qubit state. A probe tone near the resonator frequency acquires a state-dependent phase; integrating its I and Q over 0.5–2 µs is the measurement. The linewidth κ, a few MHz, trades speed against the Purcell decay γ_P = κ g²/Δ².",
+        "theory": "T05#6.3-dispersive-readout",
+        "focus_instance": "res[0]",
+        "dwell_s": 12,
+        "margin_factor": 1.4,
+        "azimuth_deg": 10,
+        "elevation_deg": 55,
+        "view": {
+          "layers": {
+            "room": false,
+            "fridge_exterior": false,
+            "fridge_interior": false,
+            "wiring": false,
+            "rack": false,
+            "ghs": false,
+            "chip": true,
+            "chip_micro": true
+          }
+        },
+        "highlight": [
+          "q[0]",
+          "feedline[0]"
+        ]
+      },
+      {
+        "id": "purcell",
+        "title": "The Purcell filter",
+        "narration": "Without protection a resonator with κ/2π = 5 MHz, g/2π = 100 MHz and Δ/2π = 1.5 GHz would drain the qubit at γ_P = κ (g/Δ)² ≈ 2π × 22 kHz, a T₁ ceiling of 7 µs. The Purcell filter is a band-pass section at the feedline input, tuned to the readout band, that presents the qubit frequency with a high impedance: the environment's density of states at f₀₁ drops by roughly (2Δ/κ_f)², two orders of magnitude, so the resonators can keep a large κ for fast measurement while the qubit's T₁ is set by materials, not wiring.",
+        "theory": "T05#6.4-purcell-decay-and-the-purcell-filter",
+        "focus_instance": "purcell[0]",
+        "dwell_s": 9,
+        "margin_factor": 1.4,
+        "azimuth_deg": -20,
+        "elevation_deg": 55,
+        "view": {
+          "layers": {
+            "room": false,
+            "fridge_exterior": false,
+            "fridge_interior": false,
+            "wiring": false,
+            "rack": false,
+            "ghs": false,
+            "chip": true,
+            "chip_micro": true
+          }
+        },
+        "highlight": [
+          "feedline[0]"
+        ]
+      },
+      {
+        "id": "couplers",
+        "title": "Couplers and two-qubit gates",
+        "narration": "Neighbouring transmons on the heavy-hex lattice are joined by fixed capacitive couplers giving an exchange coupling J/2π of a few MHz. Because the qubits are fixed-frequency, the entangling gate is cross-resonance: driving the control qubit at the target's frequency produces a ZX interaction of rate ≈ J Ω/Δ, so a CNOT takes 200–400 ns after echoing away the accompanying ZI and IX terms. The same coupler fixes an always-on ZZ interaction of tens of kHz that must be echoed out during idles, and the frequency plan must keep every pair detuned by 50–200 MHz to make the gate fast without collisions.",
+        "theory": "T05#8-the-cross-resonance-gate",
+        "focus_instance": "coupler[0-1]",
+        "dwell_s": 11,
+        "margin_factor": 1.5,
+        "azimuth_deg": 0,
+        "elevation_deg": 60,
+        "view": {
+          "layers": {
+            "room": false,
+            "fridge_exterior": false,
+            "fridge_interior": false,
+            "wiring": false,
+            "rack": false,
+            "ghs": false,
+            "chip": true,
+            "chip_micro": true
+          }
+        },
+        "highlight": [
+          "q[0]",
+          "q[1]"
+        ]
+      },
+      {
+        "id": "feedline",
+        "title": "The feedline",
+        "narration": "A through coplanar line crosses the chip and up to eight readout resonators hang from it at frequencies spaced by 20–50 MHz. One readout-in line and one readout-out line serve all of them by frequency multiplexing: the probe tones for every qubit on the feedline travel down together and the transmitted signal carries all their responses at once, to be separated digitally. This is why a 27-qubit chip needs only four feedlines, and why the amplifier chain we passed must be broadband and linear over the whole readout band.",
+        "theory": "T05#6.3-dispersive-readout",
+        "focus_instance": "feedline[0]",
+        "dwell_s": 9,
+        "margin_factor": 1.2,
+        "azimuth_deg": 0,
+        "elevation_deg": 45,
+        "view": {
+          "layers": {
+            "room": false,
+            "fridge_exterior": false,
+            "fridge_interior": false,
+            "wiring": false,
+            "rack": false,
+            "ghs": false,
+            "chip": true,
+            "chip_micro": true
+          }
+        },
+        "highlight": [
+          "res[0]",
+          "res[1]",
+          "purcell[0]"
+        ]
+      },
+      {
+        "id": "digitizer",
+        "title": "Back up: the digitizer and IQ demodulation",
+        "narration": "The amplified readout signal leaves the fridge, passes a room-temperature amplifier of about 30 dB, and is mixed with the local oscillator down to an intermediate frequency of tens of MHz. The digitizer samples it at 1 GS/s and multiplies by cos(ω_IF t) and sin(ω_IF t) weighted by calibrated integration weights, returning one (I, Q) point per shot and per qubit. Those points form two clouds, one per qubit state, separated by the dispersive phase and blurred by the amplifier noise; a threshold between them assigns the bit, and the overlap of the clouds is the readout error, typically 1–2 %.",
+        "theory": "T07#6-heterodyne-readout-and-demodulation",
+        "focus_instance": "rack_A.digitizer",
+        "bookmark": "Rack",
+        "dwell_s": 11,
+        "view": {
+          "layers": {
+            "room": true,
+            "fridge_exterior": true,
+            "fridge_interior": true,
+            "wiring": true,
+            "rack": true,
+            "ghs": true,
+            "chip": true,
+            "chip_micro": true
+          },
+          "xray": false,
+          "cutaway": false,
+          "cans": true
+        },
+        "highlight": [
+          "rack_B.rt_amplifier[0]",
+          "rack_A.iq_mixer_board[0]"
+        ]
+      },
+      {
+        "id": "software",
+        "title": "The control software and the compiler",
+        "narration": "The workstation runs QuantumXLab itself. A program written in OpenQASM 3 is parsed and lowered to an intermediate representation, routed onto the device's coupling graph with SWAPs where two qubits are not neighbours, decomposed into the native gate set of this device (rz, sx, x and the cross-resonance cx), and scheduled against the calibration: durations, frequencies and amplitudes of each pulse. The result is a pulse schedule uploaded to the control chassis, which plays it shot after shot with 16-sample timing granularity and applies virtual-Z phases in real time. Only feed-forward, a decision inside the qubit's coherence time, ever needs the workstation in the loop.",
+        "theory": "T02#8-native-gate-sets-of-the-shipped-devices",
+        "focus_instance": "workstation",
+        "dwell_s": 11,
+        "azimuth_deg": 40,
+        "elevation_deg": 25,
+        "highlight": [
+          "rack_A.control_chassis",
+          "rack_B.ref_10mhz"
+        ]
+      },
+      {
+        "id": "closing",
+        "title": "What limits the machine",
+        "narration": "Everything on this tour ends in four numbers. T₁, the energy relaxation time, is set by dielectric loss, quasiparticles and Purcell decay and reaches 100–300 µs on the best planar devices; T₂ is bounded by 2T₁ and reduced by flux and charge noise. Single-qubit gates of 20–40 ns reach errors of 1e-4 to 1e-3, two-qubit gates of 200–400 ns reach 3e-3 to 1e-2, and readout errors sit near 1e-2. The product of all the gate fidelities along a circuit is the fidelity estimate the Estimates panel shows. Behind them stands the wiring budget: every added line costs heat at 4 K and at base, every amplifier its pump, and the number of qubits a fridge can serve is that budget divided by the cost of one line.",
+        "theory": "T12#4.1-the-product-model",
+        "focus_instance": "laboratory",
+        "bookmark": "Overview",
+        "dwell_s": 14,
+        "view": {
+          "layers": {
+            "room": true,
+            "fridge_exterior": true,
+            "fridge_interior": true,
+            "wiring": true,
+            "rack": true,
+            "ghs": true,
+            "chip": true,
+            "chip_micro": true
+          },
+          "xray": false,
+          "cutaway": false,
+          "cans": true,
+          "explode": 0.0
+        }
+      }
+    ]
+  }
+}

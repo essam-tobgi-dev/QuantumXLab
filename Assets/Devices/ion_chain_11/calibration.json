@@ -1,0 +1,2741 @@
+{
+ "qxl": {
+  "kind": "calibration",
+  "schema": 1,
+  "app": "0.1.0",
+  "created": "2026-09-17T00:00:00Z"
+ },
+ "data": {
+  "device": "ion_chain_11",
+  "timestamp": "2026-09-17T00:00:00Z",
+  "qubits": {
+   "0": {
+    "f01_ghz": [
+     12.64281,
+     1e-09,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "t1_us": [
+     1000000000000000.0,
+     0.0,
+     "t1"
+    ],
+    "t2_echo_us": [
+     1922120.0,
+     250000.0,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     644716.1,
+     100000.0,
+     "ramsey"
+    ],
+    "thermal_population": [
+     1e-05,
+     1e-06,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     9.743406e-05,
+     2.5e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     10000,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.0001,
+     2e-05,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.996824,
+      0.003176
+     ],
+     [
+      0.00472,
+      0.99528
+     ]
+    ],
+    "readout_duration_ns": [
+     300000,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "lamb_dicke": [
+     0.08,
+     0.003,
+     "model"
+    ]
+   },
+   "1": {
+    "f01_ghz": [
+     12.64281,
+     1e-09,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "t1_us": [
+     1000000000000000.0,
+     0.0,
+     "t1"
+    ],
+    "t2_echo_us": [
+     2345103.0,
+     250000.0,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     905826.5,
+     100000.0,
+     "ramsey"
+    ],
+    "thermal_population": [
+     1e-05,
+     1e-06,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0001103541,
+     2.5e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     10000,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.0001,
+     2e-05,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.996796,
+      0.003204
+     ],
+     [
+      0.00481,
+      0.99519
+     ]
+    ],
+    "readout_duration_ns": [
+     300000,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "lamb_dicke": [
+     0.08,
+     0.003,
+     "model"
+    ]
+   },
+   "2": {
+    "f01_ghz": [
+     12.64281,
+     1e-09,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "t1_us": [
+     1000000000000000.0,
+     0.0,
+     "t1"
+    ],
+    "t2_echo_us": [
+     2032352.0,
+     250000.0,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     722932.7,
+     100000.0,
+     "ramsey"
+    ],
+    "thermal_population": [
+     1e-05,
+     1e-06,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     7.377191e-05,
+     2.5e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     10000,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.0001,
+     2e-05,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.998,
+      0.002
+     ],
+     [
+      0.002575,
+      0.997425
+     ]
+    ],
+    "readout_duration_ns": [
+     300000,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "lamb_dicke": [
+     0.08,
+     0.003,
+     "model"
+    ]
+   },
+   "3": {
+    "f01_ghz": [
+     12.64281,
+     1e-09,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "t1_us": [
+     1000000000000000.0,
+     0.0,
+     "t1"
+    ],
+    "t2_echo_us": [
+     1767618.0,
+     250000.0,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     715645.2,
+     100000.0,
+     "ramsey"
+    ],
+    "thermal_population": [
+     1e-05,
+     1e-06,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     8.940715e-05,
+     2.5e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     10000,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.0001,
+     2e-05,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.997245,
+      0.002755
+     ],
+     [
+      0.003391,
+      0.996609
+     ]
+    ],
+    "readout_duration_ns": [
+     300000,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "lamb_dicke": [
+     0.08,
+     0.003,
+     "model"
+    ]
+   },
+   "4": {
+    "f01_ghz": [
+     12.64281,
+     1e-09,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "t1_us": [
+     1000000000000000.0,
+     0.0,
+     "t1"
+    ],
+    "t2_echo_us": [
+     2411095.0,
+     250000.0,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     917847.1,
+     100000.0,
+     "ramsey"
+    ],
+    "thermal_population": [
+     1e-05,
+     1e-06,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     8.05288e-05,
+     2.5e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     10000,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.0001,
+     2e-05,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.998,
+      0.002
+     ],
+     [
+      0.003013,
+      0.996987
+     ]
+    ],
+    "readout_duration_ns": [
+     300000,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "lamb_dicke": [
+     0.08,
+     0.003,
+     "model"
+    ]
+   },
+   "5": {
+    "f01_ghz": [
+     12.64281,
+     1e-09,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "t1_us": [
+     1000000000000000.0,
+     0.0,
+     "t1"
+    ],
+    "t2_echo_us": [
+     2209558.0,
+     250000.0,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     1021003.0,
+     100000.0,
+     "ramsey"
+    ],
+    "thermal_population": [
+     1e-05,
+     1e-06,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0001157484,
+     2.5e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     10000,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.0001,
+     2e-05,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.99729,
+      0.00271
+     ],
+     [
+      0.005134,
+      0.994866
+     ]
+    ],
+    "readout_duration_ns": [
+     300000,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "lamb_dicke": [
+     0.08,
+     0.003,
+     "model"
+    ]
+   },
+   "6": {
+    "f01_ghz": [
+     12.64281,
+     1e-09,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "t1_us": [
+     1000000000000000.0,
+     0.0,
+     "t1"
+    ],
+    "t2_echo_us": [
+     2437880.0,
+     250000.0,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     1278780.0,
+     100000.0,
+     "ramsey"
+    ],
+    "thermal_population": [
+     1e-05,
+     1e-06,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     6.511891e-05,
+     2.5e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     10000,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.0001,
+     2e-05,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.997578,
+      0.002422
+     ],
+     [
+      0.004673,
+      0.995327
+     ]
+    ],
+    "readout_duration_ns": [
+     300000,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "lamb_dicke": [
+     0.08,
+     0.003,
+     "model"
+    ]
+   },
+   "7": {
+    "f01_ghz": [
+     12.64281,
+     1e-09,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "t1_us": [
+     1000000000000000.0,
+     0.0,
+     "t1"
+    ],
+    "t2_echo_us": [
+     2551684.0,
+     250000.0,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     1130594.0,
+     100000.0,
+     "ramsey"
+    ],
+    "thermal_population": [
+     1e-05,
+     1e-06,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     9.02297e-05,
+     2.5e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     10000,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.0001,
+     2e-05,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.99695,
+      0.00305
+     ],
+     [
+      0.002258,
+      0.997742
+     ]
+    ],
+    "readout_duration_ns": [
+     300000,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "lamb_dicke": [
+     0.08,
+     0.003,
+     "model"
+    ]
+   },
+   "8": {
+    "f01_ghz": [
+     12.64281,
+     1e-09,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "t1_us": [
+     1000000000000000.0,
+     0.0,
+     "t1"
+    ],
+    "t2_echo_us": [
+     2799144.0,
+     250000.0,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     962754.3,
+     100000.0,
+     "ramsey"
+    ],
+    "thermal_population": [
+     1e-05,
+     1e-06,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.000119378,
+     2.5e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     10000,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.0001,
+     2e-05,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.996503,
+      0.003497
+     ],
+     [
+      0.002531,
+      0.997469
+     ]
+    ],
+    "readout_duration_ns": [
+     300000,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "lamb_dicke": [
+     0.08,
+     0.003,
+     "model"
+    ]
+   },
+   "9": {
+    "f01_ghz": [
+     12.64281,
+     1e-09,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "t1_us": [
+     1000000000000000.0,
+     0.0,
+     "t1"
+    ],
+    "t2_echo_us": [
+     1926382.0,
+     250000.0,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     635120.2,
+     100000.0,
+     "ramsey"
+    ],
+    "thermal_population": [
+     1e-05,
+     1e-06,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     0.0001026377,
+     2.5e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     10000,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.0001,
+     2e-05,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.997057,
+      0.002943
+     ],
+     [
+      0.004795,
+      0.995205
+     ]
+    ],
+    "readout_duration_ns": [
+     300000,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "lamb_dicke": [
+     0.08,
+     0.003,
+     "model"
+    ]
+   },
+   "10": {
+    "f01_ghz": [
+     12.64281,
+     1e-09,
+     "qubit_spectroscopy"
+    ],
+    "anharmonicity_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "t1_us": [
+     1000000000000000.0,
+     0.0,
+     "t1"
+    ],
+    "t2_echo_us": [
+     2326159.0,
+     250000.0,
+     "t2_echo"
+    ],
+    "t2_star_us": [
+     1105155.0,
+     100000.0,
+     "ramsey"
+    ],
+    "thermal_population": [
+     1e-05,
+     1e-06,
+     "thermal_population"
+    ],
+    "gate_error_1q": [
+     8.246476e-05,
+     2.5e-05,
+     "rb_1q"
+    ],
+    "duration_1q_ns": [
+     10000,
+     0,
+     "pulses"
+    ],
+    "coherent_error_fraction_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "reset_error": [
+     0.0001,
+     2e-05,
+     "reset_fidelity"
+    ],
+    "readout_assignment": [
+     [
+      0.996656,
+      0.003344
+     ],
+     [
+      0.003239,
+      0.996761
+     ]
+    ],
+    "readout_duration_ns": [
+     300000,
+     0,
+     "pulses"
+    ],
+    "readout_crosstalk_dephasing": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_1q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "lamb_dicke": [
+     0.08,
+     0.003,
+     "model"
+    ]
+   }
+  },
+  "edges": {
+   "0-1": {
+    "gate_error_2q": [
+     0.004487112,
+     0.001121778,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "0-2": {
+    "gate_error_2q": [
+     0.003757462,
+     0.0009393656,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "0-3": {
+    "gate_error_2q": [
+     0.004803422,
+     0.001200855,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "0-4": {
+    "gate_error_2q": [
+     0.004496135,
+     0.001124034,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "0-5": {
+    "gate_error_2q": [
+     0.004919932,
+     0.001229983,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "0-6": {
+    "gate_error_2q": [
+     0.003940337,
+     0.0009850842,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "0-7": {
+    "gate_error_2q": [
+     0.004514496,
+     0.001128624,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "0-8": {
+    "gate_error_2q": [
+     0.003987955,
+     0.0009969887,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "0-9": {
+    "gate_error_2q": [
+     0.005482853,
+     0.001370713,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "0-10": {
+    "gate_error_2q": [
+     0.007106033,
+     0.001776508,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "1-2": {
+    "gate_error_2q": [
+     0.004705146,
+     0.001176287,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "1-3": {
+    "gate_error_2q": [
+     0.004189691,
+     0.001047423,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "1-4": {
+    "gate_error_2q": [
+     0.0045289,
+     0.001132225,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "1-5": {
+    "gate_error_2q": [
+     0.004007996,
+     0.001001999,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "1-6": {
+    "gate_error_2q": [
+     0.004050179,
+     0.001012545,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "1-7": {
+    "gate_error_2q": [
+     0.005572829,
+     0.001393207,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "1-8": {
+    "gate_error_2q": [
+     0.007083254,
+     0.001770813,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "1-9": {
+    "gate_error_2q": [
+     0.002561829,
+     0.0006404572,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "1-10": {
+    "gate_error_2q": [
+     0.003264644,
+     0.000816161,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "2-3": {
+    "gate_error_2q": [
+     0.003808808,
+     0.0009522019,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "2-4": {
+    "gate_error_2q": [
+     0.004103198,
+     0.0010258,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "2-5": {
+    "gate_error_2q": [
+     0.004089046,
+     0.001022261,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "2-6": {
+    "gate_error_2q": [
+     0.005067586,
+     0.001266896,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "2-7": {
+    "gate_error_2q": [
+     0.006407302,
+     0.001601826,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "2-8": {
+    "gate_error_2q": [
+     0.004589815,
+     0.001147454,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "2-9": {
+    "gate_error_2q": [
+     0.00604902,
+     0.001512255,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "2-10": {
+    "gate_error_2q": [
+     0.004088934,
+     0.001022233,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "3-4": {
+    "gate_error_2q": [
+     0.00465295,
+     0.001163238,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "3-5": {
+    "gate_error_2q": [
+     0.005622707,
+     0.001405677,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "3-6": {
+    "gate_error_2q": [
+     0.003829348,
+     0.0009573369,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "3-7": {
+    "gate_error_2q": [
+     0.00413015,
+     0.001032538,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "3-8": {
+    "gate_error_2q": [
+     0.003816519,
+     0.0009541298,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "3-9": {
+    "gate_error_2q": [
+     0.004873302,
+     0.001218326,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "3-10": {
+    "gate_error_2q": [
+     0.003834345,
+     0.0009585862,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "4-5": {
+    "gate_error_2q": [
+     0.003360255,
+     0.0008400638,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "4-6": {
+    "gate_error_2q": [
+     0.007277587,
+     0.001819397,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "4-7": {
+    "gate_error_2q": [
+     0.006739696,
+     0.001684924,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "4-8": {
+    "gate_error_2q": [
+     0.004351779,
+     0.001087945,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "4-9": {
+    "gate_error_2q": [
+     0.003317145,
+     0.0008292862,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "4-10": {
+    "gate_error_2q": [
+     0.004752061,
+     0.001188015,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "5-6": {
+    "gate_error_2q": [
+     0.006422872,
+     0.001605718,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "5-7": {
+    "gate_error_2q": [
+     0.00401598,
+     0.001003995,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "5-8": {
+    "gate_error_2q": [
+     0.004491872,
+     0.001122968,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "5-9": {
+    "gate_error_2q": [
+     0.00444485,
+     0.001111212,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "5-10": {
+    "gate_error_2q": [
+     0.00539051,
+     0.001347628,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "6-7": {
+    "gate_error_2q": [
+     0.004330137,
+     0.001082534,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "6-8": {
+    "gate_error_2q": [
+     0.005852939,
+     0.001463235,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "6-9": {
+    "gate_error_2q": [
+     0.002623594,
+     0.0006558985,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "6-10": {
+    "gate_error_2q": [
+     0.003208657,
+     0.0008021642,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "7-8": {
+    "gate_error_2q": [
+     0.004112586,
+     0.001028147,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "7-9": {
+    "gate_error_2q": [
+     0.005604996,
+     0.001401249,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "7-10": {
+    "gate_error_2q": [
+     0.004258544,
+     0.001064636,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "8-9": {
+    "gate_error_2q": [
+     0.006093549,
+     0.001523387,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "8-10": {
+    "gate_error_2q": [
+     0.002856123,
+     0.0007140307,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   },
+   "9-10": {
+    "gate_error_2q": [
+     0.003901861,
+     0.0009754652,
+     "rb_2q"
+    ],
+    "coherent_error_fraction_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "leakage_2q": [
+     0.0,
+     0.0,
+     "default"
+    ],
+    "zz_khz": [
+     0.0,
+     0.0,
+     "n/a"
+    ],
+    "duration_ns": [
+     200000,
+     0,
+     "pulses"
+    ],
+    "coupling_g_mhz": [
+     0.0,
+     0.0,
+     "n/a"
+    ]
+   }
+  },
+  "motional": {
+   "equilibrium_positions_l": [
+    -3.049727,
+    -2.296078,
+    -1.6638853,
+    -1.0865385,
+    -0.53717249,
+    4.0688953e-17,
+    0.53717249,
+    1.0865385,
+    1.6638853,
+    2.296078,
+    3.049727
+   ],
+   "axial_modes_mhz": [
+    0.3,
+    0.51961524,
+    0.72524306,
+    0.92065684,
+    1.108297,
+    1.2898952,
+    1.4666621,
+    1.6394541,
+    1.8088953,
+    1.9754562,
+    2.1395019
+   ],
+   "radial_modes_mhz": [
+    3.0,
+    2.9849623,
+    2.9634458,
+    2.9361872,
+    2.9035907,
+    2.8658481,
+    2.8230216,
+    2.7750847,
+    2.7219384,
+    2.6634163,
+    2.5992818
+   ],
+   "gate_mode": {
+    "axis": "axial",
+    "index": 0,
+    "participation": [
+     0.301511,
+     0.301511,
+     0.301511,
+     0.301511,
+     0.301511,
+     0.301511,
+     0.301511,
+     0.301511,
+     0.301511,
+     0.301511,
+     0.301511
+    ]
+   },
+   "heating_quanta_per_s": [
+    41.88516,
+    15.0,
+    "heating_rate"
+   ]
+  }
+ }
+}

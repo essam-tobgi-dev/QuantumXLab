@@ -1,0 +1,61 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "pcb",
+    "name": "Interposer PCB",
+    "category": "sample",
+    "parent": "chip_package",
+    "function": "Multilayer board with 50 Ω coplanar launchers that route signals from the package SMA connectors to the wirebond pads at the chip edge. Launcher impedance and via stitching determine reflections seen by the readout line; the transition from PCB to chip is the largest impedance discontinuity in the whole chain.",
+    "physics": {
+      "summary": "50 Ω routing from connectors to the chip edge.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "ports",
+        "unit": "",
+        "typical": [
+          8,
+          40
+        ]
+      },
+      {
+        "field": "trace impedance",
+        "unit": "Ω",
+        "typical": [
+          48,
+          52
+        ]
+      }
+    ],
+    "theory": [
+      "T05#6.3-dispersive-readout"
+    ],
+    "tooltip": "PCB routing SMA launchers to wirebond pads.",
+    "geometry": {
+      "generator": "Plate",
+      "r_m": 0.014,
+      "t_m": 0.0016,
+      "shape": "square"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

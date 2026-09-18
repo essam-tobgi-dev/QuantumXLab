@@ -1,0 +1,3 @@
+{ "statevector": null, "counts": { "0": 0.882421, "1": 0.117579 }, "tolerance": "statistical", "unitary_digest": null, "shots": 4096, "seed": 1,
+  "register": "out",
+  "note": "cos^2(0.35) and sin^2(0.35): the teleported ry(0.7)|0> read on `out` alone, the run's key being out,m[1],m[0]. Feed-forward makes the run per-shot, so the oracle is the sampled distribution inside a 5 sigma band." }

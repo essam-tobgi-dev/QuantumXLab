@@ -1,0 +1,76 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "hemt",
+    "name": "HEMT low-noise amplifier",
+    "category": "amplifier",
+    "parent": "stage_4K",
+    "function": "Cryogenic high-electron-mobility transistor amplifier at the 4 K stage with about 40 dB gain and a noise temperature of 2–4 K over 4–8 GHz. By the Friis formula it fixes the system noise referred to the chip unless a parametric amplifier precedes it. Its 10–20 mW dissipation per line is the dominant load on the 4 K stage in large systems, which is why line counts are budgeted against pulse-tube capacity.",
+    "physics": {
+      "summary": "Second-stage amplifier; dominant 4 K heat load and noise floor without a JPA.",
+      "equations": [
+        "friis"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "gain",
+        "unit": "dB",
+        "typical": [
+          35,
+          42
+        ]
+      },
+      {
+        "field": "noise temperature",
+        "unit": "K",
+        "typical": [
+          1.5,
+          4
+        ],
+        "binding": "wiring.line[$line].hemt.T_N",
+        "class": "Model"
+      },
+      {
+        "field": "dissipation",
+        "unit": "W",
+        "typical": [
+          0.008,
+          0.02
+        ],
+        "binding": "wiring.line[$line].hemt.P_diss",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T07#8-amplifier-chain-and-noise-temperature"
+    ],
+    "tooltip": "HEMT amplifier at 4 K: 40 dB gain, 2–4 K noise.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.03,
+      "h_m": 0.02,
+      "d_m": 0.05,
+      "marking": "heatsink"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

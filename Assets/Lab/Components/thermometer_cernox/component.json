@@ -1,0 +1,74 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "thermometer_cernox",
+    "name": "Cernox thermometer",
+    "category": "sensor",
+    "parent": "stage_4K",
+    "function": "Zirconium oxynitride thin-film resistor with low magnetic-field sensitivity, used from room temperature down to about 1.4 K. It tracks the 50 K and 4 K stages during cooldown and reports the pulse-tube stage temperatures; below 1 K its sensitivity is too low and the RuO₂ sensors take over.",
+    "physics": {
+      "summary": "Resistance thermometry 1.4–325 K.",
+      "equations": []
+    },
+    "spec_sheet": [
+      {
+        "field": "range",
+        "unit": "K",
+        "typical": [
+          1.4,
+          325
+        ]
+      },
+      {
+        "field": "resistance",
+        "unit": "kΩ",
+        "binding": "cryo.thermo[$i].R",
+        "class": "Model"
+      },
+      {
+        "field": "temperature",
+        "unit": "K",
+        "binding": "cryo.stage.$stage.T",
+        "class": "Numerical"
+      }
+    ],
+    "theory": [
+      "T08#8-thermometry-vibration-and-magnetic-shielding"
+    ],
+    "tooltip": "Cernox thermometer for the 4 K and 50 K stages.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.006,
+      "h_m": 0.003,
+      "d_m": 0.01
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ],
+    "model_name": "Cernox thin-film resistance thermometer",
+    "instrument": {
+      "class": "thermometer_cernox",
+      "settings_schema": "instr/thermometer.schema.json",
+      "channels": [
+        "T",
+        "R"
+      ]
+    }
+  }
+}

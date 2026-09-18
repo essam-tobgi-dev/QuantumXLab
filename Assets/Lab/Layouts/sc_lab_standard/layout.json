@@ -1,0 +1,299 @@
+{
+  "qxl": {
+    "kind": "lab.layout",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "sc_lab_standard",
+    "room": {
+      "width_m": 7.0,
+      "depth_m": 6.0,
+      "height_m": 3.4
+    },
+    "fridge": {
+      "model": "cryogen_free_dilution_400uW",
+      "position_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "stages": [
+        "rt",
+        "s50",
+        "s4",
+        "still",
+        "cp",
+        "mxc"
+      ],
+      "stage_height_m": {
+        "rt": 2.3,
+        "s50": 2.05,
+        "s4": 1.8,
+        "still": 1.55,
+        "cp": 1.4,
+        "mxc": 1.25
+      },
+      "stage_radius_m": {
+        "rt": 0.3,
+        "s50": 0.25,
+        "s4": 0.23,
+        "still": 0.21,
+        "cp": 0.19,
+        "mxc": 0.19
+      },
+      "shields": true,
+      "mag_shield": true,
+      "frame": {
+        "width_m": 1.4,
+        "depth_m": 1.4,
+        "height_m": 2.6
+      }
+    },
+    "device": "sc_heavyhex_27",
+    "wiring": "Assets/Devices/sc_heavyhex_27/wiring.json",
+    "routing": "Assets/Lab/Layouts/sc_lab_standard/routing.json",
+    "racks": [
+      {
+        "id": "A",
+        "position_m": [
+          2.2,
+          0.0,
+          -1.5
+        ],
+        "height_u": 42,
+        "units": [
+          "control_chassis",
+          "mw_generator:4",
+          "digitizer",
+          "iq_mixer_board:8",
+          "dc_source",
+          "power_dist"
+        ]
+      },
+      {
+        "id": "B",
+        "position_m": [
+          2.9,
+          0.0,
+          -1.5
+        ],
+        "height_u": 42,
+        "units": [
+          "vna",
+          "spectrum_analyzer",
+          "oscilloscope",
+          "rt_amplifier:2",
+          "ref_10mhz",
+          "clock_dist",
+          "trigger_unit",
+          "patch_panel",
+          "power_dist"
+        ]
+      }
+    ],
+    "ghs": {
+      "position_m": [
+        -2.5,
+        0.0,
+        -1.5
+      ]
+    },
+    "compressor": {
+      "position_m": [
+        -3.2,
+        0.0,
+        2.6
+      ],
+      "outside": true
+    },
+    "props": [
+      {
+        "id": "workstation",
+        "position_m": [
+          2.5,
+          0.0,
+          1.8
+        ]
+      },
+      {
+        "id": "bench",
+        "position_m": [
+          -1.5,
+          0.0,
+          2.0
+        ]
+      },
+      {
+        "id": "he_dewar",
+        "position_m": [
+          -2.9,
+          0.0,
+          0.5
+        ],
+        "count": 2
+      }
+    ],
+    "bookmarks": {
+      "Overview": {
+        "pos": [
+          5.0,
+          3.0,
+          6.0
+        ],
+        "target": [
+          0.0,
+          1.2,
+          0.0
+        ],
+        "fov_deg": 50
+      },
+      "Fridge": {
+        "pos": [
+          1.6,
+          1.8,
+          1.6
+        ],
+        "target": [
+          0.0,
+          1.6,
+          0.0
+        ],
+        "fov_deg": 45
+      },
+      "MXC": {
+        "pos": [
+          0.45,
+          1.35,
+          0.45
+        ],
+        "target": [
+          0.0,
+          1.25,
+          0.0
+        ],
+        "fov_deg": 40
+      },
+      "Chip": {
+        "pos": [
+          0.0,
+          1.16,
+          0.03
+        ],
+        "target": [
+          0.0,
+          1.13,
+          0.0
+        ],
+        "fov_deg": 30,
+        "scale_island": "chip_micro"
+      },
+      "Rack": {
+        "pos": [
+          2.5,
+          1.5,
+          0.8
+        ],
+        "target": [
+          2.55,
+          1.2,
+          -1.5
+        ],
+        "fov_deg": 45
+      },
+      "GHS": {
+        "pos": [
+          -2.5,
+          1.5,
+          0.8
+        ],
+        "target": [
+          -2.5,
+          1.0,
+          -1.5
+        ],
+        "fov_deg": 45
+      }
+    },
+    "layers": [
+      "room",
+      "fridge_exterior",
+      "fridge_interior",
+      "wiring",
+      "rack",
+      "chip",
+      "chip_micro"
+    ],
+    "lights": [
+      {
+        "position_m": [
+          -1.75,
+          3.38,
+          -1.5
+        ],
+        "size_m": [
+          1.2,
+          0.6
+        ],
+        "color": [
+          1.0,
+          0.98,
+          0.92
+        ],
+        "lumens": 4000
+      },
+      {
+        "position_m": [
+          1.75,
+          3.38,
+          -1.5
+        ],
+        "size_m": [
+          1.2,
+          0.6
+        ],
+        "color": [
+          1.0,
+          0.98,
+          0.92
+        ],
+        "lumens": 4000
+      },
+      {
+        "position_m": [
+          -1.75,
+          3.38,
+          1.5
+        ],
+        "size_m": [
+          1.2,
+          0.6
+        ],
+        "color": [
+          1.0,
+          0.98,
+          0.92
+        ],
+        "lumens": 4000
+      },
+      {
+        "position_m": [
+          1.75,
+          3.38,
+          1.5
+        ],
+        "size_m": [
+          1.2,
+          0.6
+        ],
+        "color": [
+          1.0,
+          0.98,
+          0.92
+        ],
+        "lumens": 4000
+      }
+    ]
+  }
+}

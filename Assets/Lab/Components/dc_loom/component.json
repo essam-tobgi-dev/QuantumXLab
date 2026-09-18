@@ -1,0 +1,70 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "dc_loom",
+    "name": "DC wiring loom",
+    "category": "wiring",
+    "parent": "wiring",
+    "function": "Ribbon of twisted phosphor-bronze pairs carrying thermometer, heater and slow bias signals from the top plate to the mixing chamber, clamped at every stage. Phosphor bronze has low thermal conductivity, so 24 pairs conduct less than one coaxial line. RC filtering at the cold end keeps room-temperature noise off the sensors.",
+    "physics": {
+      "summary": "Low-conductivity multi-pair wiring for sensors and heaters.",
+      "equations": [
+        "conduction_load"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "pairs",
+        "unit": "",
+        "typical": [
+          12,
+          48
+        ]
+      },
+      {
+        "field": "wire diameter",
+        "unit": "mm",
+        "typical": [
+          0.1,
+          0.2
+        ]
+      },
+      {
+        "field": "conducted heat",
+        "unit": "W",
+        "binding": "wiring.dc.P_cond",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#4-heat-conduction-along-wiring"
+    ],
+    "tooltip": "Twisted-pair loom for thermometry and heaters.",
+    "geometry": {
+      "generator": "Tube",
+      "r_m": 0.0012,
+      "bundle": 12,
+      "bundle_pitch_m": 0.0026,
+      "path": "top_to_mxc"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "trigger_unit",
+    "name": "Trigger and sequencing unit",
+    "category": "instrument",
+    "parent": "rack_B",
+    "function": "Generates the shot-repetition trigger and gates the digitizer acquisition window relative to the AWG start. The repetition rate here is the control-system overhead term in the wall-time model: each shot cannot begin before the previous readout, reset and trigger re-arm complete.",
+    "physics": {
+      "summary": "Shot repetition trigger; sets the per-shot gap.",
+      "equations": [
+        "wall_time"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "trigger rate",
+        "unit": "kHz",
+        "typical": [
+          1,
+          1000
+        ],
+        "binding": "instr.trig.rate",
+        "class": "Model"
+      },
+      {
+        "field": "jitter",
+        "unit": "ps",
+        "typical": [
+          0,
+          50
+        ]
+      }
+    ],
+    "theory": [
+      "T07#7-sampling-quantization-timing"
+    ],
+    "tooltip": "Trigger unit: shot repetition and acquisition gating.",
+    "geometry": {
+      "generator": "RackUnit",
+      "u": 1,
+      "front": "controller"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ],
+    "model_name": "Trigger and sequencing unit",
+    "instrument": {
+      "class": "controller",
+      "settings_schema": "instr/controller.schema.json",
+      "channels": [
+        "rate"
+      ]
+    }
+  }
+}

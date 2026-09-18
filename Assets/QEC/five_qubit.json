@@ -1,0 +1,115 @@
+{
+  "qxl": {
+    "kind": "qec.code",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "five_qubit",
+    "n": 5,
+    "k": 1,
+    "d": 3,
+    "family": "FiveQubit",
+    "stabilizers": [
+      "XZZXI",
+      "IXZZX",
+      "XIXZZ",
+      "ZXIXZ"
+    ],
+    "logical_x": [
+      "XXXXX"
+    ],
+    "logical_z": [
+      "ZZZZZ"
+    ],
+    "layout": {
+      "data": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          0
+        ]
+      ],
+      "ancilla": [
+        {
+          "type": "M",
+          "coord": [
+            0.5,
+            1
+          ],
+          "order": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "pauli": "XZZXI"
+        },
+        {
+          "type": "M",
+          "coord": [
+            1.5,
+            1
+          ],
+          "order": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "pauli": "IXZZX"
+        },
+        {
+          "type": "M",
+          "coord": [
+            2.5,
+            1
+          ],
+          "order": [
+            2,
+            3,
+            4,
+            0
+          ],
+          "pauli": "XIXZZ"
+        },
+        {
+          "type": "M",
+          "coord": [
+            3.5,
+            1
+          ],
+          "order": [
+            3,
+            4,
+            0,
+            1
+          ],
+          "pauli": "ZXIXZ"
+        }
+      ]
+    },
+    "decoder": "lookup",
+    "theory": [
+      "T09#4.5-five-qubit-code-5-1-3"
+    ],
+    "notes": "Smallest perfect code; ancilla type 'M' = mixed Pauli check (needs the 'pauli' field).",
+    "convention": "Pauli strings are written left-to-right from qubit 0 (position i is qubit i)."
+  }
+}

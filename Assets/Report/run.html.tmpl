@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<!-- QuantumXLab run report (spec 23 §10). Self-contained: inline CSS, inline SVG, images as data
+     URIs, no scripts and no external references. Every double-brace placeholder below is filled by
+     report::renderRunReport; the section order is the one spec 23 §10 fixes. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<style>
+:root {
+  --bg: #ffffff; --fg: #16181d; --muted: #5d6673; --rule: #d8dee9; --card: #f6f8fa;
+  --accent: #1d6fa5; --k: #a3185f; --c: #6a737d; --s: #0b7261; --n: #b25000; --g: #6f42c1;
+  --exact: #1a7f37; --numerical: #1d6fa5; --statistical: #8250df; --model: #bf8700; --illustrative: #96690a;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161a; --fg: #e8ebf0; --muted: #98a3b3; --rule: #2c313a; --card: #1b1f25;
+    --accent: #7ec8e3; --k: #ff7ab2; --c: #7f8896; --s: #56d4b8; --n: #ffab70; --g: #c8a2ff;
+    --exact: #56d364; --numerical: #7ec8e3; --statistical: #d2a8ff; --model: #e3b341; --illustrative: #d0a215;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0 auto; max-width: 62rem; padding: 2rem 1.25rem 4rem;
+       background: var(--bg); color: var(--fg);
+       font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif; }
+h1 { font-size: 1.7rem; margin: 0 0 .25rem; letter-spacing: -0.01em; }
+h2 { font-size: 1.12rem; margin: 2.2rem 0 .6rem; padding-bottom: .3rem; border-bottom: 1px solid var(--rule); }
+h3 { font-size: .98rem; margin: 1.2rem 0 .4rem; }
+p { margin: .4rem 0; }
+.sub { color: var(--muted); margin: 0 0 1.2rem; }
+.muted { color: var(--muted); }
+table.t { border-collapse: collapse; width: 100%; margin: .6rem 0 1rem; font-size: .92rem; }
+table.t th, table.t td { text-align: left; padding: .34rem .6rem; border-bottom: 1px solid var(--rule); }
+table.t th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+table.t td:first-child { white-space: nowrap; }
+table.t tbody tr:nth-child(even) { background: var(--card); }
+pre { background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+      padding: .8rem 1rem; overflow-x: auto; font-size: .86rem; line-height: 1.45;
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+code { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9em; }
+pre .k { color: var(--k); } pre .c { color: var(--c); font-style: italic; }
+pre .s { color: var(--s); } pre .n { color: var(--n); } pre .g { color: var(--g); font-weight: 600; }
+.badge { display: inline-block; padding: .05rem .45rem; border-radius: 999px; font-size: .74rem;
+         font-weight: 600; letter-spacing: .02em; border: 1px solid currentColor; white-space: nowrap; }
+.badge.exact { color: var(--exact); } .badge.numerical { color: var(--numerical); }
+.badge.statistical { color: var(--statistical); } .badge.model { color: var(--model); }
+.badge.illustrative { color: var(--illustrative); }
+.simonly { display: inline-block; padding: .05rem .45rem; border-radius: 999px; font-size: .74rem;
+           font-weight: 600; border: 1px dashed var(--accent); color: var(--accent); }
+figure { margin: .8rem 0 1.2rem; }
+figure img, figure svg { max-width: 100%; height: auto; display: block;
+                         border: 1px solid var(--rule); border-radius: 6px; background: var(--bg); }
+figcaption { color: var(--muted); font-size: .84rem; margin-top: .3rem; }
+svg.fig .ax { stroke: var(--rule); stroke-width: 1; }
+svg.fig .bar { fill: var(--accent); }
+svg.fig .line { fill: none; stroke: var(--accent); stroke-width: 2; }
+svg.fig .band { fill: var(--accent); opacity: .18; }
+svg.fig .tick { fill: var(--muted); font-size: 10px; font-family: inherit; }
+ul.assumptions { margin: .4rem 0 1rem 1.1rem; padding: 0; }
+ul.assumptions li { margin: .18rem 0; color: var(--fg); }
+.eq { background: var(--card); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0;
+      padding: .5rem .8rem; margin: .5rem 0; overflow-x: auto; }
+footer { margin-top: 3rem; padding-top: .8rem; border-top: 1px solid var(--rule);
+         color: var(--muted); font-size: .84rem; }
+@media print {
+  body { max-width: none; padding: 0; color: #000; background: #fff; }
+  h2 { break-after: avoid; } figure, table.t, pre { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<h1>{{title}}</h1>
+<p class="sub">{{subtitle}}</p>
+
+<section id="provenance">
+<h2>Provenance</h2>
+{{provenance}}
+</section>
+
+<section id="program">
+<h2>Program</h2>
+{{program}}
+</section>
+
+<section id="circuit">
+<h2>Compiled circuit</h2>
+{{circuit}}
+</section>
+
+<section id="resources">
+<h2>Resources</h2>
+{{resources}}
+</section>
+
+<section id="estimate">
+<h2>Hardware estimate</h2>
+{{estimate}}
+</section>
+
+<section id="equations">
+<h2>Equations</h2>
+{{equations}}
+</section>
+
+<section id="results">
+<h2>Results</h2>
+{{results}}
+</section>
+
+<section id="plots">
+<h2>Plots</h2>
+{{plots}}
+</section>
+
+<section id="states">
+<h2>State views</h2>
+{{states}}
+</section>
+
+<section id="recipes">
+<h2>Recipes</h2>
+{{recipes}}
+</section>
+
+<section id="diagnostics">
+<h2>Diagnostics</h2>
+{{diagnostics}}
+</section>
+
+<section id="theory">
+<h2>Theory references</h2>
+{{theory}}
+</section>
+
+{{extra}}
+
+<footer>
+Generated by QuantumXLab {{app}} on {{generated}}. Every figure carries its fidelity class
+(spec 00 §5); values marked <span class="simonly">Simulator-only</span> cannot be measured on a
+physical device.
+</footer>
+</body>
+</html>

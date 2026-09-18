@@ -1,0 +1,585 @@
+{
+ "qxl": {
+  "kind": "device",
+  "schema": 1,
+  "app": "0.1.0",
+  "created": "2026-09-17T00:00:00Z"
+ },
+ "data": {
+  "id": "sc_heavyhex_27",
+  "display_name": "27-qubit heavy-hex transmon processor",
+  "technology": "transmon_fixed",
+  "qudit_dimension": 3,
+  "qubits": [
+   {
+    "index": 0,
+    "kind": "data",
+    "pos": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "index": 1,
+    "kind": "data",
+    "pos": [
+     1.0,
+     0.0
+    ]
+   },
+   {
+    "index": 2,
+    "kind": "data",
+    "pos": [
+     2.0,
+     0.0
+    ]
+   },
+   {
+    "index": 3,
+    "kind": "data",
+    "pos": [
+     3.0,
+     0.0
+    ]
+   },
+   {
+    "index": 4,
+    "kind": "data",
+    "pos": [
+     1.0,
+     1.0
+    ]
+   },
+   {
+    "index": 5,
+    "kind": "data",
+    "pos": [
+     3.0,
+     1.0
+    ]
+   },
+   {
+    "index": 6,
+    "kind": "data",
+    "pos": [
+     0.0,
+     2.0
+    ]
+   },
+   {
+    "index": 7,
+    "kind": "data",
+    "pos": [
+     1.0,
+     2.0
+    ]
+   },
+   {
+    "index": 8,
+    "kind": "data",
+    "pos": [
+     3.0,
+     2.0
+    ]
+   },
+   {
+    "index": 9,
+    "kind": "data",
+    "pos": [
+     4.0,
+     2.0
+    ]
+   },
+   {
+    "index": 10,
+    "kind": "data",
+    "pos": [
+     1.0,
+     3.0
+    ]
+   },
+   {
+    "index": 11,
+    "kind": "data",
+    "pos": [
+     3.0,
+     3.0
+    ]
+   },
+   {
+    "index": 12,
+    "kind": "data",
+    "pos": [
+     1.0,
+     4.0
+    ]
+   },
+   {
+    "index": 13,
+    "kind": "data",
+    "pos": [
+     2.0,
+     4.0
+    ]
+   },
+   {
+    "index": 14,
+    "kind": "data",
+    "pos": [
+     3.0,
+     4.0
+    ]
+   },
+   {
+    "index": 15,
+    "kind": "data",
+    "pos": [
+     1.0,
+     5.0
+    ]
+   },
+   {
+    "index": 16,
+    "kind": "data",
+    "pos": [
+     3.0,
+     5.0
+    ]
+   },
+   {
+    "index": 17,
+    "kind": "data",
+    "pos": [
+     0.0,
+     6.0
+    ]
+   },
+   {
+    "index": 18,
+    "kind": "data",
+    "pos": [
+     1.0,
+     6.0
+    ]
+   },
+   {
+    "index": 19,
+    "kind": "data",
+    "pos": [
+     3.0,
+     6.0
+    ]
+   },
+   {
+    "index": 20,
+    "kind": "data",
+    "pos": [
+     4.0,
+     6.0
+    ]
+   },
+   {
+    "index": 21,
+    "kind": "data",
+    "pos": [
+     1.0,
+     7.0
+    ]
+   },
+   {
+    "index": 22,
+    "kind": "data",
+    "pos": [
+     3.0,
+     7.0
+    ]
+   },
+   {
+    "index": 23,
+    "kind": "data",
+    "pos": [
+     1.0,
+     8.0
+    ]
+   },
+   {
+    "index": 24,
+    "kind": "data",
+    "pos": [
+     2.0,
+     8.0
+    ]
+   },
+   {
+    "index": 25,
+    "kind": "data",
+    "pos": [
+     3.0,
+     8.0
+    ]
+   },
+   {
+    "index": 26,
+    "kind": "data",
+    "pos": [
+     4.0,
+     8.0
+    ]
+   }
+  ],
+  "edges": [
+   {
+    "a": 0,
+    "b": 1,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 1,
+    "b": 2,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 1,
+    "b": 4,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 2,
+    "b": 3,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 3,
+    "b": 5,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 4,
+    "b": 7,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 5,
+    "b": 8,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 6,
+    "b": 7,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 7,
+    "b": 10,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 8,
+    "b": 9,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 8,
+    "b": 11,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 10,
+    "b": 12,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 11,
+    "b": 14,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 12,
+    "b": 13,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 12,
+    "b": 15,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 13,
+    "b": 14,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 14,
+    "b": 16,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 15,
+    "b": 18,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 16,
+    "b": 19,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 17,
+    "b": 18,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 18,
+    "b": 21,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 19,
+    "b": 20,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 19,
+    "b": 22,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 21,
+    "b": 23,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 22,
+    "b": 25,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 23,
+    "b": 24,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 24,
+    "b": 25,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 25,
+    "b": 26,
+    "kind": "fixed_capacitive",
+    "directed": true
+   }
+  ],
+  "native_gates": {
+   "single": [
+    "x",
+    "sx",
+    "rz",
+    "id"
+   ],
+   "two": [
+    "cx",
+    "ecr"
+   ],
+   "measure": "dispersive",
+   "reset": "measure_conditional_x"
+  },
+  "timing": {
+   "dt_ps": 222,
+   "granularity_samples": 16,
+   "min_pulse_samples": 64,
+   "readout_ns": 640,
+   "readout_ringdown_ns": 160,
+   "repetition_delay_us": 250,
+   "feedforward_ns": 200
+  },
+  "control": {
+   "load_time_ms": 50,
+   "rep_overhead_us": 1.0,
+   "feedback_latency_ns": 200,
+   "reset": {
+    "policy": "active",
+    "active_duration_ns": null,
+    "passive_multiplier": 5
+   },
+   "max_program_duration_ms": 10
+  },
+  "qec": {
+   "cycle_time_us": 1.0
+  },
+  "readout": {
+   "resonator_f_ghz": [
+    7.00024,
+    7.04421,
+    7.09129,
+    7.13656,
+    7.18025,
+    7.227,
+    7.26943,
+    7.00123,
+    7.04699,
+    7.09104,
+    7.13477,
+    7.18092,
+    7.22389,
+    7.26919,
+    7.00119,
+    7.04486,
+    7.09062,
+    7.13511,
+    7.18075,
+    7.22494,
+    7.27,
+    7.00062,
+    7.04644,
+    7.09053,
+    7.137,
+    7.17918,
+    7.22391
+   ],
+   "feedlines": [
+    {
+     "id": 0,
+     "qubits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    },
+    {
+     "id": 1,
+     "qubits": [
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+     ]
+    },
+    {
+     "id": 2,
+     "qubits": [
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+     ]
+    },
+    {
+     "id": 3,
+     "qubits": [
+      21,
+      22,
+      23,
+      24,
+      25,
+      26
+     ]
+    }
+   ],
+   "purcell_filter": true,
+   "resonator_spacing_mhz_min": 40
+  },
+  "frequency_plan": {
+   "band_ghz": [
+    4.6,
+    5.4
+   ],
+   "min_neighbour_detuning_mhz": 50
+  },
+  "leakage_channels": true,
+  "crosstalk": {
+   "drive": [
+    [
+     0,
+     1,
+     0.01,
+     0.0
+    ],
+    [
+     1,
+     2,
+     0.01,
+     0.0
+    ],
+    [
+     1,
+     4,
+     0.01,
+     0.0
+    ],
+    [
+     2,
+     3,
+     0.01,
+     0.0
+    ],
+    [
+     3,
+     5,
+     0.01,
+     0.0
+    ],
+    [
+     4,
+     7,
+     0.01,
+     0.0
+    ],
+    [
+     5,
+     8,
+     0.01,
+     0.0
+    ],
+    [
+     6,
+     7,
+     0.01,
+     0.0
+    ]
+   ]
+  },
+  "generator": {
+   "tool": "gencal.py",
+   "seed": 1
+  }
+ }
+}

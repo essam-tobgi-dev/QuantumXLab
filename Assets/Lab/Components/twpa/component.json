@@ -1,0 +1,72 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "twpa",
+    "name": "Travelling-wave parametric amplifier",
+    "category": "amplifier",
+    "parent": "stage_mxc",
+    "function": "Broadband quantum-limited amplifier built from a long chain of Josephson junctions that amplifies signals co-propagating with a strong pump over about 3 GHz. It lets one output line serve many resonators across the band, at the cost of higher pump power dissipated at the mixing chamber and a noise temperature somewhat above the JPA's.",
+    "physics": {
+      "summary": "Broadband near-quantum-limited amplification.",
+      "equations": [
+        "quantum_limit",
+        "friis"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "gain",
+        "unit": "dB",
+        "typical": [
+          15,
+          25
+        ],
+        "binding": "wiring.line[$line].jpa.gain",
+        "class": "Model"
+      },
+      {
+        "field": "bandwidth",
+        "unit": "GHz",
+        "typical": [
+          2,
+          4
+        ]
+      },
+      {
+        "field": "noise temperature",
+        "unit": "K",
+        "binding": "wiring.line[$line].jpa.T_N",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T07#8-amplifier-chain-and-noise-temperature"
+    ],
+    "tooltip": "TWPA: broadband parametric amplifier.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.06,
+      "h_m": 0.012,
+      "d_m": 0.02
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

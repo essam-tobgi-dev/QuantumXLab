@@ -1,0 +1,61 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "helical_resonator",
+    "name": "Helical RF resonator",
+    "category": "ion_device",
+    "parent": "vacuum_chamber",
+    "function": "Step-up resonator that raises the RF drive to the hundreds of volts needed on the trap rails while filtering amplitude noise; its quality factor and the RF amplitude stability determine the radial secular frequency stability, and through the mode frequencies the fidelity of every Mølmer–Sørensen gate.",
+    "physics": {
+      "summary": "RF voltage step-up and filtering for the trap.",
+      "equations": [
+        "paul_pseudopotential"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "resonant frequency",
+        "unit": "MHz",
+        "typical": [
+          20,
+          50
+        ]
+      },
+      {
+        "field": "RF amplitude",
+        "unit": "V",
+        "binding": "instr.rf.V",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T06#1.1-rf-confinement-and-the-pseudopotential"
+    ],
+    "tooltip": "Helical resonator driving the trap RF.",
+    "geometry": {
+      "generator": "Cylinder",
+      "r_m": 0.05,
+      "h_m": 0.2,
+      "caps": true
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

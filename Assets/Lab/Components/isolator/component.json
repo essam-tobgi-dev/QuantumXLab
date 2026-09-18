@@ -1,0 +1,78 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "isolator",
+    "name": "Cryogenic isolator",
+    "category": "wiring",
+    "parent": "stage_mxc",
+    "function": "Ferrite non-reciprocal two-port on the output line at the mixing chamber. It passes the few-photon readout signal toward the amplifier with about 0.5 dB loss but attenuates anything travelling back by 20 dB, so the amplifier's own noise and any reflected pump power do not reach the resonator and dephase the qubit. Two in series give 40 dB of reverse isolation.",
+    "physics": {
+      "summary": "Protects the qubit from amplifier back-action and reflected noise.",
+      "equations": [
+        "friis"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "band",
+        "unit": "GHz",
+        "typical": [
+          4,
+          8
+        ]
+      },
+      {
+        "field": "reverse isolation",
+        "unit": "dB",
+        "typical": [
+          18,
+          22
+        ]
+      },
+      {
+        "field": "insertion loss",
+        "unit": "dB",
+        "typical": [
+          0.3,
+          0.8
+        ]
+      },
+      {
+        "field": "temperature",
+        "unit": "K",
+        "binding": "wiring.line[$line].iso[$k].T",
+        "class": "Numerical"
+      }
+    ],
+    "theory": [
+      "T07#8-amplifier-chain-and-noise-temperature"
+    ],
+    "tooltip": "Isolator: one-way passage for the readout signal.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.03,
+      "h_m": 0.02,
+      "d_m": 0.04,
+      "marking": "arrow"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

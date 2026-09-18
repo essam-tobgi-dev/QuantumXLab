@@ -1,0 +1,81 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "readout_resonator",
+    "name": "Readout resonator (λ/4 CPW)",
+    "category": "resonator",
+    "parent": "substrate",
+    "function": "Quarter-wave coplanar meander capacitively coupled at its open end to one transmon and inductively or capacitively to the feedline. In the dispersive regime its frequency shifts by ±χ with the qubit state; probing it near resonance and integrating the reflected phase is the measurement. Its linewidth κ trades readout speed against Purcell decay.",
+    "physics": {
+      "summary": "State-dependent frequency shift is the readout mechanism.",
+      "equations": [
+        "dispersive_shift",
+        "readout_optimum",
+        "resonator_length",
+        "vna_s21_notch",
+        "q_loaded"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "frequency",
+        "unit": "GHz",
+        "binding": "device.res[$i].f_r",
+        "class": "Model"
+      },
+      {
+        "field": "linewidth κ/2π",
+        "unit": "MHz",
+        "binding": "device.res[$i].kappa",
+        "class": "Model"
+      },
+      {
+        "field": "dispersive shift χ/2π",
+        "unit": "MHz",
+        "binding": "device.res[$i].chi",
+        "class": "Model"
+      },
+      {
+        "field": "photon number",
+        "unit": "",
+        "binding": "device.res[$i].n_photons",
+        "class": "Numerical"
+      },
+      {
+        "field": "S21",
+        "unit": "",
+        "binding": "device.res[$i].S21",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T05#6.3-dispersive-readout"
+    ],
+    "tooltip": "λ/4 readout resonator coupled to one qubit.",
+    "geometry": {
+      "generator": "Meander",
+      "from": "device.res[$i]",
+      "w_um": 10,
+      "s_um": 6
+    },
+    "lod": [
+      {
+        "max_m": 0.02,
+        "detail": "full"
+      },
+      {
+        "max_m": 0.2,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

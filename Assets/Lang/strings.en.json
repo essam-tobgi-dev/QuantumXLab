@@ -1,0 +1,171 @@
+{
+  "qxl": {
+    "kind": "ui.strings",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "app": {
+      "title": "QuantumXLab",
+      "project_untitled": "Untitled project",
+      "physical_lab": "Physical lab",
+      "physical_lab_tooltip": "Not observable on hardware — switch off Physical lab mode to use probes."
+    },
+    "workspaces": {
+      "lab": "Lab",
+      "program": "Program",
+      "analysis": "Analysis"
+    },
+    "panels": {
+      "viewport": "Viewport",
+      "inspector": "Inspector",
+      "component_tree": "Components",
+      "code_editor": "Code Editor",
+      "diagnostics": "Diagnostics",
+      "circuit": "Circuit Diagram",
+      "pulses": "Pulse Schedule",
+      "run_controls": "Run Controls",
+      "results": "Results",
+      "state_views": "State Views",
+      "instruments": "Instruments",
+      "fridge_dashboard": "Fridge Dashboard",
+      "estimates": "Estimates",
+      "theory": "Theory Browser",
+      "examples": "Examples",
+      "project": "Project & Device",
+      "log": "Log",
+      "plots": "Plots",
+      "fits": "Fits",
+      "tomography": "Tomography & Benchmarking",
+      "qec": "Error Correction",
+      "tour": "Guided Tour"
+    },
+    "menu": {
+      "file": "File",
+      "new": "New project",
+      "open": "Open…",
+      "save": "Save",
+      "save_as": "Save as…",
+      "export": "Export",
+      "export_qasm": "Compiled OpenQASM 3…",
+      "export_results": "Results (JSON/CSV)…",
+      "export_screenshot": "Screenshot (PNG)…",
+      "export_report": "Run report (HTML)…",
+      "export_state": "State vector (.npy, Simulator-only)…",
+      "edit": "Edit",
+      "undo": "Undo",
+      "redo": "Redo",
+      "view": "View",
+      "run": "Run",
+      "compile": "Compile",
+      "run_program": "Run",
+      "stop": "Stop",
+      "step_gate": "Step gate",
+      "step_shot": "Step shot",
+      "device": "Device",
+      "help": "Help",
+      "theory": "Theory",
+      "about": "About"
+    },
+    "run": {
+      "device": "Device",
+      "backend": "Backend",
+      "backend_auto": "auto",
+      "shots": "Shots",
+      "seed": "Seed",
+      "snapshot_cadence": "Snapshot every",
+      "status_idle": "Idle",
+      "status_compiling": "Compiling…",
+      "status_running": "Running shot {shot} / {shots}",
+      "status_done": "Done in {ms} ms",
+      "noise_gates_only": "Noise: gates only (unscheduled)",
+      "noise_full": "Noise: gates + idles",
+      "noise_off": "Noise off"
+    },
+    "fidelity_class": {
+      "Exact": "Exact",
+      "Numerical": "Numerical",
+      "Statistical": "Statistical",
+      "Model": "Model",
+      "Illustrative": "Illustrative",
+      "tooltip": {
+        "Exact": "Closed-form or exact linear algebra on the full state; error at machine precision.",
+        "Numerical": "Validated numerical solution of a differential equation with a stated error bound.",
+        "Statistical": "Sampled quantity; the interval shown is the 68.3 % Wilson interval.",
+        "Model": "Phenomenological or calibration-derived; correct in form, parameters from typical published ranges.",
+        "Illustrative": "Visual aid conveying a mechanism qualitatively; not a computed observable."
+      }
+    },
+    "sim_only": {
+      "badge": "Simulator-only",
+      "tooltip": "This quantity cannot be observed on a physical machine. It is computed from the simulator's state."
+    },
+    "estimate_assumptions": {
+      "queue_time_excluded": "Wall time excludes any scheduler or queue wait on a shared machine.",
+      "reset_policy:active": "Qubits are reset by measurement followed by a conditional X (active reset); duration from device.json control.reset.",
+      "reset_policy:passive": "Qubits relax for 5·T1 (or the device repetition delay, whichever is longer) between shots.",
+      "independent_errors": "Gate, idle and readout errors are treated as statistically independent and multiplied.",
+      "average_gate_fidelities": "Each gate error is the average (Clifford-twirled) error rate from randomized benchmarking; coherent errors are not tracked separately.",
+      "no_crosstalk": "Classical drive crosstalk and ZZ during idles are neglected unless present in the calibration file.",
+      "calibration_static": "Calibration values are constant over the run (no drift, no recalibration).",
+      "readout_from_calibration": "Readout duration and assignment fidelity are taken from the device calibration.",
+      "feedforward_latency": "Each classical branch adds the device feedback latency to the critical path.",
+      "idle_thermal_relaxation": "Idle error per interval is the thermal-relaxation infidelity [2(1−e^{−t/T2}) + (1−e^{−t/T1})]/6.",
+      "surface_code_scaling": "Fault-tolerant estimates use p_L ≈ 0.1 (p/0.01)^((d+1)/2) with a rotated surface code and a 1.5× routing factor.",
+      "host_benchmark": "Classical cost uses the per-amplitude gate time measured on this machine at startup."
+    },
+    "estimates": {
+      "wall_time": "Wall time on hardware",
+      "fidelity_fast": "Fidelity (product model)",
+      "fidelity_simulated": "Fidelity (noisy simulation)",
+      "resources": "Resources",
+      "classical_cost": "Classical simulation cost",
+      "qec": "If run fault-tolerantly",
+      "comparison": "Other devices",
+      "assumptions": "Assumptions"
+    },
+    "inspector": {
+      "function": "Function",
+      "physics": "Physics",
+      "spec_sheet": "Specification",
+      "live": "Live values",
+      "theory": "Theory",
+      "children": "Contains",
+      "no_selection": "Select a component in the viewport or the component tree."
+    },
+    "instruments": {
+      "acquire": "Acquire",
+      "live": "Live",
+      "stop": "Stop",
+      "single": "Single",
+      "autoscale": "Autoscale",
+      "export": "Export trace"
+    },
+    "fridge": {
+      "cooldown": "Start cooldown",
+      "warmup": "Warm up",
+      "state": "State",
+      "margin": "Cooling margin",
+      "flow": "3He flow",
+      "still_power": "Still heater",
+      "mxc_power": "MXC heater"
+    },
+    "diagnostics": {
+      "errors": "{n} errors",
+      "warnings": "{n} warnings",
+      "none": "No diagnostics",
+      "goto": "Go to source"
+    },
+    "keys": {
+      "run": "F5",
+      "compile": "F6",
+      "step_gate": "F10",
+      "step_shot": "F11",
+      "workspace_lab": "Ctrl+1",
+      "workspace_program": "Ctrl+2",
+      "workspace_analysis": "Ctrl+3",
+      "physical_lab": "Ctrl+L"
+    }
+  }
+}

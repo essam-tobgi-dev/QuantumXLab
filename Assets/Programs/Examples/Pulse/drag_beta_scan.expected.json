@@ -1,0 +1,1 @@
+{ "statevector": null, "counts": null, "tolerance": "statistical", "unitary_digest": null, "shots": 256, "seed": 1, "note": "oracle: leakage(beta) has a single minimum inside the scan (spec 25 §3 Lindblad)" }

@@ -1,0 +1,182 @@
+{
+ "qxl": {
+  "kind": "device",
+  "schema": 1,
+  "app": "0.1.0",
+  "created": "2026-09-17T00:00:00Z"
+ },
+ "data": {
+  "id": "sc_fixed_5",
+  "display_name": "5-qubit T-shaped fixed-frequency transmon processor",
+  "technology": "transmon_fixed",
+  "qudit_dimension": 3,
+  "qubits": [
+   {
+    "index": 0,
+    "kind": "data",
+    "pos": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "index": 1,
+    "kind": "data",
+    "pos": [
+     1.0,
+     0.0
+    ]
+   },
+   {
+    "index": 2,
+    "kind": "data",
+    "pos": [
+     2.0,
+     0.0
+    ]
+   },
+   {
+    "index": 3,
+    "kind": "data",
+    "pos": [
+     1.0,
+     1.0
+    ]
+   },
+   {
+    "index": 4,
+    "kind": "data",
+    "pos": [
+     1.0,
+     2.0
+    ]
+   }
+  ],
+  "edges": [
+   {
+    "a": 0,
+    "b": 1,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 1,
+    "b": 2,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 1,
+    "b": 3,
+    "kind": "fixed_capacitive",
+    "directed": true
+   },
+   {
+    "a": 3,
+    "b": 4,
+    "kind": "fixed_capacitive",
+    "directed": true
+   }
+  ],
+  "native_gates": {
+   "single": [
+    "x",
+    "sx",
+    "rz",
+    "id"
+   ],
+   "two": [
+    "cx",
+    "ecr"
+   ],
+   "measure": "dispersive",
+   "reset": "measure_conditional_x"
+  },
+  "timing": {
+   "dt_ps": 222,
+   "granularity_samples": 16,
+   "min_pulse_samples": 64,
+   "readout_ns": 700,
+   "readout_ringdown_ns": 160,
+   "repetition_delay_us": 250,
+   "feedforward_ns": 200
+  },
+  "control": {
+   "load_time_ms": 50,
+   "rep_overhead_us": 1.0,
+   "feedback_latency_ns": 200,
+   "reset": {
+    "policy": "active",
+    "active_duration_ns": null,
+    "passive_multiplier": 5
+   },
+   "max_program_duration_ms": 10
+  },
+  "qec": {
+   "cycle_time_us": 1.0
+  },
+  "readout": {
+   "resonator_f_ghz": [
+    6.99862,
+    7.04618,
+    7.09099,
+    7.1334,
+    7.17963
+   ],
+   "feedlines": [
+    {
+     "id": 0,
+     "qubits": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ]
+    }
+   ],
+   "purcell_filter": true,
+   "resonator_spacing_mhz_min": 40
+  },
+  "frequency_plan": {
+   "band_ghz": [
+    4.6,
+    5.4
+   ],
+   "min_neighbour_detuning_mhz": 50
+  },
+  "leakage_channels": true,
+  "crosstalk": {
+   "drive": [
+    [
+     0,
+     1,
+     0.01,
+     0.0
+    ],
+    [
+     1,
+     2,
+     0.01,
+     0.0
+    ],
+    [
+     1,
+     3,
+     0.01,
+     0.0
+    ],
+    [
+     3,
+     4,
+     0.01,
+     0.0
+    ]
+   ]
+  },
+  "generator": {
+   "tool": "gencal.py",
+   "seed": 1
+  }
+ }
+}

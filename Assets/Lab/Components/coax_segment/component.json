@@ -1,0 +1,92 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "coax_segment",
+    "name": "Cryogenic coaxial segment",
+    "category": "wiring",
+    "parent": "wiring",
+    "function": "One stage-to-stage run of semi-rigid coax. Material is the design choice: stainless steel (0.86 mm) between 300 K and 4 K because its low thermal conductivity limits the conducted load; cupronickel below 4 K; and superconducting NbTi on the output line between the mixing chamber and the HEMT, where the signal is a few photons and any resistive loss costs readout fidelity. Its attenuation is lumped at the cold end for the noise budget.",
+    "physics": {
+      "summary": "Conduction heat path between stages; RF loss on the signal.",
+      "equations": [
+        "conduction_load",
+        "attn_noise_cascade"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "outer diameter",
+        "unit": "mm",
+        "typical": [
+          0.86,
+          2.19
+        ]
+      },
+      {
+        "field": "length",
+        "unit": "m",
+        "typical": [
+          0.1,
+          0.3
+        ],
+        "binding": "static.length_m",
+        "class": "Model"
+      },
+      {
+        "field": "attenuation at 5 GHz",
+        "unit": "dB/m",
+        "typical": [
+          0.5,
+          10
+        ]
+      },
+      {
+        "field": "conducted heat",
+        "unit": "W",
+        "binding": "wiring.line[$line].seg[$j].P_cond",
+        "class": "Model"
+      },
+      {
+        "field": "warm-end temperature",
+        "unit": "K",
+        "binding": "wiring.line[$line].seg[$j].T_hot",
+        "class": "Numerical"
+      },
+      {
+        "field": "cold-end temperature",
+        "unit": "K",
+        "binding": "wiring.line[$line].seg[$j].T_cold",
+        "class": "Numerical"
+      }
+    ],
+    "theory": [
+      "T08#4-heat-conduction-along-wiring",
+      "T07#9-thermal-photons-and-the-attenuation-chain"
+    ],
+    "tooltip": "Coax segment between two stages; conducts heat, attenuates signal.",
+    "geometry": {
+      "generator": "Tube",
+      "r_m": 0.00043,
+      "path": "catmull_rom_between_stages"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

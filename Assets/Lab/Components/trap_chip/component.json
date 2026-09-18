@@ -1,0 +1,68 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "trap_chip",
+    "name": "Surface-electrode Paul trap",
+    "category": "ion_device",
+    "parent": "vacuum_chamber",
+    "function": "Microfabricated electrode chip whose RF rails create the pseudopotential and whose DC segments shape the axial well that holds the chain. Ion positions (glowing spheres) and their Bloch vectors are bound here; the radial and axial secular frequencies come from the RF amplitude and DC voltages.",
+    "physics": {
+      "summary": "RF pseudopotential and DC confinement of the chain.",
+      "equations": [
+        "paul_pseudopotential",
+        "chain_equilibrium",
+        "normal_modes"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "RF frequency",
+        "unit": "MHz",
+        "typical": [
+          20,
+          50
+        ]
+      },
+      {
+        "field": "axial frequency",
+        "unit": "MHz",
+        "binding": "device.trap.omega_z",
+        "class": "Numerical"
+      },
+      {
+        "field": "ion Bloch vector",
+        "unit": "",
+        "binding": "device.ion[$i].bloch",
+        "class": "Exact"
+      }
+    ],
+    "theory": [
+      "T06#1.1-rf-confinement-and-the-pseudopotential",
+      "T06#1.3-normal-modes"
+    ],
+    "tooltip": "Paul trap chip with DC and RF electrodes.",
+    "geometry": {
+      "generator": "TrapChip",
+      "electrodes": 40
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

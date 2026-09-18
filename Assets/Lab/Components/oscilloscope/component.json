@@ -1,0 +1,85 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "oscilloscope",
+    "name": "Oscilloscope, 4 GHz",
+    "category": "instrument",
+    "parent": "rack_B",
+    "function": "Time-domain view of AWG envelopes, trigger timing and the demodulated readout signal. Used to align channel delays (cable lengths differ by tens of nanoseconds), to verify pulse shapes and rise times, and to inspect the raw readout transient before integration.",
+    "physics": {
+      "summary": "Time-domain inspection of pulses and readout transients.",
+      "equations": [
+        "gaussian_pulse",
+        "heterodyne_demod"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "bandwidth",
+        "unit": "GHz",
+        "typical": [
+          1,
+          4
+        ]
+      },
+      {
+        "field": "sample rate",
+        "unit": "GS/s",
+        "typical": [
+          5,
+          20
+        ]
+      },
+      {
+        "field": "channels",
+        "unit": "",
+        "typical": [
+          2,
+          4
+        ]
+      },
+      {
+        "field": "channel trace",
+        "unit": "V",
+        "binding": "instr.scope.ch[$k]",
+        "class": "Exact"
+      }
+    ],
+    "theory": [
+      "T07#7-sampling-quantization-timing"
+    ],
+    "tooltip": "Oscilloscope for pulse and readout waveforms.",
+    "geometry": {
+      "generator": "RackUnit",
+      "u": 4,
+      "front": "oscilloscope"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ],
+    "model_name": "Oscilloscope, 4 GHz",
+    "instrument": {
+      "class": "oscilloscope",
+      "settings_schema": "instr/oscilloscope.schema.json",
+      "channels": [
+        "ch[k]"
+      ]
+    }
+  }
+}

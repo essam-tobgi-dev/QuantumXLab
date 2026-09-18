@@ -1,0 +1,69 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "ir_filter",
+    "name": "Infrared (Eccosorb) filter",
+    "category": "wiring",
+    "parent": "stage_mxc",
+    "function": "Short coax section filled with a lossy magnetically loaded epoxy that absorbs radiation above roughly 10 GHz while passing the 4–8 GHz band with 1–3 dB loss. Stray infrared photons propagating down the line break Cooper pairs in the aluminium films; the resulting quasiparticles limit T1 and shift resonator frequencies. Placed at the mixing chamber as the last element before the chip.",
+    "physics": {
+      "summary": "Blocks pair-breaking infrared photons from reaching the chip.",
+      "equations": [
+        "attn_dissipation"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "cutoff",
+        "unit": "GHz",
+        "typical": [
+          8,
+          15
+        ]
+      },
+      {
+        "field": "insertion loss in band",
+        "unit": "dB",
+        "typical": [
+          1,
+          3
+        ]
+      },
+      {
+        "field": "dissipated power",
+        "unit": "W",
+        "binding": "wiring.line[$line].irf.P_diss",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T07#9-thermal-photons-and-the-attenuation-chain",
+      "T05#10-decoherence-mechanisms"
+    ],
+    "tooltip": "Eccosorb filter against infrared photons.",
+    "geometry": {
+      "generator": "CylinderSma",
+      "length_mm": 40,
+      "diameter_mm": 9
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

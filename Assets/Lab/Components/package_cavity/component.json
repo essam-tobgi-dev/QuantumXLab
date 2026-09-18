@@ -1,0 +1,52 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "package_cavity",
+    "name": "Package cavity mode",
+    "category": "chip",
+    "parent": "chip_package",
+    "function": "The electromagnetic mode of the enclosure around the chip. It is not a fabricated part but the volume between lid and PCB; its frequency must sit above the qubit and readout bands, and the inspector shows where it lies relative to them because a low cavity mode couples all qubits together and adds Purcell loss.",
+    "physics": {
+      "summary": "Enclosure mode that must lie above the operating band.",
+      "equations": [
+        "purcell_decay"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "frequency",
+        "unit": "GHz",
+        "binding": "device.package.f_cavity",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T05#6.4-purcell-decay-and-the-purcell-filter"
+    ],
+    "tooltip": "Package cavity: enclosure mode above the band.",
+    "geometry": {
+      "generator": "Box",
+      "from": "chip_package.cavity",
+      "wireframe": true
+    },
+    "lod": [
+      {
+        "max_m": 0.02,
+        "detail": "full"
+      },
+      {
+        "max_m": 0.2,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

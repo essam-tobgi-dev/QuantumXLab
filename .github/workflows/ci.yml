@@ -1,0 +1,129 @@
+# Spec 03 §5 — build, lint and test matrix. Every job configures, builds, runs the lints and the
+# full ctest suite, then the offscreen `--selftest` and uploads its screenshots.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The dependency cache is a directory in the source tree (see CMakeLists.txt FETCHCONTENT_BASE_DIR).
+  DEPS_DIR: .deps
+
+jobs:
+  build:
+    name: ${{ matrix.name }} · ${{ matrix.preset }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: macOS arm64 (AppleClang)
+            runner: macos-15
+            preset: debug
+          - name: macOS arm64 (AppleClang)
+            runner: macos-15
+            preset: release
+          - name: macOS arm64 (AppleClang)
+            runner: macos-15
+            preset: asan
+          - name: Ubuntu (GCC 13)
+            runner: ubuntu-24.04
+            preset: debug
+            cc: gcc-13
+            cxx: g++-13
+          - name: Ubuntu (GCC 13)
+            runner: ubuntu-24.04
+            preset: release
+            cc: gcc-13
+            cxx: g++-13
+          - name: Ubuntu (Clang 18)
+            runner: ubuntu-24.04
+            preset: debug
+            cc: clang-18
+            cxx: clang++-18
+          - name: Windows (MSVC)
+            runner: windows-2022
+            preset: debug
+          - name: Windows (MSVC)
+            runner: windows-2022
+            preset: release
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@v5
+
+      # A software GL implementation so the offscreen renderer and `--selftest` can run headless.
+      - name: Install Mesa and GL headers (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-dev libglu1-mesa-dev mesa-utils \
+                                  libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev \
+                                  xvfb libosmesa6
+      - name: Install Mesa (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          curl -L -o mesa.7z https://github.com/pal1000/mesa-dist-win/releases/download/24.2.4/mesa3d-24.2.4-release-msvc.7z
+          7z x mesa.7z -omesa
+          echo "GALLIUM_DRIVER=llvmpipe" >> $env:GITHUB_ENV
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DEPS_DIR }}
+          key: deps-${{ runner.os }}-${{ hashFiles('CMakeLists.txt') }}
+
+      - name: Configure
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+        run: cmake --preset ${{ matrix.preset }} -DQXL_WERROR=ON
+
+      - name: Build
+        run: cmake --build --preset ${{ matrix.preset }} -j
+
+      - name: clang-format check
+        if: runner.os == 'macOS' && matrix.preset == 'debug'
+        run: |
+          files=$(git ls-files 'src/*.cpp' 'src/*.hpp' 'tests/*.cpp' 'tests/*.hpp')
+          clang-format --dry-run --Werror $files
+
+      - name: Include lint (layering rules G1/P1 of spec 02 §1)
+        if: runner.os == 'macOS' && matrix.preset == 'debug'
+        run: python3 tools/check_includes.py
+
+      - name: Asset lint
+        if: runner.os == 'macOS' && matrix.preset == 'debug'
+        run: |
+          python3 tools/check_xrefs.py
+          python3 tools/gen_assets.py
+          git diff --exit-code Assets  # generated assets must be committed in sync
+
+      - name: Test
+        run: ctest --preset ${{ matrix.preset }} --output-on-failure -j 4
+        env:
+          # Linux runners have no display; the GL tests create a hidden window under llvmpipe.
+          LIBGL_ALWAYS_SOFTWARE: "1"
+
+      - name: Self-test screenshots
+        if: matrix.preset != 'asan'
+        run: |
+          cmake --build --preset ${{ matrix.preset }} --target quantumxlab
+          ./build/${{ matrix.preset }}/bin/quantumxlab --selftest selftest-out
+        shell: bash
+        continue-on-error: true
+
+      - name: Upload screenshots
+        if: matrix.preset != 'asan'
+        uses: actions/upload-artifact@v4
+        with:
+          name: selftest-${{ runner.os }}-${{ matrix.preset }}
+          path: selftest-out/
+          if-no-files-found: ignore

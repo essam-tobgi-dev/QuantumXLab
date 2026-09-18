@@ -1,0 +1,65 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "lpf",
+    "name": "Low-pass filter",
+    "category": "wiring",
+    "parent": "wiring",
+    "function": "Reflective LC or RC low-pass filter that bounds the bandwidth of a line. On flux lines the cutoff (tens of MHz to 1 GHz) sets how fast a flux pulse can be and blocks high-frequency noise that would drive the qubit; on RF lines a 12 GHz cutoff blocks harmonics of the mixer and generator that would otherwise land on the |1⟩→|2⟩ or resonator transitions.",
+    "physics": {
+      "summary": "Limits line bandwidth; defines the flux-pulse bandwidth constraint.",
+      "equations": [
+        "lpf_cutoff"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "cutoff",
+        "unit": "GHz",
+        "typical": [
+          0.001,
+          12
+        ],
+        "binding": "static.f_c",
+        "class": "Model"
+      },
+      {
+        "field": "stopband rejection",
+        "unit": "dB",
+        "typical": [
+          40,
+          80
+        ]
+      }
+    ],
+    "theory": [
+      "T07#11-flux-bias-lines-filters-and-crosstalk"
+    ],
+    "tooltip": "Low-pass filter bounding line bandwidth.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.02,
+      "h_m": 0.01,
+      "d_m": 0.03
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

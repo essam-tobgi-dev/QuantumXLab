@@ -1,0 +1,175 @@
+{
+  "qxl": {
+    "kind": "qec.code",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "shor_9",
+    "n": 9,
+    "k": 1,
+    "d": 3,
+    "family": "Shor",
+    "stabilizers": [
+      "ZZIIIIIII",
+      "IZZIIIIII",
+      "IIIZZIIII",
+      "IIIIZZIII",
+      "IIIIIIZZI",
+      "IIIIIIIZZ",
+      "XXXXXXIII",
+      "IIIXXXXXX"
+    ],
+    "logical_x": [
+      "ZZZZZZZZZ"
+    ],
+    "logical_z": [
+      "XXXXXXXXX"
+    ],
+    "layout": {
+      "data": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "ancilla": [
+        {
+          "type": "Z",
+          "coord": [
+            0.5,
+            0.5
+          ],
+          "order": [
+            0,
+            1
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            1.5,
+            0.5
+          ],
+          "order": [
+            1,
+            2
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            0.5,
+            1.5
+          ],
+          "order": [
+            3,
+            4
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            1.5,
+            1.5
+          ],
+          "order": [
+            4,
+            5
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            0.5,
+            2.5
+          ],
+          "order": [
+            6,
+            7
+          ]
+        },
+        {
+          "type": "Z",
+          "coord": [
+            1.5,
+            2.5
+          ],
+          "order": [
+            7,
+            8
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            3.5,
+            0.5
+          ],
+          "order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "type": "X",
+          "coord": [
+            3.5,
+            1.5
+          ],
+          "order": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ]
+        }
+      ]
+    },
+    "decoder": "lookup",
+    "theory": [
+      "T09#4.3-shor-s-nine-qubit-code-9-1-3"
+    ],
+    "notes": "Logical X and Z are exchanged relative to the usual Shor labelling so that X̄ = Z⊗9 (phase-flip outer code).",
+    "convention": "Pauli strings are written left-to-right from qubit 0 (position i is qubit i)."
+  }
+}

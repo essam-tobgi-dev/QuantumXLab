@@ -1,0 +1,83 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "iq_mixer_board",
+    "name": "IQ mixer / up-converter board",
+    "category": "instrument",
+    "parent": "rack_A",
+    "function": "Single-sideband up-converter that multiplies the AWG I and Q envelopes with the local oscillator to place a pulse at f_LO + f_IF. Imperfections are the calibrated parameters: LO leakage (a carrier at the qubit's neighbourhood even with no pulse) and image sideband from amplitude and phase imbalance. Both are nulled by DC offsets and I/Q skew corrections in the mixer-calibration tool.",
+    "physics": {
+      "summary": "Up-conversion; LO leakage and image are calibrated impairments.",
+      "equations": [
+        "iq_modulation"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "RF band",
+        "unit": "GHz",
+        "typical": [
+          2,
+          12
+        ]
+      },
+      {
+        "field": "LO leakage",
+        "unit": "dBc",
+        "typical": [
+          -60,
+          -30
+        ],
+        "binding": "instr.mixer[$i].lo_leak",
+        "class": "Model"
+      },
+      {
+        "field": "image rejection",
+        "unit": "dBc",
+        "typical": [
+          -60,
+          -30
+        ],
+        "binding": "instr.mixer[$i].image_rej",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T07#5-iq-modulation-up-conversion-and-frames"
+    ],
+    "tooltip": "IQ mixer: up-converts envelopes; leakage and image calibrated.",
+    "geometry": {
+      "generator": "RackUnit",
+      "u": 1,
+      "front": "iq_mixer"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ],
+    "model_name": "IQ mixer / up-converter board",
+    "instrument": {
+      "class": "iq_mixer",
+      "settings_schema": "instr/iq_mixer.schema.json",
+      "channels": [
+        "lo_leak",
+        "image_rej"
+      ]
+    }
+  }
+}

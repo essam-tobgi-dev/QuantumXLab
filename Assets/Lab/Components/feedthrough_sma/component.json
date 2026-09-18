@@ -1,0 +1,66 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "feedthrough_sma",
+    "name": "SMA vacuum feedthrough",
+    "category": "wiring",
+    "parent": "top_plate_300K",
+    "function": "Hermetic SMA bulkhead in the top plate carrying one microwave line from the room-temperature rack into the vacuum. Its insertion loss is negligible compared with the cryogenic attenuators, but a leaking feedthrough is the most common cause of a slowly rising OVC pressure. The input power referenced here is the power leaving the rack cable.",
+    "physics": {
+      "summary": "Vacuum-tight RF connector; entry point of each line.",
+      "equations": [
+        "dbm_to_watts"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "frequency range",
+        "unit": "GHz",
+        "typical": [
+          0,
+          18
+        ]
+      },
+      {
+        "field": "insertion loss",
+        "unit": "dB",
+        "typical": [
+          0.1,
+          0.3
+        ]
+      },
+      {
+        "field": "input power",
+        "unit": "dBm",
+        "binding": "wiring.line[$line].rt.P_in",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T07#8-amplifier-chain-and-noise-temperature"
+    ],
+    "tooltip": "Hermetic SMA feedthrough for one microwave line.",
+    "geometry": {
+      "generator": "SmaConnector"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

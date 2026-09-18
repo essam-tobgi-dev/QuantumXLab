@@ -1,0 +1,68 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "flow_meter",
+    "name": "3He flow meter",
+    "category": "sensor",
+    "parent": "ghs_cabinet",
+    "function": "Thermal mass-flow meter in the circulation loop reporting the 3He molar flow. It is the ṅ₃ in the cooling-power law, so the fridge dashboard shows it next to the mixing-chamber temperature and the cooling-power margin; a falling flow at constant still power is the signature of a blocked impedance.",
+    "physics": {
+      "summary": "Measures the circulation rate ṅ₃.",
+      "equations": [
+        "cooling_power_mxc"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "range",
+        "unit": "mmol/s",
+        "typical": [
+          0,
+          5
+        ]
+      },
+      {
+        "field": "flow",
+        "unit": "mmol/s",
+        "binding": "cryo.flow.n3",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#1.2-cooling-power"
+    ],
+    "tooltip": "Flow meter for the 3He circulation.",
+    "geometry": {
+      "generator": "Tube",
+      "r_m": 0.01,
+      "path": "straight_0.1m"
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ],
+    "model_name": "Thermal mass-flow meter",
+    "instrument": {
+      "class": "flow_meter",
+      "settings_schema": "instr/flow.schema.json",
+      "channels": [
+        "n3"
+      ]
+    }
+  }
+}

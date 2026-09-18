@@ -1,0 +1,55 @@
+{
+  "qxl": {
+    "kind": "analysis.recipe",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "resonator_spectroscopy",
+    "title": "Resonator spectroscopy (VNA)",
+    "theory": "T05#6.3-dispersive-readout",
+    "program": "Assets/Programs/Calibration/resonator_spectroscopy.qasm",
+    "sweep": {
+      "input": "f_ro",
+      "unit": "GHz",
+      "values": {
+        "linear": [
+          6.9,
+          7.3,
+          1601
+        ]
+      }
+    },
+    "shots": 1,
+    "extract": {
+      "channel": "instr.vna.trace",
+      "y": "s21",
+      "sigma": "trace_noise"
+    },
+    "fit": {
+      "model": "resonator_notch",
+      "report": [
+        "f_r",
+        "Q_i",
+        "Q_c",
+        "Q_l"
+      ]
+    },
+    "results": [
+      {
+        "label": "f_r",
+        "measured": "fit.f_r",
+        "model": "device.calibration.res[q].f_r",
+        "tolerance": 1e-05
+      },
+      {
+        "label": "κ/2π",
+        "measured": "2*pi*fit.f_r/fit.Q_l",
+        "model": "device.calibration.res[q].kappa",
+        "tolerance": 0.2
+      }
+    ],
+    "instrument": "vna"
+  }
+}

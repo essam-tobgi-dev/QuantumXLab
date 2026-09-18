@@ -1,0 +1,96 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "stage_4K",
+    "name": "4 K stage (PT2)",
+    "category": "stage",
+    "parent": "fridge_interior",
+    "function": "Gold-plated copper plate that defines the 4 k stage isotherm of the insert. Every wire passing through is thermally anchored here so that the heat it conducts from the warmer stage is intercepted at this temperature rather than reaching the colder stages. It is cooled by the second pulse-tube stage (1.5 W at 4.2 K), hosts the HEMT amplifiers and the first 20 dB of drive attenuation, and condenses the incoming helium mixture.",
+    "physics": {
+      "summary": "Isothermal node of the thermal network; intercepts conduction and radiation loads.",
+      "equations": [
+        "conduction_load",
+        "cooldown_lumped"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "radius",
+        "unit": "m",
+        "typical": [
+          0.21000000000000002,
+          0.25
+        ]
+      },
+      {
+        "field": "nominal temperature",
+        "unit": "K",
+        "typical": [
+          2.8000000000000003,
+          4.2
+        ]
+      },
+      {
+        "field": "thickness",
+        "unit": "mm",
+        "typical": [
+          9.600000000000001,
+          14.399999999999999
+        ]
+      },
+      {
+        "field": "temperature",
+        "unit": "K",
+        "binding": "cryo.stage.s4.T",
+        "class": "Numerical"
+      },
+      {
+        "field": "heat load",
+        "unit": "W",
+        "binding": "cryo.stage.s4.P_load",
+        "class": "Model"
+      },
+      {
+        "field": "cooling power",
+        "unit": "W",
+        "binding": "cryo.stage.s4.P_cool",
+        "class": "Model"
+      },
+      {
+        "field": "HEMT dissipation",
+        "unit": "W",
+        "binding": "wiring.hemt.P_total",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#3-stage-temperatures"
+    ],
+    "tooltip": "4 K stage (PT2): isothermal stage plate.",
+    "geometry": {
+      "generator": "Plate",
+      "r_m": 0.23,
+      "t_m": 0.012,
+      "holes": "bolt_circle"
+    },
+    "lod": [
+      {
+        "max_m": 4.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 12.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

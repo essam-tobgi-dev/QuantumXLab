@@ -1,0 +1,61 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "mxc_heater",
+    "name": "Mixing-chamber heater",
+    "category": "heater",
+    "parent": "stage_mxc",
+    "function": "Resistor on the mixing-chamber plate used to regulate the base temperature above its natural minimum, to measure the cooling-power curve (applied power versus resulting temperature), and to warm the sample stage deliberately, for example to measure the temperature dependence of qubit coherence or resonator loss.",
+    "physics": {
+      "summary": "Applies a known heat load for temperature regulation and cooling-power measurements.",
+      "equations": [
+        "cooling_power_mxc"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "resistance",
+        "unit": "Ω",
+        "typical": [
+          100,
+          150
+        ]
+      },
+      {
+        "field": "power",
+        "unit": "µW",
+        "binding": "cryo.stage.mxc.P_heater",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#6-worked-wiring-budget-27-qubit-fixed-frequency-transmon-device"
+    ],
+    "tooltip": "Mixing-chamber heater for regulation and cooling-power curves.",
+    "geometry": {
+      "generator": "Box",
+      "w_m": 0.01,
+      "h_m": 0.005,
+      "d_m": 0.01
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

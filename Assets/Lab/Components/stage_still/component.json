@@ -1,0 +1,102 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "stage_still",
+    "name": "Still stage",
+    "category": "stage",
+    "parent": "fridge_interior",
+    "function": "Gold-plated copper plate that defines the still stage isotherm of the insert. Every wire passing through is thermally anchored here so that the heat it conducts from the warmer stage is intercepted at this temperature rather than reaching the colder stages. The still evaporates 3He from the dilute phase at 0.7–0.9 K; the still heater sets the circulation rate and therefore the mixing-chamber cooling power.",
+    "physics": {
+      "summary": "Isothermal node of the thermal network; intercepts conduction and radiation loads.",
+      "equations": [
+        "conduction_load",
+        "cooldown_lumped"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "radius",
+        "unit": "m",
+        "typical": [
+          0.19,
+          0.22999999999999998
+        ]
+      },
+      {
+        "field": "nominal temperature",
+        "unit": "K",
+        "typical": [
+          0.68,
+          1.02
+        ]
+      },
+      {
+        "field": "thickness",
+        "unit": "mm",
+        "typical": [
+          8.0,
+          12.0
+        ]
+      },
+      {
+        "field": "temperature",
+        "unit": "K",
+        "binding": "cryo.stage.still.T",
+        "class": "Numerical"
+      },
+      {
+        "field": "heat load",
+        "unit": "W",
+        "binding": "cryo.stage.still.P_load",
+        "class": "Model"
+      },
+      {
+        "field": "cooling power",
+        "unit": "W",
+        "binding": "cryo.stage.still.P_cool",
+        "class": "Model"
+      },
+      {
+        "field": "still heater power",
+        "unit": "mW",
+        "binding": "cryo.stage.still.P_heater",
+        "class": "Model"
+      },
+      {
+        "field": "3He flow",
+        "unit": "mmol/s",
+        "binding": "cryo.flow.n3",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#1.3-the-circulation-loop"
+    ],
+    "tooltip": "Still stage: isothermal stage plate.",
+    "geometry": {
+      "generator": "Plate",
+      "r_m": 0.21,
+      "t_m": 0.01,
+      "holes": "bolt_circle"
+    },
+    "lod": [
+      {
+        "max_m": 4.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 12.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

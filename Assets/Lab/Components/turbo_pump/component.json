@@ -1,0 +1,70 @@
+{
+  "qxl": {
+    "kind": "lab.component",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "turbo_pump",
+    "name": "Turbomolecular pump",
+    "category": "ghs",
+    "parent": "ghs_cabinet",
+    "function": "Backed by the scroll pump, it evacuates the outer vacuum can to below 1e-5 mbar before cooldown. Once cold, cryopumping on the 4 K surfaces maintains the vacuum and the turbo is valved off; its speed and the OVC pressure are the two numbers watched during the first hours of a cooldown.",
+    "physics": {
+      "summary": "Evacuates the insulating vacuum.",
+      "equations": [
+        "turbo_pressure"
+      ]
+    },
+    "spec_sheet": [
+      {
+        "field": "pumping speed",
+        "unit": "L/s",
+        "typical": [
+          60,
+          300
+        ]
+      },
+      {
+        "field": "rotor speed",
+        "unit": "rpm",
+        "binding": "cryo.pump.turbo.rpm",
+        "class": "Model"
+      },
+      {
+        "field": "OVC pressure",
+        "unit": "mbar",
+        "binding": "cryo.ovc.pressure",
+        "class": "Model"
+      }
+    ],
+    "theory": [
+      "T08#5-radiation-and-other-loads"
+    ],
+    "tooltip": "Turbo pump for the outer vacuum can.",
+    "geometry": {
+      "generator": "Cylinder",
+      "r_m": 0.06,
+      "h_m": 0.15,
+      "caps": true,
+      "attachments": [
+        "flange"
+      ]
+    },
+    "lod": [
+      {
+        "max_m": 2.0,
+        "detail": "full"
+      },
+      {
+        "max_m": 8.0,
+        "detail": "simple"
+      },
+      {
+        "max_m": 1000000000.0,
+        "detail": "hidden"
+      }
+    ]
+  }
+}

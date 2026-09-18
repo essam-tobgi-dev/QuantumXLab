@@ -1,0 +1,47 @@
+{
+  "qxl": {
+    "kind": "analysis.recipe",
+    "schema": 1,
+    "app": "0.1.0",
+    "created": "2026-09-18T09:14:48Z"
+  },
+  "data": {
+    "id": "t1",
+    "title": "T1 relaxation",
+    "theory": "T04#3.1-zero-temperature",
+    "program": "Assets/Programs/Calibration/t1.qasm",
+    "sweep": {
+      "input": "t_delay",
+      "unit": "us",
+      "values": {
+        "log": [
+          0.1,
+          500,
+          41
+        ]
+      }
+    },
+    "shots": 1000,
+    "extract": {
+      "channel": "t1.p1",
+      "y": "counts['1'] / shots",
+      "sigma": "binomial"
+    },
+    "fit": {
+      "model": "exp_decay",
+      "report": [
+        "T",
+        "A",
+        "c"
+      ]
+    },
+    "results": [
+      {
+        "label": "T1",
+        "measured": "fit.T",
+        "model": "device.calibration.qubit[q].T1",
+        "tolerance": 0.15
+      }
+    ]
+  }
+}
