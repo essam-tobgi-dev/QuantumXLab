@@ -1270,7 +1270,7 @@ def theme():
             "radius_px": {"sm": 3, "md": 5, "lg": 8}, "space_px": [4, 8, 12, 16, 24, 32],
             "typography": {"ui": {"font": "Inter", "files": ["Inter-Regular.ttf", "Inter-SemiBold.ttf"], "body_px": 13, "secondary_px": 12, "panel_title_px": 15, "workspace_title_px": 20},
                            "code": {"font": "JetBrains Mono", "files": ["JetBrainsMono-Regular.ttf"], "editor_px": 13, "log_px": 12, "readout_px": 16},
-                           "math": {"font": "Inter", "note": "STIX Two Math not vendored (download unavailable at build time); fallback renderer uses Inter — logged in SPEC_DEVIATIONS.md"},
+                           "math": {"font": "Latin Modern Math", "file": "LatinModernMath-Regular.otf", "licence": "GUST Font License (Assets/Fonts/GUST-FONT-LICENSE-LatinModernMath.txt)", "note": "the LaTeX typeface; italic and bold letters are the Mathematical Alphanumeric code points of the same face (spec 20 §1)"},
                            "icons": {"set": "Lucide", "sizes_px": [16, 20]}, "oversample": [3, 1], "hinting": False},
             "fidelity_badges": {"Exact": "class.exact", "Numerical": "class.numerical", "Statistical": "class.statistical", "Model": "class.model", "Illustrative": "class.illustrative"}}
     write_json("Lang/theme.json", "ui.theme", data)

@@ -21,6 +21,7 @@ enum class FontRole : std::uint8_t {
     Code,        // JetBrains Mono 13 (editor)
     CodeSmall,   // JetBrains Mono 12 (log)
     Readout,     // JetBrains Mono 16, tabular figures (instrument screens)
+    Math,        // Latin Modern Math 20 — the LaTeX face: equations only (spec 20 §1)
     Count
 };
 inline constexpr std::size_t kFontRoleCount = static_cast<std::size_t>(FontRole::Count);

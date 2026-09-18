@@ -53,7 +53,8 @@ add_library(imgui_lib STATIC
   ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp)
 target_include_directories(imgui_lib PUBLIC ${imgui_SOURCE_DIR} ${imgui_SOURCE_DIR}/backends ${imgui_SOURCE_DIR}/misc/freetype)
 target_link_libraries(imgui_lib PUBLIC glfw freetype)
-target_compile_definitions(imgui_lib PUBLIC IMGUI_DEFINE_MATH_OPERATORS GL_SILENCE_DEPRECATION IMGUI_ENABLE_FREETYPE)
+target_compile_definitions(imgui_lib PUBLIC IMGUI_DEFINE_MATH_OPERATORS GL_SILENCE_DEPRECATION IMGUI_ENABLE_FREETYPE
+  IMGUI_USE_WCHAR32) # the mathematical alphanumerics (U+1D400–1D7FF) of the LaTeX face, spec 20 §1
 
 add_library(implot_lib STATIC ${implot_SOURCE_DIR}/implot.cpp ${implot_SOURCE_DIR}/implot_items.cpp)
 target_include_directories(implot_lib PUBLIC ${implot_SOURCE_DIR})

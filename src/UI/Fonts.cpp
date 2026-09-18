@@ -27,11 +27,23 @@ constexpr std::array<RoleSpec, kFontRoleCount> kRoles{{
     {FontRole::Code, "code", "JetBrainsMono-Regular.ttf", &Metrics::editorPx},
     {FontRole::CodeSmall, "code_small", "JetBrainsMono-Regular.ttf", &Metrics::logPx},
     {FontRole::Readout, "readout", "JetBrainsMono-Regular.ttf", &Metrics::readoutPx},
+    // Rasterised at the workspace-title size and scaled by the layout engine, so the big
+    // operators stay crisp when they are drawn 1.5–2× the text size.
+    {FontRole::Math, "math", "LatinModernMath-Regular.otf", &Metrics::workspaceTitlePx},
 }};
 
 // Latin-1 plus the punctuation, arrows, Greek and mathematical marks the panels and the fallback
 // math renderer draw (kets, ± ≈ ≥ · › — ⟨ ⟩ ħ ω ρ χ σ, the box-drawing used by the circuit ASCII
 // export). Ranges are pairs, terminated by 0 (ImGui requires the array to outlive the atlas build).
+// The LaTeX face carries the whole mathematical repertoire: operators, relations, arrows, big
+// operators, delimiters, accents, and the italic/bold alphabets above U+FFFF (IMGUI_USE_WCHAR32).
+constexpr std::array<ImWchar, 21> kMathGlyphRanges{
+    0x0020, 0x00FF,   // Latin + Latin-1 (upright letters, digits, punctuation, ×, ±, µ)
+    0x02B0, 0x036F,   // modifier letters and combining marks (˙ ¨ ¯ ˆ ˜ and the accents)
+    0x0370, 0x03FF,   // Greek (upright)
+    0x2000, 0x2BFF,   // punctuation, super/subscripts, letterlike, arrows, operators, technical, shapes
+    0x1D400, 0x1D7FF, // mathematical alphanumerics: bold, italic, script, fraktur, double-struck, digits
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 constexpr std::array<ImWchar, 29> kGlyphRanges{
     0x0020, 0x00FF, // Latin + Latin-1 supplement
     0x0300, 0x036F, // combining marks (Q̇, n̄, X̄ in narration; zero-advance, drawn over the base)
@@ -95,7 +107,7 @@ Result<FontSet> FontSet::build(ImFontAtlas* atlas, const Theme& theme, float dpi
         cfg.OversampleV = 1;
         cfg.PixelSnapH = false;
         cfg.FontBuilderFlags = ImGuiFreeTypeBuilderFlags_NoHinting;
-        cfg.GlyphRanges = kGlyphRanges.data();
+        cfg.GlyphRanges = s.role == FontRole::Math ? kMathGlyphRanges.data() : kGlyphRanges.data();
         std::snprintf(cfg.Name, sizeof(cfg.Name), "%.*s", static_cast<int>(s.name.size()), s.name.data());
         const float px = std::round(m.*(s.size));
         ImFont* font = atlas->AddFontFromFileTTF(fontFile(dir, s.file).string().c_str(), px, &cfg);

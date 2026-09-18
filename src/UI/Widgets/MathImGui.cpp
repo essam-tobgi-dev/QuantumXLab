@@ -33,10 +33,50 @@ float faceScale(const ImFont* font, double sizePx) {
 
 } // namespace
 
-math::GlyphMetrics ImGuiMathFont::metrics(std::string_view utf8Glyph, double sizePx, math::GlyphStyle style) const {
+char32_t ImGuiMathFont::variant(char32_t cp, math::GlyphStyle style) {
+    using math::GlyphStyle;
+    if (style == GlyphStyle::Italic) {
+        if (cp == U'h') return 0x210E;                                   // PLANCK CONSTANT is the italic h
+        if (cp >= U'A' && cp <= U'Z') return 0x1D434 + (cp - U'A');
+        if (cp >= U'a' && cp <= U'z') return 0x1D44E + (cp - U'a');
+        if (cp >= 0x391 && cp <= 0x3A9) return 0x1D6E2 + (cp - 0x391);   // Α…Ω
+        if (cp >= 0x3B1 && cp <= 0x3C9) return 0x1D6FC + (cp - 0x3B1);   // α…ω (ς at 1D70D)
+        if (cp == 0x3D5) return 0x1D719;                                 // ϕ
+        if (cp == 0x3F5) return 0x1D716;                                 // ϵ
+        if (cp == 0x2202) return 0x1D715;                                // ∂
+        return cp;
+    }
+    if (style == GlyphStyle::Bold) {
+        if (cp >= U'A' && cp <= U'Z') return 0x1D400 + (cp - U'A');
+        if (cp >= U'a' && cp <= U'z') return 0x1D41A + (cp - U'a');
+        if (cp >= U'0' && cp <= U'9') return 0x1D7CE + (cp - U'0');
+        if (cp >= 0x391 && cp <= 0x3A9) return 0x1D6A8 + (cp - 0x391);
+        if (cp >= 0x3B1 && cp <= 0x3C9) return 0x1D6C2 + (cp - 0x3B1);
+        return cp;
+    }
+    return cp;
+}
+
+std::string ImGuiMathFont::styled(std::string_view utf8Glyph, math::GlyphStyle style) const {
+    if (math_ == nullptr || style == math::GlyphStyle::Upright) return std::string(utf8Glyph);
+    const Decoded d = decodeUtf8(utf8Glyph);
+    if (d.cp == 0 || d.bytes != utf8Glyph.size()) return std::string(utf8Glyph);   // a run: upright text
+    const char32_t v = variant(d.cp, style);
+    if (v == d.cp || math_->FindGlyphNoFallback(static_cast<ImWchar>(v)) == nullptr) return std::string(utf8Glyph);
+    std::string out;
+    if (v < 0x80) out += static_cast<char>(v);
+    else if (v < 0x800) { out += static_cast<char>(0xC0 | (v >> 6)); out += static_cast<char>(0x80 | (v & 0x3F)); }
+    else if (v < 0x10000) { out += static_cast<char>(0xE0 | (v >> 12)); out += static_cast<char>(0x80 | ((v >> 6) & 0x3F)); out += static_cast<char>(0x80 | (v & 0x3F)); }
+    else { out += static_cast<char>(0xF0 | (v >> 18)); out += static_cast<char>(0x80 | ((v >> 12) & 0x3F)); out += static_cast<char>(0x80 | ((v >> 6) & 0x3F)); out += static_cast<char>(0x80 | (v & 0x3F)); }
+    return out;
+}
+
+math::GlyphMetrics ImGuiMathFont::metrics(std::string_view glyphIn, double sizePx, math::GlyphStyle style) const {
     math::GlyphMetrics m;
     const ImFont* font = face(style);
-    if (font == nullptr || utf8Glyph.empty() || sizePx <= 0.0) return m;
+    if (font == nullptr || glyphIn.empty() || sizePx <= 0.0) return m;
+    const std::string mapped = styled(glyphIn, style);
+    const std::string_view utf8Glyph = mapped;
     const float scale = faceScale(font, sizePx);
 
     // A single code point takes its exact ink box (TeX needs the per-glyph height and depth); a run
@@ -76,11 +116,13 @@ double ImGuiMathFont::ruleThickness(double sizePx) const { return std::max(1.0, 
 
 // ---------------------------------------------------------------- canvas
 
-void ImGuiMathCanvas::drawGlyph(std::string_view utf8, double x, double baselineY, double sizePx,
+void ImGuiMathCanvas::drawGlyph(std::string_view utf8In, double x, double baselineY, double sizePx,
                                 math::GlyphStyle style) {
-    if (dl_ == nullptr || utf8.empty() || sizePx <= 0.0) return;
+    if (dl_ == nullptr || utf8In.empty() || sizePx <= 0.0) return;
     ImFont* font = font_->face(style);
     if (font == nullptr) return;
+    const std::string mapped = font_->styled(utf8In, style);
+    const std::string_view utf8 = mapped;
     // AddText positions the LINE BOX; the baseline sits Ascent below its top.
     const float top = static_cast<float>(baselineY) - font->Ascent * faceScale(font, sizePx);
     dl_->AddText(font, static_cast<float>(sizePx), ImVec2(origin_.x + static_cast<float>(x), origin_.y + top), color_,

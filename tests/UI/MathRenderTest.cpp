@@ -212,3 +212,30 @@ TEST_CASE("plain text of a painted formula preserves symbol order") {
     paintMath(lr, cv, 0.0, 0.0, font());
     REQUIRE(cv.plain() == "α+β");
 }
+
+TEST_CASE("the ASCII hyphen of math mode is set as the minus sign, as TeX does") {
+    using namespace qlab::ui::math;
+    MathParser pm("a - b");
+    ParseOutput parsed = pm.parse();
+    REQUIRE(parsed.root != nullptr);
+    bool minus = false, hyphen = false;
+    std::function<void(const MathNode&)> walk = [&](const MathNode& n) {
+        if (n.kind == NodeKind::Symbol && n.text == "\u2212") minus = true;
+        if (n.kind == NodeKind::Symbol && n.text == "-") hyphen = true;
+        for (const auto& c : n.children) if (c) walk(*c);
+    };
+    walk(*parsed.root);
+    CHECK(minus);
+    CHECK_FALSE(hyphen);
+    // Inside \text the hyphen is a hyphen.
+    MathParser pt(R"(\text{co-ax})");
+    ParseOutput text = pt.parse();
+    REQUIRE(text.root != nullptr);
+    bool textHyphen = false;
+    std::function<void(const MathNode&)> walk2 = [&](const MathNode& n) {
+        if (n.kind == NodeKind::Text && n.text.find('-') != std::string::npos) textHyphen = true;
+        for (const auto& c : n.children) if (c) walk2(*c);
+    };
+    walk2(*text.root);
+    CHECK(textHyphen);
+}

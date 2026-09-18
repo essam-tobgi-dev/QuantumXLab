@@ -84,6 +84,12 @@ API reference.
 - Any place the implementation must diverge from a spec goes into `SPEC_DEVIATIONS.md` with
   the reason. If the spec itself is wrong, fix the spec and say so.
 
+## Fonts
+
+Inter (UI), JetBrains Mono (code), and **Latin Modern Math** for equations (GUST Font License,
+`Assets/Fonts/GUST-FONT-LICENSE-LatinModernMath.txt`). ImGui is built with `IMGUI_USE_WCHAR32`
+because the italic and bold math alphabets are code points above U+FFFF.
+
 ## Verified baseline (2026-09-18)
 
 The whole tree builds and passes as one project, verified the way CI runs it:

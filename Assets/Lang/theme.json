@@ -3,7 +3,7 @@
     "kind": "ui.theme",
     "schema": 1,
     "app": "0.1.0",
-    "created": "2026-09-18T09:14:48Z"
+    "created": "2026-09-18T12:04:07Z"
   },
   "data": {
     "palettes": {
@@ -105,8 +105,10 @@
         "readout_px": 16
       },
       "math": {
-        "font": "Inter",
-        "note": "STIX Two Math not vendored (download unavailable at build time); fallback renderer uses Inter — logged in SPEC_DEVIATIONS.md"
+        "font": "Latin Modern Math",
+        "file": "LatinModernMath-Regular.otf",
+        "licence": "GUST Font License (Assets/Fonts/GUST-FONT-LICENSE-LatinModernMath.txt)",
+        "note": "the LaTeX typeface; italic and bold letters are the Mathematical Alphanumeric code points of the same face (spec 20 §1)"
       },
       "icons": {
         "set": "Lucide",

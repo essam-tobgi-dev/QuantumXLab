@@ -162,6 +162,9 @@ NodePtr MathParser::parseAtom() {
         std::size_t i = 0;
         char32_t cp = utf8Decode(t.text, i);
         if (cp == '|') return MathNode::symbol("|", AtomClass::Ord, t.src);
+        // TeX sets the ASCII hyphen of math mode as the minus sign (a hyphen is a third of its
+        // width); the apostrophe becomes a prime elsewhere, the asterisk stays an operator.
+        if (cp == '-') return MathNode::symbol("\u2212", AtomClass::Bin, t.src);
         return MathNode::symbol(t.text, classifyChar(cp), t.src);
     }
     default:

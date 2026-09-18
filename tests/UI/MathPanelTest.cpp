@@ -74,8 +74,25 @@ TEST_CASE("Math backend: the ImGui face reports sane TeX metrics") {
     CHECK(font.xHeight(18.0) < 18.0);
     CHECK(font.axisHeight(18.0) == Approx(0.5 * font.xHeight(18.0)));
     CHECK(font.ruleThickness(18.0) >= 1.0);
-    // Bold is a different face; an empty run has no metrics.
-    CHECK(font.face(math::GlyphStyle::Bold) != font.face(math::GlyphStyle::Italic));
+    // The LaTeX face (spec 20 §1): one OpenType math font, styles as code points — an italic
+    // `x` is MATHEMATICAL ITALIC SMALL X, bold is its bold twin, `h` the Planck-constant italic.
+    REQUIRE(font.hasMathFace());
+    CHECK(font.face(math::GlyphStyle::Bold) == font.face(math::GlyphStyle::Italic));
+    CHECK(ImGuiMathFont::variant(U'x', math::GlyphStyle::Italic) == 0x1D465);
+    CHECK(ImGuiMathFont::variant(U'x', math::GlyphStyle::Bold) == 0x1D431);
+    CHECK(ImGuiMathFont::variant(U'h', math::GlyphStyle::Italic) == 0x210E);
+    CHECK(ImGuiMathFont::variant(0x3B1, math::GlyphStyle::Italic) == 0x1D6FC);
+    CHECK(ImGuiMathFont::variant(U'x', math::GlyphStyle::Upright) == U'x');
+    CHECK(font.styled("x", math::GlyphStyle::Italic) == "\xF0\x9D\x91\xA5");
+    CHECK(font.styled("cool", math::GlyphStyle::Italic) == "cool");   // a run stays upright text
+    // The face carries the repertoire an equation needs: big operators, accents, delimiters.
+    for (ImWchar cp : {ImWchar(0x222B), ImWchar(0x2211), ImWchar(0x02D9), ImWchar(0x27E8), ImWchar(0x27E9), ImWchar(0x210F), ImWchar(0x1D465), ImWchar(0x1D6FC)}) {
+        INFO("code point U+" << std::hex << cp);
+        CHECK(font.face(math::GlyphStyle::Upright)->FindGlyphNoFallback(cp) != nullptr);
+    }
+    // An italic letter is wider than the upright one on this face (the italic has a slant and
+    // an italic correction), and an empty run has no metrics.
+    CHECK(font.metrics("f", 18.0, math::GlyphStyle::Italic).advance != Approx(font.metrics("f", 18.0, math::GlyphStyle::Upright).advance));
     CHECK(font.metrics("", 18.0, math::GlyphStyle::Italic).advance == Approx(0.0));
 }
 
