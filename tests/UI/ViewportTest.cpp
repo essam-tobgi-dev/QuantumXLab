@@ -54,13 +54,16 @@ TEST_CASE("Viewport: a left drag on the picture orbits the camera and does not m
     rig.frame([](ImGuiIO& io) { io.AddMousePosEvent(520.0f, 330.0f); });
     rig.frame([](ImGuiIO& io) { io.AddMouseButtonEvent(ImGuiMouseButton_Left, false); });
     rig.frame();
-    // Orbit: the eye moved on its sphere about the unchanged target — and the scene followed the
-    // mouse: a drag to the RIGHT (+x on screen) turns the eye toward +x so what was under the
-    // cursor slides right (the grab convention; "Invert orbit" gives the camera-turn one).
+    // Orbit: the eye moved on its sphere about the unchanged target. Horizontally the camera
+    // turns with the drag: a drag to the RIGHT moves the eye toward −x so the view looks further
+    // right (the user's convention; "Invert orbit" flips it).
     CHECK(glm::length(rig.camera.position() - pos0) > 0.1);
-    CHECK(rig.camera.position().x > pos0.x + 0.1);
+    CHECK(rig.camera.position().x < pos0.x - 0.1);
     CHECK(glm::length(rig.camera.target() - target0) < 1e-9);
     CHECK(glm::length(rig.camera.position() - target0) == Approx(glm::length(pos0 - target0)).epsilon(1e-9));
+    // Vertically the scene follows the mouse: the drag ended 20 px UP the screen, so the eye
+    // dropped (looking from lower, what was under the cursor rises).
+    CHECK(rig.camera.position().y < pos0.y);
     // …and the window stayed where it was (an `Image` let the drag grab the window instead).
     const ImVec2 win1 = rig.windowPos();
     CHECK(win1.x == Approx(win0.x));

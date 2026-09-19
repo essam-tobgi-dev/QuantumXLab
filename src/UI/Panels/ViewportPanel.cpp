@@ -243,9 +243,10 @@ void ViewportPanel::drawImage(UiContext& ctx) {
                              (left && io.KeyShift);
             if (pan) cam->pan(d.x, d.y, static_cast<int>(avail.y));
             else if (left && io.KeyAlt) cam->rotateInPlace(d.x, d.y);
-            // Default: the drag moves the SCENE (drag right → what is under the cursor goes right),
-            // the convention the user asked for; "Invert orbit" turns the camera instead.
-            else if (left) cam->orbit(invertOrbit_ ? d.x : -d.x, invertOrbit_ ? d.y : -d.y);
+            // The convention the user settled on after trying both: horizontally the camera turns
+            // with the drag (drag right → look further right), vertically the scene follows the
+            // mouse (drag down → what is under the cursor moves down). "Invert orbit" flips both.
+            else if (left) cam->orbit(invertOrbit_ ? -d.x : d.x, invertOrbit_ ? d.y : -d.y);
         }
         if (hovered && io.MouseWheel != 0.0f) {
             cam->cancelTransition();
@@ -365,7 +366,7 @@ void ViewportPanel::drawContextMenu(UiContext& ctx) {
     bool exploded = ui.explode(lab::Assembly::FridgeStages) > 0.5;
     if (ImGui::MenuItem("Exploded stages", "E", &exploded)) ui.setExplode(lab::Assembly::FridgeStages, exploded ? 1.0 : 0.0);
     ImGui::Separator();
-    ImGui::MenuItem("Invert orbit (drag turns the camera)", nullptr, &invertOrbit_);
+    ImGui::MenuItem("Invert orbit", nullptr, &invertOrbit_);
     ImGui::EndPopup();
 }
 
@@ -422,7 +423,7 @@ void ViewportPanel::drawHoverCard(UiContext& ctx) {
 
 void ViewportPanel::drawHelp(UiContext& ctx, ImVec2 imageMin, ImVec2 imageMax) {
     static constexpr std::pair<const char*, const char*> kRows[]{
-        {"Drag", "orbit: the scene follows the mouse (right-click to invert)"},
+        {"Drag", "orbit around the point under the cursor (right-click to invert)"},
         {"Right-drag / Shift-drag", "pan"},
         {"Wheel", "zoom toward the cursor"},
         {"Alt-drag", "look around"},
