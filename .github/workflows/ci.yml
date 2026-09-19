@@ -134,6 +134,8 @@ jobs:
         shell: bash
         env:
           LIBGL_ALWAYS_SOFTWARE: "1"
+          # Timing oracles are workstation figures; shared runners get slack (software GL on Linux far more).
+          QXL_PERF_SLACK: ${{ runner.os == 'Linux' && '60' || '4' }}
 
       - name: Self-test screenshots
         if: matrix.preset != 'asan'

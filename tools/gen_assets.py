@@ -23,8 +23,18 @@ def envelope(kind, data, schema=1):
 def write_json(rel, kind, data):
     path = os.path.join(ASSETS, rel)
     os.makedirs(os.path.dirname(path), exist_ok=True)
+    doc = envelope(kind, data)
+    # Reproducible output: a file whose data did not change keeps its `created` stamp, so
+    # regenerating the assets is a no-op for git (CI checks that the tree is in sync).
+    try:
+        with open(path, encoding="utf8") as f:
+            old = json.load(f)
+        if old.get("data") == data and old.get("qxl", {}).get("kind") == kind:
+            doc["qxl"]["created"] = old["qxl"].get("created", CREATED)
+    except (OSError, ValueError):
+        pass
     with open(path, "w", encoding="utf8") as f:
-        json.dump(envelope(kind, data), f, indent=2, ensure_ascii=False)
+        json.dump(doc, f, indent=2, ensure_ascii=False)
         f.write("\n")
     return path
 

@@ -19,12 +19,16 @@ for k, p in files.items():
     heads[k] = hs
 ref_re = re.compile(r'`?(T?\d\d)\s*§\s*([0-9][0-9.]*(?:\s*(?:[–-]|,\s*§?)\s*[0-9][0-9.]*)*)`?')
 desc_re = re.compile(r'\b(T\d\d)\s*§\s*([A-Za-z][A-Za-z0-9 /\-]{2,40})')
+have_specs = bool(glob.glob(f'{root}/specs/*.md'))
 bad, desc, missing_doc = [], [], []
 for k, p in files.items():
     for n, line in enumerate(open(p, encoding='utf8'), 1):
         for m in ref_re.finditer(line):
             doc, secs = m.group(1), m.group(2)
             if doc not in files:
+                # The specification documents are not part of the public tree; a reference to one
+                # from the theory corpus is checked only where they are present.
+                if not have_specs and not doc.startswith('T'): continue
                 missing_doc.append((k, n, doc)); continue
             for s in re.split(r'\s*(?:[–-]|,\s*§?)\s*', secs):
                 s = s.rstrip('.')
@@ -35,7 +39,7 @@ for k, p in files.items():
                     bad.append((k, n, doc, s + ' (top-level exists, subsection missing)'))
         for m in desc_re.finditer(line):
             desc.append((k, n, m.group(1), m.group(2)))
-print(f'documents: {len(files)}')
+print(f'documents: {len(files)}' + ('' if have_specs else ' (theory only: specs/ absent, references into it skipped)'))
 print(f'\n== missing target documents ({len(missing_doc)})')
 for x in missing_doc: print(f'  {x[0]}:{x[1]} -> {x[2]}')
 print(f'\n== unresolved numbered references ({len(bad)})')

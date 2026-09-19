@@ -2,6 +2,8 @@
 // and the GPU cost of the whole chain at 3200×2000 (reported; the budget is 3.5 ms on the M4).
 #include "TestImage.hpp"
 #include <catch2/catch_test_macros.hpp>
+#include <algorithm>
+#include <cstdlib>
 #include <cstdio>
 #include <glm/gtc/matrix_transform.hpp>
 using namespace gfxtest;
@@ -251,7 +253,10 @@ TEST_CASE("post chain GPU time at 3200x2000 (SSAO + blur + bloom + outline + ton
                 "total %.2f ms (GPU, mean of %d frames)\n",
                 W, H, aoMs, bloomMs, postMs - aoMs - bloomMs - resMs, postMs, n);
     CHECK(postMs > 0.0); // the timer queries deliver
-    CHECK(postMs <
-          8.0); // loose bound: the 3.5 ms budget is reported, not asserted, on a shared machine
+    // Loose bound: the 3.5 ms budget is reported, not asserted; QXL_PERF_SLACK covers a shared CI
+    // runner or a software rasteriser (llvmpipe under xvfb).
+    const char* slackEnv = std::getenv("QXL_PERF_SLACK");
+    const double slack = slackEnv != nullptr ? std::max(1.0, std::atof(slackEnv)) : 1.0;
+    CHECK(postMs < 8.0 * slack);
     CHECK(aoMs + bloomMs <= postMs + 0.05);
 }

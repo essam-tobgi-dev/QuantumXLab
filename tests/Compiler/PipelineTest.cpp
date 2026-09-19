@@ -2,6 +2,8 @@
 // resolution, cancellation, level 2, and diagnostics with spans in the spec's text format.
 #include "CompilerTestUtil.hpp"
 #include "Core/Timer.hpp"
+#include <algorithm>
+#include <cstdlib>
 #include <iostream>
 
 using namespace ctest;
@@ -302,9 +304,12 @@ TEST_CASE("performance: parse + compile of a 1000-gate program (spec 24 §6: 50 
     for (const auto& r : out->trace)
         std::cout << ' ' << r.pass << '=' << static_cast<double>(r.wallTime.count()) / 1000.0;
     std::cout << " ms\n";
+    // QXL_PERF_SLACK relaxes the budget on shared CI runners (the figure is for a workstation).
+    const char* slackEnv = std::getenv("QXL_PERF_SLACK");
+    const double slack = slackEnv != nullptr ? std::max(1.0, std::atof(slackEnv)) : 1.0;
 #ifdef NDEBUG
-    CHECK(ms < 50.0);
+    CHECK(ms < 50.0 * slack);
 #else
-    CHECK(ms < 3000.0); // loose bound for the unoptimised Debug build
+    CHECK(ms < 3000.0 * slack); // loose bound for the unoptimised Debug build
 #endif
 }

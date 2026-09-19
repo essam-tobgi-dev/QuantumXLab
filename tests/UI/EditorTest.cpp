@@ -7,6 +7,7 @@
 #include "UI/Widgets/Equations.hpp"
 #include <algorithm>
 #include <catch2/catch_test_macros.hpp>
+#include <cstdlib>
 #include <chrono>
 
 using namespace qlab;
@@ -370,7 +371,9 @@ TEST_CASE("Editor: a keystroke in a 5 k-line file re-analyses well inside the fr
     const double keystrokeMs = millisSince(start);
     CHECK(after > 5'000 * kTokensPerLine);
     INFO("5 k-line re-analysis " << keystrokeMs << " ms");
-    CHECK(keystrokeMs < 250.0);
+    const char* slackEnv = std::getenv("QXL_PERF_SLACK"); // shared CI runners
+    const double slack = slackEnv != nullptr ? std::max(1.0, std::atof(slackEnv)) : 1.0;
+    CHECK(keystrokeMs < 250.0 * slack);
 }
 
 TEST_CASE("CodeEditor: caret commands, fix-its and state persistence work without a frame") {
