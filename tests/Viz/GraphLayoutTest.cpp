@@ -6,6 +6,7 @@
 #include "Viz/Math/Color.hpp"
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <numbers>
 #include <cmath>
 #include <set>
 
@@ -141,6 +142,6 @@ TEST_CASE("entanglement graph of a Bell pair: one full-weight edge labelled C = 
     CHECK(g.edgeLegend.max == Approx(2.0));
     // Without a device the register sits on a circle with unit spacing between neighbours.
     const auto ring = circlePositions(12);
-    CHECK(glm::length(ring[0] - ring[1]) == Approx(2.0 * (12.0 / (2.0 * M_PI)) * std::sin(M_PI / 12.0)));
+    CHECK(glm::length(ring[0] - ring[1]) == Approx(2.0 * (12.0 / (2.0 * std::numbers::pi)) * std::sin(std::numbers::pi / 12.0)));
     CHECK(paletteIndexOf(qec::QubitRole::AncillaX) != paletteIndexOf(qec::QubitRole::AncillaZ));
 }
