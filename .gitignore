@@ -12,3 +12,4 @@ compile_commands.json
 specs/
 SPEC_DEVIATIONS.md
 __pycache__/
+DEVELOPMENT.md
