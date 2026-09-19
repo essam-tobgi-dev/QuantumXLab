@@ -16,6 +16,11 @@ std::filesystem::path withSuffix(const std::filesystem::path& file, std::string_
 }
 
 std::string isoFileTime(std::filesystem::file_time_type t) {
+#if defined(_MSC_VER)
+    // MSVC's file_clock has no to_sys; clock_cast is the portable spelling there.
+    return std::format("{:%FT%TZ}", std::chrono::floor<std::chrono::seconds>(
+                                        std::chrono::clock_cast<std::chrono::system_clock>(t)));
+#else
     if constexpr (requires { std::chrono::file_clock::to_sys(t); }) {
         return std::format("{:%FT%TZ}", std::chrono::floor<std::chrono::seconds>(
                                             std::chrono::file_clock::to_sys(t)));
@@ -24,6 +29,7 @@ std::string isoFileTime(std::filesystem::file_time_type t) {
         const Sys::time_point sys(std::chrono::duration_cast<Sys::duration>(t.time_since_epoch()));
         return std::format("{:%FT%TZ}", std::chrono::floor<std::chrono::seconds>(sys));
     }
+#endif
 }
 
 } // namespace

@@ -7,8 +7,8 @@
 #include "UI/Widgets/Equations.hpp"
 #include <algorithm>
 #include <catch2/catch_test_macros.hpp>
-#include <cstdlib>
 #include <chrono>
+#include <cstdlib>
 
 using namespace qlab;
 using namespace qlab::ui::editor;

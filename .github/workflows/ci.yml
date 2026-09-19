@@ -112,7 +112,8 @@ jobs:
       - name: clang-format check
         if: runner.os == 'macOS' && matrix.preset == 'debug'
         run: |
-          brew install clang-format
+          # Pinned: formatting drifts between major releases (23 reflowed 75 files that 22 accepts).
+          python3 -m pip install --quiet clang-format==22.1.5
           files=$(git ls-files 'src/*.cpp' 'src/*.hpp' 'tests/*.cpp' 'tests/*.hpp')
           clang-format --version
           clang-format --dry-run --Werror $files
@@ -136,6 +137,23 @@ jobs:
           LIBGL_ALWAYS_SOFTWARE: "1"
           # Timing oracles are workstation figures; shared runners get slack (software GL on Linux far more).
           QXL_PERF_SLACK: ${{ runner.os == 'Linux' && '60' || '4' }}
+
+      # A crash on the software renderer is only actionable with a stack: rerun the failing GL
+      # suites under gdb and print the backtrace (Linux only, only after a test failure).
+      - name: Backtraces of crashed suites (Linux)
+        if: failure() && runner.os == 'Linux'
+        run: |
+          sudo apt-get install -y gdb > /dev/null
+          for t in test_app test_viz test_lang test_gfx; do
+            b=build/${{ matrix.preset }}/bin/$t
+            [ -x "$b" ] || continue
+            echo "=== $t"
+            xvfb-run -a -s "-screen 0 1600x1000x24" gdb -batch -ex run -ex bt -ex quit --args "$b" 2>&1 | tail -60 || true
+          done
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+          QXL_PERF_SLACK: "60"
+        shell: bash
 
       - name: Self-test screenshots
         if: matrix.preset != 'asan'
