@@ -21,7 +21,7 @@ struct GainDb {
     constexpr GainDb operator-() const { return GainDb(-v); }
     constexpr GainDb& operator+=(GainDb g) { v += g.v; return *this; }
     constexpr auto operator<=>(const GainDb&) const = default;
-    constexpr double linear() const { return std::pow(10.0, v / 10.0); } // power ratio
+    double linear() const { return std::pow(10.0, v / 10.0); } // power ratio (std::pow is not constexpr on MSVC)
 };
 
 constexpr GainDb operator+(GainDb a, GainDb b) { return GainDb(a.v + b.v); }
