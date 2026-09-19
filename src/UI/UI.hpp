@@ -1,4 +1,6 @@
 #pragma once
+#include <filesystem>
+#include <memory>
 // Umbrella header for qlab::ui (spec 19, spec 20 §5–§7) — the design system, the panel catalog and
 // the shell the App drives.
 //
@@ -38,6 +40,7 @@
 #include "UI/Shell.hpp"
 #include "UI/Shortcuts.hpp"
 #include "UI/Strings.hpp"
+#include "Graphics/GlObjects.hpp"
 #include "UI/Theme.hpp"
 #include "UI/Theory/TheoryIndex.hpp"
 #include "UI/UndoStack.hpp"
@@ -59,6 +62,10 @@ struct UiResources {
     TheoryAssets assets;
     theory::TheoryIndex theory;
     UndoStack undo;
+    // The product mark at the left of the menu bar (Assets/Icons/logo.png). Loaded by the App
+    // once a GL context exists; absent in headless tests, and the bar then shows the name only.
+    std::unique_ptr<gfx::Texture2D> logo;
+    Status loadLogo(const std::filesystem::path& png = {});
 
     // Loads theme.json, strings.en.json, the theory corpora and the docs; reports the first failure
     // but always leaves usable fallbacks in place.

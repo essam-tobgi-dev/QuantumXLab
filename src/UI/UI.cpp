@@ -1,5 +1,7 @@
 // Spec 19 — the resource bundle the App builds once (see UI.hpp).
 #include "UI/UI.hpp"
+#include "Graphics/TextureLibrary.hpp"
+#include "Core/Paths.hpp"
 #include <algorithm>
 #include <imgui.h>
 
@@ -39,6 +41,7 @@ Status UiResources::applyScale(ImFontAtlas* atlas, float dpiScale, float fontSca
 
 void UiResources::bind(UiContext& ctx, float dpiScale, float fontScale) const {
     ctx.theme = &theme;
+    ctx.resources = this;
     ctx.fonts = &fonts;
     ctx.math = const_cast<MathRenderers*>(&math);
     ctx.assets = &assets;
@@ -46,6 +49,19 @@ void UiResources::bind(UiContext& ctx, float dpiScale, float fontScale) const {
     ctx.undo = const_cast<UndoStack*>(&undo);
     ctx.dpiScale = dpiScale;
     ctx.fontScale = fontScale;
+}
+
+Status UiResources::loadLogo(const std::filesystem::path& png) {
+    const std::filesystem::path file = png.empty() ? core::assetDir() / "Icons" / "logo.png" : png;
+    QXL_TRY_ASSIGN(gfx::ImageRgba8 image, gfx::TextureLibrary::loadImage(file));
+    gfx::TexDesc d;
+    d.width = image.width;
+    d.height = image.height;
+    d.format = gfx::TexFormat::SRGBA8;
+    d.mipmaps = true;
+    d.linear = true;
+    logo = std::make_unique<gfx::Texture2D>(d, image.rgba.data());
+    return {};
 }
 
 } // namespace qlab::ui

@@ -884,7 +884,7 @@ comp("he_dewar", "Liquid-helium dewar", "infra",
      {"generator": "Cylinder", "r_m": 0.25, "h_m": 1.3}, lod=[{"max_m": 6.0, "detail": "full"}, {"max_m": 30.0, "detail": "simple"}, {"max_m": 1e9, "detail": "hidden"}], parent="room")
 
 comp("pt_compressor", "Pulse-tube compressor", "cryocooler",
-     "Helium compressor that drives the pulse-tube cryocooler, standing outside the lab because it dissipates several kilowatts and is the loudest object in the system. It supplies high-pressure helium through flexible lines to the rotary valve on the cold head; the valve switches the gas between high and low pressure at about 1.4 Hz, and that cycle is both the cooling power of the 45 K and 4 K stages and the dominant mechanical vibration reaching the qubits. Stopping it starts the warm-up.",
+     "Helium compressor that drives the pulse-tube cryocooler; it dissipates several kilowatts and is the loudest object in the system, so it stands in the corner of the room on vibration mounts (larger facilities move it to a service room). It supplies high-pressure helium through flexible lines to the rotary valve on the cold head; the valve switches the gas between high and low pressure at about 1.4 Hz, and that cycle is both the cooling power of the 45 K and 4 K stages and the dominant mechanical vibration reaching the qubits. Stopping it starts the warm-up.",
      "Supplies the pressure wave that produces the 45 K and 4 K cooling power (T08).",
      [], [row("input power", "kW", [5, 12]), row("helium pressure", "bar", [16, 22]),
           row("cycle frequency", "Hz", [1.0, 2.0]), row("cooling water", "L/min", [5, 15]),
@@ -1102,7 +1102,7 @@ def layouts():
             {"id": "B", "position_m": [2.9, 0.0, -1.5], "height_u": 42,
              "units": ["vna", "spectrum_analyzer", "oscilloscope", "rt_amplifier:2", "ref_10mhz", "clock_dist", "trigger_unit", "patch_panel", "power_dist"]}],
         "ghs": {"position_m": [-2.5, 0.0, -1.5]},
-        "compressor": {"position_m": [-3.2, 0.0, 2.6], "outside": True},
+        "compressor": {"position_m": [-3.05, 0.0, 2.55], "outside": False},
         "props": [{"id": "workstation", "position_m": [2.5, 0.0, 1.8]}, {"id": "bench", "position_m": [-1.5, 0.0, 2.0]}, {"id": "he_dewar", "position_m": [-2.9, 0.0, 0.5], "count": 2}],
         "bookmarks": {
             "Overview": {"pos": [5.0, 3.0, 6.0], "target": [0.0, 1.2, 0.0], "fov_deg": 50},

@@ -39,6 +39,7 @@ public:
         j["cutaway_offset_deg"] = cutawayOffsetDeg_;
         j["show_legend"] = showLegend_;
         j["show_help"] = showHelp_;
+        j["invert_orbit"] = invertOrbit_;
         j["time_dilation"] = timeDilation_;
         return j;
     }
@@ -48,6 +49,7 @@ public:
             cutawayOffsetDeg_ = it->get<double>();
         if (const auto it = j.find("show_legend"); it != j.end() && it->is_boolean()) showLegend_ = it->get<bool>();
         if (const auto it = j.find("show_help"); it != j.end() && it->is_boolean()) showHelp_ = it->get<bool>();
+        if (const auto it = j.find("invert_orbit"); it != j.end() && it->is_boolean()) invertOrbit_ = it->get<bool>();
         if (const auto it = j.find("time_dilation"); it != j.end() && it->is_number())
             timeDilation_ = it->get<double>();
     }
@@ -66,6 +68,7 @@ private:
     double timeDilation_ = 1e7;       // spec 17 §8 pulse-packet slider
     bool showLegend_ = true;
     bool showHelp_ = false;
+    bool invertOrbit_ = false;        // true: drag turns the camera instead of moving the scene
     ImVec2 lastImageSize_{0.0f, 0.0f};
     int stableFrames_ = 0;
     // The last asynchronous pick (spec 18 §5 pass 11): what is under the cursor and where it is.
@@ -240,7 +243,9 @@ void ViewportPanel::drawImage(UiContext& ctx) {
                              (left && io.KeyShift);
             if (pan) cam->pan(d.x, d.y, static_cast<int>(avail.y));
             else if (left && io.KeyAlt) cam->rotateInPlace(d.x, d.y);
-            else if (left) cam->orbit(d.x, d.y);
+            // Default: the drag moves the SCENE (drag right → what is under the cursor goes right),
+            // the convention the user asked for; "Invert orbit" turns the camera instead.
+            else if (left) cam->orbit(invertOrbit_ ? d.x : -d.x, invertOrbit_ ? d.y : -d.y);
         }
         if (hovered && io.MouseWheel != 0.0f) {
             cam->cancelTransition();
@@ -359,6 +364,8 @@ void ViewportPanel::drawContextMenu(UiContext& ctx) {
     if (ImGui::MenuItem("X-ray", "X", &xray)) ui.setXray(xray);
     bool exploded = ui.explode(lab::Assembly::FridgeStages) > 0.5;
     if (ImGui::MenuItem("Exploded stages", "E", &exploded)) ui.setExplode(lab::Assembly::FridgeStages, exploded ? 1.0 : 0.0);
+    ImGui::Separator();
+    ImGui::MenuItem("Invert orbit (drag turns the camera)", nullptr, &invertOrbit_);
     ImGui::EndPopup();
 }
 
@@ -415,7 +422,7 @@ void ViewportPanel::drawHoverCard(UiContext& ctx) {
 
 void ViewportPanel::drawHelp(UiContext& ctx, ImVec2 imageMin, ImVec2 imageMax) {
     static constexpr std::pair<const char*, const char*> kRows[]{
-        {"Drag", "orbit around the point under the cursor"},
+        {"Drag", "orbit: the scene follows the mouse (right-click to invert)"},
         {"Right-drag / Shift-drag", "pan"},
         {"Wheel", "zoom toward the cursor"},
         {"Alt-drag", "look around"},

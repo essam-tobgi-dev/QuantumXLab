@@ -3,14 +3,14 @@
     "kind": "lab.component",
     "schema": 1,
     "app": "0.1.0",
-    "created": "2026-09-18T12:04:07Z"
+    "created": "2026-09-19T19:56:07Z"
   },
   "data": {
     "id": "pt_compressor",
     "name": "Pulse-tube compressor",
     "category": "cryocooler",
     "parent": "room",
-    "function": "Helium compressor that drives the pulse-tube cryocooler, standing outside the lab because it dissipates several kilowatts and is the loudest object in the system. It supplies high-pressure helium through flexible lines to the rotary valve on the cold head; the valve switches the gas between high and low pressure at about 1.4 Hz, and that cycle is both the cooling power of the 45 K and 4 K stages and the dominant mechanical vibration reaching the qubits. Stopping it starts the warm-up.",
+    "function": "Helium compressor that drives the pulse-tube cryocooler; it dissipates several kilowatts and is the loudest object in the system, so it stands in the corner of the room on vibration mounts (larger facilities move it to a service room). It supplies high-pressure helium through flexible lines to the rotary valve on the cold head; the valve switches the gas between high and low pressure at about 1.4 Hz, and that cycle is both the cooling power of the 45 K and 4 K stages and the dominant mechanical vibration reaching the qubits. Stopping it starts the warm-up.",
     "physics": {
       "summary": "Supplies the pressure wave that produces the 45 K and 4 K cooling power (T08).",
       "equations": []

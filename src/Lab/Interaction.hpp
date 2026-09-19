@@ -89,6 +89,8 @@ public:
     void setCansVisible(bool on) { view_.cansVisible = on; }
     bool cansVisible() const { return view_.cansVisible; }
     void setLayerVisible(Group g, bool on) { view_.layers[static_cast<std::size_t>(g)] = on; }
+    // The layers a bookmark would restore (tests); empty outside a chip bookmark.
+    const std::optional<std::array<bool, kGroupCount>>& layersBeforeIsland() const { return layersBeforeIsland_; }
     bool layerVisible(Group g) const { return view_.layers[static_cast<std::size_t>(g)]; }
     bool nodeVisible(const Node& n) const;
 
@@ -118,6 +120,9 @@ private:
     ComponentId hovered_{0}, selected_{0};
     double hoverStart_ = 0.0;
     std::vector<LayoutBookmark> bookmarks_;
+    // The layer set before a scale-island (chip) bookmark hid everything but the chip; a
+    // bookmark outside the island restores it (the user could not get back to the room).
+    std::optional<std::array<bool, kGroupCount>> layersBeforeIsland_;
 };
 
 // Near/far planes for the current viewing distance (spec 18 §6).

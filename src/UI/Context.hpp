@@ -32,6 +32,8 @@ namespace qlab::lab { class Tour; }
 
 namespace qlab::ui {
 
+struct UiResources;
+
 // Spec 19 §2 top bar: what the run status shows, read once per frame from the session.
 struct SessionView {
     enum class Status : std::uint8_t { Idle, Compiling, Running, Done, Failed };
@@ -75,6 +77,7 @@ struct Commands {
 struct UiContext {
     // ---- presentation
     const Theme* theme = nullptr;               // required
+    const UiResources* resources = nullptr;     // the owner of theme/fonts/logo (set by bind)
     const FontSet* fonts = nullptr;
     MathRenderers* math = nullptr;
     const TheoryAssets* assets = nullptr;

@@ -1,6 +1,7 @@
 // Spec 19 §2 — the top bar, the dockspace and the panel windows of one frame (see Shell.hpp).
 #include "UI/Format.hpp"
 #include "UI/Shell.hpp"
+#include "UI/UI.hpp"
 #include "UI/Widgets/Widgets.hpp"
 #include <algorithm>
 #include <cmath>
@@ -53,6 +54,21 @@ Token runStatusToken(SessionView::Status s) {
 
 void Shell::drawMenus(UiContext& ctx) {
     if (!ImGui::BeginMenuBar()) return;
+    // The product mark and name lead the bar (the sibling project's convention).
+    {
+        const float h = ImGui::GetFrameHeight() - 6.0f;
+        if (ctx.resources != nullptr && ctx.resources->logo) {
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 3.0f);
+            ImGui::Image(static_cast<ImTextureID>(ctx.resources->logo->id()), ImVec2(h, h));
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 3.0f);
+            ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.x);
+        }
+        FontScope f(*ctx.fonts, FontRole::Strong);
+        widgets::text(ctx, Token::Accent, "QuantumXLab");
+        ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.x * 2.0f);
+        ImGui::Separator();
+        ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.x);
+    }
     const auto item = [&](std::string_view labelKey, Action a, const std::function<void()>& fn, bool enabled = true) {
         const std::string label(ctx.text(labelKey));
         const std::string shortcut = keys_.text(a);

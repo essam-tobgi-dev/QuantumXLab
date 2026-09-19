@@ -218,10 +218,14 @@ bool Interaction::applyBookmark(std::string_view name, gfx::Camera& camera, doub
     if (durationS <= 0.0) camera.set(b->view);
     else camera.transitionTo(b->view, durationS);
     if (!b->scaleIsland.empty()) { // a chip bookmark shows the chip layers only (spec 17 §7)
+        if (!layersBeforeIsland_) layersBeforeIsland_ = view_.layers;
         for (int g = 0; g < kGroupCount; ++g) {
             Group group = static_cast<Group>(g);
             setLayerVisible(group, group == Group::Chip || group == Group::ChipMicro || group == Group::Overlay);
         }
+    } else if (layersBeforeIsland_) { // back in the room: what the chip view hid comes back
+        view_.layers = *layersBeforeIsland_;
+        layersBeforeIsland_.reset();
     }
     fitClipPlanes(camera);
     return true;

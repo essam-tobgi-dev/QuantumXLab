@@ -241,3 +241,26 @@ TEST_CASE("layer toggles, X-ray, cutaway and hover state persist through the vie
     CHECK(other.explode(Assembly::FridgeStages) == Catch::Approx(0.0));
     ui.setExplode(Assembly::ChipPackage, 0.0);
 }
+
+TEST_CASE("leaving a chip bookmark restores the layers it hid (the way back to the room)") {
+    Scene scene = build();
+    Interaction ui(scene);
+    gfx::Camera camera;
+    ui.setLayerVisible(Group::Rack, false);          // a choice the user made before
+    REQUIRE(ui.applyBookmark("Chip", camera, 0.0));
+    CHECK(ui.layerVisible(Group::Chip));
+    CHECK_FALSE(ui.layerVisible(Group::Room));
+    CHECK_FALSE(ui.layerVisible(Group::FridgeInterior));
+    REQUIRE(ui.layersBeforeIsland().has_value());
+    // A second chip-scale bookmark keeps the saved set (it does not save the hidden state).
+    const auto marks = ui.bookmarks();
+    for (const LayoutBookmark& b : marks)
+        if (b.name.rfind("Qubit", 0) == 0) { REQUIRE(ui.applyBookmark(b.name, camera, 0.0)); break; }
+    CHECK_FALSE(ui.layerVisible(Group::Room));
+    REQUIRE(ui.applyBookmark("Overview", camera, 0.0));
+    CHECK(ui.layerVisible(Group::Room));
+    CHECK(ui.layerVisible(Group::FridgeInterior));
+    CHECK(ui.layerVisible(Group::Wiring));
+    CHECK_FALSE(ui.layerVisible(Group::Rack));       // the user's own choice survives the round trip
+    CHECK_FALSE(ui.layersBeforeIsland().has_value());
+}

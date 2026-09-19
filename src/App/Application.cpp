@@ -114,6 +114,7 @@ Status Application::initImGui() {
     ui::Strings::setGlobal(ui::Strings::load().value_or(ui::Strings{}));
 
     QXL_TRY_ASSIGN(renderer_, gfx::Renderer::create(labRendererDesc(resources_.theme)));
+    if (auto st = resources_.loadLogo(); !st) QXL_LOG_WARN(Ui, "logo: {}", st.error().message); // the bar shows the name alone
     // A lit room (spec 18 §4): a soft key light from above, the environment's irradiance and
     // reflections through the IBL, and the exposure the spec recommends for that environment
     // (E/π ≈ 1.4 from the panels: sunlit white ≈ 2 HDR at exposure 1). The constant ambient only serves the `ibl = false` path.

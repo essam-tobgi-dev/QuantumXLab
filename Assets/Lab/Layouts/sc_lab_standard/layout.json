@@ -3,7 +3,7 @@
     "kind": "lab.layout",
     "schema": 1,
     "app": "0.1.0",
-    "created": "2026-09-18T12:04:07Z"
+    "created": "2026-09-19T19:56:07Z"
   },
   "data": {
     "id": "sc_lab_standard",
@@ -102,11 +102,11 @@
     },
     "compressor": {
       "position_m": [
-        -3.2,
+        -3.05,
         0.0,
-        2.6
+        2.55
       ],
-      "outside": true
+      "outside": false
     },
     "props": [
       {
