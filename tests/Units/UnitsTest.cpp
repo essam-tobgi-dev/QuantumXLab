@@ -1,5 +1,6 @@
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <numbers>
 #include "Units/Units.hpp"
 #include <cmath>
 #include <type_traits>
@@ -38,7 +39,7 @@ static_assert(consts::Phi0.v > 2.0678e-15 && consts::Phi0.v < 2.0679e-15);
 TEST_CASE("angular frequency conversions carry 2π explicitly") {
     Frequency f = 4.8_GHz;
     AngularFrequency w = omega(f);
-    REQUIRE(w.v == Approx(2 * M_PI * 4.8e9));
+    REQUIRE(w.v == Approx(2 * std::numbers::pi * 4.8e9));
     REQUIRE(freq(w).v == Approx(f.v));
     REQUIRE((sqrt(Energy(4.0) * Energy(9.0))).v == Approx(6.0));
     Dimensionless d = 2.0_GHz * 1.0_ns;

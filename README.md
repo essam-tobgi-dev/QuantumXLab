@@ -122,7 +122,7 @@ flowchart TB
 
 ## Getting started
 
-**Requirements:** CMake ≥ 3.28, Ninja, a C++23 compiler (AppleClang 21, Clang 17+, GCC 13+), OpenGL 4.1. Dependencies (GLFW, GLM, Dear ImGui, ImPlot, FreeType, spdlog, Catch2) are fetched and pinned automatically on first configure. Developed and verified on macOS (Apple silicon); Linux and Windows builds are set up in CI.
+**Requirements:** CMake ≥ 3.28, Ninja, a C++23 compiler with `std::expected` and `std::jthread` (AppleClang 21 / Xcode 26, Clang 19+, GCC 13+), OpenGL 4.1. Dependencies (GLFW, GLM, Dear ImGui, ImPlot, FreeType, spdlog, Catch2) are fetched and pinned automatically on first configure. Developed and verified on macOS (Apple silicon); Linux and Windows builds are set up in CI.
 
 ```bash
 git clone https://github.com/essam-tobgi-dev/QuantumXLab.git
