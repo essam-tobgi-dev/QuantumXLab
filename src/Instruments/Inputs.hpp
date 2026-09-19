@@ -2,8 +2,8 @@
 // Spec 12 §11 — what the instruments read. Layering decision (SPEC_DEVIATIONS.md): Instruments does
 // not depend on Runtime, so the `RunSnapshot`/`ThermalSnapshot` subscriptions of the §11 sketch are
 // replaced by two narrow value types the App layer fills each frame from the runtime and the cryo
-// model — `RunView` (the live run) and `Environment` (device, calibration, fridge state) — published
-// through an `InputHub` as immutable snapshots that worker-thread acquisitions can hold.
+// model — `RunView` (the live run) and `Environment` (device, calibration, fridge state) —
+// published through an `InputHub` as immutable snapshots that worker-thread acquisitions can hold.
 #include "Cryo/Cryo.hpp"
 #include "Hardware/Hardware.hpp"
 #include "Noise/Noise.hpp"
@@ -46,17 +46,17 @@ struct RunView {
     std::uint32_t levels = 2;
     bool running = false;
     std::uint64_t seed = 0;
-    std::uint64_t shot = 0, shots = 0; // current shot index / requested shots
-    std::uint64_t gateCursor = 0;      // index of the instruction being executed
-    double wallTimeS = 0.0;            // hardware wall-time estimate so far (spec 15)
-    double playheadS = 0.0;            // position inside `schedule`
+    std::uint64_t shot = 0, shots = 0;               // current shot index / requested shots
+    std::uint64_t gateCursor = 0;                    // index of the instruction being executed
+    double wallTimeS = 0.0;                          // hardware wall-time estimate so far (spec 15)
+    double playheadS = 0.0;                          // position inside `schedule`
     std::shared_ptr<const pulse::Schedule> schedule; // the compiled pulse schedule of one shot
     std::shared_ptr<const qsim::Snapshot> state;     // amplitudes / density matrix / reduced states
-    std::shared_ptr<const qsim::Snapshot> ideal;     // noiseless reference run at the same gate index
-    std::vector<std::int8_t> measuredBits;           // per qubit: outcome of the current shot, −1 = none
-    std::vector<LevelSample> populations;            // time-domain record for `probe_leakage`
-    std::vector<JumpRecord> jumps;                   // `probe_trajectory`
-    std::optional<GateComparison> gate;              // `probe_fidelity` process channel
+    std::shared_ptr<const qsim::Snapshot> ideal; // noiseless reference run at the same gate index
+    std::vector<std::int8_t> measuredBits; // per qubit: outcome of the current shot, −1 = none
+    std::vector<LevelSample> populations;  // time-domain record for `probe_leakage`
+    std::vector<JumpRecord> jumps;         // `probe_trajectory`
+    std::optional<GateComparison> gate;    // `probe_fidelity` process channel
 };
 
 // cryo::NoiseBudget only references its coax catalogue; this owns both so an Environment can
@@ -83,14 +83,14 @@ struct Environment {
     std::shared_ptr<const hw::Device> device;
     std::shared_ptr<const hw::Calibration> calibration;
     std::shared_ptr<const noise::NoiseModel> noiseModel; // optional
-    std::shared_ptr<const cryo::Wiring> wiring;          // optional: without it the standard chains apply
-    std::shared_ptr<const CryoCatalogs> catalogs;        // optional: a shared default is used without it
-    cryo::ThermalSnapshot thermal;                       // latest stage temperatures (truth)
-    cryo::GhsSnapshot ghs;                               // pressures and ³He flow
-    double labTimeS = 0.0;                               // lab clock, stamps every trace
-    std::uint64_t seed = 0x5EEDC0FFEE17ull;              // instrument noise seed when no run is active
-    double feedlineCableLengthM = 13.6;                  // rack → fridge → rack (layout routing.json)
-    double cableVelocityFactor = 0.7;                    // PTFE coax
+    std::shared_ptr<const cryo::Wiring> wiring;   // optional: without it the standard chains apply
+    std::shared_ptr<const CryoCatalogs> catalogs; // optional: a shared default is used without it
+    cryo::ThermalSnapshot thermal;                // latest stage temperatures (truth)
+    cryo::GhsSnapshot ghs;                        // pressures and ³He flow
+    double labTimeS = 0.0;                        // lab clock, stamps every trace
+    std::uint64_t seed = 0x5EEDC0FFEE17ull;       // instrument noise seed when no run is active
+    double feedlineCableLengthM = 13.6;           // rack → fridge → rack (layout routing.json)
+    double cableVelocityFactor = 0.7;             // PTFE coax
 
     // Stage temperatures of `thermal`, with the nominal value wherever the snapshot holds none.
     cryo::StageArray stageTemperatures() const;
@@ -112,13 +112,13 @@ bool channelListCovers(std::string_view channel, std::uint32_t index);
 
 // Latest immutable inputs. The App publishes; instruments take a snapshot per acquisition.
 class InputHub {
-public:
+  public:
     void publish(RunView v);
     void publish(Environment e);
     std::shared_ptr<const RunView> run() const;
     std::shared_ptr<const Environment> environment() const;
 
-private:
+  private:
     mutable std::mutex mu_;
     std::shared_ptr<const RunView> run_;
     std::shared_ptr<const Environment> env_;

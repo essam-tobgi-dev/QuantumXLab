@@ -26,7 +26,10 @@ struct Bookmark {
     double orthoHeight = 2.0; // world units visible vertically in ortho mode
 };
 
-struct Ray { glm::dvec3 origin; glm::dvec3 dir; };
+struct Ray {
+    glm::dvec3 origin;
+    glm::dvec3 dir;
+};
 
 struct Frustum {
     glm::dvec4 planes[6]; // normalized (a,b,c,d): dot(n,p)+d >= 0 inside
@@ -34,7 +37,7 @@ struct Frustum {
 };
 
 class Camera {
-public:
+  public:
     Camera();
     // --- state
     const glm::dvec3& position() const { return pos_; }
@@ -47,7 +50,10 @@ public:
     double farPlane() const { return far_; }
     void setAspect(double a) { aspect_ = a > 0 ? a : 1.0; }
     double aspect() const { return aspect_; }
-    void setClip(double n, double f) { near_ = n; far_ = f; }
+    void setClip(double n, double f) {
+        near_ = n;
+        far_ = f;
+    }
     void setOrtho(bool o) { ortho_ = o; }
     void setFov(double deg) { fovDeg_ = deg; }
     void lookAt(const glm::dvec3& pos, const glm::dvec3& tgt, const glm::dvec3& up = {0, 1, 0});
@@ -55,9 +61,9 @@ public:
     Bookmark bookmark(const std::string& name = "") const;
 
     // --- interaction (deltas in pixels unless noted)
-    void orbit(double dxPx, double dyPx);          // rotate around target
+    void orbit(double dxPx, double dyPx);              // rotate around target
     void pan(double dxPx, double dyPx, int viewportH); // translate target in view plane
-    void dolly(double scrollSteps);                 // exponential distance change / ortho zoom
+    void dolly(double scrollSteps);                    // exponential distance change / ortho zoom
     // Zoom toward a world point: the point stays under the same pixel while the distance to it
     // shrinks by 0.9 per step (grows for negative steps). Ortho: zooms the height about it.
     void dollyToward(const glm::dvec3& anchor, double scrollSteps);
@@ -65,20 +71,20 @@ public:
     // viewing line to the depth of `point`, so a drag rotates around what was under the cursor.
     void setPivot(const glm::dvec3& point);
     void fly(const glm::dvec3& localMove, double dt, double speed); // fly mode translate
-    void rotateInPlace(double dxPx, double dyPx);   // fly mode look
+    void rotateInPlace(double dxPx, double dyPx);                   // fly mode look
 
     // --- animation
     void transitionTo(const Bookmark& b, double durationS);
-    void update(double dt);                         // advances the transition (ease in-out)
+    void update(double dt); // advances the transition (ease in-out)
     bool transitioning() const { return animT_ < animDur_; }
-    void cancelTransition();                        // spec 18 §6: any user input stops a flight where it is
+    void cancelTransition(); // spec 18 §6: any user input stops a flight where it is
 
     // --- framing
     void frame(const Aabb& box, double marginFactor = 1.15);
 
     // --- matrices
-    glm::dmat4 viewMatrix() const;                  // absolute (double)
-    glm::mat4 viewRel() const;                      // view with camera position at the origin (float upload)
+    glm::dmat4 viewMatrix() const; // absolute (double)
+    glm::mat4 viewRel() const;     // view with camera position at the origin (float upload)
     glm::mat4 projMatrix() const;
     glm::dmat4 viewProj() const { return glm::dmat4(projMatrix()) * viewMatrix(); }
     Frustum frustum() const;
@@ -93,7 +99,7 @@ public:
     // Pixel plus GL window depth (0 near … 1 far, as the depth buffer stores it) → world point.
     glm::dvec3 unproject(double px, double py, double depth01, int w, int h) const;
 
-private:
+  private:
     glm::dvec3 pos_{0, 1.5, 5}, target_{0, 0, 0}, up_{0, 1, 0};
     double fovDeg_ = 45.0, aspect_ = 16.0 / 9.0, near_ = 0.01, far_ = 200.0;
     bool ortho_ = false;

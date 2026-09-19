@@ -10,7 +10,7 @@ namespace qlab::report::font {
 
 inline constexpr int kGlyphWidth = 5;
 inline constexpr int kGlyphHeight = 7;
-inline constexpr int kAdvance = 6;   // glyph width plus one column of spacing
+inline constexpr int kAdvance = 6; // glyph width plus one column of spacing
 
 // Five column bitmaps; bit k of a column is row k, row 0 at the top.
 std::span<const std::uint8_t> glyph(char c);

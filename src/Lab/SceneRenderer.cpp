@@ -1,6 +1,6 @@
 // Spec 17 §10 — culling and level of detail (CPU only).
-#include "Lab/Materials.hpp"
 #include "Lab/SceneRenderer.hpp"
+#include "Lab/Materials.hpp"
 #include <algorithm>
 #include <cmath>
 
@@ -11,12 +11,15 @@ constexpr float kXrayOpacity = 0.12f; // spec 17 §7.6
 constexpr double kTintMix = 0.6;      // albedo lerp toward the colormap value (spec 17 §8)
 
 bool insideBox(const gfx::Aabb& box, const glm::dvec3& p, double margin) {
-    return box.valid() && p.x > box.min.x - margin && p.x < box.max.x + margin && p.y > box.min.y - margin &&
-           p.y < box.max.y + margin && p.z > box.min.z - margin && p.z < box.max.z + margin;
+    return box.valid() && p.x > box.min.x - margin && p.x < box.max.x + margin &&
+           p.y > box.min.y - margin && p.y < box.max.y + margin && p.z > box.min.z - margin &&
+           p.z < box.max.z + margin;
 }
 } // namespace
 
-SceneRenderer::SceneRenderer(Scene& scene) : scene_(&scene) { lodState_.assign(scene.size(), 0); }
+SceneRenderer::SceneRenderer(Scene& scene) : scene_(&scene) {
+    lodState_.assign(scene.size(), 0);
+}
 
 // Spec 17 §11 `lights[]` → gfx::PointLight. Photometry to the renderer's radiometric scale: a
 // luminaire of flux Φ (lm) is treated as an isotropic source of intensity I = Φ / 4π (cd), whose
@@ -30,7 +33,8 @@ std::vector<gfx::PointLight> SceneRenderer::pointLights(const glm::dvec3& eye) c
     constexpr double kLuxPerUnit = 1500.0;
     std::vector<gfx::PointLight> out;
     for (const auto& light : scene_->layout().lights) {
-        if (out.size() >= static_cast<std::size_t>(gfx::kMaxPointLights)) break;
+        if (out.size() >= static_cast<std::size_t>(gfx::kMaxPointLights))
+            break;
         const double r = std::max(0.1, 0.5 * std::hypot(light.size_m.x, light.size_m.y));
         const double intensity = light.lumens / (4.0 * 3.14159265358979) / (kLuxPerUnit * r * r);
         gfx::PointLight p{};
@@ -44,10 +48,12 @@ std::vector<gfx::PointLight> SceneRenderer::pointLights(const glm::dvec3& eye) c
 }
 SceneRenderer::~SceneRenderer() = default;
 
-void SceneRenderer::prepare(const gfx::Camera& camera, const Interaction& ui, const OverlayVisuals* overlays) {
+void SceneRenderer::prepare(const gfx::Camera& camera, const Interaction& ui,
+                            const OverlayVisuals* overlays) {
     items_.clear();
     stats_ = RenderStats{};
-    if (lodState_.size() != scene_->size()) lodState_.assign(scene_->size(), 0);
+    if (lodState_.size() != scene_->size())
+        lodState_.assign(scene_->size(), 0);
     const gfx::Frustum frustum = camera.frustum();
     const glm::dvec3 eye = camera.position();
     eye_ = eye;
@@ -59,8 +65,10 @@ void SceneRenderer::prepare(const gfx::Camera& camera, const Interaction& ui, co
     gfx::Aabb occluder = emptyAabb();
     if (!xray && !cutaway && ui.cansVisible() && ui.layerVisible(Group::FridgeExterior)) {
         for (ComponentId id : scene_->findByDescriptor("ovc"))
-            if (const Node* n = scene_->node(id); n && n->worldBounds.valid() && ui.nodeVisible(*n)) occluder = n->worldBounds;
-        if (insideBox(occluder, eye, 0.05)) occluder = emptyAabb(); // the camera is inside the can
+            if (const Node* n = scene_->node(id); n && n->worldBounds.valid() && ui.nodeVisible(*n))
+                occluder = n->worldBounds;
+        if (insideBox(occluder, eye, 0.05))
+            occluder = emptyAabb(); // the camera is inside the can
     }
 
     const auto& nodes = scene_->nodes();
@@ -73,7 +81,8 @@ void SceneRenderer::prepare(const gfx::Camera& camera, const Interaction& ui, co
             continue;
         }
         ++i;
-        if (n.lods.empty() || !n.hasGeometry()) continue;
+        if (n.lods.empty() || !n.hasGeometry())
+            continue;
         ++stats_.considered;
         if (!ui.nodeVisible(n)) {
             ++stats_.layerHidden;
@@ -81,7 +90,8 @@ void SceneRenderer::prepare(const gfx::Camera& camera, const Interaction& ui, co
         }
         // (a part that pokes out of the can — the still pumping line above the top plate — is kept)
         if (occluder.valid() && n.group != Group::FridgeExterior && n.group != Group::Room &&
-            insideBox(occluder, n.worldBounds.min, 0.0) && insideBox(occluder, n.worldBounds.max, 0.0)) {
+            insideBox(occluder, n.worldBounds.min, 0.0) &&
+            insideBox(occluder, n.worldBounds.max, 0.0)) {
             ++stats_.occluded;
             continue;
         }
@@ -89,20 +99,25 @@ void SceneRenderer::prepare(const gfx::Camera& camera, const Interaction& ui, co
         double distance = glm::length(n.worldBounds.center() - eye);
         auto level = static_cast<std::size_t>(lodState_[i - 1]);
         level = std::min(level, n.lods.size() - 1);
-        while (level + 1 < n.lods.size() && distance > n.lods[level].maxDistance_m * (1.0 + hysteresis_)) ++level;
-        while (level > 0 && distance < n.lods[level - 1].maxDistance_m * (1.0 - hysteresis_)) --level;
+        while (level + 1 < n.lods.size() &&
+               distance > n.lods[level].maxDistance_m * (1.0 + hysteresis_))
+            ++level;
+        while (level > 0 && distance < n.lods[level - 1].maxDistance_m * (1.0 - hysteresis_))
+            --level;
         lodState_[i - 1] = static_cast<std::uint8_t>(level);
         MeshHandle mesh = n.lods[level].mesh;
         if (!mesh.valid()) {
             // Spec 17 §10 group policy on top of the descriptor's table: the fridge exterior is
             // never hidden, and X-ray keeps the wiring (and the shells it shows through) visible.
-            bool keep = n.group == Group::FridgeExterior || (xray && (n.group == Group::Wiring || n.xrayFade));
+            bool keep = n.group == Group::FridgeExterior ||
+                        (xray && (n.group == Group::Wiring || n.xrayFade));
             if (!keep) {
                 ++stats_.lodHidden;
                 continue;
             }
             for (std::size_t l = n.lods.size(); l-- > 0;)
-                if (n.lods[l].mesh.valid()) mesh = n.lods[l].mesh;
+                if (n.lods[l].mesh.valid())
+                    mesh = n.lods[l].mesh;
             if (!mesh.valid()) {
                 ++stats_.lodHidden;
                 continue;
@@ -119,8 +134,10 @@ void SceneRenderer::prepare(const gfx::Camera& camera, const Interaction& ui, co
         item.pickable = n.pickable && n.kind == NodeKind::Component;
         if (overlays) {
             if (auto tint = overlays->albedo.find(n.id.value); tint != overlays->albedo.end())
-                item.material.baseColor = glm::mix(item.material.baseColor, tint->second, static_cast<float>(kTintMix));
-            if (auto glow = overlays->emissive.find(n.id.value); glow != overlays->emissive.end() && glow->second > 0.0f) {
+                item.material.baseColor =
+                    glm::mix(item.material.baseColor, tint->second, static_cast<float>(kTintMix));
+            if (auto glow = overlays->emissive.find(n.id.value);
+                glow != overlays->emissive.end() && glow->second > 0.0f) {
                 item.material.emissive = glm::vec3(item.material.baseColor);
                 item.material.emissiveStrength = glow->second;
                 item.instanceable = false; // emissive strength is not a per-instance attribute
@@ -135,7 +152,8 @@ void SceneRenderer::prepare(const gfx::Camera& camera, const Interaction& ui, co
             item.clipped = true;
             item.instanceable = false;
         }
-        if (item.material.baseColor != labMaterial(n.material).baseColor || item.material.emissiveStrength > 0.0f)
+        if (item.material.baseColor != labMaterial(n.material).baseColor ||
+            item.material.emissiveStrength > 0.0f)
             item.instanceable = false;
         stats_.triangles += scene_->meshes().triangles(mesh);
         items_.push_back(std::move(item));

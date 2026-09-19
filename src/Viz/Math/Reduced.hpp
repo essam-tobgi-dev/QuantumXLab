@@ -22,7 +22,8 @@ Result<Matrix> reducedSingle(std::span<const Complex> psi, std::uint32_t nQubits
 
 // ρ_ij (4×4) from a state vector, in the basis |q_j q_i⟩: index = b_i + 2·b_j, i.e. the first
 // qubit named is the least significant, as for `num::reducedState(psi, n, {i, j})`. Cost O(2^n).
-Result<Matrix> reducedPair(std::span<const Complex> psi, std::uint32_t nQubits, std::uint32_t i, std::uint32_t j);
+Result<Matrix> reducedPair(std::span<const Complex> psi, std::uint32_t nQubits, std::uint32_t i,
+                           std::uint32_t j);
 
 // General subset from a state vector (keep[0] least significant). Cost O(2^n · 2^|keep|).
 Result<Matrix> reducedSubset(std::span<const Complex> psi, std::uint32_t nQubits,
@@ -42,15 +43,15 @@ Result<Matrix> computationalBlock(const Matrix& rho, std::uint32_t nSites, std::
 struct BlochVector {
     double x = 0.0, y = 0.0, z = 1.0;
     double norm() const;
-    double theta() const;  // polar angle from +z, [0, π]; 0 for the null vector
-    double phi() const;    // azimuth atan2(y, x), (−π, π]; 0 when x = y = 0
-    double p1() const { return 0.5 * (1.0 - z); }   // P(|1⟩) = (1 − r_z)/2
+    double theta() const; // polar angle from +z, [0, π]; 0 for the null vector
+    double phi() const;   // azimuth atan2(y, x), (−π, π]; 0 when x = y = 0
+    double p1() const { return 0.5 * (1.0 - z); } // P(|1⟩) = (1 − r_z)/2
     std::array<double, 3> array() const { return {x, y, z}; }
 };
 Result<BlochVector> blochVector(const Matrix& rho1q);
 
-double purity(const Matrix& rho);        // Tr ρ²
-double entropyBits(const Matrix& rho);   // S(ρ) = −Tr ρ log₂ ρ
+double purity(const Matrix& rho);      // Tr ρ²
+double entropyBits(const Matrix& rho); // S(ρ) = −Tr ρ log₂ ρ
 
 // Spec 21 §2.2 / §3.8: entropies of two qubits and of the pair, I(i:j) = S_i + S_j − S_ij ∈ [0, 2]
 // and the Wootters concurrence of ρ_ij.
@@ -71,7 +72,8 @@ struct SchmidtSpectrum {
     std::size_t rank = 0;
 };
 Result<SchmidtSpectrum> schmidtSpectrum(std::span<const Complex> psi, std::uint32_t nQubits,
-                                        std::span<const QubitIndex> partition, double rankTol = 1e-10);
+                                        std::span<const QubitIndex> partition,
+                                        double rankTol = 1e-10);
 
 // Number of qubits of a 2^n state vector, or an error when the length is not a power of two.
 Result<std::uint32_t> qubitCountOf(std::size_t amplitudes);

@@ -9,7 +9,7 @@
 namespace qlab::viz {
 
 class HintonView final : public StateView {
-public:
+  public:
     std::string_view id() const override { return "hinton"; }
     std::string_view title() const override { return "Hinton diagram"; }
     Observability observability() const override { return Observability::SimulatorOnly; }
@@ -26,12 +26,12 @@ public:
     float cellSize() const { return cell_; }
     Rect cellRect(std::uint32_t row, std::uint32_t col) const;
 
-protected:
+  protected:
     void rebuild(const ViewInput& in) override;
     void layout() override;
     void drawBody(DrawContext& ctx) override;
 
-private:
+  private:
     DensitySource source_;
     math::HintonModel model_;
     Rect grid_;

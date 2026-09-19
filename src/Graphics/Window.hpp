@@ -13,28 +13,32 @@ struct GLFWwindow;
 namespace qlab::gfx {
 
 struct InputState {
-    double mouseX = 0, mouseY = 0;      // framebuffer pixels
-    double mouseDx = 0, mouseDy = 0;    // since last poll
-    double scrollX = 0, scrollY = 0;    // accumulated since last poll
+    double mouseX = 0, mouseY = 0;   // framebuffer pixels
+    double mouseDx = 0, mouseDy = 0; // since last poll
+    double scrollX = 0, scrollY = 0; // accumulated since last poll
     std::array<bool, 8> mouseDown{};
     std::array<bool, 512> keyDown{};
     bool shift = false, ctrl = false, alt = false, super = false;
-    std::vector<unsigned int> chars;    // text input since last poll
-    void beginPoll() { mouseDx = mouseDy = 0; scrollX = scrollY = 0; chars.clear(); }
+    std::vector<unsigned int> chars; // text input since last poll
+    void beginPoll() {
+        mouseDx = mouseDy = 0;
+        scrollX = scrollY = 0;
+        chars.clear();
+    }
 };
 
 struct WindowDesc {
     int width = 1600, height = 1000;
     std::string title = "QuantumXLab";
-    bool visible = true;   // false = headless / hidden (tests, --selftest)
+    bool visible = true; // false = headless / hidden (tests, --selftest)
     bool vsync = true;
     bool resizable = true;
-    int samples = 0;       // default framebuffer MSAA (viewport has its own FBO); keep 0
+    int samples = 0; // default framebuffer MSAA (viewport has its own FBO); keep 0
     bool srgb = true;
 };
 
 class Window {
-public:
+  public:
     static Result<std::unique_ptr<Window>> create(const WindowDesc& desc);
     ~Window();
     Window(const Window&) = delete;
@@ -64,7 +68,7 @@ public:
     std::function<void(int, int)> onFramebufferResize;
     std::function<void(const std::vector<std::string>&)> onDrop;
 
-private:
+  private:
     Window() = default;
     static void installCallbacks(Window* w);
     GLFWwindow* win_ = nullptr;

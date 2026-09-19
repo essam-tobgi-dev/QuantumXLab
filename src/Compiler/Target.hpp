@@ -19,7 +19,7 @@ struct Target {
     std::vector<std::string> native1q{"U"};
     std::vector<std::string> native2q{"cx"};
     const hw::Device* device = nullptr;
-    std::string name = "{U, cx}";          // device id, for QL4070
+    std::string name = "{U, cx}"; // device id, for QL4070
     // Largest |θ| of one `ms(θ)`: the MS pulse table of spec 10 §6.6 is calibrated up to π/2.
     double maxEntanglerAngle = 0.0;
 
@@ -28,7 +28,8 @@ struct Target {
     // Native set of a device. `preferredEntangler` picks among several native two-qubit gates
     // (cx | ecr on cross-resonance devices, cz | siswap on tunable couplers) and makes it the only
     // two-qubit gate of the output; empty = emit the first listed, accept all of them.
-    static Result<Target> forDevice(const hw::Device& dev, std::string_view preferredEntangler = {});
+    static Result<Target> forDevice(const hw::Device& dev,
+                                    std::string_view preferredEntangler = {});
 
     bool isNative1q(std::string_view gate) const;
     bool isNative2q(std::string_view gate) const;

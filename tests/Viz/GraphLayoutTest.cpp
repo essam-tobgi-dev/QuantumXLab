@@ -1,13 +1,13 @@
 // Spec 21 §3.12, §3.8 — coupling graph of the shipped devices (node/edge counts, positions,
 // calibration colouring with legend, mapping overlay, hit testing) and the entanglement graph of a
 // Bell pair. Headless.
-#include "Hardware/Hardware.hpp"
 #include "Viz/Layout/GraphLayout.hpp"
+#include "Hardware/Hardware.hpp"
 #include "Viz/Math/Color.hpp"
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <numbers>
 #include <cmath>
+#include <numbers>
 #include <set>
 
 using namespace qlab;
@@ -15,7 +15,8 @@ using namespace qlab::viz;
 using namespace qlab::viz::layout;
 using Catch::Approx;
 
-TEST_CASE("coupling graph of sc_heavyhex_27 has 27 nodes and 28 edges at the device's coordinates") {
+TEST_CASE(
+    "coupling graph of sc_heavyhex_27 has 27 nodes and 28 edges at the device's coordinates") {
     auto loaded = hw::loadShippedDevice("sc_heavyhex_27");
     REQUIRE(loaded.has_value());
     const DeviceGraph g = buildCouplingGraph(loaded->device, &loaded->calibration);
@@ -67,7 +68,8 @@ TEST_CASE("coupling graph colours by calibration with a min/max legend (spec 22 
     for (const GraphNode& n : g.nodes) {
         REQUIRE(n.value.has_value());
         const glm::vec3 want = math::sequentialColor(g.nodeLegend.normalised(*n.value));
-        CHECK(glm::length(n.color - want) < 1e-6f); // the node colour is the legend colour of its value
+        CHECK(glm::length(n.color - want) <
+              1e-6f); // the node colour is the legend colour of its value
     }
     for (const GraphEdge& e : g.edges) {
         REQUIRE(e.value.has_value());
@@ -85,7 +87,8 @@ TEST_CASE("coupling graph colours by calibration with a min/max legend (spec 22 
 TEST_CASE("coupling graph: mapping overlay, hit testing, couplers and all-to-all devices") {
     auto five = hw::loadShippedDevice("sc_fixed_5");
     REQUIRE(five.has_value());
-    const std::vector<std::uint32_t> virtualToPhysical{2, 0}; // program q0 → physical 2, q1 → physical 0
+    const std::vector<std::uint32_t> virtualToPhysical{
+        2, 0}; // program q0 → physical 2, q1 → physical 0
     CouplingOptions o;
     o.layout = virtualToPhysical;
     const DeviceGraph g = buildCouplingGraph(five->device, &five->calibration, o);
@@ -105,16 +108,18 @@ TEST_CASE("coupling graph: mapping overlay, hit testing, couplers and all-to-all
     auto grid = hw::loadShippedDevice("sc_tunable_grid_54");
     REQUIRE(grid.has_value());
     const DeviceGraph gg = buildCouplingGraph(grid->device, &grid->calibration);
-    CHECK(gg.dataNodes == 54);           // couplers are nodes of their own kind, not qubits
-    CHECK(gg.edges.size() == 93);        // one per grid edge (SPEC_DEVIATIONS #5)
+    CHECK(gg.dataNodes == 54);    // couplers are nodes of their own kind, not qubits
+    CHECK(gg.edges.size() == 93); // one per grid edge (SPEC_DEVIATIONS #5)
     std::size_t couplers = 0;
-    for (const GraphNode& n : gg.nodes) couplers += n.coupler ? 1 : 0;
+    for (const GraphNode& n : gg.nodes)
+        couplers += n.coupler ? 1 : 0;
     CHECK(couplers == 93);
     CHECK(gg.edges[0].coupler.has_value());
 
     auto ions = hw::loadShippedDevice("ion_chain_11");
     REQUIRE(ions.has_value());
-    CHECK(buildCouplingGraph(ions->device, &ions->calibration).edges.size() == 55); // all-to-all: C(11, 2)
+    CHECK(buildCouplingGraph(ions->device, &ions->calibration).edges.size() ==
+          55); // all-to-all: C(11, 2)
 }
 
 TEST_CASE("entanglement graph of a Bell pair: one full-weight edge labelled C = 1 (spec 21 §5)") {
@@ -123,7 +128,8 @@ TEST_CASE("entanglement graph of a Bell pair: one full-weight edge labelled C = 
     for (std::uint32_t q = 0; q < 3; ++q) {
         SingleReduction s;
         s.qubit = QubitIndex{q};
-        s.entropyBits = q < 2 ? 1.0 : 0.0; // qubits 0, 1 form the pair; qubit 2 is a spectator in |0⟩
+        s.entropyBits =
+            q < 2 ? 1.0 : 0.0; // qubits 0, 1 form the pair; qubit 2 is a spectator in |0⟩
         red.singles.push_back(s);
     }
     PairReduction bell{QubitIndex{0}, QubitIndex{1}, {1.0, 1.0, 0.0, 2.0, 1.0}};
@@ -132,16 +138,17 @@ TEST_CASE("entanglement graph of a Bell pair: one full-weight edge labelled C = 
     const DeviceGraph g = buildEntanglementGraph(nullptr, 3, red);
     REQUIRE(g.nodes.size() == 3);
     REQUIRE(g.edges.size() == 2);
-    CHECK(g.edges[0].weight == Approx(1.0));          // I/2 = 1: full width and opacity
+    CHECK(g.edges[0].weight == Approx(1.0)); // I/2 = 1: full width and opacity
     REQUIRE(g.edges[0].concurrence.has_value());
     CHECK(*g.edges[0].concurrence == Approx(1.0));
     CHECK(g.edges[1].weight == Approx(0.0));
-    CHECK_FALSE(g.edges[1].concurrence.has_value());  // I ≤ 0.01: no label
+    CHECK_FALSE(g.edges[1].concurrence.has_value()); // I ≤ 0.01: no label
     CHECK(*g.nodes[0].value == Approx(1.0));
     CHECK(*g.nodes[2].value == Approx(0.0));
     CHECK(g.edgeLegend.max == Approx(2.0));
     // Without a device the register sits on a circle with unit spacing between neighbours.
     const auto ring = circlePositions(12);
-    CHECK(glm::length(ring[0] - ring[1]) == Approx(2.0 * (12.0 / (2.0 * std::numbers::pi)) * std::sin(std::numbers::pi / 12.0)));
+    CHECK(glm::length(ring[0] - ring[1]) ==
+          Approx(2.0 * (12.0 / (2.0 * std::numbers::pi)) * std::sin(std::numbers::pi / 12.0)));
     CHECK(paletteIndexOf(qec::QubitRole::AncillaX) != paletteIndexOf(qec::QubitRole::AncillaZ));
 }

@@ -15,7 +15,7 @@
 namespace qlab::ui {
 
 class Strings {
-public:
+  public:
     // Loads Assets/Lang/strings.en.json (envelope kind "ui.strings").
     static Result<Strings> load();
     static Result<Strings> fromJson(const core::Json& data);
@@ -30,10 +30,12 @@ public:
     // Keys asked for that the asset does not define, in first-asked order (spec 25 §7 asset lint).
     const std::vector<std::string>& missing() const { return missing_; }
 
-    // `{n}`-style substitution: `format("run.status_running", {{"shot", "12"}, {"shots", "1024"}})`.
-    std::string format(std::string_view key, std::span<const std::pair<std::string_view, std::string>> args) const;
+    // `{n}`-style substitution: `format("run.status_running", {{"shot", "12"}, {"shots",
+    // "1024"}})`.
+    std::string format(std::string_view key,
+                       std::span<const std::pair<std::string_view, std::string>> args) const;
 
-private:
+  private:
     std::map<std::string, std::string, std::less<>> table_;
     mutable std::vector<std::string> missing_;
 };

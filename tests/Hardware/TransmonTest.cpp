@@ -39,8 +39,8 @@ TEST_CASE("charge dispersion is exponentially small in sqrt(8 EJ/EC)") {
     auto d20 = transmon::chargeDispersion01(Frequency(6.0e9), Frequency(0.300e9));
     REQUIRE(d50);
     REQUIRE(d20);
-    REQUIRE(d50->v < d20->v);      // deeper transmon regime suppresses the dispersion
-    REQUIRE(d50->v < 1e6);         // well under a MHz at E_J/E_C = 50
+    REQUIRE(d50->v < d20->v); // deeper transmon regime suppresses the dispersion
+    REQUIRE(d50->v < 1e6);    // well under a MHz at E_J/E_C = 50
     REQUIRE(d50->v >= 0.0);
 }
 
@@ -57,7 +57,7 @@ TEST_CASE("(f01, alpha) inversion round-trips through the exact spectrum") {
 
 TEST_CASE("SQUID flux tunability follows T05 (4.1)") {
     const Frequency ejs(20e9);
-    REQUIRE(transmon::josephsonEnergy(ejs, 0.0).v == Approx(ejs.v));       // sweet spot
+    REQUIRE(transmon::josephsonEnergy(ejs, 0.0).v == Approx(ejs.v));           // sweet spot
     REQUIRE(transmon::josephsonEnergy(ejs, 0.5).v == Approx(0.0).margin(1e3)); // symmetric null
     REQUIRE(transmon::josephsonEnergy(ejs, 0.25).v ==
             Approx(ejs.v * std::cos(3.14159265358979 * 0.25)).epsilon(1e-9));
@@ -92,8 +92,7 @@ TEST_CASE("static ZZ matches the T05 (5.3) closed form") {
     // g = 3.2 MHz, f1 = 4.8 GHz, f2 = 5.0 GHz, alpha1 = alpha2 = -320 MHz.
     const Frequency g(3.2e6), f1(4.8e9), f2(5.0e9), a1(-320e6), a2(-320e6);
     const double delta = f1.v - f2.v;
-    const double expected =
-        2.0 * g.v * g.v * (a1.v + a2.v) / ((delta + a1.v) * (delta - a2.v));
+    const double expected = 2.0 * g.v * g.v * (a1.v + a2.v) / ((delta + a1.v) * (delta - a2.v));
     const double got = transmon::staticZZ(g, f1, f2, a1, a2).v;
     REQUIRE(got == Approx(expected).epsilon(1e-12));
     // |Delta| = 200 MHz < |alpha| = 320 MHz is the straddling regime: ZZ is positive there.
@@ -115,7 +114,8 @@ TEST_CASE("tunable coupler has an off point above both qubits") {
     REQUIRE(off->v > f2.v);
     REQUIRE(transmon::effectiveCoupling(g12, g1c, g2c, f1, f2, *off).v == Approx(0.0).margin(1e3));
     // Moving the coupler down from the off point turns the interaction back on.
-    const double on = transmon::effectiveCoupling(g12, g1c, g2c, f1, f2, Frequency(off->v - 500e6)).v;
+    const double on =
+        transmon::effectiveCoupling(g12, g1c, g2c, f1, f2, Frequency(off->v - 500e6)).v;
     REQUIRE(std::abs(on) > 1e6);
 }
 

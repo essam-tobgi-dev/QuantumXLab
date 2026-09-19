@@ -11,7 +11,8 @@
 
 namespace qlab::gfx {
 
-void Renderer::drawCubeFaces(const ShaderProgram& prog, TextureCube& target, int level, Framebuffer& fbo) {
+void Renderer::drawCubeFaces(const ShaderProgram& prog, TextureCube& target, int level,
+                             Framebuffer& fbo) {
     const int sz = target.levelSize(level);
     glViewport(0, 0, sz, sz);
     for (int face = 0; face < 6; ++face) {
@@ -24,11 +25,16 @@ void Renderer::drawCubeFaces(const ShaderProgram& prog, TextureCube& target, int
 
 Status Renderer::buildEnvironment() {
     core::Timer t;
-    glDisable(GL_DEPTH_TEST); glDisable(GL_CULL_FACE); glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_BLEND);
     envFbo_ = Framebuffer();
 
     // 1. Source environment: pure function of direction (env_lab.frag).
-    CubeDesc src; src.size = 256; src.format = TexFormat::RGB16F; src.levels = 9;   // 256 → 1
+    CubeDesc src;
+    src.size = 256;
+    src.format = TexFormat::RGB16F;
+    src.levels = 9; // 256 → 1
     envSrc_ = TextureCube(src);
     envFbo_.attachCubeFace(0, envSrc_, 0, 0);
     envFbo_.setDrawBuffers(1);
@@ -46,21 +52,25 @@ Status Renderer::buildEnvironment() {
     envSrc_.generateMipmaps();
 
     // 2. Prefiltered specular: level k ↔ roughness k/5, sampling the source mips by pdf.
-    CubeDesc pre = src; pre.levels = 6;   // 256, 128, 64, 32, 16, 8
+    CubeDesc pre = src;
+    pre.levels = 6; // 256, 128, 64, 32, 16, 8
     envPrefiltered_ = TextureCube(pre);
     envPrefilter_.use();
     envSrc_.bind(0);
     envPrefilter_.set("uEnv", 0);
     envPrefilter_.set("uSrcSize", static_cast<float>(src.size));
-    static constexpr unsigned kSamples[6] = {1u, 128u, 512u, 2048u, 2048u, 2048u};   // per level
+    static constexpr unsigned kSamples[6] = {1u, 128u, 512u, 2048u, 2048u, 2048u}; // per level
     for (int level = 0; level < pre.levels; ++level) {
-        envPrefilter_.set("uRoughness", static_cast<float>(level) / static_cast<float>(pre.levels - 1));
+        envPrefilter_.set("uRoughness",
+                          static_cast<float>(level) / static_cast<float>(pre.levels - 1));
         envPrefilter_.setUnsigned("uSamples", kSamples[level]);
         drawCubeFaces(envPrefilter_, envPrefiltered_, level, envFbo_);
     }
 
     // 3. Irradiance: 32² cosine convolution of source mip 3 (32² faces).
-    CubeDesc irr = src; irr.size = 32; irr.levels = 1;
+    CubeDesc irr = src;
+    irr.size = 32;
+    irr.levels = 1;
     envIrradiance_ = TextureCube(irr);
     envIrrProg_.use();
     envSrc_.bind(0);
@@ -69,7 +79,11 @@ Status Renderer::buildEnvironment() {
     drawCubeFaces(envIrrProg_, envIrradiance_, 0, envFbo_);
 
     // 4. BRDF LUT 128² RG16F.
-    TexDesc ld; ld.width = ld.height = 128; ld.format = TexFormat::RG16F; ld.linear = true; ld.clampToEdge = true;
+    TexDesc ld;
+    ld.width = ld.height = 128;
+    ld.format = TexFormat::RG16F;
+    ld.linear = true;
+    ld.clampToEdge = true;
     brdfLut_ = Texture2D(ld);
     Framebuffer lutFbo;
     lutFbo.attachColor(0, brdfLut_);
@@ -81,9 +95,10 @@ Status Renderer::buildEnvironment() {
 
     Framebuffer::bindDefault();
     VertexArray::unbind();
-    glEnable(GL_DEPTH_TEST); glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
     drainGlErrors("Renderer::buildEnvironment");
-    glFinish();   // one-time init: wait so the logged cost is the real GPU time (budget 150 ms)
+    glFinish(); // one-time init: wait so the logged cost is the real GPU time (budget 150 ms)
     QXL_LOG_INFO(Gfx, "environment prefiltered in {:.1f} ms", t.ms());
     return {};
 }

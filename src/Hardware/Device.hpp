@@ -28,9 +28,9 @@ struct QubitInfo {
 };
 
 struct EdgeInfo {
-    std::uint32_t a = 0, b = 0;   // for AllToAll both are 0 and `allToAll` is set on the Device
+    std::uint32_t a = 0, b = 0; // for AllToAll both are 0 and `allToAll` is set on the Device
     EdgeKind kind = EdgeKind::FixedCapacitive;
-    bool directed = false;        // control→target (cross-resonance)
+    bool directed = false;                // control→target (cross-resonance)
     std::optional<std::uint32_t> coupler; // coupler qubit index for TunableCoupler edges
 };
 
@@ -60,12 +60,15 @@ struct ControlTiming {
     ResetPolicy resetPolicy = ResetPolicy::Active;
     std::optional<units::Time> activeResetDuration; // null → readout + feedback + x duration
     double passiveMultiplier = 5.0;
-    units::Time coolingTime{1.5e-3};               // ions
+    units::Time coolingTime{1.5e-3}; // ions
     units::Time maxProgramDuration{10e-3};
     units::Time qecCycleTime{1e-6};
 };
 
-struct Feedline { int id = 0; std::vector<std::uint32_t> qubits; };
+struct Feedline {
+    int id = 0;
+    std::vector<std::uint32_t> qubits;
+};
 
 struct ReadoutConfig {
     std::vector<units::Frequency> resonatorFrequencies; // per qubit index (transmons)
@@ -89,8 +92,8 @@ struct MotionalModes {
     std::string axis = "axial";
     int cutoff = 8;
     double heatingQuantaPerS = 50.0;
-    units::Frequency omegaZ{0.3e6};  // axial COM (ordinary frequency)
-    units::Frequency omegaR{3.0e6};  // radial
+    units::Frequency omegaZ{0.3e6}; // axial COM (ordinary frequency)
+    units::Frequency omegaR{3.0e6}; // radial
 };
 
 struct IonInfo {
@@ -101,7 +104,11 @@ struct IonInfo {
     double lambDickeNominal = 0.08;
 };
 
-struct DriveCrosstalk { std::uint32_t from = 0, to = 0; double amplitudeRatio = 0.0; double phase = 0.0; };
+struct DriveCrosstalk {
+    std::uint32_t from = 0, to = 0;
+    double amplitudeRatio = 0.0;
+    double phase = 0.0;
+};
 
 struct Device {
     std::string id;
@@ -127,9 +134,11 @@ struct Device {
     std::size_t dataQubitCount() const;
     bool hasQubit(std::uint32_t q) const { return q < qubits.size(); }
     bool isCoupler(std::uint32_t q) const;
-    // Adjacent in either direction (couplers are not adjacent to anything; edges are between data qubits).
+    // Adjacent in either direction (couplers are not adjacent to anything; edges are between data
+    // qubits).
     bool adjacent(std::uint32_t a, std::uint32_t b) const;
-    // Index into `edges` for the pair (either order), or nullopt. AllToAll devices return 0 for any distinct pair.
+    // Index into `edges` for the pair (either order), or nullopt. AllToAll devices return 0 for any
+    // distinct pair.
     std::optional<std::size_t> edgeIndex(std::uint32_t a, std::uint32_t b) const;
     // True when the edge is directed and (control=a, target=b) is its native direction.
     bool nativeDirection(std::uint32_t control, std::uint32_t target) const;
@@ -137,7 +146,8 @@ struct Device {
     std::size_t degree(std::uint32_t q) const { return neighbours(q).size(); }
     // BFS hop distance over the coupling graph; returns -1 when disconnected.
     int distance(std::uint32_t a, std::uint32_t b) const;
-    std::vector<std::vector<int>> distanceMatrix() const; // data qubits only in index space of all qubits
+    std::vector<std::vector<int>>
+    distanceMatrix() const; // data qubits only in index space of all qubits
     std::vector<std::uint32_t> dataQubits() const;
     std::optional<int> feedlineOf(std::uint32_t q) const;
 

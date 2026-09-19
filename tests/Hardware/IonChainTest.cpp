@@ -29,7 +29,8 @@ TEST_CASE("equilibrium positions match the analytic small-N solutions") {
     // Chains stay ordered and symmetric about the centre for larger N.
     auto u11 = ion::equilibriumPositions(11);
     REQUIRE(u11);
-    for (std::size_t k = 1; k < u11->size(); ++k) REQUIRE((*u11)[k] > (*u11)[k - 1]);
+    for (std::size_t k = 1; k < u11->size(); ++k)
+        REQUIRE((*u11)[k] > (*u11)[k - 1]);
     REQUIRE((*u11)[0] == Approx(-(*u11)[10]).epsilon(1e-6));
     REQUIRE((*u11)[5] == Approx(0.0).margin(1e-9));
 }

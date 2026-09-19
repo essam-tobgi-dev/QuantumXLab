@@ -11,17 +11,24 @@ enum class FidelityClass { Exact, Numerical, Statistical, Model, Illustrative };
 
 constexpr std::string_view fidelityName(FidelityClass c) {
     switch (c) {
-    case FidelityClass::Exact: return "Exact";
-    case FidelityClass::Numerical: return "Numerical";
-    case FidelityClass::Statistical: return "Statistical";
-    case FidelityClass::Model: return "Model";
-    case FidelityClass::Illustrative: return "Illustrative";
+    case FidelityClass::Exact:
+        return "Exact";
+    case FidelityClass::Numerical:
+        return "Numerical";
+    case FidelityClass::Statistical:
+        return "Statistical";
+    case FidelityClass::Model:
+        return "Model";
+    case FidelityClass::Illustrative:
+        return "Illustrative";
     }
     return "?";
 }
 
 // A quantity takes the weakest class of its inputs (spec 00 §5):
 // Exact > Numerical > Statistical > Model > Illustrative.
-constexpr FidelityClass weakest(FidelityClass a, FidelityClass b) { return a > b ? a : b; }
+constexpr FidelityClass weakest(FidelityClass a, FidelityClass b) {
+    return a > b ? a : b;
+}
 
 } // namespace qlab

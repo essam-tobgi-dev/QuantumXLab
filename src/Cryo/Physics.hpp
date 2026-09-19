@@ -1,8 +1,8 @@
 #pragma once
 // Spec 11 / T07 §9 / T08 — small physics helpers private to the cryo module (SI doubles).
 // Units module is not a dependency of cryo; suffixes name the unit (T_K, P_W, f_Hz).
-#include <cmath>
 #include <algorithm>
+#include <cmath>
 
 namespace qlab::cryo::phys {
 
@@ -14,20 +14,25 @@ inline constexpr double kZ0_ohm = 50.0;
 
 // Bose–Einstein occupation of a mode at f, T (T07 (9.1)).
 inline double thermalPhotons(double f_Hz, double T_K) {
-    if (T_K <= 0.0) return 0.0;
+    if (T_K <= 0.0)
+        return 0.0;
     double x = kPlanck_Js * f_Hz / (kBoltzmann_JK * T_K);
-    if (x > 700.0) return 0.0;
+    if (x > 700.0)
+        return 0.0;
     return 1.0 / std::expm1(x);
 }
 
 // Inverse of thermalPhotons: radiative temperature giving occupation n at f.
 inline double effectiveTemperature(double f_Hz, double n) {
-    if (n <= 0.0) return 0.0;
+    if (n <= 0.0)
+        return 0.0;
     return kPlanck_Js * f_Hz / (kBoltzmann_JK * std::log1p(1.0 / n));
 }
 
 // Qubit excited-state population implied by a photon bath of occupation n (T08 (10.1) form).
-inline double populationFromPhotons(double n) { return n / (1.0 + 2.0 * n); }
+inline double populationFromPhotons(double n) {
+    return n / (1.0 + 2.0 * n);
+}
 
 // Effective qubit temperature from a measured excited population P1 at f.
 inline double temperatureFromPopulation(double f_Hz, double P1) {
@@ -35,10 +40,18 @@ inline double temperatureFromPopulation(double f_Hz, double P1) {
     return kPlanck_Js * f_Hz / (kBoltzmann_JK * std::log((1.0 - P1) / P1));
 }
 
-inline double dbToLinear(double dB) { return std::pow(10.0, dB / 10.0); }
-inline double linearToDb(double x) { return 10.0 * std::log10(x); }
-inline double dbmToWatts(double dBm) { return 1e-3 * std::pow(10.0, dBm / 10.0); }
-inline double wattsToDbm(double W) { return 10.0 * std::log10(W / 1e-3); }
+inline double dbToLinear(double dB) {
+    return std::pow(10.0, dB / 10.0);
+}
+inline double linearToDb(double x) {
+    return 10.0 * std::log10(x);
+}
+inline double dbmToWatts(double dBm) {
+    return 1e-3 * std::pow(10.0, dBm / 10.0);
+}
+inline double wattsToDbm(double W) {
+    return 10.0 * std::log10(W / 1e-3);
+}
 
 // Power dissipated in an attenuator of A dB with input power P_in (spec 11 §2.3).
 inline double attenuatorDissipation(double P_in_W, double A_dB) {

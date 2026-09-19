@@ -22,10 +22,12 @@ int CryoStack::advance(double dtSeconds) {
     constexpr int kMaxSteps = 10;
     while (carry_ >= kStepSeconds && steps < kMaxSteps) {
         carry_ -= kStepSeconds;
-        if (auto s = sequencer.step(kStepSeconds)) snapshot = *s;
+        if (auto s = sequencer.step(kStepSeconds))
+            snapshot = *s;
         ++steps;
     }
-    if (carry_ > kMaxSteps * kStepSeconds) carry_ = 0.0;
+    if (carry_ > kMaxSteps * kStepSeconds)
+        carry_ = 0.0;
     return steps;
 }
 
@@ -48,9 +50,11 @@ void CryoStack::settle() {
         snapshot = *steady;
     }
     const std::size_t still = static_cast<std::size_t>(cryo::stageIndex(cryo::Stage::STILL));
-    for (int i = 0; i < 48; ++i) ghs.step(600.0, network.cooling.stillHeater_W, network.temperatures()[still]);
+    for (int i = 0; i < 48; ++i)
+        ghs.step(600.0, network.cooling.stillHeater_W, network.temperatures()[still]);
     for (int i = 0; i < 16 && sequencer.state() != cryo::FridgeState::Base; ++i) {
-        if (auto s = sequencer.step(kStepSeconds)) snapshot = *s;
+        if (auto s = sequencer.step(kStepSeconds))
+            snapshot = *s;
     }
 }
 
@@ -58,7 +62,8 @@ Result<cryo::Wiring> wiringFor(const hw::Device& device) {
     const std::filesystem::path file = device.directory / "wiring.json";
     if (std::filesystem::exists(file)) {
         auto loaded = cryo::loadWiring(file);
-        if (loaded) return loaded;
+        if (loaded)
+            return loaded;
         // Spec 11 is the dilution refrigerator: an ion trap's "wiring" is an optical path, and the
         // shipped ion files name chains (`optical_raman_individual`, `trap_rf_drive`, …) that
         // `cryo::ChainCatalog` does not define. That must not stop the laboratory from opening —
@@ -74,7 +79,8 @@ Result<cryo::Wiring> wiringFor(const hw::Device& device) {
     cryo::Wiring w;
     w.device = device.id;
     const auto add = [&](std::string_view chain, std::string id, std::string channel) {
-        if (auto line = cryo::ChainCatalog::instantiate(chain, std::move(id), std::move(channel), w.stageLengths_m))
+        if (auto line = cryo::ChainCatalog::instantiate(chain, std::move(id), std::move(channel),
+                                                        w.stageLengths_m))
             w.lines.push_back(std::move(*line));
     };
     for (std::uint32_t q = 0; q < device.qubitCount(); ++q) {
@@ -101,7 +107,8 @@ Result<std::unique_ptr<CryoStack>> makeCryoStack(const hw::Device& device) {
 // ---------------------------------------------------------------- laboratory
 
 LabStack::LabStack(lab::Scene s, const lab::BindingRegistry& bindings)
-    : scene(std::move(s)), interaction(scene, &bindings), renderer(scene), overlays(scene, bindings) {}
+    : scene(std::move(s)), interaction(scene, &bindings), renderer(scene),
+      overlays(scene, bindings) {}
 
 // ---------------------------------------------------------------- model
 
@@ -116,11 +123,12 @@ Result<std::unique_ptr<LabModel>> LabModel::create(Config config) {
     model->views_ = viz::makeAllViews();
     model->recordChannels();
     registerBindingProviders(model->bindings_, model->live_state_, model->statics_);
-    if (config.instruments) model->instruments_.setEventBus(&model->bus_);
+    if (config.instruments)
+        model->instruments_.setEventBus(&model->bus_);
     QXL_TRY(model->selectDevice(config.device));
     if (config.instruments) {
         instr::StandardSetOptions opts;
-        opts.probes = true;   // the registry hides them in Physical-lab mode (spec 12 §12)
+        opts.probes = true; // the registry hides them in Physical-lab mode (spec 12 §12)
         QXL_TRY(model->instruments_.createStandardSet(opts));
         QXL_TRY(model->bindInstruments());
     }
@@ -155,7 +163,8 @@ void LabModel::subscribeEvents() {
 Status LabModel::selectDevice(std::string_view id) {
     QXL_TRY(session_.selectDevice(id));
     const hw::Device* device = session_.device();
-    if (device == nullptr) return fail(ErrorCode::NotFound, std::format("device '{}' did not load", id));
+    if (device == nullptr)
+        return fail(ErrorCode::NotFound, std::format("device '{}' did not load", id));
     QXL_TRY_ASSIGN(cryo_, makeCryoStack(*device));
     LiveState& s = *live_state_;
     s.device = viz::borrow(*device);
@@ -174,13 +183,15 @@ Status LabModel::selectDevice(std::string_view id) {
     statics_.setNumber("device.qubits", static_cast<double>(device->qubitCount()));
     statics_.setNumber("device.edges", static_cast<double>(device->edges.size()));
     layout_ = defaultLayoutFor(device->id);
-    if (buildLab_) QXL_TRY(rebuildScene());
+    if (buildLab_)
+        QXL_TRY(rebuildScene());
     return {};
 }
 
 Status LabModel::rebuildScene() {
     const hw::Device* device = session_.device();
-    if (device == nullptr) return fail(ErrorCode::NotFound, "no device selected");
+    if (device == nullptr)
+        return fail(ErrorCode::NotFound, "no device selected");
     lab::BuildOptions options;
     options.deviceOverride = device->id;
     QXL_TRY_ASSIGN(lab::Scene scene, lab::buildScene(layout_, options));
@@ -189,19 +200,25 @@ Status LabModel::rebuildScene() {
     lab_ = std::make_unique<LabStack>(std::move(scene), bindings_);
     // Spec 21 §1.1: the qubit ↔ component map is read once, at device load.
     selection_.bindScene(lab_->scene);
-    for (const std::string& d : diagnostics_) QXL_LOG_DEBUG(App, "scene: {}", d);
-    if (auto st = loadTour(); !st) QXL_LOG_WARN(App, "tour: {}", st.error().message);
+    for (const std::string& d : diagnostics_)
+        QXL_LOG_DEBUG(App, "scene: {}", d);
+    if (auto st = loadTour(); !st)
+        QXL_LOG_WARN(App, "tour: {}", st.error().message);
     return {};
 }
 
 Status LabModel::loadTour() {
     tour_.reset();
-    if (lab_ == nullptr) return {};
+    if (lab_ == nullptr)
+        return {};
     const std::filesystem::path file = core::assetDir() / "Lab" / "Tours" / (layout_ + ".json");
-    if (!std::filesystem::exists(file)) return {}; // a layout without a tour is not an error
-    QXL_TRY_ASSIGN(lab::Tour tour, lab::Tour::load(file, lab_->scene, lab_->interaction, &bindings_));
+    if (!std::filesystem::exists(file))
+        return {}; // a layout without a tour is not an error
+    QXL_TRY_ASSIGN(lab::Tour tour,
+                   lab::Tour::load(file, lab_->scene, lab_->interaction, &bindings_));
     tour.setPhysicalLab(live_state_->physicalLab);
-    for (const std::string& w : tour.warnings()) QXL_LOG_INFO(App, "tour: {}", w);
+    for (const std::string& w : tour.warnings())
+        QXL_LOG_INFO(App, "tour: {}", w);
     tour_ = std::make_unique<lab::Tour>(std::move(tour));
     return {};
 }
@@ -212,23 +229,27 @@ Status LabModel::bindInstruments() {
     // the descriptors, so a new instrument needs no code here (spec 02 §7).
     QXL_TRY_ASSIGN(auto descriptors, instr::loadInstrumentDescriptors());
     std::map<std::string, std::string, std::less<>> componentOf;
-    for (const instr::InstrumentDescriptor& d : descriptors) componentOf[d.kind] = d.componentId;
+    for (const instr::InstrumentDescriptor& d : descriptors)
+        componentOf[d.kind] = d.componentId;
 
     if (lab_ != nullptr) {
         std::map<std::string, std::size_t, std::less<>> used;
         for (instr::IInstrument* i : instruments_.all()) {
             const auto it = componentOf.find(i->id().kind);
-            if (it == componentOf.end()) continue;
+            if (it == componentOf.end())
+                continue;
             const std::vector<ComponentId> nodes = lab_->scene.findByDescriptor(it->second);
             const std::size_t k = used[it->second]++;
-            if (k >= nodes.size()) continue;
+            if (k >= nodes.size())
+                continue;
             (void)instruments_.bindComponent(i->id(), nodes[k]);
         }
     }
     // Spec 12 §1/§11: thermometry, pressure and flow are always reading in a working laboratory, so
     // their live channels are on from the start (`cryo.thermo[i].T` and friends have no value until
     // the sensor has acquired once). Every other channel goes live only when the user asks.
-    for (const char* kind : {"thermometer_ruo2", "thermometer_cernox", "pressure_gauge", "flow_meter"})
+    for (const char* kind :
+         {"thermometer_ruo2", "thermometer_cernox", "pressure_gauge", "flow_meter"})
         for (instr::IInstrument* i : instruments_.ofKind(kind))
             for (const instr::ChannelDesc& channel : i->channels())
                 if (channel.name == "T" || channel.name == "p" || channel.name == "n3")
@@ -238,9 +259,11 @@ Status LabModel::bindInstruments() {
     if (live_state_->wiring != nullptr) {
         std::uint32_t mixer = 0;
         for (const cryo::WiringLine& line : live_state_->wiring->lines) {
-            if (line.kind == cryo::LineKind::ReadoutOut || line.kind == cryo::LineKind::DC) continue;
+            if (line.kind == cryo::LineKind::ReadoutOut || line.kind == cryo::LineKind::DC)
+                continue;
             const std::string node = std::format("iq_mixer[{}].rf", mixer);
-            if (!instruments_.routing().hasNode(node)) break;
+            if (!instruments_.routing().hasNode(node))
+                break;
             (void)instruments_.attachLine(node, line.id);
             ++mixer;
         }
@@ -250,8 +273,10 @@ Status LabModel::bindInstruments() {
 
 void LabModel::setPhysicalLab(bool on) {
     live_state_->physicalLab = on;
-    if (lab_ != nullptr) lab_->overlays.setEnabled(lab_->overlays.temperatureTint(), true, !on, true);
-    if (tour_ != nullptr) tour_->setPhysicalLab(on); // Simulator-only stops are skipped (spec 19 §2)
+    if (lab_ != nullptr)
+        lab_->overlays.setEnabled(lab_->overlays.temperatureTint(), true, !on, true);
+    if (tour_ != nullptr)
+        tour_->setPhysicalLab(on); // Simulator-only stops are skipped (spec 19 §2)
 }
 
 } // namespace qlab::app

@@ -21,10 +21,18 @@ Result<Kraus> singleFlip(double p, std::uint32_t code, std::string_view name) {
 }
 } // namespace
 
-Result<Kraus> bitFlip(double p) { return singleFlip(p, 1, "bit_flip p"); }
-Result<Kraus> phaseFlip(double p) { return singleFlip(p, 3, "phase_flip p"); }
-Result<Kraus> bitPhaseFlip(double p) { return singleFlip(p, 2, "bit_phase_flip p"); }
-Result<Kraus> resetError(double p) { return singleFlip(p, 1, "reset_error"); } // spec 08 §5.5
+Result<Kraus> bitFlip(double p) {
+    return singleFlip(p, 1, "bit_flip p");
+}
+Result<Kraus> phaseFlip(double p) {
+    return singleFlip(p, 3, "phase_flip p");
+}
+Result<Kraus> bitPhaseFlip(double p) {
+    return singleFlip(p, 2, "bit_phase_flip p");
+}
+Result<Kraus> resetError(double p) {
+    return singleFlip(p, 1, "reset_error");
+} // spec 08 §5.5
 
 Result<Kraus> pauli(double px, double py, double pz) {
     QXL_TRY(checkProbability(px, "pauli p_x"));
@@ -32,13 +40,16 @@ Result<Kraus> pauli(double px, double py, double pz) {
     QXL_TRY(checkProbability(pz, "pauli p_z"));
     const double rest = 1.0 - px - py - pz;
     if (rest < -1e-15)
-        return fail(err::InvalidParameter, std::format("pauli probabilities sum to {} > 1", px + py + pz));
+        return fail(err::InvalidParameter,
+                    std::format("pauli probabilities sum to {} > 1", px + py + pz));
     const std::vector<double> w{std::max(0.0, rest), px, py, pz};
     return Kraus::fromPauliWeights(1, w);
 }
 
 Result<Kraus> depolarizingNq(std::uint32_t n, double p) {
-    if (n == 0 || n > 4) return fail(err::InvalidParameter, std::format("depolarizing_nq supports 1..4 qubits, {} requested", n));
+    if (n == 0 || n > 4)
+        return fail(err::InvalidParameter,
+                    std::format("depolarizing_nq supports 1..4 qubits, {} requested", n));
     QXL_TRY(checkProbability(p, "depolarizing p"));
     const std::size_t count = num::ipow(4, n); // d² Pauli strings
     const double each = p / static_cast<double>(count);
@@ -46,8 +57,12 @@ Result<Kraus> depolarizingNq(std::uint32_t n, double p) {
     w[0] = 1.0 - each * static_cast<double>(count - 1); // 1 − p (d²−1)/d²
     return Kraus::fromPauliWeights(n, w);
 }
-Result<Kraus> depolarizing1q(double p) { return depolarizingNq(1, p); }
-Result<Kraus> depolarizing2q(double p) { return depolarizingNq(2, p); }
+Result<Kraus> depolarizing1q(double p) {
+    return depolarizingNq(1, p);
+}
+Result<Kraus> depolarizing2q(double p) {
+    return depolarizingNq(2, p);
+}
 
 double depolarizingFromGateError(double r, std::uint32_t n) {
     const double d = std::ldexp(1.0, static_cast<int>(n));

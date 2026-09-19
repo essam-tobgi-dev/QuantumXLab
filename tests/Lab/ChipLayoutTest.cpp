@@ -1,7 +1,7 @@
 // Spec 17 §6.3 — chip placement is deterministic, non-overlapping and derived from the topology.
+#include "Lab/ChipLayout.hpp"
 #include "Core/Timer.hpp"
 #include "Hardware/Hardware.hpp"
-#include "Lab/ChipLayout.hpp"
 #include "Lab/Generators.hpp"
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -25,7 +25,8 @@ const hw::LoadedDevice& device(const char* id) {
 ChipLayout layout(const char* id) {
     const auto& dev = device(id);
     auto L = layoutChip(dev.device, &dev.calibration);
-    if (!L) FAIL(L.error().format());
+    if (!L)
+        FAIL(L.error().format());
     return std::move(*L);
 }
 } // namespace
@@ -85,7 +86,8 @@ TEST_CASE("heavy-hex positions put every coupled pair one pitch apart") {
     }
     int bridges = 0;
     for (const auto& q : dev.qubits) {
-        if (std::lround(q.pos[1]) % 2 == 0) continue;
+        if (std::lround(q.pos[1]) % 2 == 0)
+            continue;
         ++bridges;
         const auto& nb = adj[q.index];
         glm::dvec2 mid = 0.5 * (L.qubits[nb[0]].pos_um + L.qubits[nb[1]].pos_um);
@@ -102,7 +104,8 @@ TEST_CASE("grid positions follow the pitch and couplers sit at edge midpoints") 
         REQUIRE(e.coupler.has_value());
         glm::dvec2 mid = 0.5 * (L.qubits[e.a].pos_um + L.qubits[e.b].pos_um);
         CHECK(glm::length(L.qubits[*e.coupler].pos_um - mid) < 1e-9);
-        CHECK(glm::length(L.qubits[e.a].pos_um - L.qubits[e.b].pos_um) == Catch::Approx(o.pitch_um).epsilon(1e-9));
+        CHECK(glm::length(L.qubits[e.a].pos_um - L.qubits[e.b].pos_um) ==
+              Catch::Approx(o.pitch_um).epsilon(1e-9));
         CHECK(L.qubits[*e.coupler].armLength_um < L.qubits[e.a].armLength_um); // coupler scale 0.6
     }
 }
@@ -120,21 +123,26 @@ TEST_CASE("chip placement is deterministic and free of overlaps") {
         CHECK(a->topology == b->topology);
         CHECK(a->size_um == b->size_um);
         REQUIRE(a->qubits.size() == b->qubits.size());
-        for (std::size_t i = 0; i < a->qubits.size(); ++i) CHECK(a->qubits[i].pos_um == b->qubits[i].pos_um);
+        for (std::size_t i = 0; i < a->qubits.size(); ++i)
+            CHECK(a->qubits[i].pos_um == b->qubits[i].pos_um);
         REQUIRE(a->resonators.size() == b->resonators.size());
         for (std::size_t i = 0; i < a->resonators.size(); ++i) {
             CHECK(a->resonators[i].centerline_um == b->resonators[i].centerline_um);
             CHECK(a->resonators[i].angle_rad == b->resonators[i].angle_rad);
         }
         REQUIRE(a->driveLines.size() == b->driveLines.size());
-        for (std::size_t i = 0; i < a->driveLines.size(); ++i) CHECK(a->driveLines[i].route.path_um == b->driveLines[i].route.path_um);
+        for (std::size_t i = 0; i < a->driveLines.size(); ++i)
+            CHECK(a->driveLines[i].route.path_um == b->driveLines[i].route.path_um);
         REQUIRE(a->airbridges.size() == b->airbridges.size());
-        for (std::size_t i = 0; i < a->airbridges.size(); ++i) CHECK(a->airbridges[i].pos_um == b->airbridges[i].pos_um);
+        for (std::size_t i = 0; i < a->airbridges.size(); ++i)
+            CHECK(a->airbridges[i].pos_um == b->airbridges[i].pos_um);
         CHECK(a->overlaps().empty());
-        for (const auto& d : a->diagnostics) WARN(d);
+        for (const auto& d : a->diagnostics)
+            WARN(d);
         WARN(std::string(id) + ": " + std::to_string(a->size_um.x / 1000.0) + " x " +
-             std::to_string(a->size_um.y / 1000.0) + " mm, " + std::to_string(a->airbridges.size()) +
-             " airbridges, " + std::to_string(a->bondPads.size()) + " pads, " + std::to_string(ms) + " ms");
+             std::to_string(a->size_um.y / 1000.0) + " mm, " +
+             std::to_string(a->airbridges.size()) + " airbridges, " +
+             std::to_string(a->bondPads.size()) + " pads, " + std::to_string(ms) + " ms");
     }
 }
 
@@ -153,7 +161,8 @@ TEST_CASE("resonators, feedlines and control lines follow the device") {
         CHECK(r.frequency_Hz == Catch::Approx(f));
         CHECK(r.length_um == Catch::Approx(quarterWaveLength_m(f, 6.45) * 1e6));
         double len = 0.0;
-        for (std::size_t i = 1; i < r.centerline_um.size(); ++i) len += glm::length(r.centerline_um[i] - r.centerline_um[i - 1]);
+        for (std::size_t i = 1; i < r.centerline_um.size(); ++i)
+            len += glm::length(r.centerline_um[i] - r.centerline_um[i - 1]);
         CHECK(len == Catch::Approx(r.length_um).epsilon(1e-9));
         CHECK(r.tap_um == r.centerline_um.back());
     }
@@ -163,7 +172,8 @@ TEST_CASE("resonators, feedlines and control lines follow the device") {
     }
     // the device's own feedline membership is honoured
     for (const auto& f : dev.device.readout.feedlines)
-        for (auto q : f.qubits) CHECK(L.resonators[q].feedline == f.id);
+        for (auto q : f.qubits)
+            CHECK(L.resonators[q].feedline == f.id);
     // one drive line per data qubit, no flux lines on a fixed-frequency device
     CHECK(L.driveLines.size() == 27);
     CHECK(L.fluxLines.empty());

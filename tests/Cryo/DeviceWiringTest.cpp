@@ -9,7 +9,8 @@
 using namespace qlab;
 
 TEST_CASE("every shipped transmon device's wiring.json loads through Cryo") {
-    for (const char* id : {"sc_fixed_5", "sc_heavyhex_27", "sc_heavyhex_127", "sc_tunable_grid_54"}) {
+    for (const char* id :
+         {"sc_fixed_5", "sc_heavyhex_27", "sc_heavyhex_127", "sc_tunable_grid_54"}) {
         INFO(id);
         const auto path = core::assetDir() / "Devices" / id / "wiring.json";
         auto w = cryo::loadWiring(path);
@@ -22,7 +23,8 @@ TEST_CASE("every shipped transmon device's wiring.json loads through Cryo") {
         // Every qubit drive line passes the 4 K and mixing-chamber stages (spec 11 §4.1).
         std::size_t drives = 0;
         for (const auto& line : w->lines)
-            if (line.kind == cryo::LineKind::XY) ++drives;
+            if (line.kind == cryo::LineKind::XY)
+                ++drives;
         REQUIRE(drives > 0);
     }
 }
@@ -35,7 +37,8 @@ TEST_CASE("the template and the older envelope kind are both accepted") {
     REQUIRE(again.has_value());
     REQUIRE(again->lines.size() == tpl->lines.size());
     // A foreign kind is refused with a message that names it.
-    auto bad = cryo::parseWiring(R"({"qxl":{"kind":"pulses","schema":1,"app":"t","created":"t"},"data":{}})");
+    auto bad = cryo::parseWiring(
+        R"({"qxl":{"kind":"pulses","schema":1,"app":"t","created":"t"},"data":{}})");
     REQUIRE_FALSE(bad.has_value());
     REQUIRE(bad.error().message.find("pulses") != std::string::npos);
 }

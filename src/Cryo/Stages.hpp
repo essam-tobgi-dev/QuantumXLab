@@ -8,13 +8,15 @@ namespace qlab::cryo {
 
 enum class Stage : int { RT = 0, PT1 = 1, PT2 = 2, STILL = 3, CP = 4, MXC = 5 };
 inline constexpr int kStageCount = 6;
-inline constexpr std::array<Stage, kStageCount> kStages{Stage::RT, Stage::PT1, Stage::PT2,
-                                                        Stage::STILL, Stage::CP, Stage::MXC};
+inline constexpr std::array<Stage, kStageCount> kStages{Stage::RT,    Stage::PT1, Stage::PT2,
+                                                        Stage::STILL, Stage::CP,  Stage::MXC};
 
-std::string_view stageName(Stage s);          // "RT", "PT1", ...
-std::string_view stageLongName(Stage s);      // "Mixing chamber", ...
+std::string_view stageName(Stage s);     // "RT", "PT1", ...
+std::string_view stageLongName(Stage s); // "Mixing chamber", ...
 bool stageFromName(std::string_view name, Stage& out);
-inline int stageIndex(Stage s) { return static_cast<int>(s); }
+inline int stageIndex(Stage s) {
+    return static_cast<int>(s);
+}
 
 // Nominal temperatures (K): 293, 45, 3.5, 0.85, 0.10, 0.015 (spec 11 §1, T08 §3).
 double nominalTemperature(Stage s);
@@ -27,7 +29,7 @@ struct CoolingParams {
     double Q0_W = 30e-6;          // parasitic MXC load setting the base temperature
     double stillHeater_W = 10e-3; // raises circulation; dissipated at STILL
     double mxcHeater_W = 0.0;
-    double filmBurden_W = 2e-3;   // superfluid film load on the still
+    double filmBurden_W = 2e-3; // superfluid film load on the still
 };
 
 // Cooling power available at a stage held at temperature T (W). Monotonic non-decreasing in T,

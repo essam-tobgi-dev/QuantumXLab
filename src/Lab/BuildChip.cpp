@@ -10,13 +10,15 @@
 namespace qlab::lab {
 
 namespace {
-constexpr double kPackageLid_m = 0.005;   // package half-height
+constexpr double kPackageLid_m = 0.005; // package half-height
 constexpr double kPcbThickness_m = 0.0016;
 constexpr double kSubstrateThickness_um = 350.0;
 constexpr double kWirebondReach_um = 800.0;
 
 // Chip plane (x, y) → the island's mesh plane (X, Z) = (x, −y).
-glm::dvec3 toMesh(glm::dvec2 chip, double y) { return {chip.x, y, -chip.y}; }
+glm::dvec3 toMesh(glm::dvec2 chip, double y) {
+    return {chip.x, y, -chip.y};
+}
 
 core::Json pathOf(const std::vector<glm::dvec2>& path, const ChipLayout& chip) {
     core::Json j = core::Json::array();
@@ -28,7 +30,8 @@ core::Json pathOf(const std::vector<glm::dvec2>& path, const ChipLayout& chip) {
 }
 } // namespace
 
-Status SceneBuilder::buildChip(ComponentId parent, const hw::LoadedDevice& device, const ChipLayout& chip) {
+Status SceneBuilder::buildChip(ComponentId parent, const hw::LoadedDevice& device,
+                               const ChipLayout& chip) {
     const double degrees = 180.0 / glm::pi<double>();
     const double filmTop = kFilmMetalTop_m * 1e6;
     const double substrateTop = 0.5 * kSubstrateThickness_um;
@@ -64,14 +67,17 @@ Status SceneBuilder::buildChip(ComponentId parent, const hw::LoadedDevice& devic
     NodeSpec substrate;
     substrate.descriptor = "substrate";
     substrate.instance = "substrate";
-    substrate.display = std::format("Silicon substrate ({:.1f} × {:.1f} mm)", chip.size_um.x / 1000.0, chip.size_um.y / 1000.0);
+    substrate.display = std::format("Silicon substrate ({:.1f} × {:.1f} mm)",
+                                    chip.size_um.x / 1000.0, chip.size_um.y / 1000.0);
     substrate.group = Group::ChipMicro;
     substrate.material = "silicon";
-    substrate.local = Transform::scaled({0.0, kPackageLid_m + kPcbThickness_m + 0.5 * kSubstrateThickness_um * 1e-6, 0.0}, 1e-6);
+    substrate.local = Transform::scaled(
+        {0.0, kPackageLid_m + kPcbThickness_m + 0.5 * kSubstrateThickness_um * 1e-6, 0.0}, 1e-6);
     substrate.unitScale = 1e6;
     substrate.assembly = Assembly::ChipPackage;
     substrate.assemblyIndex = 2;
-    substrate.overrides = {{"w_um", chip.size_um.x}, {"d_um", chip.size_um.y}, {"h_um", kSubstrateThickness_um}};
+    substrate.overrides = {
+        {"w_um", chip.size_um.x}, {"d_um", chip.size_um.y}, {"h_um", kSubstrateThickness_um}};
     QXL_TRY_ASSIGN(ComponentId sub, addComponent(packageId, std::move(substrate)));
     scene_.setChipRoot(sub);
 
@@ -89,7 +95,10 @@ Status SceneBuilder::buildChip(ComponentId parent, const hw::LoadedDevice& devic
         plane.material = "niobium_film";
         plane.unitScale = 1e6;
         plane.local = Transform::at(0.0, substrateTop, 0.0);
-        plane.overrides = {{"w_um", chip.size_um.x}, {"d_um", chip.size_um.y}, {"t_um", kFilmGround_m * 1e6}, {"holes_um", holes}};
+        plane.overrides = {{"w_um", chip.size_um.x},
+                           {"d_um", chip.size_um.y},
+                           {"t_um", kFilmGround_m * 1e6},
+                           {"holes_um", holes}};
         plane.cacheMesh = false;
         QXL_TRY(addComponent(sub, std::move(plane)));
     }
@@ -102,18 +111,24 @@ Status SceneBuilder::buildChip(ComponentId parent, const hw::LoadedDevice& devic
         glm::dvec2 c = chip.centred(q.pos_um);
         NodeSpec pad;
         pad.descriptor = q.coupler ? "coupler_tunable" : "transmon_pad";
-        pad.instance = q.coupler ? std::format("coupler[{}]", q.index) : std::format("q[{}]", q.index);
-        pad.display = q.coupler ? std::format("Tunable coupler {}", q.index) : std::format("Qubit q[{}]", q.index);
+        pad.instance =
+            q.coupler ? std::format("coupler[{}]", q.index) : std::format("q[{}]", q.index);
+        pad.display = q.coupler ? std::format("Tunable coupler {}", q.index)
+                                : std::format("Qubit q[{}]", q.index);
         pad.group = Group::ChipMicro;
         pad.material = "niobium_film";
         pad.unitScale = 1e6;
         pad.local = Transform::at(toMesh(c, substrateTop));
-        pad.overrides = {{"arm_length_um", q.armLength_um}, {"arm_width_um", q.armWidth_um}, {"gap_um", q.gap_um}, {"scale", 1.0}};
+        pad.overrides = {{"arm_length_um", q.armLength_um},
+                         {"arm_width_um", q.armWidth_um},
+                         {"gap_um", q.gap_um},
+                         {"scale", 1.0}};
         pad.params.setIndex("i", q.index);
         pad.params.setIndex("q", q.index);
         if (q.coupler)
             for (std::size_t e = 0; e < chip.couplers.size(); ++e)
-                if (chip.couplers[e].couplerQubit && *chip.couplers[e].couplerQubit == q.index) pad.params.setIndex("e", static_cast<long long>(e));
+                if (chip.couplers[e].couplerQubit && *chip.couplers[e].couplerQubit == q.index)
+                    pad.params.setIndex("e", static_cast<long long>(e));
         QXL_TRY_ASSIGN(ComponentId padId, addComponent(sub, std::move(pad)));
         scene_.qubitNodes()[q.index] = padId;
 
@@ -122,7 +137,8 @@ Status SceneBuilder::buildChip(ComponentId parent, const hw::LoadedDevice& devic
         if (tunable || q.coupler) {
             NodeSpec squid;
             squid.descriptor = "squid_loop";
-            squid.instance = std::format("{}.squid", q.coupler ? std::format("coupler[{}]", q.index) : std::format("q[{}]", q.index));
+            squid.instance = std::format("{}.squid", q.coupler ? std::format("coupler[{}]", q.index)
+                                                               : std::format("q[{}]", q.index));
             squid.display = "SQUID loop";
             squid.group = Group::ChipMicro;
             squid.material = "niobium_film";
@@ -160,19 +176,18 @@ Status SceneBuilder::buildChip(ComponentId parent, const hw::LoadedDevice& devic
         NodeSpec res;
         res.descriptor = "readout_resonator";
         res.instance = std::format("res[{}]", r.qubit);
-        res.display = std::format("Readout resonator q[{}] ({:.3f} GHz)", r.qubit, r.frequency_Hz / 1e9);
+        res.display =
+            std::format("Readout resonator q[{}] ({:.3f} GHz)", r.qubit, r.frequency_Hz / 1e9);
         res.group = Group::ChipMicro;
         res.material = "niobium_film";
         res.unitScale = 1e6;
         // the meander is generated along +x in the chip plane; the y-flip turns a chip-plane
         // rotation by θ into a mesh rotation by −θ about +Y
-        res.local = Transform::rotated(toMesh(c, substrateTop), {0.0, 1.0, 0.0}, -r.angle_rad * degrees);
-        res.overrides = {{"length_um", r.length_um},
-                         {"pitch_um", r.pitch_um},
-                         {"amplitude_um", r.amplitude_um},
-                         {"lead_um", r.lead_um},
-                         {"w_um", 10.0},
-                         {"s_um", 6.0}};
+        res.local =
+            Transform::rotated(toMesh(c, substrateTop), {0.0, 1.0, 0.0}, -r.angle_rad * degrees);
+        res.overrides = {
+            {"length_um", r.length_um}, {"pitch_um", r.pitch_um}, {"amplitude_um", r.amplitude_um},
+            {"lead_um", r.lead_um},     {"w_um", 10.0},           {"s_um", 6.0}};
         res.params.setIndex("i", r.qubit);
         res.params.setIndex("q", r.qubit);
         QXL_TRY_ASSIGN(ComponentId id, addComponent(sub, std::move(res)));
@@ -180,9 +195,10 @@ Status SceneBuilder::buildChip(ComponentId parent, const hw::LoadedDevice& devic
     }
 
     // ---- feedlines with their Purcell filters, couplers, drive and flux lines
-    auto addCpw = [&](std::string descriptor, std::string instance, std::string display, const std::vector<glm::dvec2>& path,
-                      InstanceParams params) -> Status {
-        if (path.size() < 2) return {};
+    auto addCpw = [&](std::string descriptor, std::string instance, std::string display,
+                      const std::vector<glm::dvec2>& path, InstanceParams params) -> Status {
+        if (path.size() < 2)
+            return {};
         NodeSpec spec;
         spec.descriptor = std::move(descriptor);
         spec.instance = std::move(instance);
@@ -200,17 +216,21 @@ Status SceneBuilder::buildChip(ComponentId parent, const hw::LoadedDevice& devic
     for (const auto& f : chip.feedlines) {
         InstanceParams p;
         p.setIndex("i", f.id);
-        QXL_TRY(addCpw("feedline", std::format("feedline[{}]", f.id), std::format("Feedline {}", f.id), f.route.path_um, p));
-        QXL_TRY(addCpw("purcell_filter", std::format("purcell[{}]", f.id), std::format("Purcell filter {}", f.id), f.purcell.path_um, p));
+        QXL_TRY(addCpw("feedline", std::format("feedline[{}]", f.id),
+                       std::format("Feedline {}", f.id), f.route.path_um, p));
+        QXL_TRY(addCpw("purcell_filter", std::format("purcell[{}]", f.id),
+                       std::format("Purcell filter {}", f.id), f.purcell.path_um, p));
     }
     for (std::size_t e = 0; e < chip.couplers.size(); ++e) {
         const auto& cpl = chip.couplers[e];
-        if (cpl.couplerQubit) continue; // a tunable coupler is its own pad, drawn above
+        if (cpl.couplerQubit)
+            continue; // a tunable coupler is its own pad, drawn above
         InstanceParams p;
         p.setIndex("e", static_cast<long long>(e));
         for (std::size_t s = 0; s < cpl.stubs.size(); ++s)
             QXL_TRY(addCpw("coupler_fixed", std::format("coupler[{}-{}]", cpl.a, cpl.b),
-                           std::format("Coupler q[{}]–q[{}]", cpl.a, cpl.b), cpl.stubs[s].path_um, p));
+                           std::format("Coupler q[{}]–q[{}]", cpl.a, cpl.b), cpl.stubs[s].path_um,
+                           p));
     }
     for (const auto* lines : {&chip.driveLines, &chip.fluxLines})
         for (const auto& c : *lines) {
@@ -219,7 +239,8 @@ Status SceneBuilder::buildChip(ComponentId parent, const hw::LoadedDevice& devic
             p.setIndex("q", c.target);
             QXL_TRY(addCpw(c.flux ? "flux_line" : "drive_line",
                            std::format("{}[{}]", c.flux ? "flux" : "drive", c.target),
-                           std::format("{} line q[{}]", c.flux ? "Flux" : "Drive", c.target), c.route.path_um, p));
+                           std::format("{} line q[{}]", c.flux ? "Flux" : "Drive", c.target),
+                           c.route.path_um, p));
         }
 
     // ---- airbridges (instanced by the renderer: one node each, contiguous ids)
@@ -233,7 +254,8 @@ Status SceneBuilder::buildChip(ComponentId parent, const hw::LoadedDevice& devic
         spec.group = Group::ChipMicro;
         spec.material = "niobium_film";
         spec.unitScale = 1e6;
-        spec.local = Transform::rotated(toMesh(c, substrateTop + kFilmGapTop_m * 1e6), {0.0, 1.0, 0.0}, -a.angle_rad * degrees);
+        spec.local = Transform::rotated(toMesh(c, substrateTop + kFilmGapTop_m * 1e6),
+                                        {0.0, 1.0, 0.0}, -a.angle_rad * degrees);
         QXL_TRY(addComponent(sub, std::move(spec)));
     }
 
@@ -265,7 +287,8 @@ Status SceneBuilder::buildChip(ComponentId parent, const hw::LoadedDevice& devic
         spec.descriptor = "bond_pad";
         spec.instance = std::format("bond_pad[{}]", i);
         spec.display = b.signal >= 0 && b.signal < static_cast<int>(chip.signalNames.size())
-                           ? std::format("Bond pad {} ({})", i, chip.signalNames[static_cast<std::size_t>(b.signal)])
+                           ? std::format("Bond pad {} ({})", i,
+                                         chip.signalNames[static_cast<std::size_t>(b.signal)])
                            : std::format("Bond pad {} (ground)", i);
         spec.group = Group::ChipMicro;
         spec.material = "aluminium";

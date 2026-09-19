@@ -15,7 +15,8 @@ namespace {
 Status renameOver(const std::filesystem::path& tmp, const std::filesystem::path& path) {
     std::error_code ec;
     std::filesystem::rename(tmp, path, ec);
-    if (ec) return fail(ErrorCode::Io, "rename failed: " + ec.message());
+    if (ec)
+        return fail(ErrorCode::Io, "rename failed: " + ec.message());
     return {};
 }
 
@@ -28,24 +29,29 @@ Image::Image(int w, int h, Rgba fill) : width(w), height(h) {
     }
     rgba.resize(static_cast<std::size_t>(w) * h * 4);
     for (std::size_t i = 0; i < rgba.size(); i += 4)
-        for (int k = 0; k < 4; ++k) rgba[i + static_cast<std::size_t>(k)] = fill[static_cast<std::size_t>(k)];
+        for (int k = 0; k < 4; ++k)
+            rgba[i + static_cast<std::size_t>(k)] = fill[static_cast<std::size_t>(k)];
 }
 
 void Image::set(int x, int y, Rgba c) {
-    if (x < 0 || y < 0 || x >= width || y >= height) return;
+    if (x < 0 || y < 0 || x >= width || y >= height)
+        return;
     std::uint8_t* p = pixel(x, y);
-    for (int k = 0; k < 4; ++k) p[k] = c[static_cast<std::size_t>(k)];
+    for (int k = 0; k < 4; ++k)
+        p[k] = c[static_cast<std::size_t>(k)];
 }
 
 Rgba Image::get(int x, int y) const {
-    if (x < 0 || y < 0 || x >= width || y >= height) return {0, 0, 0, 0};
+    if (x < 0 || y < 0 || x >= width || y >= height)
+        return {0, 0, 0, 0};
     const std::uint8_t* p = pixel(x, y);
     return {p[0], p[1], p[2], p[3]};
 }
 
 void Image::fillRect(int x, int y, int w, int h, Rgba c) {
     for (int j = std::max(0, y); j < std::min(height, y + h); ++j)
-        for (int i = std::max(0, x); i < std::min(width, x + w); ++i) set(i, j, c);
+        for (int i = std::max(0, x); i < std::min(width, x + w); ++i)
+            set(i, j, c);
 }
 
 int Image::drawText(int x, int y, std::string_view text, Rgba c, int scale) {
@@ -65,7 +71,8 @@ int Image::drawText(int x, int y, std::string_view text, Rgba c, int scale) {
 Result<Image> readPng(const std::filesystem::path& path) {
     int w = 0, h = 0, channels = 0;
     stbi_uc* data = stbi_load(path.string().c_str(), &w, &h, &channels, 4);
-    if (!data) return fail(ErrorCode::Io, "cannot read PNG " + path.string());
+    if (!data)
+        return fail(ErrorCode::Io, "cannot read PNG " + path.string());
     Image img;
     img.width = w;
     img.height = h;
@@ -75,12 +82,15 @@ Result<Image> readPng(const std::filesystem::path& path) {
 }
 
 Status writePng(const std::filesystem::path& path, const Image& img) {
-    if (img.empty()) return fail(ErrorCode::InvalidArgument, "image is empty");
+    if (img.empty())
+        return fail(ErrorCode::InvalidArgument, "image is empty");
     std::error_code ec;
-    if (path.has_parent_path()) std::filesystem::create_directories(path.parent_path(), ec);
+    if (path.has_parent_path())
+        std::filesystem::create_directories(path.parent_path(), ec);
     std::filesystem::path tmp = path;
     tmp += ".tmp";
-    const int ok = stbi_write_png(tmp.string().c_str(), img.width, img.height, 4, img.rgba.data(), img.width * 4);
+    const int ok = stbi_write_png(tmp.string().c_str(), img.width, img.height, 4, img.rgba.data(),
+                                  img.width * 4);
     if (!ok) {
         std::filesystem::remove(tmp, ec);
         return fail(ErrorCode::Io, "cannot write PNG " + path.string());
@@ -90,19 +100,24 @@ Status writePng(const std::filesystem::path& path, const Image& img) {
 
 std::vector<std::string> annotationLines(const Annotation& a) {
     std::vector<std::string> lines;
-    if (!a.title.empty()) lines.push_back(a.title);
+    if (!a.title.empty())
+        lines.push_back(a.title);
     std::string second;
-    if (!a.device.empty()) second = "device " + a.device;
+    if (!a.device.empty())
+        second = "device " + a.device;
     const std::string when = a.timestamp.empty() ? core::isoNow() : a.timestamp;
     second += second.empty() ? when : "   " + when;
     lines.push_back(second);
     std::string badges;
     for (const auto& b : a.badges) {
-        if (!badges.empty()) badges += "   ";
+        if (!badges.empty())
+            badges += "   ";
         badges += b.view + ": " + std::string(data::fidelityName(b.cls));
-        if (b.simulatorOnly) badges += " (sim-only)";
+        if (b.simulatorOnly)
+            badges += " (sim-only)";
     }
-    if (!badges.empty()) lines.push_back(badges);
+    if (!badges.empty())
+        lines.push_back(badges);
     return lines;
 }
 
@@ -132,8 +147,10 @@ Image withAnnotation(const Image& img, const Annotation& a) {
     return out;
 }
 
-Status writeViewportPng(const std::filesystem::path& path, const Image& img, const Annotation* annotation) {
-    if (!annotation) return writePng(path, img);
+Status writeViewportPng(const std::filesystem::path& path, const Image& img,
+                        const Annotation* annotation) {
+    if (!annotation)
+        return writePng(path, img);
     return writePng(path, withAnnotation(img, *annotation));
 }
 

@@ -14,9 +14,12 @@ namespace qlab::app {
 namespace {
 
 ui::SessionView::Status statusOf(bool compiling, bool running, bool hasResult, bool failed) {
-    if (failed) return ui::SessionView::Status::Failed;
-    if (running) return ui::SessionView::Status::Running;
-    if (compiling) return ui::SessionView::Status::Compiling;
+    if (failed)
+        return ui::SessionView::Status::Failed;
+    if (running)
+        return ui::SessionView::Status::Running;
+    if (compiling)
+        return ui::SessionView::Status::Compiling;
     return hasResult ? ui::SessionView::Status::Done : ui::SessionView::Status::Idle;
 }
 
@@ -61,10 +64,13 @@ void Application::refreshContext(double dtSeconds) {
     ctx_.traces = &traces_;
 
     ui::SessionView& v = ctx_.session_view;
-    v.status = statusOf(compilePending_, runPending_, m.result() != nullptr, !lastError_.empty() && !runPending_);
+    v.status = statusOf(compilePending_, runPending_, m.result() != nullptr,
+                        !lastError_.empty() && !runPending_);
     v.shotsDone = m.state().shotsDone;
     v.shotsTotal = m.state().shotsTotal;
-    v.progress = v.shotsTotal > 0 ? static_cast<double>(v.shotsDone) / static_cast<double>(v.shotsTotal) : -1.0;
+    v.progress = v.shotsTotal > 0
+                     ? static_cast<double>(v.shotsDone) / static_cast<double>(v.shotsTotal)
+                     : -1.0;
     v.lastWallMs = m.state().lastRunMs;
     v.project = projects_->title();
     v.device = m.device() != nullptr ? m.device()->id : std::string{};
@@ -74,8 +80,10 @@ void Application::refreshContext(double dtSeconds) {
     v.errors = 0;
     v.warnings = 0;
     for (const lang::Diagnostic& d : diagnostics_) {
-        if (d.severity == lang::Severity::Error) ++v.errors;
-        else if (d.severity == lang::Severity::Warning) ++v.warnings;
+        if (d.severity == lang::Severity::Error)
+            ++v.errors;
+        else if (d.severity == lang::Severity::Warning)
+            ++v.warnings;
     }
     v.hasProgram = !programSource().empty();
     v.hasResult = m.result() != nullptr;
@@ -89,13 +97,15 @@ void Application::renderLab() {
     }
     lab::SceneRenderer* scene = model_->sceneRenderer();
     lab::Interaction* ui = model_->interaction();
-    if (scene == nullptr || ui == nullptr) return;
+    if (scene == nullptr || ui == nullptr)
+        return;
     camera_.setAspect(static_cast<double>(viewportW_) / std::max(1, viewportH_));
     renderer_->beginFrame(viewportW_, viewportH_, camera_, timeS_);
     lab::LabOverlays* overlays = model_->overlays();
     scene->prepare(camera_, *ui, overlays != nullptr ? &overlays->visuals() : nullptr);
     scene->submit(*renderer_, *ui);
-    if (overlays != nullptr) scene->submitOverlays(*renderer_, *overlays);
+    if (overlays != nullptr)
+        scene->submitOverlays(*renderer_, *overlays);
     renderer_->endFrame();
 }
 
@@ -136,7 +146,8 @@ void Application::frame(double dtSeconds) {
         if (auto st = resources_.applyScale(ImGui::GetIO().Fonts, dpiScale_, fontScale_); st)
             ImGui_ImplOpenGL3_DestroyFontsTexture();
         else
-            QXL_LOG_WARN(Ui, "could not re-rasterise the fonts at dpi {} scale {}: {}", dpiScale_, fontScale_, st.error().message);
+            QXL_LOG_WARN(Ui, "could not re-rasterise the fonts at dpi {} scale {}: {}", dpiScale_,
+                         fontScale_, st.error().message);
     }
 
     renderLab();
@@ -153,7 +164,8 @@ void Application::frame(double dtSeconds) {
 
 // ---------------------------------------------------------------- captures (spec 23 §8)
 
-Status Application::captureViewport(const std::filesystem::path& png, int width, int height, bool annotate) {
+Status Application::captureViewport(const std::filesystem::path& png, int width, int height,
+                                    bool annotate) {
     const int keepW = viewportW_, keepH = viewportH_;
     // A resize the Viewport panel posted must not override the size asked for here.
     pendingW_ = pendingH_ = 0;
@@ -163,7 +175,8 @@ Status Application::captureViewport(const std::filesystem::path& png, int width,
     viewportW_ = keepW;
     viewportH_ = keepH;
     QXL_TRY(renderer_->screenshot(png));
-    if (!annotate) return {};
+    if (!annotate)
+        return {};
     report::Annotation a;
     // `report::Image::drawText` is a 5×7 ASCII bitmap (spec 23 §8): the strip carries no glyph
     // outside 32…126, so the title is plain ASCII and the unsaved-changes bullet is dropped.
@@ -171,19 +184,22 @@ Status Application::captureViewport(const std::filesystem::path& png, int width,
     a.device = model_->device() != nullptr ? model_->device()->id : std::string{};
     a.timestamp = core::isoNow();
     for (const std::unique_ptr<viz::IStateView>& v : model_->views()) {
-        if (!v) continue;
+        if (!v)
+            continue;
         report::ViewBadge badge;
         badge.view = std::string(v->title());
         badge.cls = v->fidelity(model_->viewInput());
         badge.simulatorOnly = v->observability() == viz::Observability::SimulatorOnly;
-        if (a.badges.size() < 4) a.badges.push_back(std::move(badge));
+        if (a.badges.size() < 4)
+            a.badges.push_back(std::move(badge));
     }
     return report::annotatePngFile(png, a);
 }
 
 Status Application::captureWindow(const std::filesystem::path& png) {
     const int w = window_->framebufferWidth(), h = window_->framebufferHeight();
-    if (w <= 0 || h <= 0) return fail(err::NoContext, "the window has no framebuffer");
+    if (w <= 0 || h <= 0)
+        return fail(err::NoContext, "the window has no framebuffer");
     report::Image image(w, h);
     gfx::Framebuffer::bindDefault(GL_READ_FRAMEBUFFER);
     glPixelStorei(GL_PACK_ALIGNMENT, 1);

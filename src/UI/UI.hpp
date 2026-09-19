@@ -13,9 +13,10 @@
 //   format::            unit-aware display and parsing of every numeric (§5.1, §5.2).
 //   UndoStack           the 200-entry command stack, grouped by drag gesture (§5.3).
 //   Shortcuts           the §5 keyboard table, remappable and JSON round-tripping.
-//   UiContext           the per-frame snapshot record every panel reads, plus the commands it posts.
-//   Panel / makeAllPanels   the §3 catalog: 19 panels, each with its workspace and its state slice.
-//   Shell               the top bar, the dockspace, the workspace presets and the Physical-lab
+//   UiContext           the per-frame snapshot record every panel reads, plus the commands it
+//   posts. Panel / makeAllPanels   the §3 catalog: 19 panels, each with its workspace and its state
+//   slice. Shell               the top bar, the dockspace, the workspace presets and the
+//   Physical-lab
 //                       toggle; `draw()` once per frame between NewFrame and Render.
 //   LayoutState         §4 persistence: one ImGui ini per workspace plus each panel's JSON.
 //   BasicMathRenderer + ImGuiMathFont/ImGuiMathCanvas + EquationView
@@ -26,6 +27,7 @@
 //                       go-to-definition, undo) and the `CodeEditor` widget over it.
 //
 // ImGui and ImPlot appear only inside `src/UI`, `src/Viz` and `src/App` (spec 19 lint).
+#include "Graphics/GlObjects.hpp"
 #include "UI/Context.hpp"
 #include "UI/Editor/CodeEditor.hpp"
 #include "UI/Editor/Document.hpp"
@@ -40,7 +42,6 @@
 #include "UI/Shell.hpp"
 #include "UI/Shortcuts.hpp"
 #include "UI/Strings.hpp"
-#include "Graphics/GlObjects.hpp"
 #include "UI/Theme.hpp"
 #include "UI/Theory/TheoryIndex.hpp"
 #include "UI/UndoStack.hpp"

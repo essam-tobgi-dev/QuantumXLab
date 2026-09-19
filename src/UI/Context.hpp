@@ -28,7 +28,9 @@
 #include <string>
 #include <vector>
 
-namespace qlab::lab { class Tour; }
+namespace qlab::lab {
+class Tour;
+}
 
 namespace qlab::ui {
 
@@ -39,7 +41,7 @@ struct SessionView {
     enum class Status : std::uint8_t { Idle, Compiling, Running, Done, Failed };
     Status status = Status::Idle;
     std::uint64_t shotsDone = 0, shotsTotal = 0;
-    double progress = 0.0;                 // 0 … 1, negative when indeterminate
+    double progress = 0.0; // 0 … 1, negative when indeterminate
     double lastWallMs = 0.0;
     std::string project = "Untitled project";
     std::string device, calibration;
@@ -48,7 +50,7 @@ struct SessionView {
     std::uint32_t errors = 0, warnings = 0;
     bool hasProgram = false, hasResult = false;
 
-    std::string_view statusKey() const;    // strings.en.json key of the status text
+    std::string_view statusKey() const; // strings.en.json key of the status text
 };
 
 // Commands a panel posts back to the App. An unset callback is a disabled control.
@@ -76,8 +78,8 @@ struct Commands {
 
 struct UiContext {
     // ---- presentation
-    const Theme* theme = nullptr;               // required
-    const UiResources* resources = nullptr;     // the owner of theme/fonts/logo (set by bind)
+    const Theme* theme = nullptr;           // required
+    const UiResources* resources = nullptr; // the owner of theme/fonts/logo (set by bind)
     const FontSet* fonts = nullptr;
     MathRenderers* math = nullptr;
     const TheoryAssets* assets = nullptr;
@@ -86,9 +88,9 @@ struct UiContext {
     const Shortcuts* keys = nullptr;
     float dpiScale = 1.0f, fontScale = 1.0f;
     double timeS = 0.0, deltaS = 1.0 / 60.0;
-    bool physicalLab = false;                   // spec 00 §6 / 19 §2
+    bool physicalLab = false; // spec 00 §6 / 19 §2
     bool reducedMotion = false, asciiKets = false;
-    bool devMode = false;                       // QXL_DEV: FPS counter, perf tab
+    bool devMode = false; // QXL_DEV: FPS counter, perf tab
 
     // ---- model (owned by the App)
     runtime::Session* session = nullptr;
@@ -97,7 +99,7 @@ struct UiContext {
     compiler::IncrementalCompiler* incremental = nullptr;
     lab::Scene* scene = nullptr;
     lab::Interaction* interaction = nullptr;
-    lab::Tour* tour = nullptr;                 // the guided tour (spec 17 §7.10); null when none is loaded
+    lab::Tour* tour = nullptr; // the guided tour (spec 17 §7.10); null when none is loaded
     lab::SceneRenderer* sceneRenderer = nullptr;
     lab::LabOverlays* overlays = nullptr;
     const lab::BindingRegistry* bindings = nullptr;
@@ -111,7 +113,7 @@ struct UiContext {
     gfx::Renderer* renderer = nullptr;
     gfx::Camera* camera = nullptr;
     cryo::CooldownSequencer* fridge = nullptr;
-    cryo::ThermalNetwork* thermalNet = nullptr;   // heater set points are written here (spec 11 §8)
+    cryo::ThermalNetwork* thermalNet = nullptr; // heater set points are written here (spec 11 §8)
     const cryo::ThermalSnapshot* thermal = nullptr;
     const runtime::RunResult* result = nullptr;
     const runtime::Estimate* estimate = nullptr;

@@ -1,7 +1,7 @@
 // Spec 17 §4/§12 — the shipped component catalog loads, lints and resolves its references.
+#include "Lab/Catalog.hpp"
 #include "Core/Paths.hpp"
 #include "Data/Fidelity.hpp"
-#include "Lab/Catalog.hpp"
 #include "Lab/Generators.hpp"
 #include <catch2/catch_test_macros.hpp>
 #include <filesystem>
@@ -25,9 +25,12 @@ TEST_CASE("every shipped component descriptor loads and passes the spec 17 §4 l
     const auto& cat = catalog();
     // one descriptor per Assets/Lab/Components/<id>/component.json
     std::size_t dirs = 0;
-    for (const auto& e : std::filesystem::directory_iterator(core::assetDir() / "Lab" / "Components"))
-        if (std::filesystem::exists(e.path() / "component.json")) ++dirs;
-    REQUIRE(dirs == 108); // 97 + seven of the fridge detail pass (spec 17 §3.1 amended) + four of the rack detail pass (cable_loom, microscope, wire_bonder, sample_box)
+    for (const auto& e :
+         std::filesystem::directory_iterator(core::assetDir() / "Lab" / "Components"))
+        if (std::filesystem::exists(e.path() / "component.json"))
+            ++dirs;
+    REQUIRE(dirs == 108); // 97 + seven of the fridge detail pass (spec 17 §3.1 amended) + four of
+                          // the rack detail pass (cable_loom, microscope, wire_bonder, sample_box)
     REQUIRE(cat.size() == dirs);
     for (const auto& d : cat.all()) {
         INFO(d.id);
@@ -41,20 +44,25 @@ TEST_CASE("every shipped component descriptor loads and passes the spec 17 §4 l
         // spec 17 §1: every descriptor names a generator this module can build
         REQUIRE(hasGenerator(d.generator));
         // lod rules are sorted and end in a catch-all level
-        for (std::size_t i = 1; i < d.lod.size(); ++i) REQUIRE(d.lod[i - 1].maxDistance_m <= d.lod[i].maxDistance_m);
+        for (std::size_t i = 1; i < d.lod.size(); ++i)
+            REQUIRE(d.lod[i - 1].maxDistance_m <= d.lod[i].maxDistance_m);
     }
     // spec 17 §3 ids exist (sample across the five tables)
-    for (const char* id : {"fridge_frame", "top_plate_300K", "ovc", "stage_mxc", "mag_shield_al", "coax_segment",
-                           "attenuator", "hemt", "twpa", "mw_generator", "digitizer", "vna", "ghs_cabinet",
-                           "turbo_pump", "substrate", "transmon_pad", "junction", "readout_resonator", "feedline",
-                           "airbridge", "bond_pad", "vacuum_chamber", "trap_chip"})
+    for (const char* id : {"fridge_frame",  "top_plate_300K",    "ovc",        "stage_mxc",
+                           "mag_shield_al", "coax_segment",      "attenuator", "hemt",
+                           "twpa",          "mw_generator",      "digitizer",  "vna",
+                           "ghs_cabinet",   "turbo_pump",        "substrate",  "transmon_pad",
+                           "junction",      "readout_resonator", "feedline",   "airbridge",
+                           "bond_pad",      "vacuum_chamber",    "trap_chip"})
         REQUIRE(cat.contains(id));
 }
 
 TEST_CASE("descriptor references resolve to equations.json and docs/theory") {
-    auto problems = catalog().lintReferences(core::assetDir() / "Theory" / "equations.json",
-                                             std::filesystem::path(QXL_SOURCE_DIR) / "docs" / "theory");
-    for (const auto& p : problems) WARN(p);
+    auto problems =
+        catalog().lintReferences(core::assetDir() / "Theory" / "equations.json",
+                                 std::filesystem::path(QXL_SOURCE_DIR) / "docs" / "theory");
+    for (const auto& p : problems)
+        WARN(p);
     REQUIRE(problems.empty());
 }
 

@@ -10,9 +10,9 @@
 namespace qlab::cryo {
 
 struct SpecificHeatModel {
-    std::string model = "debye";  // "debye" (lattice + electronic) or "table"
-    double thetaD_K = 300.0;      // Debye temperature
-    double gamma_mJ_molK2 = 0.0;  // electronic coefficient (0 for insulators)
+    std::string model = "debye"; // "debye" (lattice + electronic) or "table"
+    double thetaD_K = 300.0;     // Debye temperature
+    double gamma_mJ_molK2 = 0.0; // electronic coefficient (0 for insulators)
     double molarMass_g = 60.0;
     std::vector<std::pair<double, double>> table; // (T, c J/kg/K) when model == "table"
 };
@@ -41,7 +41,7 @@ struct Material {
 };
 
 class MaterialCatalog {
-public:
+  public:
     // Loads every *.json of kind "qlab.material" in dir (default: assetDir()/Lab/Materials).
     static Result<MaterialCatalog> load(const std::filesystem::path& dir = {});
     static Result<Material> parse(const std::string& text);
@@ -50,7 +50,8 @@ public:
     std::vector<std::string> ids() const;
     void add(Material m) { mats_[m.id] = std::move(m); }
     std::size_t size() const { return mats_.size(); }
-private:
+
+  private:
     std::map<std::string, Material, std::less<>> mats_;
 };
 

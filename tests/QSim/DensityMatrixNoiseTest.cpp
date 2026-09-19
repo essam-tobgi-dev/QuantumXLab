@@ -1,9 +1,9 @@
 // Spec 07 §3.2, spec 25 §3.4 — Kraus channels, projective measurement and sampling on the
 // density-matrix backend, with closed-form expectations.
 #include "Circuits.hpp"
+#include "Numerics/Checks.hpp"
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include "Numerics/Checks.hpp"
 
 using namespace qtest;
 using Catch::Approx;
@@ -32,13 +32,15 @@ TEST_CASE("DM: amplitude damping gives the exact T1 population") {
     REQUIRE(dm.stateNorm() == Approx(1.0).margin(1e-12));
     auto spect = dm.reducedDensityMatrix(q({0, 2}));
     REQUIRE(spect.has_value());
-    REQUIRE(measures::purity(*spect) == Approx(1.0).margin(1e-12)); // the Bell pair on (0,2) stays pure
+    REQUIRE(measures::purity(*spect) ==
+            Approx(1.0).margin(1e-12)); // the Bell pair on (0,2) stays pure
     // Composition: ten idles of t/10 equal one idle of t (semigroup property of the channel).
     DensityMatrixBackend steps;
     REQUIRE(steps.allocate(1).has_value());
     REQUIRE(steps.applyGate(X(), q({0})).has_value());
     for (int i = 0; i < 10; ++i)
-        REQUIRE(steps.applyChannel(amplitudeDamping(1.0 - std::exp(-t / (10.0 * t1))), q({0})).has_value());
+        REQUIRE(steps.applyChannel(amplitudeDamping(1.0 - std::exp(-t / (10.0 * t1))), q({0}))
+                    .has_value());
     REQUIRE(steps.population(QubitIndex{0}, 1) == Approx(std::exp(-t / t1)).margin(1e-12));
     // Coherence of |+> decays as sqrt(1-gamma) = exp(-t/2T1) (T2 = 2 T1 limit).
     DensityMatrixBackend plus;
@@ -55,7 +57,8 @@ TEST_CASE("DM: depolarizing Kraus set lowers purity and preserves the trace") {
     REQUIRE(one.applyChannel(depolarizing(p), q({0})).has_value());
     // |0><0| -> (1 - 2p/3)|0><0| + (2p/3)|1><1|.
     REQUIRE(one.rho()(1, 1).real() == Approx(2.0 * p / 3.0).margin(1e-12));
-    REQUIRE(one.purity() == Approx(std::pow(1 - 2 * p / 3, 2) + std::pow(2 * p / 3, 2)).margin(1e-12));
+    REQUIRE(one.purity() ==
+            Approx(std::pow(1 - 2 * p / 3, 2) + std::pow(2 * p / 3, 2)).margin(1e-12));
     REQUIRE(one.purity() < 1.0);
     REQUIRE(one.stateNorm() == Approx(1.0).margin(1e-10));
     // On half a Bell pair: rho -> (1 - 4p/3)|Phi+><Phi+| + (4p/3) I/4, purity (1-p)^2 + p^2/3.
@@ -69,14 +72,16 @@ TEST_CASE("DM: depolarizing Kraus set lowers purity and preserves the trace") {
     REQUIRE(maxHermitianDefect(bell.rho()) < 1e-12);
     REQUIRE(num::isPositiveSemidefinite(bell.rho(), 1e-12));
     REQUIRE(bell.rho()(0, 3).real() == Approx(0.5 * (1 - 4 * p / 3)).margin(1e-12));
-    REQUIRE(bell.expectation(*PauliString::parse("ZZ")).value() == Approx(1 - 4 * p / 3).margin(1e-12));
+    REQUIRE(bell.expectation(*PauliString::parse("ZZ")).value() ==
+            Approx(1 - 4 * p / 3).margin(1e-12));
     // A long noisy circuit keeps the trace at 1 to 1e-10 (spec 07 §3.2 invariants).
     DensityMatrixBackend run;
     REQUIRE(run.allocate(4).has_value());
     const Circuit c = randomUniversal(4, 150, 9);
     for (const auto& op : c) {
         REQUIRE((op.controls.empty() ? run.applyGate(op.u, op.targets)
-                                     : run.applyControlled(op.u, op.controls, op.targets)).has_value());
+                                     : run.applyControlled(op.u, op.controls, op.targets))
+                    .has_value());
         REQUIRE(run.applyChannel(depolarizing(0.01), {&op.targets[0], 1}).has_value());
     }
     REQUIRE(std::abs(run.stateNorm() - 1.0) < 1e-10);
@@ -84,7 +89,8 @@ TEST_CASE("DM: depolarizing Kraus set lowers purity and preserves the trace") {
     REQUIRE(num::isDensityMatrix(run.rho(), 1e-10));
     // Malformed Kraus sets are refused.
     REQUIRE(run.applyChannel(Kraus{}, q({0})).error().code == err::BadKraus);
-    REQUIRE(run.applyChannel(depolarizing(0.1), q({0, 1})).error().code == err::BadKraus); // 2x2 on two sites
+    REQUIRE(run.applyChannel(depolarizing(0.1), q({0, 1})).error().code ==
+            err::BadKraus); // 2x2 on two sites
 }
 
 TEST_CASE("DM: a qubit channel on a d = 3 site preserves the leaked population") {
@@ -92,12 +98,14 @@ TEST_CASE("DM: a qubit channel on a d = 3 site preserves the leaked population")
     REQUIRE(dm.allocate(1, 3).has_value());
     REQUIRE(dm.applyGate(RY(1.2), q({0})).has_value());
     Matrix x12(3, 3);
-    x12(0, 0) = 1; x12(1, 2) = 1; x12(2, 1) = 1;
+    x12(0, 0) = 1;
+    x12(1, 2) = 1;
+    x12(2, 1) = 1;
     REQUIRE(dm.applyGate(x12, q({0})).has_value());
     const double p2 = dm.population(QubitIndex{0}, 2);
     REQUIRE(p2 == Approx(std::pow(std::sin(0.6), 2)).margin(1e-12));
     REQUIRE(dm.applyChannel(depolarizing(0.2), q({0})).has_value());
-    REQUIRE(dm.stateNorm() == Approx(1.0).margin(1e-12));           // trace preserving on the full site
+    REQUIRE(dm.stateNorm() == Approx(1.0).margin(1e-12)); // trace preserving on the full site
     REQUIRE(dm.population(QubitIndex{0}, 2) == Approx(p2).margin(1e-12)); // identity on |2>
     REQUIRE(dm.population(QubitIndex{0}, 1) == Approx((1.0 - p2) * 2.0 * 0.2 / 3.0).margin(1e-12));
 }
@@ -133,7 +141,10 @@ TEST_CASE("DM: projective measurement probabilities and post-measurement state")
             auto& post = static_cast<DensityMatrixBackend&>(*copy);
             StateVectorBackend ref;
             REQUIRE(ref.allocate(3).has_value());
-            if (out->bits[0]) { REQUIRE(ref.applyGate(X(), q({0})).has_value()); REQUIRE(ref.applyGate(X(), q({1})).has_value()); }
+            if (out->bits[0]) {
+                REQUIRE(ref.applyGate(X(), q({0})).has_value());
+                REQUIRE(ref.applyGate(X(), q({1})).has_value());
+            }
             REQUIRE(ref.applyGate(H(), q({2})).has_value());
             REQUIRE(maxAbsDiff(post.rho(), num::projector(ref.amplitudes())) < 1e-12);
             REQUIRE(post.stateNorm() == Approx(1.0).margin(1e-12));
@@ -152,7 +163,8 @@ TEST_CASE("DM: projective measurement probabilities and post-measurement state")
     auto out = bell.measure(q({0}), rng);
     REQUIRE(out.has_value());
     REQUIRE(out->probability == Approx(0.5).margin(1e-12));
-    REQUIRE(bell.population(QubitIndex{1}, out->bits[0] ? 0u : 1u) == Approx(2.0 * p / 3.0).margin(1e-12));
+    REQUIRE(bell.population(QubitIndex{1}, out->bits[0] ? 0u : 1u) ==
+            Approx(2.0 * p / 3.0).margin(1e-12));
     REQUIRE(bell.stateNorm() == Approx(1.0).margin(1e-12));
     REQUIRE(bell.measure(q({2}), rng).error().code == err::BadTargets);
 }
@@ -161,7 +173,8 @@ TEST_CASE("DM: sampling uses the diagonal and does not mutate the state") {
     const double p1 = 0.3;
     DensityMatrixBackend dm;
     prepareCorrelated(dm, p1);
-    REQUIRE(dm.applyChannel(phaseFlip(0.5), q({0})).has_value()); // kill the coherence: classical mixture
+    REQUIRE(dm.applyChannel(phaseFlip(0.5), q({0}))
+                .has_value()); // kill the coherence: classical mixture
     REQUIRE(std::abs(dm.rho()(0, 3)) < 1e-15);
     const Matrix before = dm.rho();
     core::Random rng(321);

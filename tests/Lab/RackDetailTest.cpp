@@ -5,9 +5,9 @@
 // the shared mimic grid.
 #include "Lab/Lab.hpp"
 #include "Lab/RackPanel.hpp"
+#include <algorithm>
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <algorithm>
 #include <cstring>
 #include <format>
 #include <map>
@@ -20,7 +20,8 @@ namespace {
 const Scene& standardScene() {
     static Scene scene = [] {
         auto s = buildScene("sc_lab_standard");
-        if (!s) FAIL(s.error().format());
+        if (!s)
+            FAIL(s.error().format());
         return std::move(*s);
     }();
     return scene;
@@ -29,7 +30,8 @@ const Scene& standardScene() {
 std::vector<const ComponentDescriptor*> rackUnits(const ComponentCatalog& cat) {
     std::vector<const ComponentDescriptor*> out;
     for (const auto& d : cat.all())
-        if (d.generator == "RackUnit") out.push_back(&d);
+        if (d.generator == "RackUnit")
+            out.push_back(&d);
     return out;
 }
 
@@ -51,7 +53,8 @@ std::uint64_t meshHash(const gfx::MeshData& m) {
 std::size_t countColour(const gfx::MeshData& m, const glm::vec4& c) {
     std::size_t n = 0;
     for (const auto& v : m.vertices)
-        if (v.color == c) ++n;
+        if (v.color == c)
+            ++n;
     return n;
 }
 } // namespace
@@ -67,8 +70,9 @@ TEST_CASE("every rack instrument has its own front panel: distinct meshes within
         auto full = generateMesh("RackUnit", p, GenContext{Detail::Full, 1.0});
         REQUIRE(full.has_value());
         INFO(d->id << ": " << full->triangleCount() << " triangles");
-        CHECK(full->triangleCount() > 200);     // a real panel, not a box
-        CHECK(full->triangleCount() < 16'000);  // per-unit budget: the 48-way patch panel is the largest
+        CHECK(full->triangleCount() > 200); // a real panel, not a box
+        CHECK(full->triangleCount() <
+              16'000); // per-unit budget: the 48-way patch panel is the largest
         total += full->triangleCount();
         auto [it, inserted] = seen.emplace(meshHash(*full), d->id);
         INFO("duplicate of " << it->second);
@@ -86,10 +90,11 @@ TEST_CASE("every rack instrument has its own front panel: distinct meshes within
 
 TEST_CASE("rack units have the U heights of spec 17 §3.3 and the stack does not overlap") {
     const Scene& scene = standardScene();
-    const std::map<std::string, int> kHeightU{{"mw_generator", 2}, {"control_chassis", 4}, {"digitizer", 3}, {"iq_mixer_board", 1},
-                                              {"dc_source", 3},    {"power_dist", 1},      {"vna", 4},       {"spectrum_analyzer", 4},
-                                              {"oscilloscope", 4}, {"rt_amplifier", 1},    {"ref_10mhz", 1}, {"clock_dist", 1},
-                                              {"trigger_unit", 1}, {"patch_panel", 1}};
+    const std::map<std::string, int> kHeightU{
+        {"mw_generator", 2}, {"control_chassis", 4}, {"digitizer", 3}, {"iq_mixer_board", 1},
+        {"dc_source", 3},    {"power_dist", 1},      {"vna", 4},       {"spectrum_analyzer", 4},
+        {"oscilloscope", 4}, {"rt_amplifier", 1},    {"ref_10mhz", 1}, {"clock_dist", 1},
+        {"trigger_unit", 1}, {"patch_panel", 1}};
     for (const auto& [id, u] : kHeightU) {
         const ComponentDescriptor* d = scene.catalog().find(id);
         REQUIRE(d != nullptr);
@@ -98,10 +103,13 @@ TEST_CASE("rack units have the U heights of spec 17 §3.3 and the stack does not
     }
     std::map<std::string, std::vector<const Node*>> perRack;
     for (const Node& n : scene.nodes())
-        if (n.assembly == Assembly::RackUnits) perRack[n.instanceName.substr(0, 6)].push_back(&n);
+        if (n.assembly == Assembly::RackUnits)
+            perRack[n.instanceName.substr(0, 6)].push_back(&n);
     REQUIRE(perRack.size() == 2);
     for (auto& [rack, nodes] : perRack) {
-        std::sort(nodes.begin(), nodes.end(), [](const Node* a, const Node* b) { return a->worldBounds.min.y > b->worldBounds.min.y; });
+        std::sort(nodes.begin(), nodes.end(), [](const Node* a, const Node* b) {
+            return a->worldBounds.min.y > b->worldBounds.min.y;
+        });
         const Node* enclosure = scene.node(scene.findByInstance(rack + ".enclosure"));
         REQUIRE(enclosure != nullptr);
         for (std::size_t i = 0; i < nodes.size(); ++i) {
@@ -114,7 +122,9 @@ TEST_CASE("rack units have the U heights of spec 17 §3.3 and the stack does not
             CHECK(n->worldBounds.min.x >= enclosure->worldBounds.min.x - 1e-9);
             CHECK(n->worldBounds.max.x <= enclosure->worldBounds.max.x + 1e-9);
             CHECK(n->worldBounds.min.y >= enclosure->worldBounds.min.y);
-            if (i > 0) CHECK(nodes[i - 1]->worldBounds.min.y >= n->worldBounds.max.y - 1e-6); // no overlap, top to bottom
+            if (i > 0)
+                CHECK(nodes[i - 1]->worldBounds.min.y >=
+                      n->worldBounds.max.y - 1e-6); // no overlap, top to bottom
         }
         CHECK(nodes.size() >= 9);
     }
@@ -131,30 +141,37 @@ TEST_CASE("connector counts in each unit's mesh match the descriptor's front-pan
         REQUIRE(spec.connectorCount() > 0); // every instrument presents at least one port
         // N and BNC share the nickel body colour; the other types are unique
         const std::size_t nickel = countColour(*full, connectorBodyColour(ConnectorType::N));
-        CHECK(nickel == spec.connectorCount(ConnectorType::N) * connectorVertexCount(ConnectorType::N) +
-                            spec.connectorCount(ConnectorType::Bnc) * connectorVertexCount(ConnectorType::Bnc));
+        CHECK(nickel ==
+              spec.connectorCount(ConnectorType::N) * connectorVertexCount(ConnectorType::N) +
+                  spec.connectorCount(ConnectorType::Bnc) *
+                      connectorVertexCount(ConnectorType::Bnc));
         for (ConnectorType t : {ConnectorType::Sma, ConnectorType::Iec, ConnectorType::Dsub}) {
             INFO(connectorTypeName(t));
-            CHECK(countColour(*full, connectorBodyColour(t)) == static_cast<std::size_t>(spec.connectorCount(t)) * connectorVertexCount(t));
+            CHECK(countColour(*full, connectorBodyColour(t)) ==
+                  static_cast<std::size_t>(spec.connectorCount(t)) * connectorVertexCount(t));
         }
         // the label list is the port list the inspector would show
         std::set<std::string> labels;
-        for (const auto& c : spec.connectors) labels.insert(c.label);
+        for (const auto& c : spec.connectors)
+            labels.insert(c.label);
         CHECK(labels.size() == spec.connectors.size());
         // the nameplate anchor of the renderer's model label lies on the unit's faceplate
         glm::dvec3 np = rackNameplateLocal(spec.u, kRackUnitDepth_m);
         gfx::Aabb box = emptyAabb();
-        for (const auto& v : full->vertices) box.expand(glm::dvec3(v.position));
+        for (const auto& v : full->vertices)
+            box.expand(glm::dvec3(v.position));
         CHECK(np.x > box.min.x);
         CHECK(np.x < box.max.x);
         CHECK(np.y < box.max.y);
         CHECK(np.z <= box.max.z);
     }
     // the specific real layouts of spec 17 §3.3 (amended)
-    auto spec = [&](const char* id) { return parseRackPanel(GenParams::merged(cat.find(id)->geometry, core::Json::object())); };
+    auto spec = [&](const char* id) {
+        return parseRackPanel(GenParams::merged(cat.find(id)->geometry, core::Json::object()));
+    };
     CHECK(spec("vna").connectorCount(ConnectorType::N) == 2);
     CHECK(spec("iq_mixer_board").connectorCount(ConnectorType::Sma) == 5);
-    CHECK(spec("digitizer").connectorCount(ConnectorType::Sma) == 9); // 8 channels + clock in
+    CHECK(spec("digitizer").connectorCount(ConnectorType::Sma) == 9);   // 8 channels + clock in
     CHECK(spec("clock_dist").connectorCount(ConnectorType::Sma) == 13); // 12 outputs + reference in
     CHECK(spec("patch_panel").connectorCount(ConnectorType::Sma) == 48);
     CHECK(spec("control_chassis").slots.has_value());
@@ -186,8 +203,10 @@ TEST_CASE("the gas-handling panel carries its valves and gauges on the mimic gri
         auto i = v->params.index("i");
         REQUIRE(i.has_value());
         const glm::dvec3 at(v->world[3]);
-        CHECK(at.x == Catch::Approx(origin.x + ghsValveX(static_cast<int>(*i % 5)) * W).margin(1e-9));
-        CHECK(at.y == Catch::Approx(origin.y + ghsValveY(static_cast<int>(*i / 5)) * H).margin(1e-9));
+        CHECK(at.x ==
+              Catch::Approx(origin.x + ghsValveX(static_cast<int>(*i % 5)) * W).margin(1e-9));
+        CHECK(at.y ==
+              Catch::Approx(origin.y + ghsValveY(static_cast<int>(*i / 5)) * H).margin(1e-9));
         CHECK(at.z > cab->worldBounds.max.z - 0.03); // on the front panel
         CHECK(v->displayName == std::format("Valve V{}", *i + 1));
     }
@@ -204,7 +223,8 @@ TEST_CASE("the gas-handling panel carries its valves and gauges on the mimic gri
             const Node* p = scene.node(n);
             INFO(p->instanceName);
             const glm::dvec3 foot(p->world[3]);
-            CHECK((foot.x <= cab->worldBounds.min.x - 0.1 || foot.x >= cab->worldBounds.max.x + 0.1));
+            CHECK(
+                (foot.x <= cab->worldBounds.min.x - 0.1 || foot.x >= cab->worldBounds.max.x + 0.1));
             CHECK(foot.y == Catch::Approx(0.0).margin(1e-9));
             CHECK(p->worldBounds.min.y >= -1e-6);
         }
@@ -212,11 +232,13 @@ TEST_CASE("the gas-handling panel carries its valves and gauges on the mimic gri
     CHECK(turbo->worldBounds.min.y >= cab->worldBounds.max.y - 1e-6);
     CHECK(scene.findByDescriptor("dump_tank").size() == 2);
     // the new inspectable parts of the pass are in the scene with their function paragraphs
-    for (const char* id : {"cable_loom", "microscope", "wire_bonder", "sample_box", "he_dewar", "pt_compressor", "workstation", "bench"}) {
+    for (const char* id : {"cable_loom", "microscope", "wire_bonder", "sample_box", "he_dewar",
+                           "pt_compressor", "workstation", "bench"}) {
         INFO(id);
         auto nodes = scene.findByDescriptor(id);
         REQUIRE_FALSE(nodes.empty());
         CHECK(scene.inspect(nodes.front()).function.size() > 200);
     }
-    CHECK(scene.findByDescriptor("cable_loom").size() == 3); // two rack looms and the drop to the top plate
+    CHECK(scene.findByDescriptor("cable_loom").size() ==
+          3); // two rack looms and the drop to the top plate
 }

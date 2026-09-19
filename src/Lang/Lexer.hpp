@@ -6,12 +6,12 @@
 namespace qlab::lang {
 
 struct LexResult {
-    std::vector<Token> tokens;       // Comment tokens are excluded unless keepComments
+    std::vector<Token> tokens; // Comment tokens are excluded unless keepComments
     std::vector<Diagnostic> diagnostics;
 };
 
 struct LexOptions {
-    bool keepComments = false;       // editor highlighting wants comments
+    bool keepComments = false; // editor highlighting wants comments
     std::string filename;
 };
 

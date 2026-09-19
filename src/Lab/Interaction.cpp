@@ -13,7 +13,8 @@ constexpr double kTooltipDelay_s = 0.25; // spec 17 §7.1
 
 std::string lower(std::string_view s) {
     std::string out(s);
-    for (char& c : out) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    for (char& c : out)
+        c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
     return out;
 }
 
@@ -21,7 +22,8 @@ std::string lower(std::string_view s) {
 bool subsequence(const std::string& needle, const std::string& haystack) {
     std::size_t i = 0;
     for (char c : haystack)
-        if (i < needle.size() && c == needle[i]) ++i;
+        if (i < needle.size() && c == needle[i])
+            ++i;
     return i == needle.size();
 }
 } // namespace
@@ -35,10 +37,12 @@ void fitClipPlanes(gfx::Camera& camera) {
     camera.setClip(std::clamp(5e-3 * d, 1e-7, 0.05), std::max(50.0, 50.0 * d));
 }
 
-Interaction::Interaction(Scene& scene, const BindingRegistry* bindings) : scene_(&scene), bindings_(bindings) {
+Interaction::Interaction(Scene& scene, const BindingRegistry* bindings)
+    : scene_(&scene), bindings_(bindings) {
     for (const auto& group : scene.layout().layers) { // the layout lists the layers it ships with
         Group g;
-        if (groupFromName(group, g)) view_.layers[static_cast<std::size_t>(g)] = true;
+        if (groupFromName(group, g))
+            view_.layers[static_cast<std::size_t>(g)] = true;
     }
     for (const auto& b : scene.layout().bookmarks) {
         LayoutBookmark bm = b;
@@ -55,7 +59,8 @@ Interaction::Interaction(Scene& scene, const BindingRegistry* bindings) : scene_
     // one bookmark per qubit, framed on its pad (spec 17 §7)
     for (std::size_t q = 0; q < scene.qubitNodes().size(); ++q) {
         const Node* n = scene.node(scene.qubitNodes()[q]);
-        if (!n || !n->subtreeBounds.valid()) continue;
+        if (!n || !n->subtreeBounds.valid())
+            continue;
         LayoutBookmark bm;
         bm.name = std::format("Qubit q[{}]", q);
         bm.scaleIsland = "chip_micro";
@@ -78,11 +83,14 @@ void Interaction::hover(ComponentId id, double timeS) {
 }
 
 std::optional<Tooltip> Interaction::tooltip(double timeS) const {
-    if (hovered_.value == 0 || timeS - hoverStart_ < kTooltipDelay_s) return std::nullopt;
+    if (hovered_.value == 0 || timeS - hoverStart_ < kTooltipDelay_s)
+        return std::nullopt;
     const Node* n = scene_->node(hovered_);
-    if (!n) return std::nullopt;
+    if (!n)
+        return std::nullopt;
     const ComponentDescriptor* d = scene_->descriptor(*n);
-    if (!d) return std::nullopt;
+    if (!d)
+        return std::nullopt;
     Tooltip t;
     t.id = hovered_;
     t.name = d->name;
@@ -90,11 +98,14 @@ std::optional<Tooltip> Interaction::tooltip(double timeS) const {
     t.category = d->category;
     t.text = d->tooltip;
     t.function = d->function;
-    if (!d->theoryAnchors.empty()) t.theory = d->theoryAnchors.front();
+    if (!d->theoryAnchors.empty())
+        t.theory = d->theoryAnchors.front();
     // Up to three live rows, in sheet order; the first one also fills the single-line fields.
     for (const SpecRow& row : d->specSheet) {
-        if (!row.binding) continue;
-        std::optional<BindingValue> v = bindings_ ? bindings_->resolve(n->params, row) : std::nullopt;
+        if (!row.binding)
+            continue;
+        std::optional<BindingValue> v =
+            bindings_ ? bindings_->resolve(n->params, row) : std::nullopt;
         Tooltip::LiveRow live;
         live.text = std::format("{}: {}", row.field, formatBindingValue(v, row.unit));
         live.cls = v ? v->cls : row.cls;
@@ -105,7 +116,8 @@ std::optional<Tooltip> Interaction::tooltip(double timeS) const {
             t.simulatorOnly = live.simulatorOnly;
         }
         t.liveRows.push_back(std::move(live));
-        if (t.liveRows.size() == 3) break;
+        if (t.liveRows.size() == 3)
+            break;
     }
     return t;
 }
@@ -116,27 +128,33 @@ void Interaction::select(ComponentId id) {
 }
 
 void Interaction::selectParent() {
-    if (const Node* n = scene_->node(selected_)) selected_ = n->parent;
+    if (const Node* n = scene_->node(selected_))
+        selected_ = n->parent;
 }
 
 gfx::Bookmark Interaction::focusBookmark(ComponentId id, const gfx::Camera& camera) const {
     gfx::Camera framed = camera;
     const Node* n = scene_->node(id);
-    gfx::Aabb box = n ? (n->subtreeBounds.valid() ? n->subtreeBounds : n->worldBounds) : emptyAabb();
-    if (box.valid()) framed.frame(box);
+    gfx::Aabb box =
+        n ? (n->subtreeBounds.valid() ? n->subtreeBounds : n->worldBounds) : emptyAabb();
+    if (box.valid())
+        framed.frame(box);
     gfx::Bookmark bm = framed.bookmark(n ? n->displayName : std::string{});
     return bm;
 }
 
 bool Interaction::focus(ComponentId id, gfx::Camera& camera, double durationS) {
     const Node* n = scene_->node(id);
-    if (!n) return false;
+    if (!n)
+        return false;
     gfx::Aabb box = n->subtreeBounds.valid() ? n->subtreeBounds : n->worldBounds;
-    if (!box.valid()) return false;
+    if (!box.valid())
+        return false;
     gfx::Camera framed = camera;
     framed.frame(box);
     camera.transitionTo(framed.bookmark(n->displayName), durationS);
-    if (durationS <= 0.0) camera.set(framed.bookmark(n->displayName));
+    if (durationS <= 0.0)
+        camera.set(framed.bookmark(n->displayName));
     fitClipPlanes(camera);
     return true;
 }
@@ -164,64 +182,86 @@ glm::dvec4 Interaction::cutawayPlane() const {
 }
 
 bool Interaction::nodeVisible(const Node& n) const {
-    if (!n.visible) return false;
-    if (!layerVisible(n.group)) return false;
-    if (n.can && !view_.cansVisible) return false;
+    if (!n.visible)
+        return false;
+    if (!layerVisible(n.group))
+        return false;
+    if (n.can && !view_.cansVisible)
+        return false;
     return true;
 }
 
 std::vector<SearchHit> Interaction::search(std::string_view query, std::size_t limit) const {
     std::vector<SearchHit> hits;
     std::string q = lower(query);
-    if (q.empty()) return hits;
+    if (q.empty())
+        return hits;
     for (const Node& n : scene_->nodes()) {
         const ComponentDescriptor* d = scene_->descriptor(n);
         std::string instance = lower(n.instanceName), display = lower(n.displayName);
         std::string component = d ? lower(d->name) : std::string{};
         std::string descriptor = lower(n.descriptorId);
         double score = 0.0;
-        if (instance == q || descriptor == q) score = 1000.0;
-        else if (instance.starts_with(q)) score = 700.0;
-        else if (instance.find(q) != std::string::npos) score = 600.0;
-        else if (descriptor.find(q) != std::string::npos) score = 550.0;
-        else if (component.find(q) != std::string::npos) score = 400.0;
-        else if (display.find(q) != std::string::npos) score = 350.0;
-        else if (subsequence(q, instance) || subsequence(q, component)) score = 100.0;
-        if (score <= 0.0) continue;
-        if (n.kind == NodeKind::Group) score *= 0.5; // prefer real components over grouping nodes
+        if (instance == q || descriptor == q)
+            score = 1000.0;
+        else if (instance.starts_with(q))
+            score = 700.0;
+        else if (instance.find(q) != std::string::npos)
+            score = 600.0;
+        else if (descriptor.find(q) != std::string::npos)
+            score = 550.0;
+        else if (component.find(q) != std::string::npos)
+            score = 400.0;
+        else if (display.find(q) != std::string::npos)
+            score = 350.0;
+        else if (subsequence(q, instance) || subsequence(q, component))
+            score = 100.0;
+        if (score <= 0.0)
+            continue;
+        if (n.kind == NodeKind::Group)
+            score *= 0.5; // prefer real components over grouping nodes
         hits.push_back({n.id, n.instanceName + (d ? " — " + d->name : std::string{}), score});
     }
     std::stable_sort(hits.begin(), hits.end(), [](const SearchHit& a, const SearchHit& b) {
         return a.score != b.score ? a.score > b.score : a.id.value < b.id.value;
     });
-    if (limit > 0 && hits.size() > limit) hits.resize(limit);
+    if (limit > 0 && hits.size() > limit)
+        hits.resize(limit);
     return hits;
 }
 
 ComponentId Interaction::searchSelect(std::string_view query, gfx::Camera* camera) {
     auto hits = search(query, 1);
-    if (hits.empty()) return ComponentId{0};
+    if (hits.empty())
+        return ComponentId{0};
     select(hits.front().id);
-    if (camera) focus(hits.front().id, *camera);
+    if (camera)
+        focus(hits.front().id, *camera);
     return hits.front().id;
 }
 
 const LayoutBookmark* Interaction::bookmark(std::string_view name) const {
     for (const auto& b : bookmarks_)
-        if (b.name == name) return &b;
+        if (b.name == name)
+            return &b;
     return nullptr;
 }
 
 bool Interaction::applyBookmark(std::string_view name, gfx::Camera& camera, double durationS) {
     const LayoutBookmark* b = bookmark(name);
-    if (!b) return false;
-    if (durationS <= 0.0) camera.set(b->view);
-    else camera.transitionTo(b->view, durationS);
+    if (!b)
+        return false;
+    if (durationS <= 0.0)
+        camera.set(b->view);
+    else
+        camera.transitionTo(b->view, durationS);
     if (!b->scaleIsland.empty()) { // a chip bookmark shows the chip layers only (spec 17 §7)
-        if (!layersBeforeIsland_) layersBeforeIsland_ = view_.layers;
+        if (!layersBeforeIsland_)
+            layersBeforeIsland_ = view_.layers;
         for (int g = 0; g < kGroupCount; ++g) {
             Group group = static_cast<Group>(g);
-            setLayerVisible(group, group == Group::Chip || group == Group::ChipMicro || group == Group::Overlay);
+            setLayerVisible(group, group == Group::Chip || group == Group::ChipMicro ||
+                                       group == Group::Overlay);
         }
     } else if (layersBeforeIsland_) { // back in the room: what the chip view hid comes back
         view_.layers = *layersBeforeIsland_;
@@ -245,9 +285,12 @@ void Interaction::storeBookmark(std::string name, const gfx::Camera& camera) {
 
 core::Json Interaction::saveViewState() const {
     core::Json layers = core::Json::object();
-    for (int g = 0; g < kGroupCount; ++g) layers[std::string(groupName(static_cast<Group>(g)))] = view_.layers[static_cast<std::size_t>(g)];
+    for (int g = 0; g < kGroupCount; ++g)
+        layers[std::string(groupName(static_cast<Group>(g)))] =
+            view_.layers[static_cast<std::size_t>(g)];
     core::Json explode = core::Json::array();
-    for (double s : view_.explode) explode.push_back(s);
+    for (double s : view_.explode)
+        explode.push_back(s);
     return core::Json{{"layers", layers},
                       {"explode", explode},
                       {"xray", view_.xray},
@@ -258,7 +301,8 @@ core::Json Interaction::saveViewState() const {
 }
 
 void Interaction::loadViewState(const core::Json& j) {
-    if (!j.is_object()) return;
+    if (!j.is_object())
+        return;
     if (auto layers = j.find("layers"); layers != j.end() && layers->is_object())
         for (auto it = layers->begin(); it != layers->end(); ++it) {
             Group g;

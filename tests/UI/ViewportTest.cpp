@@ -2,12 +2,12 @@
 // right-drag pans, the wheel zooms, and none of it moves the panel. Headless, with the mouse
 // driven through ImGui's input queue; no renderer, so there is no picture and no pick — the
 // camera must still respond.
-#include "UiHarness.hpp"
 #include "UI/Panels/Panels.hpp"
+#include "UiHarness.hpp"
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <imgui_internal.h>
 #include <cmath>
+#include <imgui_internal.h>
 
 using namespace qlab;
 using namespace qlab::ui;
@@ -34,7 +34,9 @@ struct Rig {
             ImGui::End();
         });
     }
-    void frame() { frame([](ImGuiIO&) {}); }
+    void frame() {
+        frame([](ImGuiIO&) {});
+    }
     ImVec2 windowPos() const { return ImGui::FindWindowByName("viewport_rig")->Pos; }
 };
 
@@ -42,7 +44,8 @@ struct Rig {
 
 TEST_CASE("Viewport: a left drag on the picture orbits the camera and does not move the panel") {
     Rig rig;
-    if (!rig.ui.ready()) SKIP("the pinned fonts are not available");
+    if (!rig.ui.ready())
+        SKIP("the pinned fonts are not available");
     rig.frame();
     rig.frame();
     const glm::dvec3 pos0 = rig.camera.position();
@@ -60,7 +63,8 @@ TEST_CASE("Viewport: a left drag on the picture orbits the camera and does not m
     CHECK(glm::length(rig.camera.position() - pos0) > 0.1);
     CHECK(rig.camera.position().x < pos0.x - 0.1);
     CHECK(glm::length(rig.camera.target() - target0) < 1e-9);
-    CHECK(glm::length(rig.camera.position() - target0) == Approx(glm::length(pos0 - target0)).epsilon(1e-9));
+    CHECK(glm::length(rig.camera.position() - target0) ==
+          Approx(glm::length(pos0 - target0)).epsilon(1e-9));
     // Vertically the scene follows the mouse: the drag ended 20 px UP the screen, so the eye
     // dropped (looking from lower, what was under the cursor rises).
     CHECK(rig.camera.position().y < pos0.y);
@@ -72,7 +76,8 @@ TEST_CASE("Viewport: a left drag on the picture orbits the camera and does not m
 
 TEST_CASE("Viewport: a right drag pans, Shift-drag pans, and the wheel zooms") {
     Rig rig;
-    if (!rig.ui.ready()) SKIP("the pinned fonts are not available");
+    if (!rig.ui.ready())
+        SKIP("the pinned fonts are not available");
     rig.frame();
     rig.frame();
     const glm::dvec3 pos0 = rig.camera.position();
@@ -96,9 +101,15 @@ TEST_CASE("Viewport: a right drag pans, Shift-drag pans, and the wheel zooms") {
 
     // Shift + left drag also pans.
     const glm::dvec3 pos2 = rig.camera.position(), target2 = rig.camera.target();
-    rig.frame([](ImGuiIO& io) { io.AddKeyEvent(ImGuiMod_Shift, true); io.AddMouseButtonEvent(ImGuiMouseButton_Left, true); });
+    rig.frame([](ImGuiIO& io) {
+        io.AddKeyEvent(ImGuiMod_Shift, true);
+        io.AddMouseButtonEvent(ImGuiMouseButton_Left, true);
+    });
     rig.frame([](ImGuiIO& io) { io.AddMousePosEvent(400.0f, 300.0f); });
-    rig.frame([](ImGuiIO& io) { io.AddMouseButtonEvent(ImGuiMouseButton_Left, false); io.AddKeyEvent(ImGuiMod_Shift, false); });
+    rig.frame([](ImGuiIO& io) {
+        io.AddMouseButtonEvent(ImGuiMouseButton_Left, false);
+        io.AddKeyEvent(ImGuiMod_Shift, false);
+    });
     rig.frame();
     CHECK(glm::length((rig.camera.position() - pos2) - (rig.camera.target() - target2)) < 1e-9);
     CHECK(glm::length(rig.camera.position() - pos2) > 1e-3);

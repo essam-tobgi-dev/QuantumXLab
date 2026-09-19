@@ -34,7 +34,8 @@ struct InstrumentDescriptor {
 Result<std::optional<InstrumentDescriptor>> parseInstrumentDescriptor(const core::Json& data);
 // Every component with an `instrument` block under `componentsDir`
 // (default: core::assetDir()/Lab/Components), sorted by component id.
-Result<std::vector<InstrumentDescriptor>> loadInstrumentDescriptors(const std::filesystem::path& componentsDir = {});
+Result<std::vector<InstrumentDescriptor>>
+loadInstrumentDescriptors(const std::filesystem::path& componentsDir = {});
 
 // Setting key or model term that enforces a spec-sheet row of an instrument kind, e.g.
 // ("sg_mw", "output power") → "power"; nullopt when the model has nothing for it.
@@ -42,6 +43,7 @@ std::optional<std::string> specSheetTerm(std::string_view kind, std::string_view
 
 // Lint of one descriptor. `registry` must hold an instance of the descriptor's kind (it is created
 // when missing). Returns one line per problem; empty means the descriptor is honoured.
-std::vector<std::string> lintDescriptor(const InstrumentDescriptor& descriptor, InstrumentRegistry& registry);
+std::vector<std::string> lintDescriptor(const InstrumentDescriptor& descriptor,
+                                        InstrumentRegistry& registry);
 
 } // namespace qlab::instr

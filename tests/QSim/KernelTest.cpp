@@ -1,9 +1,9 @@
 // Spec 07 §2 — kernel fast paths, controlled gates, measurement, sampling, memory guard.
 #include "Gates.hpp"
-#include <catch2/catch_approx.hpp>
-#include <catch2/catch_test_macros.hpp>
 #include "Numerics/Checks.hpp"
 #include "Numerics/Tensor.hpp"
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <map>
 
 using namespace qtest;
@@ -19,7 +19,8 @@ std::vector<Complex> randomState(std::uint32_t n, std::uint64_t seed) {
         norm += std::norm(c);
     }
     double s = 1.0 / std::sqrt(norm);
-    for (auto& c : v) c *= s;
+    for (auto& c : v)
+        c *= s;
     return v;
 }
 // Reference: build the full 2^n operator with num::embed and multiply.
@@ -33,7 +34,8 @@ std::vector<Complex> reference(const std::vector<Complex>& psi, const Matrix& u,
 void requireClose(std::span<const Complex> a, const std::vector<Complex>& b, double tol = 1e-12) {
     REQUIRE(a.size() == b.size());
     double worst = 0;
-    for (std::size_t i = 0; i < b.size(); ++i) worst = std::max(worst, std::abs(a[i] - b[i]));
+    for (std::size_t i = 0; i < b.size(); ++i)
+        worst = std::max(worst, std::abs(a[i] - b[i]));
     REQUIRE(worst < tol);
 }
 } // namespace
@@ -42,9 +44,16 @@ TEST_CASE("single-qubit kernels match the embedded reference") {
     const std::uint32_t n = 8;
     auto psi = randomState(n, 11);
     for (std::uint32_t t = 0; t < n; ++t) {
-        for (const auto& [name, u] : std::vector<std::pair<std::string, Matrix>>{
-                 {"X", X()}, {"Z", Z()}, {"H", H()}, {"S", S()}, {"T", T()}, {"SX", SX()},
-                 {"RZ", RZ(0.77)}, {"RY", RY(-1.3)}, {"phase", phase(0.42)}}) {
+        for (const auto& [name, u] :
+             std::vector<std::pair<std::string, Matrix>>{{"X", X()},
+                                                         {"Z", Z()},
+                                                         {"H", H()},
+                                                         {"S", S()},
+                                                         {"T", T()},
+                                                         {"SX", SX()},
+                                                         {"RZ", RZ(0.77)},
+                                                         {"RY", RY(-1.3)},
+                                                         {"phase", phase(0.42)}}) {
             INFO(name << " on q" << t);
             StateVectorBackend sv;
             REQUIRE(sv.allocate(n).has_value());
@@ -58,7 +67,12 @@ TEST_CASE("single-qubit kernels match the embedded reference") {
 TEST_CASE("GateClass fast paths equal the generic kernel") {
     const std::uint32_t n = 8;
     auto psi = randomState(n, 23);
-    struct Case { const char* name; Matrix u; GateClass cls; std::vector<std::uint32_t> t; };
+    struct Case {
+        const char* name;
+        Matrix u;
+        GateClass cls;
+        std::vector<std::uint32_t> t;
+    };
     std::vector<Case> cases{
         {"PauliX", X(), GateClass::PauliX, {3}},
         {"PauliZ", Z(), GateClass::PauliZ, {5}},
@@ -78,10 +92,12 @@ TEST_CASE("GateClass fast paths equal the generic kernel") {
         GateOp op;
         op.matrix = c.u;
         op.cls = c.cls;
-        for (auto x : c.t) op.targets.push_back(QubitIndex{x});
+        for (auto x : c.t)
+            op.targets.push_back(QubitIndex{x});
         REQUIRE(fast.apply(op).has_value());
         REQUIRE(generic.applyGate(c.u, op.targets).has_value());
-        requireClose(fast.amplitudes(), std::vector<Complex>(generic.amplitudes().begin(), generic.amplitudes().end()));
+        requireClose(fast.amplitudes(), std::vector<Complex>(generic.amplitudes().begin(),
+                                                             generic.amplitudes().end()));
     }
 }
 
@@ -94,20 +110,26 @@ TEST_CASE("controlled application equals the embedded controlled matrix") {
     // Controlled-RY on target 4 with controls {0, 2}: build the 8x8 reference on {0,2,4}.
     Matrix ry = RY(0.83);
     Matrix ccry(8, 8);
-    for (std::size_t i = 0; i < 8; ++i) ccry(i, i) = 1.0;
+    for (std::size_t i = 0; i < 8; ++i)
+        ccry(i, i) = 1.0;
     // Basis |t c2 c0> little-endian: controls are bits 0 and 1, target bit 2.
     const std::size_t c0 = 1, c1 = 2, tgt = 4;
     for (std::size_t i = 0; i < 8; ++i)
-        for (std::size_t j = 0; j < 8; ++j) ccry(i, j) = (i == j) ? Complex(1) : Complex(0);
+        for (std::size_t j = 0; j < 8; ++j)
+            ccry(i, j) = (i == j) ? Complex(1) : Complex(0);
     for (std::size_t a = 0; a < 2; ++a)
         for (std::size_t b = 0; b < 2; ++b) {
-            std::size_t base = c0 * 0; (void)base;
+            std::size_t base = c0 * 0;
+            (void)base;
             std::size_t i = (a ? c0 : 0) + (b ? c1 : 0);
             (void)i;
         }
-    // Rows/cols where both controls are set: indices 3 (=0b011) and 7 (=0b111) differ in the target bit.
-    ccry(3, 3) = ry(0, 0); ccry(3, 7) = ry(0, 1);
-    ccry(7, 3) = ry(1, 0); ccry(7, 7) = ry(1, 1);
+    // Rows/cols where both controls are set: indices 3 (=0b011) and 7 (=0b111) differ in the target
+    // bit.
+    ccry(3, 3) = ry(0, 0);
+    ccry(3, 7) = ry(0, 1);
+    ccry(7, 3) = ry(1, 0);
+    ccry(7, 7) = ry(1, 1);
     REQUIRE(sv.applyControlled(ry, q({0, 2}), q({4})).has_value());
     requireClose(sv.amplitudes(), reference(psi, ccry, {0, 2, 4}, n));
     (void)tgt;
@@ -164,7 +186,8 @@ TEST_CASE("reduced states, entropy, concurrence and Schmidt coefficients") {
     REQUIRE(measures::purity(*rho) == Approx(0.5).margin(1e-12));
     auto bloch = measures::blochVector(*rho);
     REQUIRE(bloch.has_value());
-    for (double c : *bloch) REQUIRE(std::abs(c) < 1e-12);
+    for (double c : *bloch)
+        REQUIRE(std::abs(c) < 1e-12);
     // Concurrence of a Bell state is 1.
     std::vector<Complex> bell(sv.amplitudes().begin(), sv.amplitudes().end());
     Matrix full = num::projector(bell);
@@ -183,7 +206,8 @@ TEST_CASE("reduced states, entropy, concurrence and Schmidt coefficients") {
     auto rhoP = prod.reducedDensityMatrix(q({0}));
     REQUIRE(rhoP.has_value());
     REQUIRE(measures::entropyBits(*rhoP) == Approx(0.0).margin(1e-10));
-    auto concP = measures::concurrence(num::projector(std::vector<Complex>(prod.amplitudes().begin(), prod.amplitudes().end())));
+    auto concP = measures::concurrence(
+        num::projector(std::vector<Complex>(prod.amplitudes().begin(), prod.amplitudes().end())));
     REQUIRE(concP.has_value());
     REQUIRE(*concP == Approx(0.0).margin(1e-8));
 }

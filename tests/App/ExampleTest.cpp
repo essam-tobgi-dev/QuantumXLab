@@ -19,12 +19,15 @@ std::vector<std::filesystem::path> corpus() {
     std::vector<std::filesystem::path> out;
     const std::filesystem::path root = core::assetDir() / "Programs" / "Examples";
     std::error_code ec;
-    if (!std::filesystem::is_directory(root, ec)) return out;
+    if (!std::filesystem::is_directory(root, ec))
+        return out;
     for (const auto& entry : std::filesystem::recursive_directory_iterator(root)) {
-        if (!entry.is_regular_file() || entry.path().extension() != ".qasm") continue;
+        if (!entry.is_regular_file() || entry.path().extension() != ".qasm")
+            continue;
         std::filesystem::path expected = entry.path();
         expected.replace_extension(".expected.json");
-        if (std::filesystem::exists(expected, ec)) out.push_back(entry.path());
+        if (std::filesystem::exists(expected, ec))
+            out.push_back(entry.path());
     }
     std::sort(out.begin(), out.end());
     return out;
@@ -33,7 +36,7 @@ std::vector<std::filesystem::path> corpus() {
 app::Options selfTestOptions() {
     app::Options o;
     o.mode = app::Mode::SelfTest;
-    return o;   // `checkExample` pins the ideal backend, the shots, the seed and the device itself
+    return o; // `checkExample` pins the ideal backend, the shots, the seed and the device itself
 }
 
 app::ExampleCheck check(std::string_view category, std::string_view name) {
@@ -42,7 +45,8 @@ app::ExampleCheck check(std::string_view category, std::string_view name) {
 }
 
 std::filesystem::path scratch(std::string_view name) {
-    const std::filesystem::path dir = std::filesystem::temp_directory_path() / "qxl_app_test" / name;
+    const std::filesystem::path dir =
+        std::filesystem::temp_directory_path() / "qxl_app_test" / name;
     std::error_code ec;
     std::filesystem::remove_all(dir, ec);
     std::filesystem::create_directories(dir, ec);
@@ -85,17 +89,18 @@ TEST_CASE("every shipped example reproduces its own expectation", "[oracle]") {
 TEST_CASE("an example runs on the device it names, else the smallest that holds it", "[oracle]") {
     // Shipped data qubits, smallest first: sc_fixed_5 (5), ion_chain_11 (11), sc_heavyhex_27 (27),
     // ion_chain_32 (32), sc_tunable_grid_54 (54), sc_heavyhex_127 (127).
-    CHECK(check("Basics", "bell").device == "sc_fixed_5");              // 2 qubits
-    CHECK(check("QEC", "repetition_3_memory").device == "sc_fixed_5");  // 5 qubits: fits exactly
-    CHECK(check("Oracles", "simon_6").device == "ion_chain_11");        // 6: the 5 does not fit
-    CHECK(check("Oracles", "bernstein_vazirani_8").device == "ion_chain_11");   // 9 qubits
-    CHECK(check("Search", "grover_6_two_marked").device == "ion_chain_11");     // 10 qubits
+    CHECK(check("Basics", "bell").device == "sc_fixed_5");             // 2 qubits
+    CHECK(check("QEC", "repetition_3_memory").device == "sc_fixed_5"); // 5 qubits: fits exactly
+    CHECK(check("Oracles", "simon_6").device == "ion_chain_11");       // 6: the 5 does not fit
+    CHECK(check("Oracles", "bernstein_vazirani_8").device == "ion_chain_11"); // 9 qubits
+    CHECK(check("Search", "grover_6_two_marked").device == "ion_chain_11");   // 10 qubits
     // 12 qubits, and its own `pragma qlab.device` (spec 15 §1) wins over the size rule.
     CHECK(check("Factoring", "shor_15_order_finding").device == "ion_chain_32");
 }
 
 // No semicolon in the name: `catch_discover_tests` puts it in a CMake list, where `;` splits it.
-TEST_CASE("an expectation reads the register it names, and a bare label spans the key", "[oracle]") {
+TEST_CASE("an expectation reads the register it names, and a bare label spans the key",
+          "[oracle]") {
     // Two one-bit registers: the run's key is "b a", so a one-bit label matches no key at all. That
     // is how teleportation, entanglement swapping and the repetition-code memory silently read
     // P = 0 for outcomes their programs produce on every shot.

@@ -17,17 +17,21 @@ enum class RoutingChoice { Sabre, None };
 struct Sweep {
     std::string input;
     bool isRange = true;
-    double from = 0, to = 0, step = 1;   // range form
-    std::vector<double> values;          // set form
+    double from = 0, to = 0, step = 1; // range form
+    std::vector<double> values;        // set form
     std::size_t count() const;
     std::vector<double> grid() const;
 };
 struct Probe {
-    std::string kind;                    // state | bloch | entanglement | density
-    std::vector<std::string> qubits;     // operand texts (q[0], $3)
+    std::string kind;                // state | bloch | entanglement | density
+    std::vector<std::string> qubits; // operand texts (q[0], $3)
     bool atBarriers = false;
 };
-struct RbSpec { int nQubits = 1; std::vector<int> lengths; int samples = 1; };
+struct RbSpec {
+    int nQubits = 1;
+    std::vector<int> lengths;
+    int samples = 1;
+};
 
 struct Pragmas {
     std::optional<std::string> device;
@@ -44,12 +48,14 @@ struct Pragmas {
     std::optional<RbSpec> rb;
     std::optional<bool> pulseLevel;
     std::string snapshotCadence = "gate";
-    std::vector<std::string> alignment;  // spec 10 §alignment values
-    std::vector<std::string> asserts;    // raw `qlab.assert` expressions (spec 22 §6)
+    std::vector<std::string> alignment; // spec 10 §alignment values
+    std::vector<std::string> asserts;   // raw `qlab.assert` expressions (spec 22 §6)
     bool physicalLayout() const { return layout && *layout == LayoutChoice::Physical; }
 };
 
-// Interprets a PragmaStmt into `out`; reports QL2014 (malformed), QL2050 (unknown), QL2051 (ignored).
-void applyPragma(const PragmaStmt& p, const SourceSpan& span, Pragmas& out, std::vector<Diagnostic>& diags);
+// Interprets a PragmaStmt into `out`; reports QL2014 (malformed), QL2050 (unknown), QL2051
+// (ignored).
+void applyPragma(const PragmaStmt& p, const SourceSpan& span, Pragmas& out,
+                 std::vector<Diagnostic>& diags);
 
 } // namespace qlab::lang

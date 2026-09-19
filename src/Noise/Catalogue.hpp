@@ -12,7 +12,8 @@ Result<Kraus> bitFlip(double p);      // K0 = √(1−p) I, K1 = √p X
 Result<Kraus> phaseFlip(double p);    // K0 = √(1−p) I, K1 = √p Z
 Result<Kraus> bitPhaseFlip(double p); // K0 = √(1−p) I, K1 = √p Y
 Result<Kraus> pauli(double px, double py, double pz);
-// ρ → (1−p)ρ + p I/d with d = 2^n (T04 (5.2)): weight 1 − p(d²−1)/d² on I, p/d² on every other string.
+// ρ → (1−p)ρ + p I/d with d = 2^n (T04 (5.2)): weight 1 − p(d²−1)/d² on I, p/d² on every other
+// string.
 Result<Kraus> depolarizing1q(double p);
 Result<Kraus> depolarizing2q(double p);
 Result<Kraus> depolarizingNq(std::uint32_t nQubits, double p);
@@ -21,8 +22,8 @@ double depolarizingFromGateError(double r, std::uint32_t nQubits);
 double gateErrorFromDepolarizing(double p, std::uint32_t nQubits);
 
 // ---- §2.2 amplitude damping
-Result<Kraus> amplitudeDamping(double gamma);                                  // (2.1)
-Result<Kraus> generalizedAmplitudeDamping(double gamma, double pThermal);      // (2.2)
+Result<Kraus> amplitudeDamping(double gamma);                             // (2.1)
+Result<Kraus> generalizedAmplitudeDamping(double gamma, double pThermal); // (2.2)
 // Duration form: γ = 1 − e^{−t/T1}; pThermal = excited-state equilibrium population.
 Result<Kraus> amplitudeDampingOver(double t1S, double tS, double pThermal = 0.0);
 // p_th = n/(1 + 2n) and its inverse (T04 (3.3)).
@@ -35,7 +36,8 @@ Result<Kraus> phaseDamping(double lambda);
 Result<Kraus> phaseDampingOver(double tPhiS, double tS);
 // 1/Tφ = 1/T2 − 1/(2T1) (2.4); +∞ when T2 = 2T1. Rejects T2 > 2T1 (err::Unphysical).
 Result<double> pureDephasingTime(double t1S, double t2S);
-// (2.2) followed by (2.3): populations relax with T1 towards pThermal, coherences as e^{−t/T2} exactly.
+// (2.2) followed by (2.3): populations relax with T1 towards pThermal, coherences as e^{−t/T2}
+// exactly.
 Result<Kraus> thermalRelaxation(double t1S, double t2S, double tS, double pThermal = 0.0);
 // 1 − F_avg of thermalRelaxation in closed form, T04 (4.6); independent of pThermal.
 double thermalRelaxationInfidelity(double t1S, double t2S, double tS);

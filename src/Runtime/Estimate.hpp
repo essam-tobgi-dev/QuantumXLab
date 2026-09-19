@@ -3,8 +3,8 @@
 // fidelity (7.1) and the simulated comparison, resources, classical simulation cost and the QEC
 // hook. Every figure is class `Model` and carries the assumption list of T12 §9 verbatim.
 #include "Compiler/Types.hpp"
-#include "Data/Fidelity.hpp"
 #include "Core/Json.hpp"
+#include "Data/Fidelity.hpp"
 #include "Hardware/Calibration.hpp"
 #include "Hardware/Device.hpp"
 #include "Hardware/Hardware.hpp"
@@ -16,7 +16,10 @@
 #include <string>
 #include <vector>
 
-namespace qlab::compiler { struct CompileOutput; struct CompileOptions; }
+namespace qlab::compiler {
+struct CompileOutput;
+struct CompileOptions;
+} // namespace qlab::compiler
 
 namespace qlab::runtime {
 
@@ -27,7 +30,7 @@ struct WallTimeEstimate {
     double perShotS = 0.0, shotsS = 0.0, feedbackTotalS = 0.0;
     std::uint64_t shots = 0;
     hw::ResetPolicy resetPolicy = hw::ResetPolicy::Active;
-    double minS = 0.0, maxS = 0.0;   // T12 §7 favourable / unfavourable ends
+    double minS = 0.0, maxS = 0.0; // T12 §7 favourable / unfavourable ends
 };
 
 // §7 (ii): the noisy-versus-ideal comparison of the output distributions and of the state.
@@ -40,12 +43,12 @@ struct SimulatedFidelity {
 };
 
 struct FidelityEstimate {
-    double fast = 1.0;                       // (7.1)
-    double low = 1.0, high = 1.0;            // min–max interval of T12 §7
-    double sigmaLog = 0.0;                   // 1σ band propagated in the log domain
+    double fast = 1.0;            // (7.1)
+    double low = 1.0, high = 1.0; // min–max interval of T12 §7
+    double sigmaLog = 0.0;        // 1σ band propagated in the log domain
     double gateProduct = 1.0, idleProduct = 1.0, readoutProduct = 1.0;
     std::optional<SimulatedFidelity> simulated;
-    std::vector<std::string> caveats;        // spec 15 §7 / T12 §4.2, rendered with the number
+    std::vector<std::string> caveats; // spec 15 §7 / T12 §4.2, rendered with the number
     data::FidelityClass cls = data::FidelityClass::Model;
 };
 
@@ -60,10 +63,10 @@ struct ResourceSummary {
 struct ClassicalCost {
     double stateVectorBytes = 0.0, densityMatrixBytes = 0.0;
     double stabilizerBytes = 0.0;
-    double estimatedTimeS = 0.0;       // N_gates · 2^n · c_gate
-    double gateCostS = 0.0;            // c_gate: seconds per amplitude update, measured on this host
-    std::uint32_t hostMaxQubits = 0;   // largest n the state vector fits in memory
-    double crossoverQubits = 0.0;      // n* of T12 (3.2), 0 when it does not apply
+    double estimatedTimeS = 0.0;     // N_gates · 2^n · c_gate
+    double gateCostS = 0.0;          // c_gate: seconds per amplitude update, measured on this host
+    std::uint32_t hostMaxQubits = 0; // largest n the state vector fits in memory
+    double crossoverQubits = 0.0;    // n* of T12 (3.2), 0 when it does not apply
 };
 
 struct DeviceComparison {
@@ -81,11 +84,11 @@ struct Estimate {
     ResourceSummary resources;
     ClassicalCost classicalCost;
     std::optional<qec::ResourceEstimate> qec;
-    std::vector<std::string> assumptions;   // keys; `assumptionText` renders each in full
+    std::vector<std::string> assumptions; // keys; `assumptionText` renders each in full
     std::vector<DeviceComparison> comparison;
 
-    core::Json toJson() const;              // the §9 schema
-    std::string serialize() const;          // core::JsonEnvelope, kind "qlab.estimate"
+    core::Json toJson() const;     // the §9 schema
+    std::string serialize() const; // core::JsonEnvelope, kind "qlab.estimate"
 };
 
 // The sentence rendered under an estimate for an assumption key (T12 §9). Spec 15 §9 puts these in
@@ -101,10 +104,10 @@ struct EstimateInput {
     const compiler::CompileOutput* program = nullptr;
     std::uint64_t shots = 1024;
     std::vector<std::uint32_t> usedQubits, measuredQubits;
-    double branchesPerShot = 0.0;        // executed feedforward points, mean over shots
-    std::optional<hw::ResetPolicy> resetPolicy;   // override the device's declared method
-    bool includeQec = true;              // §8 hook when the fast fidelity falls below `qecThreshold`
-    double qecThreshold = 0.5;           // T12 §6 default
+    double branchesPerShot = 0.0;               // executed feedforward points, mean over shots
+    std::optional<hw::ResetPolicy> resetPolicy; // override the device's declared method
+    bool includeQec = true;    // §8 hook when the fast fidelity falls below `qecThreshold`
+    double qecThreshold = 0.5; // T12 §6 default
     double qecFailureBudget = 1.0e-2;
 };
 
@@ -112,7 +115,8 @@ struct EstimateInput {
 Result<WallTimeEstimate> estimateWallTime(const EstimateInput& in);
 // §7 (i): the product model (7.1) with the schedule's idle intervals and the readout fidelities.
 Result<FidelityEstimate> estimateFidelityFast(const EstimateInput& in);
-// §8: resources from the metrics and the pre-decomposition circuit (T count, non-Clifford rotations).
+// §8: resources from the metrics and the pre-decomposition circuit (T count, non-Clifford
+// rotations).
 ResourceSummary summarizeResources(const EstimateInput& in);
 // §8: classical simulation cost of `qubits` qubits and `gates` gate applications on this host.
 ClassicalCost classicalCost(std::uint32_t qubits, std::uint64_t gates, double perShotS = 0.0,

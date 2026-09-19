@@ -14,19 +14,19 @@ namespace qlab::lab {
 // One node to add: geometry comes from the descriptor's generator with `overrides` layered on,
 // built once per LOD detail level and cached by parameter key.
 struct NodeSpec {
-    std::string descriptor;  // component.json id; empty for groups and scenery
-    std::string instance;    // unique instance name
-    std::string display;     // breadcrumb label (empty → descriptor name)
+    std::string descriptor; // component.json id; empty for groups and scenery
+    std::string instance;   // unique instance name
+    std::string display;    // breadcrumb label (empty → descriptor name)
     Transform local;
     Group group = Group::Room;
     std::string material = "vertex";
-    std::string generator;   // overrides the descriptor's generator (e.g. the MXC vessel)
+    std::string generator; // overrides the descriptor's generator (e.g. the MXC vessel)
     core::Json overrides = core::Json::object();
     InstanceParams params;
     double unitScale = 1.0;
     Assembly assembly = Assembly::None;
     int assemblyIndex = 0;
-    bool cacheMesh = true;   // false for unique geometry (wiring splines)
+    bool cacheMesh = true; // false for unique geometry (wiring splines)
     bool pickable = true;
     glm::vec4 tint{1.0f, 1.0f, 1.0f, 1.0f};
     std::optional<SplineInfo> spline;
@@ -40,8 +40,9 @@ struct NodeSpec {
 };
 
 class SceneBuilder {
-public:
-    SceneBuilder(Scene& scene, const LayoutSpec& layout, const RoutingSpec& routing, bool flipChipBumps = false)
+  public:
+    SceneBuilder(Scene& scene, const LayoutSpec& layout, const RoutingSpec& routing,
+                 bool flipChipBumps = false)
         : scene_(scene), layout_(layout), routing_(routing), flipChipBumps_(flipChipBumps) {}
 
     // Grouping node: no geometry, never picked.
@@ -51,8 +52,9 @@ public:
     Result<ComponentId> addComponent(ComponentId parent, NodeSpec spec);
     // Scenery: geometry without a descriptor (room shell, desks, dewars). Records a lint note the
     // first time a given id is used so the missing descriptor is visible (spec 17 §1, 25 §7).
-    ComponentId addScenery(ComponentId parent, std::string instance, std::string display, Group group,
-                           const Transform& local, gfx::MeshData mesh, std::string material);
+    ComponentId addScenery(ComponentId parent, std::string instance, std::string display,
+                           Group group, const Transform& local, gfx::MeshData mesh,
+                           std::string material);
     // Component when the catalog has the descriptor, scenery with `mesh` otherwise.
     ComponentId addProp(ComponentId parent, NodeSpec spec, const gfx::MeshData& fallback);
 
@@ -76,7 +78,7 @@ public:
     // inside the wiring bundle radii.
     static constexpr double kPulseTubeAzimuth_deg = 345.0, kPulseTubeRadius_m = 0.16;
     static constexpr double kStillAzimuth_deg = 165.0, kStillRadius_m = 0.09;
-    static constexpr double kPumpLineRadius_m = 0.025;   // Ø 50 mm still pumping line
+    static constexpr double kPumpLineRadius_m = 0.025; // Ø 50 mm still pumping line
     static constexpr double kStillBodyRadius_m = 0.03, kStillBodyHeight_m = 0.04;
     static constexpr double kMcRadius_m = 0.025, kMcHeight_m = 0.06;
     static constexpr int kPostsPerStage = 6;
@@ -118,7 +120,7 @@ public:
     ComponentId fridgeInterior() const { return fridgeInterior_; }
     ComponentId puckNode() const { return puck_; }
 
-private:
+  private:
     Scene& scene_;
     const LayoutSpec& layout_;
     const RoutingSpec& routing_;

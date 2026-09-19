@@ -19,11 +19,11 @@ namespace qlab::lab {
 
 // Error block of spec 04 §2 owned by this module (ErrorCode::Lab_ + n).
 inline constexpr ErrorCode kErrDescriptor = ErrorCode::Lab_ + 1; // component.json invalid
-inline constexpr ErrorCode kErrLayout = ErrorCode::Lab_ + 2;     // layout.json / routing.json invalid
-inline constexpr ErrorCode kErrGeometry = ErrorCode::Lab_ + 3;   // unknown or unusable generator
-inline constexpr ErrorCode kErrScene = ErrorCode::Lab_ + 4;      // scene graph inconsistency
-inline constexpr ErrorCode kErrChip = ErrorCode::Lab_ + 5;       // chip placement failed
-inline constexpr ErrorCode kErrBinding = ErrorCode::Lab_ + 6;    // binding path malformed
+inline constexpr ErrorCode kErrLayout = ErrorCode::Lab_ + 2;   // layout.json / routing.json invalid
+inline constexpr ErrorCode kErrGeometry = ErrorCode::Lab_ + 3; // unknown or unusable generator
+inline constexpr ErrorCode kErrScene = ErrorCode::Lab_ + 4;    // scene graph inconsistency
+inline constexpr ErrorCode kErrChip = ErrorCode::Lab_ + 5;     // chip placement failed
+inline constexpr ErrorCode kErrBinding = ErrorCode::Lab_ + 6;  // binding path malformed
 
 // Spec 17 §1 — TRS relative to the parent. World units are metres, +Y up, +Z toward the lab door;
 // the ChipMicro subtree is authored in micrometres under a 1e-6 scale (spec 17 §1, §6).
@@ -88,7 +88,9 @@ struct InstanceParams {
     std::map<std::string, double, std::less<>> numbers;     // "A_dB" -> 20
 
     void setToken(std::string key, std::string value) { tokens[std::move(key)] = std::move(value); }
-    void setIndex(std::string key, long long value) { tokens[std::move(key)] = std::to_string(value); }
+    void setIndex(std::string key, long long value) {
+        tokens[std::move(key)] = std::to_string(value);
+    }
     void setNumber(std::string key, double value) { numbers[std::move(key)] = value; }
     const std::string* token(std::string_view key) const {
         auto it = tokens.find(key);
@@ -107,10 +109,13 @@ inline gfx::Aabb emptyAabb() {
     return gfx::Aabb{glm::dvec3(inf), glm::dvec3(-inf)};
 }
 inline void mergeInto(gfx::Aabb& into, const gfx::Aabb& b) {
-    if (!b.valid()) return;
+    if (!b.valid())
+        return;
     into.expand(b.min);
     into.expand(b.max);
 }
-inline glm::dvec3 aabbSize(const gfx::Aabb& b) { return b.valid() ? b.max - b.min : glm::dvec3(0.0); }
+inline glm::dvec3 aabbSize(const gfx::Aabb& b) {
+    return b.valid() ? b.max - b.min : glm::dvec3(0.0);
+}
 
 } // namespace qlab::lab

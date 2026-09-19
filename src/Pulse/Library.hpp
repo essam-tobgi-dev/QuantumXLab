@@ -25,11 +25,11 @@ struct DefcalKey {
 // One entry of the table. Either explicit `instructions` or a `ref` to a template.
 struct Defcal {
     DefcalKey key;
-    std::vector<std::string> params;      // formal parameter names, e.g. {"theta"}
-    core::Json instructions;              // array, may be null when `ref` is used
-    std::string ref;                      // template name
-    std::string paramsFrom;               // "cal.edges.0-1"
-    core::Json extra;                     // the raw defcal object (amp_cr, flux_channel, …)
+    std::vector<std::string> params; // formal parameter names, e.g. {"theta"}
+    core::Json instructions;         // array, may be null when `ref` is used
+    std::string ref;                 // template name
+    std::string paramsFrom;          // "cal.edges.0-1"
+    core::Json extra;                // the raw defcal object (amp_cr, flux_channel, …)
 };
 
 // Mølmer–Sørensen parameters of one `ms(θ)` invocation (spec 10 §6.6, T06 §6).
@@ -39,17 +39,17 @@ struct Defcal {
 // δτ = 2πK and Ω = √(θδ/(η_i η_j τ)); `omegaSquareRadPerS` is that value at |θ| = π/2 and must
 // match the table's `omega_rad_s_at_pi_2`.
 struct MsParams {
-    int loops = 1;                     // K
-    double durationS = 0.0;            // τ (on the device grid)
-    double edgeS = 0.0;                // gaussian_square rise/fall
-    double detuningRadPerS = 0.0;      // δ, sign −sign(θ) (T06 (6.5))
+    int loops = 1;                      // K
+    double durationS = 0.0;             // τ (on the device grid)
+    double edgeS = 0.0;                 // gaussian_square rise/fall
+    double detuningRadPerS = 0.0;       // δ, sign −sign(θ) (T06 (6.5))
     double squareDetuningRadPerS = 0.0; // |δ| = 2πK/τ of a square envelope
-    double omegaRadPerS = 0.0;         // per-tone carrier Rabi rate realising θ
-    double omegaMaxRadPerS = 0.0;      // the same at |θ| = π/2 (unit envelope amplitude)
-    double omegaSquareRadPerS = 0.0;   // square-envelope Ω at |θ| = π/2 (spec 10 §6.6, T06 (6.6))
-    double etaI = 0.0, etaJ = 0.0;     // Lamb–Dicke factors of the two ions on the gate mode
-    double theta = 0.0;                // requested XX angle, XX(θ) = exp(−iθ/2 XX)
-    double amplitude = 0.0;            // envelope scale = Ω/Ω_max = √(|θ|/(π/2))
+    double omegaRadPerS = 0.0;          // per-tone carrier Rabi rate realising θ
+    double omegaMaxRadPerS = 0.0;       // the same at |θ| = π/2 (unit envelope amplitude)
+    double omegaSquareRadPerS = 0.0;    // square-envelope Ω at |θ| = π/2 (spec 10 §6.6, T06 (6.6))
+    double etaI = 0.0, etaJ = 0.0;      // Lamb–Dicke factors of the two ions on the gate mode
+    double theta = 0.0;                 // requested XX angle, XX(θ) = exp(−iθ/2 XX)
+    double amplitude = 0.0;             // envelope scale = Ω/Ω_max = √(|θ|/(π/2))
     std::string modeAxis = "axial";
     int modeIndex = 0;
     double modeFrequencyHz = 0.0;
@@ -67,12 +67,13 @@ struct CrParams {
 };
 
 class PulseLibrary {
-public:
+  public:
     // Loads `<dir>/pulses.json` against the device and calibration of the same directory
     // (hw::loadDevice), resolves every `cal.*` reference against the typed calibration, and
     // fails with E_NO_DEFCAL when a native gate on a qubit/edge has no defcal (spec 10 §6).
     static Result<PulseLibrary> load(const std::filesystem::path& deviceDir);
-    static Result<PulseLibrary> fromJson(core::Json pulses, hw::Device device, hw::Calibration calibration);
+    static Result<PulseLibrary> fromJson(core::Json pulses, hw::Device device,
+                                         hw::Calibration calibration);
     // The same table resolved against a new calibration (spec 09 §8 recalibration).
     Result<PulseLibrary> withCalibration(hw::Calibration calibration) const;
 
@@ -88,8 +89,9 @@ public:
     const Defcal* find(std::string_view gate, std::span<const std::uint32_t> qubits) const;
     // Spec 10 §6: every native gate on every data qubit and edge has a defcal. Lists all gaps.
     Result<void> checkComplete() const;
-    // Every `ms` defcal's stored `omega_rad_s_at_pi_2` equals the square-envelope value of T06 (6.6)
-    // for this calibration (1e-6 relative). `load` runs it; a recalibrated library need not pass.
+    // Every `ms` defcal's stored `omega_rad_s_at_pi_2` equals the square-envelope value of T06
+    // (6.6) for this calibration (1e-6 relative). `load` runs it; a recalibrated library need not
+    // pass.
     Result<void> checkMsTable() const;
 
     // Build the schedule for one gate invocation. `params` supplies the formal parameters
@@ -123,9 +125,13 @@ public:
 
     // Loop-closing detuning |δ| and phase integral J = ∫∫ e e' sin δ(t−t') of the unit MS
     // envelope for one duration (T06 (11.1), (6.2)); computed once per duration at load.
-    struct MsShape { double durationS = 0.0, edgeS = 0.0; int loops = 1; double delta = 0.0, phaseIntegral = 0.0; };
+    struct MsShape {
+        double durationS = 0.0, edgeS = 0.0;
+        int loops = 1;
+        double delta = 0.0, phaseIntegral = 0.0;
+    };
 
-private:
+  private:
     Result<Schedule> buildFromInstructions(const Defcal& d, const ParamMap& params) const;
     Result<Schedule> buildFromTemplate(const Defcal& d, const ParamMap& params) const;
     Result<Schedule> buildCrEcho(const Defcal& d, bool bare) const;

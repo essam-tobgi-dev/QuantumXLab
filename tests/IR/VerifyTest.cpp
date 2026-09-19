@@ -11,12 +11,15 @@ ir::Circuit shell(std::uint32_t qubits, std::uint32_t bits = 0) {
     ir::Circuit c;
     c.setQubitCount(qubits);
     c.setClbitCount(bits);
-    if (bits > 0) c.addBitRegister(ir::BitRegister{"c", 0, bits, ir::RegKind::Bit, false});
+    if (bits > 0)
+        c.addBitRegister(ir::BitRegister{"c", 0, bits, ir::RegKind::Bit, false});
     return c;
 }
-ir::Gate gate(std::string_view name, std::vector<std::uint32_t> targets, std::vector<double> params = {}) {
+ir::Gate gate(std::string_view name, std::vector<std::uint32_t> targets,
+              std::vector<double> params = {}) {
     std::vector<ir::Wire> ws;
-    for (auto t : targets) ws.push_back(ir::Wire{t});
+    for (auto t : targets)
+        ws.push_back(ir::Wire{t});
     auto g = ir::makeGate(name, std::move(ws), std::move(params));
     REQUIRE(g.has_value());
     return std::move(*g);
@@ -33,7 +36,8 @@ ErrorCode unitaryError(const ir::Circuit& c) {
 }
 } // namespace
 
-TEST_CASE("verify accepts well-formed circuits including nested bodies and discarded measurements") {
+TEST_CASE(
+    "verify accepts well-formed circuits including nested bodies and discarded measurements") {
     const auto c = build(program(R"(qubit[2] q;
 bit[2] c;
 h q[0];
@@ -51,16 +55,17 @@ if (c[0] == 1) { box { x q[1]; } }
 }
 
 TEST_CASE("verify rejects a non-unitary custom matrix") {
-    CHECK_FALSE(ir::makeUnitary(num::Matrix::fromRows({{1, 0}, {0, 2}}), {ir::Wire{0}}).has_value());
+    CHECK_FALSE(
+        ir::makeUnitary(num::Matrix::fromRows({{1, 0}, {0, 2}}), {ir::Wire{0}}).has_value());
     auto c = shell(1);
     ir::Gate g;
     g.name = "unitary";
     g.targets = {ir::Wire{0}};
-    g.custom = num::Matrix::fromRows({{1, 0}, {0, 1.0 + 1e-9}});   // off by more than kUnitaryTol
+    g.custom = num::Matrix::fromRows({{1, 0}, {0, 1.0 + 1e-9}}); // off by more than kUnitaryTol
     c.add(g);
     CHECK(rejectCode(c) == ir::err::NotUnitary);
     ir::Gate shape = g;
-    shape.custom = num::Matrix::identity(4);   // 4x4 on one target
+    shape.custom = num::Matrix::identity(4); // 4x4 on one target
     auto s = shell(1);
     s.add(shape);
     CHECK(rejectCode(s) == ir::err::BadArity);
@@ -102,7 +107,7 @@ TEST_CASE("verify rejects control == target, duplicated or out-of-range wires, a
 
 TEST_CASE("verify rejects measurements and conditions outside the declared registers") {
     auto meas = shell(1, 1);
-    meas.setClbitCount(2);   // bit 1 exists in the space but in no register
+    meas.setClbitCount(2); // bit 1 exists in the space but in no register
     meas.add(ir::Measure{ir::Wire{0}, ir::ClassicalBit{1}, std::nullopt, {}});
     CHECK(rejectCode(meas) == ir::err::BadBit);
 
@@ -114,7 +119,9 @@ TEST_CASE("verify rejects measurements and conditions outside the declared regis
     ir::Circuit arm = shell(1, 1);
     arm.add(gate("x", {0}));
     ir::Branch br;
-    br.cond = ir::ClassicalExpr::binary(ir::ClassOp::Eq, ir::ClassicalExpr::bitRef(ir::ClassicalBit{3}), ir::ClassicalExpr::constant(1));
+    br.cond =
+        ir::ClassicalExpr::binary(ir::ClassOp::Eq, ir::ClassicalExpr::bitRef(ir::ClassicalBit{3}),
+                                  ir::ClassicalExpr::constant(1));
     br.thenBody = ir::SubCircuit(arm);
     cond.add(br);
     CHECK(rejectCode(cond) == ir::err::BadBit);
@@ -122,12 +129,13 @@ TEST_CASE("verify rejects measurements and conditions outside the declared regis
     auto shape = shell(1, 1);
     ir::Branch nested;
     nested.cond = ir::ClassicalExpr::bitRef(ir::ClassicalBit{0});
-    nested.thenBody = ir::SubCircuit(shell(3, 1));   // body shaped differently from its parent
+    nested.thenBody = ir::SubCircuit(shell(3, 1)); // body shaped differently from its parent
     shape.add(nested);
     CHECK(rejectCode(shape) == ir::err::BadNode);
 }
 
-TEST_CASE("toUnitary refuses measurement, reset, branches, loops, defcal-only gates and > 12 qubits") {
+TEST_CASE(
+    "toUnitary refuses measurement, reset, branches, loops, defcal-only gates and > 12 qubits") {
     auto m = shell(1, 1);
     m.add(ir::Measure{ir::Wire{0}, ir::ClassicalBit{0}, std::nullopt, {}});
     CHECK(unitaryError(m) == ir::err::NotPure);
@@ -172,7 +180,8 @@ barrier q;
     CHECK(c.structurallyEqual(c));
     CHECK_FALSE(c.structurallyEqual(*inv));
     auto shifted = c;
-    auto& rz = std::get<ir::Gate>(shifted.node(shifted.topologicalOrder()[3]));   // rz(0.3) from mygate
+    auto& rz =
+        std::get<ir::Gate>(shifted.node(shifted.topologicalOrder()[3])); // rz(0.3) from mygate
     REQUIRE((rz.name == "rz" && rz.params.size() == 1));
     rz.params[0] += 1e-9;
     CHECK_FALSE(shifted.structurallyEqual(c));
@@ -183,8 +192,10 @@ barrier q;
     CHECK(notInvertible.error().code == ir::err::NotPure);
 }
 
-TEST_CASE("toGateOp hands backends positive controls natively and negative controls as full matrices") {
-    const auto c = build(program("qubit[3] q;\nctrl @ ctrl @ rz(0.3) q[0], q[1], q[2];\nnegctrl @ x q[0], q[1];\n"));
+TEST_CASE(
+    "toGateOp hands backends positive controls natively and negative controls as full matrices") {
+    const auto c = build(
+        program("qubit[3] q;\nctrl @ ctrl @ rz(0.3) q[0], q[1], q[2];\nnegctrl @ x q[0], q[1];\n"));
     auto op = ir::toGateOp(gateAt(c, 0));
     REQUIRE(op.has_value());
     CHECK((op->targets.size() == 1 && op->controls.size() == 2 && op->matrix.rows == 2));

@@ -7,10 +7,11 @@
 namespace qlab::lab {
 
 Status SceneBuilder::buildIonLab(ComponentId root, const hw::LoadedDevice& device) {
-    if (!layout_.chamberPosition_m) return {};
+    if (!layout_.chamberPosition_m)
+        return {};
     const double pi = glm::pi<double>();
     ComponentId chamberGroup = addGroup(root, "ion_chamber", "Ion trap", Group::FridgeInterior,
-                                       Transform::at(*layout_.chamberPosition_m));
+                                        Transform::at(*layout_.chamberPosition_m));
     NodeSpec chamber;
     chamber.descriptor = "vacuum_chamber";
     chamber.instance = "vacuum_chamber";
@@ -56,7 +57,8 @@ Status SceneBuilder::buildIonLab(ComponentId root, const hw::LoadedDevice& devic
                      {"helical_resonator", "copper", {0.22, 0.0, 0.0}},
                      {"magnetic_coils", "copper", {0.0, 0.0, 0.0}}};
     for (const auto& a : kAux) {
-        if (!scene_.catalog().contains(a.id)) continue;
+        if (!scene_.catalog().contains(a.id))
+            continue;
         NodeSpec spec;
         spec.descriptor = a.id;
         spec.instance = a.id;

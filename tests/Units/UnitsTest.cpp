@@ -1,8 +1,8 @@
+#include "Units/Units.hpp"
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <numbers>
-#include "Units/Units.hpp"
 #include <cmath>
+#include <numbers>
 #include <type_traits>
 
 using namespace qlab;
@@ -18,13 +18,16 @@ static_assert(std::is_same_v<decltype(Voltage(1.0) / Current(1.0)), Resistance>)
 static_assert(std::is_same_v<decltype(Charge(1.0) / Voltage(1.0)), Capacitance>);
 static_assert(std::is_same_v<decltype(omega(Frequency(1.0))), AngularFrequency>);
 static_assert(!std::is_same_v<Frequency, AngularFrequency>);
-static_assert(std::is_same_v<decltype(consts::hbar * AngularFrequency(1.0)), Q<DimMul<ActionDim, AngularFreqDim>>>);
+static_assert(std::is_same_v<decltype(consts::hbar * AngularFrequency(1.0)),
+                             Q<DimMul<ActionDim, AngularFreqDim>>>);
 static_assert(std::is_same_v<decltype(sqrt(Area(4.0))), Length>);
 static_assert(std::is_same_v<decltype(pow<2>(Length(2.0))), Area>);
 static_assert(std::is_same_v<decltype(1.0 / Time(2.0)), Frequency>);
 // Negative compile test: Frequency + AngularFrequency must not compile.
 template <class A, class B, class = void> struct Addable : std::false_type {};
-template <class A, class B> struct Addable<A, B, std::void_t<decltype(std::declval<A>() + std::declval<B>())>> : std::true_type {};
+template <class A, class B>
+struct Addable<A, B, std::void_t<decltype(std::declval<A>() + std::declval<B>())>>
+    : std::true_type {};
 static_assert(!Addable<Frequency, AngularFrequency>::value);
 static_assert(!Addable<Time, Frequency>::value);
 static_assert(Addable<Frequency, Frequency>::value);
@@ -63,7 +66,8 @@ TEST_CASE("dBm <-> W round trips and chains") {
     REQUIRE(toDbm(1.0_mW).v == Approx(0.0).margin(1e-12));
     for (double d : {-130.0, -60.0, -20.0, 0.0, 13.0, 30.0})
         REQUIRE(toDbm(fromDbm(PowerDbm(d))).v == Approx(d).margin(1e-9));
-    PowerDbm p = 0.0_dBm; GainDb att = -20.0_dB;
+    PowerDbm p = 0.0_dBm;
+    GainDb att = -20.0_dB;
     PowerDbm out = p + att + att;
     REQUIRE(fromDbm(out).v == Approx(1e-3 * 1e-4));
     REQUIRE((att + att).linear() == Approx(1e-4));
@@ -140,9 +144,11 @@ TEST_CASE("catalog parse") {
 
 TEST_CASE("catalog JSON round trip for every registered unit") {
     const auto& c = UnitCatalog::global();
-    for (const char* sym : {"GHz", "MHz", "kHz", "Hz", "ns", "us", "µs", "ms", "s", "mK", "K", "eV", "meV",
-                            "W", "mW", "µW", "pW", "V", "mV", "A", "nA", "F", "fF", "H", "nH", "Ω", "kΩ",
-                            "Wb", "Pa", "mbar", "bar", "mol/s", "mmol/s", "m", "mm", "µm", "kg", "u", "rad", "deg", "%", "dBm", "dB"}) {
+    for (const char* sym :
+         {"GHz", "MHz", "kHz", "Hz", "ns", "us",  "µs",  "ms",   "s",   "mK",    "K",
+          "eV",  "meV", "W",   "mW", "µW", "pW",  "V",   "mV",   "A",   "nA",    "F",
+          "fF",  "H",   "nH",  "Ω",  "kΩ", "Wb",  "Pa",  "mbar", "bar", "mol/s", "mmol/s",
+          "m",   "mm",  "µm",  "kg", "u",  "rad", "deg", "%",    "dBm", "dB"}) {
         const UnitDef* u = c.find(sym);
         REQUIRE(u != nullptr);
         double v = 3.14159;

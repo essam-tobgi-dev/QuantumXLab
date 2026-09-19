@@ -9,8 +9,8 @@
 
 namespace qlab::lab {
 
-ComponentId SceneBuilder::addGroup(ComponentId parent, std::string instance, std::string display, Group group,
-                                   const Transform& local) {
+ComponentId SceneBuilder::addGroup(ComponentId parent, std::string instance, std::string display,
+                                   Group group, const Transform& local) {
     Node n;
     n.kind = NodeKind::Group;
     n.instanceName = std::move(instance);
@@ -25,7 +25,8 @@ Result<ComponentId> SceneBuilder::addComponent(ComponentId parent, NodeSpec spec
     const ComponentDescriptor* d = scene_.catalog().find(spec.descriptor);
     if (!d)
         return fail(kErrScene,
-                    std::format("node '{}' names component '{}', which has no descriptor", spec.instance, spec.descriptor));
+                    std::format("node '{}' names component '{}', which has no descriptor",
+                                spec.instance, spec.descriptor));
     Node n;
     n.kind = NodeKind::Component;
     n.descriptorId = d->id;
@@ -41,15 +42,19 @@ Result<ComponentId> SceneBuilder::addComponent(ComponentId parent, NodeSpec spec
     n.pickable = spec.pickable;
     const std::string generator = spec.generator.empty() ? d->generator : spec.generator;
     n.can = generator == "Can";
-    n.xrayFade = spec.group == Group::FridgeExterior || d->category == "shield" || d->category == "vacuum";
+    n.xrayFade =
+        spec.group == Group::FridgeExterior || d->category == "shield" || d->category == "vacuum";
     GenParams params = GenParams::merged(d->geometry, spec.overrides);
     for (const auto& rule : d->lod) {
         LodLevel level;
         level.maxDistance_m = rule.maxDistance_m;
         level.detail = rule.detail;
         if (rule.detail != Detail::Hidden && spec.authoredMesh != nullptr) {
-            const gfx::MeshData* authored = rule.detail == Detail::Simple && spec.authoredSimple ? spec.authoredSimple : spec.authoredMesh;
-            if (authored->triangleCount() > 0) level.mesh = scene_.meshes().add(gfx::MeshData(*authored));
+            const gfx::MeshData* authored = rule.detail == Detail::Simple && spec.authoredSimple
+                                                ? spec.authoredSimple
+                                                : spec.authoredMesh;
+            if (authored->triangleCount() > 0)
+                level.mesh = scene_.meshes().add(gfx::MeshData(*authored));
         } else if (rule.detail != Detail::Hidden) {
             auto mesh = generateMesh(generator, params, GenContext{rule.detail, spec.unitScale});
             if (!mesh) {
@@ -57,19 +62,23 @@ Result<ComponentId> SceneBuilder::addComponent(ComponentId parent, NodeSpec spec
                 return std::unexpected(std::move(mesh.error()));
             }
             if (mesh->triangleCount() > 0)
-                level.mesh = scene_.meshes().add(std::move(*mesh),
-                                                 spec.cacheMesh ? params.cacheKey(generator, rule.detail, spec.unitScale)
-                                                                : std::string{});
+                level.mesh = scene_.meshes().add(
+                    std::move(*mesh), spec.cacheMesh
+                                          ? params.cacheKey(generator, rule.detail, spec.unitScale)
+                                          : std::string{});
         }
         n.lods.push_back(level);
     }
     n.localBounds = n.finestMesh().valid() ? scene_.meshes().bounds(n.finestMesh()) : emptyAabb();
     for (const auto& row : d->specSheet) { // spec 17 §5: bind the live rows to this instance
-        if (!row.binding) continue;
+        if (!row.binding)
+            continue;
         auto path = substitutePath(*row.binding, n.params);
-        if (!path) continue;
+        if (!path)
+            continue;
         auto split = splitBindingRoot(*path);
-        if (!split) continue;
+        if (!split)
+            continue;
         Binding b;
         b.root = split->first;
         b.path = split->second;
@@ -79,12 +88,14 @@ Result<ComponentId> SceneBuilder::addComponent(ComponentId parent, NodeSpec spec
         b.simulatorOnly = row.simulatorOnly;
         n.bindings.push_back(std::move(b));
     }
-    if (spec.spline) n.spline = std::move(spec.spline);
+    if (spec.spline)
+        n.spline = std::move(spec.spline);
     return scene_.add(std::move(n), parent);
 }
 
-ComponentId SceneBuilder::addScenery(ComponentId parent, std::string instance, std::string display, Group group,
-                                     const Transform& local, gfx::MeshData mesh, std::string material) {
+ComponentId SceneBuilder::addScenery(ComponentId parent, std::string instance, std::string display,
+                                     Group group, const Transform& local, gfx::MeshData mesh,
+                                     std::string material) {
     Node n;
     n.kind = NodeKind::Scenery;
     n.instanceName = std::move(instance);
@@ -96,44 +107,53 @@ ComponentId SceneBuilder::addScenery(ComponentId parent, std::string instance, s
     LodLevel level;
     level.maxDistance_m = 1e9;
     level.detail = Detail::Full;
-    if (mesh.triangleCount() > 0) level.mesh = scene_.meshes().add(std::move(mesh));
+    if (mesh.triangleCount() > 0)
+        level.mesh = scene_.meshes().add(std::move(mesh));
     n.lods.push_back(level);
     n.localBounds = n.finestMesh().valid() ? scene_.meshes().bounds(n.finestMesh()) : emptyAabb();
     return scene_.add(std::move(n), parent);
 }
 
-ComponentId SceneBuilder::addProp(ComponentId parent, NodeSpec spec, const gfx::MeshData& fallback) {
+ComponentId SceneBuilder::addProp(ComponentId parent, NodeSpec spec,
+                                  const gfx::MeshData& fallback) {
     if (scene_.catalog().contains(spec.descriptor)) {
         // Keep the authored composite; the descriptor is what makes the prop inspectable.
-        if (fallback.triangleCount() > 0 && spec.authoredMesh == nullptr) spec.authoredMesh = &fallback;
+        if (fallback.triangleCount() > 0 && spec.authoredMesh == nullptr)
+            spec.authoredMesh = &fallback;
         spec.cacheMesh = false;
         auto id = addComponent(parent, spec);
-        if (id) return *id;
+        if (id)
+            return *id;
         note(id.error().message);
         return ComponentId{0};
     }
     if (std::find(missing_.begin(), missing_.end(), spec.descriptor) == missing_.end()) {
         missing_.push_back(spec.descriptor);
-        note(std::format("prop '{}' has no component.json: drawn as scenery, not selectable (spec 17 §1)", spec.descriptor));
+        note(std::format(
+            "prop '{}' has no component.json: drawn as scenery, not selectable (spec 17 §1)",
+            spec.descriptor));
     }
     return addScenery(parent, spec.instance.empty() ? spec.descriptor : spec.instance,
-                      spec.display.empty() ? spec.descriptor : spec.display, spec.group, spec.local, fallback,
-                      spec.material);
+                      spec.display.empty() ? spec.descriptor : spec.display, spec.group, spec.local,
+                      fallback, spec.material);
 }
 
 double SceneBuilder::stageHeight(cryo::Stage s) const {
     for (const auto& st : layout_.stages)
-        if (st.stage == s) return st.height_m;
+        if (st.stage == s)
+            return st.height_m;
     return 0.0;
 }
 double SceneBuilder::stageRadius(cryo::Stage s) const {
     for (const auto& st : layout_.stages)
-        if (st.stage == s) return st.radius_m;
+        if (st.stage == s)
+            return st.radius_m;
     return 0.2;
 }
 bool SceneBuilder::hasStage(cryo::Stage s) const {
     for (const auto& st : layout_.stages)
-        if (st.stage == s) return true;
+        if (st.stage == s)
+            return true;
     return false;
 }
 
@@ -142,7 +162,8 @@ namespace {
 Result<cryo::Wiring> loadDeviceWiring(const std::filesystem::path& path) {
     QXL_TRY_ASSIGN(std::string text, core::readTextFile(path));
     auto w = cryo::parseWiring(text);
-    if (!w) w.error().notes.push_back("file: " + path.string());
+    if (!w)
+        w.error().notes.push_back("file: " + path.string());
     return w;
 }
 } // namespace
@@ -161,21 +182,26 @@ Result<Scene> buildScene(const std::filesystem::path& layoutDirOrId, const Build
     SceneBuilder builder(scene, scene.layout(), routing, options.flipChipBumps);
     ComponentId root = builder.addGroup(ComponentId{0}, "laboratory", "Laboratory", Group::Room);
 
-    std::string deviceId = options.deviceOverride.empty() ? scene.layout().device : options.deviceOverride;
+    std::string deviceId =
+        options.deviceOverride.empty() ? scene.layout().device : options.deviceOverride;
     std::optional<hw::LoadedDevice> device;
     if (!deviceId.empty()) {
         auto loaded = hw::loadShippedDevice(deviceId);
-        if (!loaded) return std::unexpected(loaded.error());
-        for (const auto& w : loaded->warnings) scene.diagnostics().push_back("device: " + w);
+        if (!loaded)
+            return std::unexpected(loaded.error());
+        for (const auto& w : loaded->warnings)
+            scene.diagnostics().push_back("device: " + w);
         device = std::move(*loaded);
         if (deviceId != scene.layout().device) { // an overridden device brings its own wiring
             std::filesystem::path wiring = device->device.directory / "wiring.json";
-            if (std::filesystem::exists(wiring, ec)) scene.layout().wiringFile = wiring;
+            if (std::filesystem::exists(wiring, ec))
+                scene.layout().wiringFile = wiring;
             scene.layout().device = deviceId;
         }
     }
 
-    if (!options.wiringOverride.empty()) scene.layout().wiringFile = options.wiringOverride;
+    if (!options.wiringOverride.empty())
+        scene.layout().wiringFile = options.wiringOverride;
     QXL_TRY(builder.buildRoom(root));
     if (scene.layout().hasFridge()) {
         QXL_TRY(builder.buildFridge(root));
@@ -184,7 +210,8 @@ Result<Scene> buildScene(const std::filesystem::path& layoutDirOrId, const Build
             QXL_TRY_ASSIGN(cryo::Wiring wiring, loadDeviceWiring(scene.layout().wiringFile));
             if (options.validateWiring)
                 if (auto st = cryo::validateWiring(wiring); !st)
-                    scene.diagnostics().push_back("wiring rules (spec 11 §5): " + st.error().message);
+                    scene.diagnostics().push_back("wiring rules (spec 11 §5): " +
+                                                  st.error().message);
             QXL_TRY(builder.buildWiring(root, wiring));
         }
     }
@@ -192,7 +219,8 @@ Result<Scene> buildScene(const std::filesystem::path& layoutDirOrId, const Build
     QXL_TRY(builder.buildGasHandling(root));
     QXL_TRY(builder.buildProps(root));
     if (device && options.buildChip && hw::isTransmon(device->device.technology)) {
-        QXL_TRY_ASSIGN(ChipLayout chip, layoutChip(device->device, &device->calibration, options.chip));
+        QXL_TRY_ASSIGN(ChipLayout chip,
+                       layoutChip(device->device, &device->calibration, options.chip));
         scene.chipLayout() = std::move(chip);
         ComponentId parent = builder.puckNode().value != 0 ? builder.puckNode() : root;
         QXL_TRY(builder.buildChip(parent, *device, *scene.chipLayout()));

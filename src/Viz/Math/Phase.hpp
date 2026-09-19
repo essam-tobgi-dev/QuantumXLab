@@ -24,13 +24,17 @@ double phaseHue(double phi);
 std::span<const glm::vec3> phaseLut();
 // Display (sRGB) colour at position H, linearly interpolated between LUT entries with wrap-around.
 glm::vec3 phaseColorAtHue(double hue);
-inline glm::vec3 phaseColor(double phi) { return phaseColorAtHue(phaseHue(phi)); }
-inline glm::vec3 phaseColor(num::Complex a) { return phaseColorAtHue(phaseHue(phaseOf(a))); }
+inline glm::vec3 phaseColor(double phi) {
+    return phaseColorAtHue(phaseHue(phi));
+}
+inline glm::vec3 phaseColor(num::Complex a) {
+    return phaseColorAtHue(phaseHue(phaseOf(a)));
+}
 
 // One tick of the phase-wheel legend (spec 21 §2.4, §4: hue is always paired with a label).
 struct PhaseTick {
     double phi = 0.0;
-    std::string label;      // "0", "π/2", "π", "−π/2"
+    std::string label; // "0", "π/2", "π", "−π/2"
     glm::vec3 color{0.0f};
 };
 // `count` equally spaced ticks starting at φ = 0 (count = 4: 0, π/2, π, −π/2).

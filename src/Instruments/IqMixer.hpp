@@ -19,7 +19,7 @@ struct IqImbalance {
 };
 
 class IqMixer final : public InstrumentBase, public ISignalSource {
-public:
+  public:
     explicit IqMixer(std::uint32_t index = 0);
     static SettingSchema makeSchema();
 
@@ -46,14 +46,14 @@ public:
 
     // Port "rf". Errors: NotBound without a routing matrix.
     Result<Signal> signal(std::string_view port, const SignalRequest& request) const override;
-    double sampleRateHz(std::string_view port) const override; // the rate of the IF input
+    double sampleRateHz(std::string_view port) const override;         // the rate of the IF input
     std::optional<double> query(std::string_view path) const override; // lo_leak, image_rej
 
-protected:
+  protected:
     Result<Trace> doAcquire(const ChannelDesc& channel, AcquireContext& ctx) override;
     bool triggerSourceSet(const SettingValues&) const override { return false; }
 
-private:
+  private:
     const Awg* awg_ = nullptr;
     std::uint32_t awgPort_ = 0;
     const Generator* lo_ = nullptr;

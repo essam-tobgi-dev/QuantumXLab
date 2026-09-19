@@ -15,10 +15,20 @@
 namespace qlab::runtime {
 
 // ---------------------------------------------------------------- events (spec 02 §6, 15 §1)
-struct DeviceSelected { std::string device, calibrationTimestamp; };
-struct BackendSelected { BackendChoice choice; };
-struct ProgramLoaded { ProgramId program; std::string origin; };
-struct CompileStarted { ProgramId program; CompileHandle handle; };
+struct DeviceSelected {
+    std::string device, calibrationTimestamp;
+};
+struct BackendSelected {
+    BackendChoice choice;
+};
+struct ProgramLoaded {
+    ProgramId program;
+    std::string origin;
+};
+struct CompileStarted {
+    ProgramId program;
+    CompileHandle handle;
+};
 struct CompileFinished {
     ProgramId program;
     CompileHandle handle;
@@ -34,7 +44,11 @@ struct RunStarted {
     std::uint32_t shots = 0;
     std::uint64_t seed = 0;
 };
-struct RunProgress { RunHandle handle; RunId id; std::uint64_t done = 0, total = 0; };
+struct RunProgress {
+    RunHandle handle;
+    RunId id;
+    std::uint64_t done = 0, total = 0;
+};
 struct RunFinished {
     RunHandle handle;
     RunId id;
@@ -54,15 +68,15 @@ struct RunRequest {
 };
 
 class Session {
-public:
+  public:
     explicit Session(core::EventBus* bus = nullptr, core::JobSystem* jobs = nullptr);
     ~Session();
     Session(const Session&) = delete;
     Session& operator=(const Session&) = delete;
 
     // ---- device and backend (spec 15 §1: exactly one of each at a time)
-    Status selectDevice(std::string_view deviceId);        // one of `hw::shippedDeviceIds()`
-    void setDevice(hw::LoadedDevice loaded);               // an already-loaded pair
+    Status selectDevice(std::string_view deviceId); // one of `hw::shippedDeviceIds()`
+    void setDevice(hw::LoadedDevice loaded);        // an already-loaded pair
     const hw::Device* device() const { return device_ ? &device_->device : nullptr; }
     const hw::Calibration* calibration() const { return device_ ? &device_->calibration : nullptr; }
     void selectBackend(BackendChoice choice);
@@ -78,7 +92,7 @@ public:
     bool compileDone(CompileHandle h) const;
     Status waitCompile(CompileHandle h);
     void cancelCompile(CompileHandle h);
-    const compiler::CompiledProgram* compiled(CompileHandle h) const;   // nullptr until it succeeded
+    const compiler::CompiledProgram* compiled(CompileHandle h) const; // nullptr until it succeeded
     std::vector<lang::Diagnostic> compileDiagnostics(CompileHandle h) const;
 
     // ---- run (async, cancellable)
@@ -86,7 +100,7 @@ public:
     bool done(RunHandle h) const;
     Status wait(RunHandle h);
     void cancel(RunHandle h);
-    const RunResult* result(RunHandle h) const;                          // nullptr until complete
+    const RunResult* result(RunHandle h) const; // nullptr until complete
     std::vector<RunRecord> history() const;
 
     // Synchronous execution of an already compiled program: what `run` does on the worker, for the
@@ -94,9 +108,10 @@ public:
     Result<RunResult> runSync(const RunRequest& request);
 
     // Spec 15 §5: the grid a program's `pragma qlab.sweep` declares, merged with `options.sweep`.
-    Result<std::optional<SweepGrid>> sweepGrid(const lang::Program* program, const RunOptions& options) const;
+    Result<std::optional<SweepGrid>> sweepGrid(const lang::Program* program,
+                                               const RunOptions& options) const;
 
-private:
+  private:
     // Held by unique_ptr so a worker's pointer stays valid while the session loads more programs.
     struct ProgramEntry {
         std::string source;
@@ -126,6 +141,7 @@ private:
 };
 
 // Spec 15 §3.2: every `input` the program declares must have a value at run time (QL5001).
-Status checkInputs(const lang::Program& program, const ir::ParamMap& bound, const std::optional<SweepGrid>& sweep);
+Status checkInputs(const lang::Program& program, const ir::ParamMap& bound,
+                   const std::optional<SweepGrid>& sweep);
 
 } // namespace qlab::runtime

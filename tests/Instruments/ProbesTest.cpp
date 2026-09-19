@@ -77,11 +77,13 @@ TEST_CASE("probe_state: amplitudes, Bloch vectors and purities of a Bell state")
         auto t = acquire(bench.probe, ch);
         REQUIRE(t);
         REQUIRE(t->size() == 2);
-        for (double y : t->y) REQUIRE(y == Approx(0.0).margin(1e-14));
+        for (double y : t->y)
+            REQUIRE(y == Approx(0.0).margin(1e-14));
     }
     auto purity = acquire(bench.probe, "purity");
     REQUIRE(purity);
-    for (double y : purity->y) REQUIRE(y == Approx(0.5).epsilon(1e-12));
+    for (double y : purity->y)
+        REQUIRE(y == Approx(0.5).epsilon(1e-12));
     REQUIRE(purity->marker("global")->value == Approx(1.0).epsilon(1e-12));
     REQUIRE(*bench.probe.query("purity") == Approx(1.0).epsilon(1e-12));
     REQUIRE(*bench.probe.query("qubit[1].purity") == Approx(0.5).epsilon(1e-12));
@@ -107,7 +109,8 @@ TEST_CASE("probe_state: amplitudes, Bloch vectors and purities of a Bell state")
     REQUIRE(bench.probe.set("qubits", std::string("")));
     auto z = acquire(bench.probe, "bloch_z");
     REQUIRE(z);
-    for (double y : z->y) REQUIRE(y == Approx(1.0).epsilon(1e-12));
+    for (double y : z->y)
+        REQUIRE(y == Approx(1.0).epsilon(1e-12));
 }
 
 TEST_CASE("probe_entanglement: S = 1 bit, concurrence 1 and I(0:1) = 2 bits for a Bell pair") {
@@ -116,7 +119,8 @@ TEST_CASE("probe_entanglement: S = 1 bit, concurrence 1 and I(0:1) = 2 bits for 
     REQUIRE(entropy);
     REQUIRE(entropy->simulatorOnly);
     REQUIRE(entropy->size() == 2);
-    for (double y : entropy->y) REQUIRE(y == Approx(1.0).epsilon(1e-10)); // −2·½·log₂½ = 1 bit
+    for (double y : entropy->y)
+        REQUIRE(y == Approx(1.0).epsilon(1e-10)); // −2·½·log₂½ = 1 bit
 
     auto concurrence = acquire(bench.probe, "concurrence");
     REQUIRE(concurrence);
@@ -174,9 +178,12 @@ TEST_CASE("probe_fidelity: squared state fidelity per gate and process fidelity 
     GateComparison gate;
     gate.name = "x q0";
     gate.ideal = num::Matrix::fromRows({{0.0, 1.0}, {1.0, 0.0}});
-    num::Matrix k0 = gate.ideal, k1 = num::Matrix::fromRows({{0.0, Complex{0.0, -1.0}}, {Complex{0.0, 1.0}, 0.0}});
-    for (auto& v : k0.data) v *= std::sqrt(1.0 - p);
-    for (auto& v : k1.data) v *= std::sqrt(p);
+    num::Matrix k0 = gate.ideal,
+                k1 = num::Matrix::fromRows({{0.0, Complex{0.0, -1.0}}, {Complex{0.0, 1.0}, 0.0}});
+    for (auto& v : k0.data)
+        v *= std::sqrt(1.0 - p);
+    for (auto& v : k1.data)
+        v *= std::sqrt(p);
     gate.kraus = {k0, k1};
     RunView withGate = run;
     withGate.gate = gate;
@@ -184,7 +191,8 @@ TEST_CASE("probe_fidelity: squared state fidelity per gate and process fidelity 
     auto process = acquire(bench.probe, "process_fidelity");
     REQUIRE(process);
     REQUIRE(process->y[0] == Approx(1.0 - p).epsilon(1e-12));
-    REQUIRE(process->marker("F_avg")->value == Approx((2.0 * (1.0 - p) + 1.0) / 3.0).epsilon(1e-12)); // T10 §1.3
+    REQUIRE(process->marker("F_avg")->value ==
+            Approx((2.0 * (1.0 - p) + 1.0) / 3.0).epsilon(1e-12)); // T10 §1.3
     REQUIRE(process->marker("gate: x q0") != nullptr);
     REQUIRE(FidelityProbe::processFidelity(gate).value() == Approx(1.0 - p).epsilon(1e-12));
 }
@@ -223,7 +231,8 @@ TEST_CASE("probe_trajectory, probe_thermal_truth and probe_leakage read the run 
         // Three levels: the leakage trace is the summed |2> population per sample.
         RunView leaky = bellRun();
         leaky.levels = 3;
-        leaky.populations = {{0.0, {1.0, 0.0, 0.0, 1.0, 0.0, 0.0}}, {2e-8, {0.9, 0.08, 0.02, 0.95, 0.04, 0.01}}};
+        leaky.populations = {{0.0, {1.0, 0.0, 0.0, 1.0, 0.0, 0.0}},
+                             {2e-8, {0.9, 0.08, 0.02, 0.95, 0.04, 0.01}}};
         ProbeBench<LeakageProbe> bench(leaky);
         auto trace = acquire(bench.probe, "leakage");
         REQUIRE(trace);
@@ -240,8 +249,9 @@ TEST_CASE("probe_trajectory, probe_thermal_truth and probe_leakage read the run 
 TEST_CASE("every probe is Simulator-only and absent from the Physical-lab workspace") {
     InstrumentRegistry registry;
     REQUIRE(registry.createStandardSet());
-    const std::vector<std::string> probes = {"probe_state",      "probe_entanglement",  "probe_fidelity",
-                                             "probe_trajectory", "probe_thermal_truth", "probe_leakage"};
+    const std::vector<std::string> probes = {"probe_state",         "probe_entanglement",
+                                             "probe_fidelity",      "probe_trajectory",
+                                             "probe_thermal_truth", "probe_leakage"};
     const auto all = registry.kinds();
     const auto physical = registry.kinds(true);
     for (auto const& kind : probes) {
@@ -250,14 +260,17 @@ TEST_CASE("every probe is Simulator-only and absent from the Physical-lab worksp
         IInstrument* probe = registry.find(kind);
         REQUIRE(probe != nullptr);
         REQUIRE(probe->simulatorOnly());
-        for (auto const& channel : probe->channels()) REQUIRE(channel.simulatorOnly); // spec 12 §12
+        for (auto const& channel : probe->channels())
+            REQUIRE(channel.simulatorOnly); // spec 12 §12
     }
-    for (IInstrument* i : registry.all(true)) REQUIRE_FALSE(i->simulatorOnly());
+    for (IInstrument* i : registry.all(true))
+        REQUIRE_FALSE(i->simulatorOnly());
     REQUIRE(registry.all().size() == registry.all(true).size() + probes.size());
     // No physical instrument claims the flag.
     for (IInstrument* i : registry.all())
         if (!i->id().kind.starts_with("probe_"))
-            for (auto const& channel : i->channels()) REQUIRE_FALSE(channel.simulatorOnly);
+            for (auto const& channel : i->channels())
+                REQUIRE_FALSE(channel.simulatorOnly);
 
     // The binding path of a probe resolves in the simulator workspace and nowhere else.
     RunView run = bellRun();

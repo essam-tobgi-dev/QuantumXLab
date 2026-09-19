@@ -7,9 +7,11 @@ std::string Error::format() const {
         s += std::format("{}:{}:{}: ", span->file.empty() ? "<program>" : span->file, span->line,
                          span->column);
     }
-    if (!diagnosticId.empty()) s += std::format("[{}] ", diagnosticId);
+    if (!diagnosticId.empty())
+        s += std::format("[{}] ", diagnosticId);
     s += message;
-    for (auto& n : notes) s += "\n  note: " + n;
+    for (auto& n : notes)
+        s += "\n  note: " + n;
     return s;
 }
 } // namespace qlab

@@ -27,7 +27,9 @@ std::string formatPolar(num::Complex a, int sig = 4);
 // is the rightmost character: bitString(1, 3) = "001".
 std::string bitString(std::uint64_t index, std::size_t nbits);
 // "|001⟩" (or "|001>" when `ascii`), or the decimal form "|1⟩" when `decimal`.
-std::string ketLabel(std::uint64_t index, std::size_t nbits, bool decimal = false, bool ascii = false);
-std::string braLabel(std::uint64_t index, std::size_t nbits, bool decimal = false, bool ascii = false);
+std::string ketLabel(std::uint64_t index, std::size_t nbits, bool decimal = false,
+                     bool ascii = false);
+std::string braLabel(std::uint64_t index, std::size_t nbits, bool decimal = false,
+                     bool ascii = false);
 
 } // namespace qlab::viz::math

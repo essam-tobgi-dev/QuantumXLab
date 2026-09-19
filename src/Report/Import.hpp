@@ -19,10 +19,10 @@ std::string_view importKindName(ImportKind k);
 ImportKind classify(const std::filesystem::path& path);
 
 struct ImportedProgram {
-    std::string source;                          // OpenQASM 3, ready for `lang::parseProgram`
+    std::string source; // OpenQASM 3, ready for `lang::parseProgram`
     std::filesystem::path origin;
-    bool converted = false;                      // an OpenQASM 2 file was rewritten
-    std::vector<lang::Diagnostic> diagnostics;   // one Info per rewrite (spec 23 §11)
+    bool converted = false;                    // an OpenQASM 2 file was rewritten
+    std::vector<lang::Diagnostic> diagnostics; // one Info per rewrite (spec 23 §11)
 };
 
 // Spec 23 §11: the OpenQASM 2 → 3 rewrites this shim performs. `qreg`/`creg`, `measure q -> c;`

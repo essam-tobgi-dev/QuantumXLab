@@ -24,7 +24,8 @@ inline glm::vec4 displayToScene(glm::vec4 display, float exposure = 1.0f) {
 // WCAG relative luminance of an sRGB colour and the contrast ratio (1 … 21) of two colours.
 double relativeLuminance(glm::vec3 srgb);
 double contrastRatio(glm::vec3 a, glm::vec3 b);
-// Whichever of `light` / `dark` reads better on `background` (labels drawn on phase-coloured marks).
+// Whichever of `light` / `dark` reads better on `background` (labels drawn on phase-coloured
+// marks).
 glm::vec3 readableOn(glm::vec3 background, glm::vec3 light, glm::vec3 dark);
 
 // Sequential scale (viridis) for t ∈ [0, 1] and diverging scale (coolwarm) for s ∈ [−1, 1] with the
@@ -32,6 +33,8 @@ glm::vec3 readableOn(glm::vec3 background, glm::vec3 light, glm::vec3 dark);
 glm::vec3 sequentialColor(double t);
 glm::vec3 divergingColor(double s);
 
-inline glm::vec3 mixColor(glm::vec3 a, glm::vec3 b, float t) { return a + (b - a) * t; }
+inline glm::vec3 mixColor(glm::vec3 a, glm::vec3 b, float t) {
+    return a + (b - a) * t;
+}
 
 } // namespace qlab::viz::math

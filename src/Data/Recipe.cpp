@@ -7,7 +7,9 @@
 namespace qlab::data {
 namespace {
 constexpr const char* kKind = "analysis.recipe"; // matches Assets/Analysis/*.json and spec 22 §6
-struct Registrar { Registrar() { core::JsonEnvelope::registerKind(kKind, 1); } } registrar;
+struct Registrar {
+    Registrar() { core::JsonEnvelope::registerKind(kKind, 1); }
+} registrar;
 
 // Fit models the recipes may name. `fit::makeModel` covers the curve fits; these two are
 // maximum-likelihood tomography reconstructions implemented in `qsim::tomo` (spec 22 §4), and
@@ -22,18 +24,23 @@ std::vector<double> expandValues(const core::Json& v, SweepAxis& axis) {
     if (v.is_array()) {
         axis.scale = "list";
         for (const auto& x : v)
-            if (x.is_number()) out.push_back(x.get<double>());
+            if (x.is_number())
+                out.push_back(x.get<double>());
         return out;
     }
-    if (!v.is_object()) return out;
+    if (!v.is_object())
+        return out;
     for (const char* mode : {"linear", "log"}) {
-        if (!v.contains(mode) || !v[mode].is_array() || v[mode].size() != 3) continue;
+        if (!v.contains(mode) || !v[mode].is_array() || v[mode].size() != 3)
+            continue;
         axis.scale = mode;
         axis.from = v[mode][0].get<double>();
         axis.to = v[mode][1].get<double>();
         axis.points = v[mode][2].get<int>();
-        if (axis.points <= 0) return out;
-        if (axis.points == 1) return {axis.from};
+        if (axis.points <= 0)
+            return out;
+        if (axis.points == 1)
+            return {axis.from};
         out.reserve(static_cast<std::size_t>(axis.points));
         const bool logScale = axis.scale == "log" && axis.from > 0 && axis.to > 0;
         for (int i = 0; i < axis.points; ++i) {
@@ -48,14 +55,17 @@ std::vector<double> expandValues(const core::Json& v, SweepAxis& axis) {
 
 std::optional<SweepAxis> readAxis(const core::Json& s, const char* inputKey, const char* unitKey,
                                   const char* valuesKey, const char* labelsKey) {
-    if (!s.contains(inputKey)) return std::nullopt;
+    if (!s.contains(inputKey))
+        return std::nullopt;
     SweepAxis a;
     a.input = s.value(inputKey, "");
     a.unit = s.value(unitKey, "");
-    if (s.contains(valuesKey)) a.values = expandValues(s[valuesKey], a);
+    if (s.contains(valuesKey))
+        a.values = expandValues(s[valuesKey], a);
     if (s.contains(labelsKey) && s[labelsKey].is_array())
         for (const auto& l : s[labelsKey])
-            if (l.is_string()) a.labels.push_back(l.get<std::string>());
+            if (l.is_string())
+                a.labels.push_back(l.get<std::string>());
     return a;
 }
 
@@ -67,13 +77,15 @@ core::Json axisToJson(const SweepAxis& a, core::Json s, const char* inputKey, co
         s[valuesKey] = core::Json{{a.scale, core::Json::array({a.from, a.to, a.points})}};
     else
         s[valuesKey] = a.values;
-    if (!a.labels.empty()) s[labelsKey] = a.labels;
+    if (!a.labels.empty())
+        s[labelsKey] = a.labels;
     return s;
 }
 } // namespace
 
 Result<Recipe> recipeFromJson(const core::Json& d) {
-    if (!d.is_object()) return fail(ErrorCode::Data_ + 30, "recipe data must be an object");
+    if (!d.is_object())
+        return fail(ErrorCode::Data_ + 30, "recipe data must be an object");
     Recipe r;
     r.id = d.value("id", "");
     r.title = d.value("title", r.id);
@@ -96,21 +108,24 @@ Result<Recipe> recipeFromJson(const core::Json& d) {
         r.extract.averageOver = e.value("average_over", "");
         r.extract.extra = core::Json::object();
         for (const auto& [k, v] : e.items())
-            if (k != "channel" && k != "y" && k != "sigma" && k != "sequences" && k != "average_over")
+            if (k != "channel" && k != "y" && k != "sigma" && k != "sequences" &&
+                k != "average_over")
                 r.extract.extra[k] = v;
     }
     if (d.contains("fit") && d["fit"].is_object()) {
         // "none" is how a recipe says it has no curve fit (a 2D map is read, not fitted).
         r.fitModel = d["fit"].value("model", "");
-        if (r.fitModel == "none") r.fitModel.clear();
+        if (r.fitModel == "none")
+            r.fitModel.clear();
         if (d["fit"].contains("report") && d["fit"]["report"].is_array())
             for (const auto& f : d["fit"]["report"])
-                if (f.is_string()) r.report.push_back(f.get<std::string>());
+                if (f.is_string())
+                    r.report.push_back(f.get<std::string>());
     }
     if (d.contains("results") && d["results"].is_array())
         for (const auto& row : d["results"])
-            r.results.push_back({row.value("label", ""), row.value("measured", ""), row.value("model", ""),
-                                 row.value("tolerance", 0.0)});
+            r.results.push_back({row.value("label", ""), row.value("measured", ""),
+                                 row.value("model", ""), row.value("tolerance", 0.0)});
     if (d.contains("generator") && d["generator"].is_object()) {
         GeneratorSpec g;
         g.kind = d["generator"].value("kind", "");
@@ -120,11 +135,12 @@ Result<Recipe> recipeFromJson(const core::Json& d) {
     }
     // Unknown top-level keys are preserved (spec 23 §1 forward compatibility).
     r.extra = core::Json::object();
-    static const std::set<std::string> known{"id",      "title", "theory",  "description", "program",
-                                             "sweep",   "shots", "extract", "fit",         "results",
-                                             "generator"};
+    static const std::set<std::string> known{"id",      "title",   "theory",   "description",
+                                             "program", "sweep",   "shots",    "extract",
+                                             "fit",     "results", "generator"};
     for (const auto& [k, v] : d.items())
-        if (!known.contains(k)) r.extra[k] = v;
+        if (!known.contains(k))
+            r.extra[k] = v;
 
     QXL_TRY(validateRecipe(r));
     return r;
@@ -134,12 +150,17 @@ core::Json recipeToJson(const Recipe& r) {
     core::Json d = core::Json::object();
     d["id"] = r.id;
     d["title"] = r.title;
-    if (!r.theory.empty()) d["theory"] = r.theory;
-    if (!r.description.empty()) d["description"] = r.description;
-    if (!r.program.empty()) d["program"] = r.program;
+    if (!r.theory.empty())
+        d["theory"] = r.theory;
+    if (!r.description.empty())
+        d["description"] = r.description;
+    if (!r.program.empty())
+        d["program"] = r.program;
     if (r.sweep) {
-        core::Json s = axisToJson(*r.sweep, core::Json::object(), "input", "unit", "values", "labels");
-        if (r.sweep2) s = axisToJson(*r.sweep2, std::move(s), "input2", "unit2", "values2", "labels2");
+        core::Json s =
+            axisToJson(*r.sweep, core::Json::object(), "input", "unit", "values", "labels");
+        if (r.sweep2)
+            s = axisToJson(*r.sweep2, std::move(s), "input2", "unit2", "values2", "labels2");
         d["sweep"] = std::move(s);
     }
     d["shots"] = r.shots;
@@ -147,8 +168,10 @@ core::Json recipeToJson(const Recipe& r) {
     e["channel"] = r.extract.channel;
     e["y"] = r.extract.y;
     e["sigma"] = r.extract.sigma;
-    if (r.extract.sequences > 0) e["sequences"] = r.extract.sequences;
-    if (!r.extract.averageOver.empty()) e["average_over"] = r.extract.averageOver;
+    if (r.extract.sequences > 0)
+        e["sequences"] = r.extract.sequences;
+    if (!r.extract.averageOver.empty())
+        e["average_over"] = r.extract.averageOver;
     d["extract"] = std::move(e);
     if (!r.fitModel.empty()) {
         core::Json f;
@@ -170,12 +193,14 @@ core::Json recipeToJson(const Recipe& r) {
         d["generator"] = std::move(g);
     }
     if (r.extra.is_object())
-        for (const auto& [k, v] : r.extra.items()) d[k] = v;
+        for (const auto& [k, v] : r.extra.items())
+            d[k] = v;
     return d;
 }
 
 Status validateRecipe(const Recipe& r) {
-    if (r.id.empty()) return fail(ErrorCode::Data_ + 31, "recipe id is empty");
+    if (r.id.empty())
+        return fail(ErrorCode::Data_ + 31, "recipe id is empty");
     // Spec 22 §6: a recipe names a program, or declares the generator that builds the family.
     if (r.program.empty() && !r.generator)
         return fail(ErrorCode::Data_ + 32,
@@ -186,23 +211,32 @@ Status validateRecipe(const Recipe& r) {
     if (r.generator && r.generator->kind.empty())
         return fail(ErrorCode::Data_ + 33, "recipe '" + r.id + "' has a generator with no kind");
     for (const SweepAxis* a : {r.sweep ? &*r.sweep : nullptr, r.sweep2 ? &*r.sweep2 : nullptr}) {
-        if (a == nullptr) continue;
-        if (a->input.empty()) return fail(ErrorCode::Data_ + 34, "recipe '" + r.id + "': sweep axis has no input");
-        if (a->values.empty()) return fail(ErrorCode::Data_ + 35, "recipe '" + r.id + "': sweep axis '" + a->input + "' has no points");
+        if (a == nullptr)
+            continue;
+        if (a->input.empty())
+            return fail(ErrorCode::Data_ + 34, "recipe '" + r.id + "': sweep axis has no input");
+        if (a->values.empty())
+            return fail(ErrorCode::Data_ + 35,
+                        "recipe '" + r.id + "': sweep axis '" + a->input + "' has no points");
         if (!a->labels.empty() && a->labels.size() != a->values.size())
-            return fail(ErrorCode::Data_ + 36, "recipe '" + r.id + "': sweep labels do not match the value count");
+            return fail(ErrorCode::Data_ + 36,
+                        "recipe '" + r.id + "': sweep labels do not match the value count");
     }
     if (!r.fitModel.empty() && !knownFitModel(r.fitModel))
-        return fail(ErrorCode::Data_ + 37, "recipe '" + r.id + "': unknown fit model '" + r.fitModel + "'");
-    if (r.shots < 1) return fail(ErrorCode::Data_ + 38, "recipe '" + r.id + "': shots must be >= 1");
+        return fail(ErrorCode::Data_ + 37,
+                    "recipe '" + r.id + "': unknown fit model '" + r.fitModel + "'");
+    if (r.shots < 1)
+        return fail(ErrorCode::Data_ + 38, "recipe '" + r.id + "': shots must be >= 1");
     return {};
 }
 
 Result<Recipe> loadRecipe(const std::filesystem::path& path) {
     auto e = core::JsonEnvelope::load(path, kKind);
-    if (!e) return std::unexpected(e.error());
+    if (!e)
+        return std::unexpected(e.error());
     auto r = recipeFromJson(e->data);
-    if (!r) r.error().notes.push_back("file: " + path.string());
+    if (!r)
+        r.error().notes.push_back("file: " + path.string());
     return r;
 }
 Status saveRecipe(const std::filesystem::path& path, const Recipe& r) {
@@ -212,14 +246,17 @@ Status saveRecipe(const std::filesystem::path& path, const Recipe& r) {
 Result<std::vector<Recipe>> loadRecipeDirectory(const std::filesystem::path& dir) {
     std::vector<Recipe> out;
     std::error_code ec;
-    if (!std::filesystem::is_directory(dir, ec)) return fail(ErrorCode::NotFound, "no recipe directory " + dir.string());
+    if (!std::filesystem::is_directory(dir, ec))
+        return fail(ErrorCode::NotFound, "no recipe directory " + dir.string());
     std::vector<std::filesystem::path> files;
     for (auto& e : std::filesystem::directory_iterator(dir))
-        if (e.path().extension() == ".json") files.push_back(e.path());
+        if (e.path().extension() == ".json")
+            files.push_back(e.path());
     std::sort(files.begin(), files.end());
     for (auto& f : files) {
         auto r = loadRecipe(f);
-        if (!r) return std::unexpected(r.error());
+        if (!r)
+            return std::unexpected(r.error());
         out.push_back(std::move(*r));
     }
     return out;

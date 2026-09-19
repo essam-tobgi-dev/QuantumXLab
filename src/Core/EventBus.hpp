@@ -11,27 +11,30 @@
 namespace qlab::core {
 class EventBus;
 class Subscription {
-public:
+  public:
     Subscription() = default;
-    Subscription(EventBus* bus, std::type_index t, std::uint64_t id) : bus_(bus), type_(t), id_(id) {}
+    Subscription(EventBus* bus, std::type_index t, std::uint64_t id)
+        : bus_(bus), type_(t), id_(id) {}
     Subscription(Subscription&& o) noexcept { *this = std::move(o); }
     Subscription& operator=(Subscription&& o) noexcept;
     Subscription(const Subscription&) = delete;
     Subscription& operator=(const Subscription&) = delete;
     ~Subscription();
     void reset();
-private:
+
+  private:
     EventBus* bus_ = nullptr;
     std::type_index type_ = typeid(void);
     std::uint64_t id_ = 0;
 };
 
 class EventBus {
-public:
+  public:
     template <class E> [[nodiscard]] Subscription subscribe(std::function<void(const E&)> fn) {
         std::lock_guard lk(mu_);
         auto id = ++nextId_;
-        subs_[typeid(E)].push_back({id, [fn = std::move(fn)](const std::any& a) { fn(std::any_cast<const E&>(a)); }});
+        subs_[typeid(E)].push_back(
+            {id, [fn = std::move(fn)](const std::any& a) { fn(std::any_cast<const E&>(a)); }});
         return Subscription(this, typeid(E), id);
     }
     // Deliver now on the calling thread (main thread only, spec 02 §6).
@@ -43,10 +46,20 @@ public:
     }
     void drain();
     void unsubscribe(std::type_index t, std::uint64_t id);
-    std::size_t pending() const { std::lock_guard lk(qmu_); return queue_.size(); }
-private:
-    struct Sub { std::uint64_t id; std::function<void(const std::any&)> fn; };
-    struct Queued { std::type_index type; std::any payload; };
+    std::size_t pending() const {
+        std::lock_guard lk(qmu_);
+        return queue_.size();
+    }
+
+  private:
+    struct Sub {
+        std::uint64_t id;
+        std::function<void(const std::any&)> fn;
+    };
+    struct Queued {
+        std::type_index type;
+        std::any payload;
+    };
     void dispatch(std::type_index t, const std::any& a);
     mutable std::mutex mu_;
     mutable std::mutex qmu_;

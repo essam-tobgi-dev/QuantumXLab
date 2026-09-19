@@ -1,9 +1,9 @@
 // Spec 07 §3, §9 — density-matrix backend: reference states, agreement with the state vector,
 // multi-level sites and the memory guard.
 #include "Circuits.hpp"
+#include "Numerics/Checks.hpp"
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include "Numerics/Checks.hpp"
 
 using namespace qtest;
 using Catch::Approx;
@@ -32,13 +32,15 @@ TEST_CASE("DM: Bell and GHZ density matrices") {
     DensityMatrixBackend ghz;
     REQUIRE(ghz.allocate(n).has_value());
     REQUIRE(ghz.applyGate(H(), q({0})).has_value());
-    for (std::uint32_t i = 0; i + 1 < n; ++i) REQUIRE(ghz.applyGate(CX(), q({i, i + 1})).has_value());
+    for (std::uint32_t i = 0; i + 1 < n; ++i)
+        REQUIRE(ghz.applyGate(CX(), q({i, i + 1})).has_value());
     const std::size_t last = (std::size_t{1} << n) - 1;
     double offCorner = 0;
     for (std::size_t i = 0; i <= last; ++i)
         for (std::size_t j = 0; j <= last; ++j) {
             const bool corner = (i == 0 || i == last) && (j == 0 || j == last);
-            if (!corner) offCorner = std::max(offCorner, std::abs(ghz.rho()(i, j)));
+            if (!corner)
+                offCorner = std::max(offCorner, std::abs(ghz.rho()(i, j)));
         }
     REQUIRE(offCorner < 1e-14);
     REQUIRE(std::abs(ghz.rho()(0, 0) - Complex(0.5)) < 1e-14);
@@ -77,7 +79,8 @@ TEST_CASE("DM agrees with the state vector on seeded random 6-qubit circuits") {
         auto pDm = dm.probabilities(q({4, 1, 3}));
         REQUIRE(pSv.has_value());
         REQUIRE(pDm.has_value());
-        for (std::size_t i = 0; i < pSv->size(); ++i) REQUIRE((*pDm)[i] == Approx((*pSv)[i]).margin(1e-12));
+        for (std::size_t i = 0; i < pSv->size(); ++i)
+            REQUIRE((*pDm)[i] == Approx((*pSv)[i]).margin(1e-12));
         auto rSv = sv.reducedDensityMatrix(q({0, 5}));
         auto rDm = dm.reducedDensityMatrix(q({0, 5}));
         REQUIRE(rSv.has_value());
@@ -98,7 +101,8 @@ TEST_CASE("DM: controlled gates equal the state-vector controlled kernel") {
     REQUIRE(sv.allocate(4).has_value());
     REQUIRE(dm.allocate(4).has_value());
     for (IBackend* b : {static_cast<IBackend*>(&sv), static_cast<IBackend*>(&dm)}) {
-        for (std::uint32_t i = 0; i < 4; ++i) REQUIRE(b->applyGate(RY(0.4 + 0.3 * i), q({i})).has_value());
+        for (std::uint32_t i = 0; i < 4; ++i)
+            REQUIRE(b->applyGate(RY(0.4 + 0.3 * i), q({i})).has_value());
         REQUIRE(b->applyControlled(RX(1.1), q({3, 0}), q({2})).has_value());
         REQUIRE(b->applyControlled(SWAP(), q({1}), q({0, 3})).has_value()); // Fredkin
     }
@@ -130,15 +134,19 @@ TEST_CASE("DM: a d = 3 site keeps |2> empty under qubit-subspace gates") {
     auto pq = qubits.probabilities(allQubits(3));
     REQUIRE(pm.has_value());
     REQUIRE(pq.has_value());
-    for (std::size_t i = 0; i < 8; ++i) REQUIRE((*pm)[i] == Approx((*pq)[i]).margin(1e-12));
+    for (std::size_t i = 0; i < 8; ++i)
+        REQUIRE((*pm)[i] == Approx((*pq)[i]).margin(1e-12));
     for (const char* label : {"ZII", "XYZ", "YIX"}) {
         auto p = PauliString::parse(label);
-        REQUIRE(mixed.expectation(*p).value() == Approx(qubits.expectation(*p).value()).margin(1e-12));
+        REQUIRE(mixed.expectation(*p).value() ==
+                Approx(qubits.expectation(*p).value()).margin(1e-12));
     }
     // A full-dimension 3x3 unitary does reach |2>: the |1> <-> |2> swap moves P1 into P2.
     const double p1 = mixed.population(QubitIndex{0}, 1);
     Matrix x12(3, 3);
-    x12(0, 0) = 1; x12(1, 2) = 1; x12(2, 1) = 1;
+    x12(0, 0) = 1;
+    x12(1, 2) = 1;
+    x12(2, 1) = 1;
     REQUIRE(mixed.applyGate(x12, q({0})).has_value());
     REQUIRE(mixed.population(QubitIndex{0}, 2) == Approx(p1).margin(1e-12));
     REQUIRE(mixed.population(QubitIndex{0}, 1) == Approx(0.0).margin(1e-15));
@@ -153,7 +161,7 @@ TEST_CASE("DM: memory guard and argument validation") {
     auto fourteen = dm.allocate(14);
     REQUIRE_FALSE(fourteen.has_value());
     REQUIRE(fourteen.error().code == err::TooLarge);
-    REQUIRE_FALSE(dm.allocate(64).has_value()); // 2^64 must not wrap around to a tiny allocation
+    REQUIRE_FALSE(dm.allocate(64).has_value());   // 2^64 must not wrap around to a tiny allocation
     REQUIRE_FALSE(dm.allocate(9, 3).has_value()); // 3^9 = 19683 > 2^13
     REQUIRE(DensityMatrixBackend::maxQubits() <= 13);
     REQUIRE(dm.capabilities().maxQubits == DensityMatrixBackend::maxQubits());

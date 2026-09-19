@@ -16,7 +16,7 @@ struct SpectrumPeak {
 };
 
 class SpectrumAnalyzer final : public InstrumentBase {
-public:
+  public:
     // Longest record analysed; a smaller RBW than this allows is widened and reported by the
     // "rbw_effective" marker.
     static constexpr std::size_t kMaxRecord = std::size_t{1} << 18;
@@ -30,17 +30,19 @@ public:
     Result<double> markerPowerDbm(double frequencyHz) const;
     // Local maxima of a displayed trace at least `prominenceDb` above both neighbours' valleys,
     // strongest first.
-    static std::vector<SpectrumPeak> findPeaks(const Trace& trace, std::size_t maxPeaks = 8, double prominenceDb = 6.0);
-    std::optional<double> query(std::string_view path) const override; // trace / peak: strongest line of the last sweep (dBm)
+    static std::vector<SpectrumPeak> findPeaks(const Trace& trace, std::size_t maxPeaks = 8,
+                                               double prominenceDb = 6.0);
+    std::optional<double> query(std::string_view path)
+        const override; // trace / peak: strongest line of the last sweep (dBm)
 
-protected:
+  protected:
     Result<Trace> doAcquire(const ChannelDesc& channel, AcquireContext& ctx) override;
 
-private:
+  private:
     struct Record {
         Signal signal;
-        double rbwHz = 0.0;       // effective
-        double floorWatts = 0.0;  // (node + DANL) noise power in the RBW
+        double rbwHz = 0.0;      // effective
+        double floorWatts = 0.0; // (node + DANL) noise power in the RBW
     };
     Result<Record> record(const SettingValues& v, std::uint64_t noiseSeed) const;
     Result<Trace> sweep(const ChannelDesc& channel, AcquireContext& ctx) const;

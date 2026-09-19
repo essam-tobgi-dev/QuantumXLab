@@ -19,16 +19,26 @@ Result<std::uint32_t> parseIndex(std::string_view s) {
 
 std::string_view channelKindName(ChannelKind k) {
     switch (k) {
-    case ChannelKind::Drive: return "drive";
-    case ChannelKind::Control: return "control";
-    case ChannelKind::Flux: return "flux";
-    case ChannelKind::Measure: return "measure";
-    case ChannelKind::Acquire: return "acquire";
-    case ChannelKind::GlobalRaman: return "global_raman";
-    case ChannelKind::Raman: return "raman";
-    case ChannelKind::Bichromatic: return "bichromatic";
-    case ChannelKind::Detect: return "detect";
-    case ChannelKind::Pump: return "pump";
+    case ChannelKind::Drive:
+        return "drive";
+    case ChannelKind::Control:
+        return "control";
+    case ChannelKind::Flux:
+        return "flux";
+    case ChannelKind::Measure:
+        return "measure";
+    case ChannelKind::Acquire:
+        return "acquire";
+    case ChannelKind::GlobalRaman:
+        return "global_raman";
+    case ChannelKind::Raman:
+        return "raman";
+    case ChannelKind::Bichromatic:
+        return "bichromatic";
+    case ChannelKind::Detect:
+        return "detect";
+    case ChannelKind::Pump:
+        return "pump";
     }
     return "?";
 }
@@ -36,36 +46,54 @@ std::string_view channelKindName(ChannelKind k) {
 int channelKindArity(ChannelKind k) {
     switch (k) {
     case ChannelKind::Control:
-    case ChannelKind::Bichromatic: return 2;
+    case ChannelKind::Bichromatic:
+        return 2;
     case ChannelKind::GlobalRaman:
     case ChannelKind::Detect:
-    case ChannelKind::Pump: return 0;
-    default: return 1;
+    case ChannelKind::Pump:
+        return 0;
+    default:
+        return 1;
     }
 }
 
-bool ChannelId::isDrivelike() const { return kind != ChannelKind::Acquire; }
+bool ChannelId::isDrivelike() const {
+    return kind != ChannelKind::Acquire;
+}
 
 std::string ChannelId::toString() const {
     switch (kind) {
-    case ChannelKind::Drive: return std::format("d[{}]", a);
-    case ChannelKind::Control: return std::format("u[{},{}]", a, b);
-    case ChannelKind::Flux: return std::format("f[{}]", a);
-    case ChannelKind::Measure: return std::format("m[{}]", a);
-    case ChannelKind::Acquire: return std::format("a[{}]", a);
-    case ChannelKind::GlobalRaman: return "g";
-    case ChannelKind::Raman: return std::format("r[{}]", a);
-    case ChannelKind::Bichromatic: return std::format("ms[{},{}]", a, b);
-    case ChannelKind::Detect: return "detect";
-    case ChannelKind::Pump: return "pump";
+    case ChannelKind::Drive:
+        return std::format("d[{}]", a);
+    case ChannelKind::Control:
+        return std::format("u[{},{}]", a, b);
+    case ChannelKind::Flux:
+        return std::format("f[{}]", a);
+    case ChannelKind::Measure:
+        return std::format("m[{}]", a);
+    case ChannelKind::Acquire:
+        return std::format("a[{}]", a);
+    case ChannelKind::GlobalRaman:
+        return "g";
+    case ChannelKind::Raman:
+        return std::format("r[{}]", a);
+    case ChannelKind::Bichromatic:
+        return std::format("ms[{},{}]", a, b);
+    case ChannelKind::Detect:
+        return "detect";
+    case ChannelKind::Pump:
+        return "pump";
     }
     return "?";
 }
 
 Result<ChannelId> parseChannel(std::string_view s) {
-    if (s == "g") return ChannelId::globalRaman();
-    if (s == "detect") return ChannelId::detect();
-    if (s == "pump") return ChannelId::pump();
+    if (s == "g")
+        return ChannelId::globalRaman();
+    if (s == "detect")
+        return ChannelId::detect();
+    if (s == "pump")
+        return ChannelId::pump();
 
     auto open = s.find('[');
     if (open == std::string_view::npos || s.back() != ']')
@@ -74,14 +102,22 @@ Result<ChannelId> parseChannel(std::string_view s) {
     std::string_view body = s.substr(open + 1, s.size() - open - 2);
 
     ChannelKind kind{};
-    if (prefix == "d") kind = ChannelKind::Drive;
-    else if (prefix == "u") kind = ChannelKind::Control;
-    else if (prefix == "f") kind = ChannelKind::Flux;
-    else if (prefix == "m") kind = ChannelKind::Measure;
-    else if (prefix == "a") kind = ChannelKind::Acquire;
-    else if (prefix == "r") kind = ChannelKind::Raman;
-    else if (prefix == "ms") kind = ChannelKind::Bichromatic;
-    else return fail(kErr, std::format("unknown channel prefix '{}'", prefix));
+    if (prefix == "d")
+        kind = ChannelKind::Drive;
+    else if (prefix == "u")
+        kind = ChannelKind::Control;
+    else if (prefix == "f")
+        kind = ChannelKind::Flux;
+    else if (prefix == "m")
+        kind = ChannelKind::Measure;
+    else if (prefix == "a")
+        kind = ChannelKind::Acquire;
+    else if (prefix == "r")
+        kind = ChannelKind::Raman;
+    else if (prefix == "ms")
+        kind = ChannelKind::Bichromatic;
+    else
+        return fail(kErr, std::format("unknown channel prefix '{}'", prefix));
 
     auto comma = body.find(',');
     if (channelKindArity(kind) == 2) {

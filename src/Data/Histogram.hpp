@@ -14,7 +14,9 @@ namespace qlab::data {
 
 // Wilson score interval for a binomial proportion with k successes in n trials.
 // z = 1 gives the 68.3 % interval used for Statistical error bars (spec 21 §2.5).
-struct Interval { double lo, hi, center; };
+struct Interval {
+    double lo, hi, center;
+};
 Interval wilson(std::uint64_t k, std::uint64_t n, double z = 1.0);
 // Binomial σ with p clipped to [0.5/N, 1 - 0.5/N] (spec 22 §5.1).
 double binomialSigma(std::uint64_t k, std::uint64_t n);
@@ -22,7 +24,7 @@ double binomialSigma(std::uint64_t k, std::uint64_t n);
 // Bitstring labels are rendered most-significant qubit first: label[0] is q_{n-1}, label[n-1]
 // is q_0 (README conventions). `bit k` below always means qubit k, i.e. label[n-1-k].
 class Histogram {
-public:
+  public:
     Histogram() = default;
     explicit Histogram(std::size_t nbits) : nbits_(nbits) {}
     void add(const std::string& label, std::uint64_t count = 1);
@@ -38,23 +40,27 @@ public:
     // Marginal over the given qubit indices (kept in the order given, highest listed first
     // in the rendered label, i.e. the output label follows the same convention).
     Histogram marginal(std::span<const std::size_t> qubits) const;
-    Interval interval(const std::string& label, double z = 1.0) const { return wilson(count(label), total_, z); }
+    Interval interval(const std::string& label, double z = 1.0) const {
+        return wilson(count(label), total_, z);
+    }
     std::optional<std::vector<double>> theory; // Born probabilities for labels in all() order
     static std::string labelFromIndex(std::uint64_t index, std::size_t nbits);
     static std::uint64_t indexFromLabel(const std::string& label);
     const std::map<std::string, std::uint64_t>& raw() const { return counts_; }
     FidelityClass cls = FidelityClass::Statistical;
-private:
+
+  private:
     std::size_t nbits_ = 0;
     std::uint64_t total_ = 0;
     std::map<std::string, std::uint64_t> counts_;
 };
 
 struct Histogram1D {
-    std::vector<double> edges;   // size bins+1
+    std::vector<double> edges; // size bins+1
     std::vector<std::uint64_t> counts;
     std::uint64_t total = 0;
-    static Histogram1D build(std::span<const double> values, std::size_t bins = 0); // 0 -> Freedman–Diaconis
+    static Histogram1D build(std::span<const double> values,
+                             std::size_t bins = 0); // 0 -> Freedman–Diaconis
     double binWidth() const { return edges.size() > 1 ? edges[1] - edges[0] : 0.0; }
 };
 

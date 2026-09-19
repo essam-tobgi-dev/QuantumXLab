@@ -11,7 +11,9 @@
 namespace qlab::app {
 namespace {
 
-std::string sigfig(double v, int digits = 4) { return std::format("{:.{}g}", v, digits); }
+std::string sigfig(double v, int digits = 4) {
+    return std::format("{:.{}g}", v, digits);
+}
 
 void printCounts(const runtime::RunResult& r, std::ostream& out) {
     const std::uint64_t total = r.counts.total();
@@ -30,18 +32,20 @@ void printCounts(const runtime::RunResult& r, std::ostream& out) {
 
 void printEstimate(const runtime::Estimate& e, std::ostream& out) {
     out << "estimate (class Model — what this program would cost on the physical device)\n";
-    out << std::format("  wall time      {} s   [{} … {}]\n", sigfig(e.wallTime.valueS), sigfig(e.wallTime.minS),
-                       sigfig(e.wallTime.maxS));
+    out << std::format("  wall time      {} s   [{} … {}]\n", sigfig(e.wallTime.valueS),
+                       sigfig(e.wallTime.minS), sigfig(e.wallTime.maxS));
     out << std::format("  per shot       {} s   (reset {} + circuit {} + readout {})\n",
-                       sigfig(e.wallTime.perShotS), sigfig(e.wallTime.resetS), sigfig(e.wallTime.circuitS),
-                       sigfig(e.wallTime.readoutS));
-    out << std::format("  fidelity       {}   [{} … {}]\n", sigfig(e.fidelity.fast), sigfig(e.fidelity.low),
-                       sigfig(e.fidelity.high));
+                       sigfig(e.wallTime.perShotS), sigfig(e.wallTime.resetS),
+                       sigfig(e.wallTime.circuitS), sigfig(e.wallTime.readoutS));
+    out << std::format("  fidelity       {}   [{} … {}]\n", sigfig(e.fidelity.fast),
+                       sigfig(e.fidelity.low), sigfig(e.fidelity.high));
     if (e.fidelity.simulated)
-        out << std::format("  simulated F_c  {}   (Hellinger {})\n", sigfig(e.fidelity.simulated->classical),
+        out << std::format("  simulated F_c  {}   (Hellinger {})\n",
+                           sigfig(e.fidelity.simulated->classical),
                            sigfig(e.fidelity.simulated->hellinger));
-    out << std::format("  resources      {} qubits, depth {}, {} two-qubit gates, {} T\n", e.resources.qubits,
-                       e.resources.depth, e.resources.twoQubit, e.resources.tCount);
+    out << std::format("  resources      {} qubits, depth {}, {} two-qubit gates, {} T\n",
+                       e.resources.qubits, e.resources.depth, e.resources.twoQubit,
+                       e.resources.tCount);
     if (e.qec)
         out << std::format("  surface code   distance {}, {} physical qubits\n", e.qec->distance,
                            e.qec->physicalQubits);
@@ -67,7 +71,7 @@ int runHeadless(const Options& options, std::ostream& out, std::ostream& err) {
 
     if (options.json) {
         report::ResultExportOptions ro;
-        ro.writeMemory = false;   // the memory blob is a file, not part of a printed document
+        ro.writeMemory = false; // the memory blob is a file, not part of a printed document
         ro.compileTime = run->compileTime;
         out << report::serializeRunResult(r, ro) << "\n";
         return r.partial ? 1 : 0;
@@ -79,20 +83,25 @@ int runHeadless(const Options& options, std::ostream& out, std::ostream& err) {
     out << std::format("backend    {}   {}\n", qsim::kindName(r.backend), r.backendReason);
     out << std::format("shots      {}   seed {}   class {}\n", r.options.shots, r.seed,
                        data::fidelityName(r.backendClass));
-    out << std::format("sim time   {:.1f} ms\n",
-                       static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(r.wallTime).count()) /
-                           1000.0);
-    if (r.partial) out << "run was cancelled: the result is partial\n";
+    out << std::format(
+        "sim time   {:.1f} ms\n",
+        static_cast<double>(
+            std::chrono::duration_cast<std::chrono::microseconds>(r.wallTime).count()) /
+            1000.0);
+    if (r.partial)
+        out << "run was cancelled: the result is partial\n";
     out << "counts (68 % Wilson interval)\n";
     printCounts(r, out);
     if (!r.expectations.empty()) {
         out << "expectations\n";
         for (const runtime::Expectation& e : r.expectations)
-            out << std::format("  {:<10} {:>10}  ± {}\n", e.observable, sigfig(e.value), sigfig(e.stderr_, 2));
+            out << std::format("  {:<10} {:>10}  ± {}\n", e.observable, sigfig(e.value),
+                               sigfig(e.stderr_, 2));
     }
     printEstimate(r.estimate, out);
     for (const lang::Diagnostic& d : run->diagnostics)
-        if (d.severity != lang::Severity::Info) err << compiler::formatDiagnostic(d) << "\n";
+        if (d.severity != lang::Severity::Info)
+            err << compiler::formatDiagnostic(d) << "\n";
     return r.partial ? 1 : 0;
 }
 

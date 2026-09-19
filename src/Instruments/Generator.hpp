@@ -18,7 +18,7 @@ struct PhaseNoiseMask {
 };
 
 class Generator final : public InstrumentBase, public ISignalSource {
-public:
+  public:
     explicit Generator(std::uint32_t index = 0);
     static SettingSchema makeSchema();
 
@@ -32,9 +32,9 @@ public:
     // Port "rf": √(2 P Z0)·e^{iφ_n(t)} referred to carrierHz(); zeros when the output is off.
     Result<Signal> signal(std::string_view port, const SignalRequest& request) const override;
     double sampleRateHz(std::string_view) const override { return 0.0; } // CW: follows the request
-    std::optional<double> query(std::string_view path) const override; // f, P_dBm, on
+    std::optional<double> query(std::string_view path) const override;   // f, P_dBm, on
 
-protected:
+  protected:
     Result<Trace> doAcquire(const ChannelDesc& channel, AcquireContext& ctx) override;
     bool triggerSourceSet(const SettingValues&) const override { return false; }
 };

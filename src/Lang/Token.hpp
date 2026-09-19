@@ -8,10 +8,10 @@
 namespace qlab::lang {
 
 enum class TokenKind {
-    Keyword,       // reserved words (OPENQASM include qubit gate if ...)
-    Type,          // int uint float angle bool bit duration stretch complex qubit
-    Gate,          // U gphase and stdgates names
-    Builtin,       // pi euler tau sin cos ... casts
+    Keyword, // reserved words (OPENQASM include qubit gate if ...)
+    Type,    // int uint float angle bool bit duration stretch complex qubit
+    Gate,    // U gphase and stdgates names
+    Builtin, // pi euler tau sin cos ... casts
     Identifier,
     PhysicalQubit, // $k
     Number,        // integer / float / imaginary literal
@@ -19,8 +19,8 @@ enum class TokenKind {
     String,        // "stdgates.inc"
     BitString,     // "0101"
     Comment,
-    Pragma,        // whole `pragma ...` line
-    CalBlock,      // OpenPulse contextual keyword inside cal/defcal
+    Pragma,   // whole `pragma ...` line
+    CalBlock, // OpenPulse contextual keyword inside cal/defcal
     Operator,
     Punct,
     Invalid,
@@ -33,7 +33,7 @@ enum class DurationUnit { None, Ns, Us, Ms, S, Dt };
 
 struct Token {
     TokenKind kind = TokenKind::Invalid;
-    std::string text;      // exact source text (for Pragma: the text after `pragma`)
+    std::string text; // exact source text (for Pragma: the text after `pragma`)
     SourceSpan span;
     // Parsed literal payload
     bool isFloat = false;
@@ -44,7 +44,9 @@ struct Token {
 
     bool is(TokenKind k) const { return kind == k; }
     bool is(TokenKind k, std::string_view t) const { return kind == k && text == t; }
-    bool isText(std::string_view t) const { return text == t && kind != TokenKind::String && kind != TokenKind::BitString; }
+    bool isText(std::string_view t) const {
+        return text == t && kind != TokenKind::String && kind != TokenKind::BitString;
+    }
 };
 
 // Converts a duration literal to picoseconds (dt durations are not physical; see Sema).

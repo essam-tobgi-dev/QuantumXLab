@@ -16,21 +16,22 @@
 namespace qlab::app {
 
 class ProjectHost {
-public:
+  public:
     explicit ProjectHost(LabModel& model);
 
     // ---- lifecycle
     void newProject();
     // Opens `file`; with `RecoveryChoice::Ask` a newer autosave is reported in `recovery()` rather
     // than loaded, so the caller can put the prompt of spec 23 §2 in front of the user.
-    Status open(const std::filesystem::path& file, report::RecoveryChoice choice = report::RecoveryChoice::Ask);
-    Status save();                                       // NotFound while the project is untitled
+    Status open(const std::filesystem::path& file,
+                report::RecoveryChoice choice = report::RecoveryChoice::Ask);
+    Status save(); // NotFound while the project is untitled
     Status saveAs(const std::filesystem::path& file);
     // Spec 23 §2: autosave every 60 s of wall time and after every successful run. An untitled
     // project journals to `<userData>/recovery/<id>.qxlab` instead.
     void tick(double dtSeconds);
     Status autosaveNow();
-    void discardAutosave();                              // clean exit
+    void discardAutosave(); // clean exit
 
     // ---- state
     report::Project& project() { return project_; }
@@ -48,7 +49,8 @@ public:
     // ---- contents
     void setMainProgram(std::string source, std::filesystem::path origin = {});
     std::string mainSource() const;
-    // Appends the run summary and, for a titled project, writes the `run_result` document beside it.
+    // Appends the run summary and, for a titled project, writes the `run_result` document beside
+    // it.
     Status recordRun(const runtime::RunResult& run, std::string_view source);
 
     // ---- workspace slice (spec 19 §4)
@@ -62,11 +64,11 @@ public:
     Status apply();
     void capture();
 
-private:
+  private:
     LabModel* model_;
     report::Project project_;
     std::filesystem::path path_;
-    std::string recoveryId_;      // journal id of an untitled project
+    std::string recoveryId_; // journal id of an untitled project
     std::optional<report::OpenedProject> recovery_;
     double sinceAutosave_ = 0.0;
     bool dirty_ = false;

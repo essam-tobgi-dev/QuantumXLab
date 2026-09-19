@@ -35,7 +35,7 @@ struct LodRule {
 // `instrument` object names the instrument class, its settings schema and its channels
 // (the channel list supplies the `$k` values of `instr.*.ch[$k]` bindings).
 struct InstrumentInfo {
-    std::string kind;          // instrument.class, e.g. "sg_mw"
+    std::string kind;           // instrument.class, e.g. "sg_mw"
     std::string settingsSchema; // instrument.settings_schema
     std::vector<std::string> channels;
 };
@@ -85,7 +85,7 @@ struct Inspectable {
 };
 
 class ComponentCatalog {
-public:
+  public:
     // Loads and validates every component.json under `dir`
     // (default: core::assetDir()/"Lab"/"Components"). Every failure names the offending file.
     static Result<ComponentCatalog> load(const std::filesystem::path& dir = {});
@@ -98,7 +98,8 @@ public:
 
     // Lint of spec 17 §4 applied to one parsed descriptor; every problem is an Error note.
     static Status validate(const ComponentDescriptor& d);
-    static Result<ComponentDescriptor> parse(const core::Json& data, const std::filesystem::path& from);
+    static Result<ComponentDescriptor> parse(const core::Json& data,
+                                             const std::filesystem::path& from);
 
     // Asset lint (spec 25 §7): every `physics.equations` id exists in `equationsJson`
     // (Assets/Theory/equations.json) and every theory anchor `Tnn#<n>-<slug>` names a heading of
@@ -106,7 +107,7 @@ public:
     std::vector<std::string> lintReferences(const std::filesystem::path& equationsJson,
                                             const std::filesystem::path& theoryDir) const;
 
-private:
+  private:
     std::vector<ComponentDescriptor> items_;
     std::map<std::string, std::size_t, std::less<>> byId_;
 };

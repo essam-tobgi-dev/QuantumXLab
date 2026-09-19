@@ -13,18 +13,21 @@
 namespace qlab::compiler {
 
 class CouplingGraph {
-public:
+  public:
     static constexpr std::uint32_t kUnreachable = std::numeric_limits<std::uint32_t>::max();
 
     // `calibration` may be null: edge costs are then uniform.
-    static Result<CouplingGraph> build(const hw::Device& device, const hw::Calibration* calibration);
+    static Result<CouplingGraph> build(const hw::Device& device,
+                                       const hw::Calibration* calibration);
 
-    std::uint32_t qubitCount() const { return qubits_; }                       // device qubits, couplers included
-    const std::vector<std::uint32_t>& dataQubits() const { return data_; }     // ascending
+    std::uint32_t qubitCount() const { return qubits_; } // device qubits, couplers included
+    const std::vector<std::uint32_t>& dataQubits() const { return data_; } // ascending
     bool isData(std::uint32_t q) const { return q < qubits_ && isData_[q] != 0; }
     const std::vector<std::uint32_t>& neighbours(std::uint32_t q) const { return adj_[q]; }
     std::size_t degree(std::uint32_t q) const { return adj_[q].size(); }
-    const std::vector<std::pair<std::uint32_t, std::uint32_t>>& edges() const { return edges_; }   // a < b
+    const std::vector<std::pair<std::uint32_t, std::uint32_t>>& edges() const {
+        return edges_;
+    } // a < b
     bool allToAll() const { return allToAll_; }
     bool hasCalibration() const { return calibrated_; }
 
@@ -37,7 +40,9 @@ public:
     // Σ −ln F_2q along the most reliable path (spec 14 §8 "shortest reliability path").
     double pathCost(std::uint32_t a, std::uint32_t b) const { return rel_[a * qubits_ + b]; }
     // pathCost in units of the mean edge cost, so that it is comparable with `hops`.
-    double reliabilityDistance(std::uint32_t a, std::uint32_t b) const { return rel_[a * qubits_ + b] / meanEdge_; }
+    double reliabilityDistance(std::uint32_t a, std::uint32_t b) const {
+        return rel_[a * qubits_ + b] / meanEdge_;
+    }
     double meanEdgeCost() const { return meanEdge_; }
     std::uint32_t diameter() const { return diameter_; }
 
@@ -46,7 +51,7 @@ public:
     double decayRate(std::uint32_t q) const { return q < decay_.size() ? decay_[q] : 0.0; }
     double typicalTwoQubitSeconds() const { return typical2q_; }
 
-private:
+  private:
     std::uint32_t qubits_ = 0;
     bool allToAll_ = false, calibrated_ = false;
     std::vector<std::uint32_t> data_;
@@ -55,7 +60,7 @@ private:
     std::vector<std::pair<std::uint32_t, std::uint32_t>> edges_;
     std::vector<std::uint32_t> hop_;
     std::vector<double> rel_;
-    std::vector<double> edgeCost_;                                             // parallel to edges_
+    std::vector<double> edgeCost_; // parallel to edges_
     std::vector<double> readout_, decay_;
     double meanEdge_ = 1.0, typical2q_ = 0.0;
     std::uint32_t diameter_ = 0;

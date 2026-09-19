@@ -5,14 +5,14 @@
 // chosen bits, and the Hellinger and total-variation distances printed with the shot count.
 // Register labels are little-endian with "bit 0 is rightmost" in the axis title. Cost
 // O(#outcomes); at most 4096 are shown, the rest aggregated as "other".
-#include "Viz/Math/Statistics.hpp"
 #include "Data/Fidelity.hpp"
+#include "Viz/Math/Statistics.hpp"
 #include "Viz/StateView.hpp"
 
 namespace qlab::viz {
 
 class HistogramView final : public StateView {
-public:
+  public:
     std::string_view id() const override { return "histogram"; }
     std::string_view title() const override { return "Probabilities"; }
     // The bars are shot counts: a physical machine produces exactly this (spec 00 §6).
@@ -29,18 +29,19 @@ public:
     math::HistogramOrder order() const { return options_.order; }
     void setCumulative(bool on);
     bool cumulative() const { return cumulative_; }
-    void setMarginalBits(std::vector<std::size_t> bits);   // bit 0 is qubit 0 (rightmost in the label)
+    void
+    setMarginalBits(std::vector<std::size_t> bits); // bit 0 is qubit 0 (rightmost in the label)
     std::span<const std::size_t> marginalBits() const { return options_.marginalBits; }
 
     const math::HistogramModel& model() const { return model_; }
     const std::string& note() const { return note_; }
     Rect plotRect() const { return plot_; }
 
-protected:
+  protected:
     void rebuild(const ViewInput& in) override;
     void drawBody(DrawContext& ctx) override;
 
-private:
+  private:
     math::HistogramOptions options_;
     math::HistogramModel model_;
     std::string note_;

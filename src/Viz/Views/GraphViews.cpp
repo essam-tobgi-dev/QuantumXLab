@@ -1,7 +1,7 @@
 // Spec 21 §3.12 coupling graph and §3.8 entanglement graph (see GraphView.hpp).
-#include "Viz/Views/GraphView.hpp"
 #include "Data/Fidelity.hpp"
 #include "Viz/Math/Format.hpp"
+#include "Viz/Views/GraphView.hpp"
 #include <algorithm>
 #include <cmath>
 #include <numbers>
@@ -45,13 +45,15 @@ data::FidelityClass CouplingView::fidelity(const ViewInput& in) const {
 }
 
 void CouplingView::setNodeField(layout::NodeField f) {
-    if (options_.nodeField == f) return;
+    if (options_.nodeField == f)
+        return;
     options_.nodeField = f;
     markDirty();
 }
 
 void CouplingView::setEdgeField(layout::EdgeField f) {
-    if (options_.edgeField == f) return;
+    if (options_.edgeField == f)
+        return;
     options_.edgeField = f;
     markDirty();
 }
@@ -72,56 +74,78 @@ void CouplingView::rebuild(const ViewInput& in) {
     graph_ = layout::buildCouplingGraph(*in.device, in.calibration.get(), o);
 
     // Overlays of spec 21 §3.12: the routing SWAPs, and the gates active at the playhead.
-    const std::shared_ptr<const ir::Circuit> routed =
-        in.circuits.at(CircuitStage::Scheduled) ? in.circuits.at(CircuitStage::Scheduled) : in.circuits.at(CircuitStage::Routed);
-    if (!routed) return;
+    const std::shared_ptr<const ir::Circuit> routed = in.circuits.at(CircuitStage::Scheduled)
+                                                          ? in.circuits.at(CircuitStage::Scheduled)
+                                                          : in.circuits.at(CircuitStage::Routed);
+    if (!routed)
+        return;
     const std::span<const ir::NodeId> order = routed->topologicalOrder();
     // A routed circuit is already physical: the identity map.
     static const std::vector<std::uint32_t> kIdentity;
     for (std::size_t k = 0; k < order.size(); ++k) {
         const ir::Node& node = routed->node(order[k]);
         const std::vector<QubitIndex> qs = physicalQubitsOf(node, kIdentity);
-        if (qs.size() != 2) continue;
-        const auto edge = std::pair<QubitIndex, QubitIndex>{std::min(qs[0], qs[1]), std::max(qs[0], qs[1])};
-        if (isSwap(node)) swaps_.push_back(edge);
-        if (in.hasPlayhead && k == in.playheadGate) active_.push_back(edge);
+        if (qs.size() != 2)
+            continue;
+        const auto edge =
+            std::pair<QubitIndex, QubitIndex>{std::min(qs[0], qs[1]), std::max(qs[0], qs[1])};
+        if (isSwap(node))
+            swaps_.push_back(edge);
+        if (in.hasPlayhead && k == in.playheadGate)
+            active_.push_back(edge);
     }
 }
 
-void CouplingView::drawOverlay(gfx::Renderer& r, GlBackend& gl, const VizTheme& theme, float pxScale) const {
+void CouplingView::drawOverlay(gfx::Renderer& r, GlBackend& gl, const VizTheme& theme,
+                               float pxScale) const {
     (void)gl;
     const Rect& e = graph_.extent;
     const glm::dvec2 center{e.cx(), e.cy()};
-    const auto world = [&](glm::dvec2 p) { return glm::dvec3(p.x - center.x, center.y - p.y, 0.02); };
-    const auto nodeAt = [&](QubitIndex q) { return q.get() < graph_.nodes.size() ? graph_.nodes[q.get()].pos : glm::dvec2{}; };
+    const auto world = [&](glm::dvec2 p) {
+        return glm::dvec3(p.x - center.x, center.y - p.y, 0.02);
+    };
+    const auto nodeAt = [&](QubitIndex q) {
+        return q.get() < graph_.nodes.size() ? graph_.nodes[q.get()].pos : glm::dvec2{};
+    };
     // Inserted SWAPs are drawn as a dashed overlay on their edge; the ones the playhead is on now
     // are drawn solid and bright (the "animated pulse" of the spec, without motion when the user
     // asked for reduced motion — this view carries no animation state of its own).
     for (const auto& [a, b] : swaps_)
-        r.linesNoDepth().segment(world(nodeAt(a)), world(nodeAt(b)), GlBackend::exact(glm::vec3(theme.warn), 0.85f),
-                                 3.0f * pxScale, 6.0f * pxScale);
+        r.linesNoDepth().segment(world(nodeAt(a)), world(nodeAt(b)),
+                                 GlBackend::exact(glm::vec3(theme.warn), 0.85f), 3.0f * pxScale,
+                                 6.0f * pxScale);
     for (const auto& [a, b] : active_)
-        r.linesNoDepth().segment(world(nodeAt(a)), world(nodeAt(b)), GlBackend::exact(glm::vec3(theme.accent), 1.0f),
-                                 4.5f * pxScale);
+        r.linesNoDepth().segment(world(nodeAt(a)), world(nodeAt(b)),
+                                 GlBackend::exact(glm::vec3(theme.accent), 1.0f), 4.5f * pxScale);
 }
 
 void CouplingView::fillNodeReadout(HitResult& h, const layout::GraphNode& n) const {
-    if (n.value) h.readout.push_back({std::string(layout::nodeFieldName(options_.nodeField)), n.valueText, fidelity(input())});
-    if (n.role) h.readout.push_back({"QEC role", n.syndromeFired ? "syndrome 1" : "syndrome 0", data::FidelityClass::Numerical});
+    if (n.value)
+        h.readout.push_back({std::string(layout::nodeFieldName(options_.nodeField)), n.valueText,
+                             fidelity(input())});
+    if (n.role)
+        h.readout.push_back({"QEC role", n.syndromeFired ? "syndrome 1" : "syndrome 0",
+                             data::FidelityClass::Numerical});
 }
 
 void CouplingView::fillEdgeReadout(HitResult& h, const layout::GraphEdge& e) const {
-    if (e.value) h.readout.push_back({std::string(layout::edgeFieldName(options_.edgeField)), e.valueText, fidelity(input())});
+    if (e.value)
+        h.readout.push_back({std::string(layout::edgeFieldName(options_.edgeField)), e.valueText,
+                             fidelity(input())});
     const auto key = std::pair<QubitIndex, QubitIndex>{e.a, e.b};
     if (std::find(swaps_.begin(), swaps_.end(), key) != swaps_.end())
         h.readout.push_back({"routing", "SWAP inserted here", data::FidelityClass::Exact});
 }
 
 std::string CouplingView::statusLine() const {
-    if (graph_.nodes.empty()) return {};
-    std::string s = std::to_string(graph_.dataNodes) + " qubits   " + std::to_string(graph_.edges.size()) + " couplings";
-    if (!swaps_.empty()) s += "   " + std::to_string(swaps_.size()) + " routing SWAPs";
-    if (!active_.empty()) s += "   gate active";
+    if (graph_.nodes.empty())
+        return {};
+    std::string s = std::to_string(graph_.dataNodes) + " qubits   " +
+                    std::to_string(graph_.edges.size()) + " couplings";
+    if (!swaps_.empty())
+        s += "   " + std::to_string(swaps_.size()) + " routing SWAPs";
+    if (!active_.empty())
+        s += "   gate active";
     return s;
 }
 
@@ -136,8 +160,10 @@ ReductionRequest EntanglementView::wants(const ViewInput& in) const {
     if (n > 0 && (n <= kPairReductionMaxQubits || subset.size() <= kPairReductionMaxQubits)) {
         r.singles = true;
         r.pairs = true;
-        if (n > kPairReductionMaxQubits) r.qubits = subset;
-        else r.qubits.assign(qubitSubset().begin(), qubitSubset().end());
+        if (n > kPairReductionMaxQubits)
+            r.qubits = subset;
+        else
+            r.qubits.assign(qubitSubset().begin(), qubitSubset().end());
     }
     return r;
 }
@@ -160,13 +186,15 @@ void EntanglementView::rebuild(const ViewInput& in) {
     }
     graph_ = layout::buildEntanglementGraph(in.device.get(), nQubits_, *in.reductions);
     for (const layout::GraphEdge& e : graph_.edges)
-        if (e.value) totalMutualInformation_ += *e.value;
+        if (e.value)
+            totalMutualInformation_ += *e.value;
 }
 
 void EntanglementView::drawOverlay(gfx::Renderer&, GlBackend&, const VizTheme&, float) const {}
 
 void EntanglementView::fillNodeReadout(HitResult& h, const layout::GraphNode& n) const {
-    if (n.value) h.readout.push_back({"S(ρ)", math::formatSig(*n.value) + " bits", input().stateClass()});
+    if (n.value)
+        h.readout.push_back({"S(ρ)", math::formatSig(*n.value) + " bits", input().stateClass()});
 }
 
 void EntanglementView::fillEdgeReadout(HitResult& h, const layout::GraphEdge& e) const {
@@ -178,15 +206,20 @@ void EntanglementView::fillEdgeReadout(HitResult& h, const layout::GraphEdge& e)
             h.readout.push_back({"S_j", math::formatSig(p->measures.entropyJ) + " bits", cls});
             h.readout.push_back({"S_ij", math::formatSig(p->measures.entropyIJ) + " bits", cls});
         }
-    if (e.value) h.readout.push_back({"I(i:j)", math::formatSig(*e.value) + " bits", cls});
-    if (e.concurrence) h.readout.push_back({"C", math::formatSig(*e.concurrence), cls});
+    if (e.value)
+        h.readout.push_back({"I(i:j)", math::formatSig(*e.value) + " bits", cls});
+    if (e.concurrence)
+        h.readout.push_back({"C", math::formatSig(*e.concurrence), cls});
 }
 
 std::string EntanglementView::statusLine() const {
-    if (graph_.nodes.empty()) return StateView::statusLine();
+    if (graph_.nodes.empty())
+        return StateView::statusLine();
     std::string s = StateView::statusLine();
-    if (!s.empty()) s += "   ";
-    return s + std::to_string(graph_.edges.size()) + " pairs   ΣI = " + math::formatSig(totalMutualInformation_) + " bits";
+    if (!s.empty())
+        s += "   ";
+    return s + std::to_string(graph_.edges.size()) +
+           " pairs   ΣI = " + math::formatSig(totalMutualInformation_) + " bits";
 }
 
 } // namespace qlab::viz

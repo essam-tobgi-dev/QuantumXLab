@@ -10,7 +10,7 @@ enum class FridgeState { Warm, Pumping, Precooling, Condensing, Base, Warming };
 std::string_view fridgeStateName(FridgeState s);
 
 class CooldownSequencer {
-public:
+  public:
     CooldownSequencer(ThermalNetwork& net, GasHandlingSystem& ghs) : net_(net), ghs_(ghs) {}
     void startCooldown();
     void startWarmup();
@@ -19,7 +19,8 @@ public:
     FridgeState state() const { return state_; }
     double elapsed_s() const { return elapsed_; }
     const ThermalSnapshot& last() const { return last_; }
-private:
+
+  private:
     ThermalNetwork& net_;
     GasHandlingSystem& ghs_;
     FridgeState state_ = FridgeState::Warm;

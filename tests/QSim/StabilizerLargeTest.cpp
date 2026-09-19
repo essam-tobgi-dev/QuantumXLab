@@ -1,9 +1,9 @@
 // Spec 07 §4, T09 §1.2 — stabilizer backend on large registers (wider than a 64-bit mask), Bell
 // generators, tableau export, clone independence and argument validation.
 #include "Circuits.hpp"
+#include <algorithm>
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <algorithm>
 #include <cmath>
 
 using namespace qtest;
@@ -11,9 +11,12 @@ using Catch::Approx;
 
 namespace {
 // MSB-first label of an n-qubit Pauli string with the given letters (index = qubit).
-std::string wideLabel(std::uint32_t n, std::initializer_list<std::pair<std::uint32_t, char>> letters, char fill = 'I') {
+std::string wideLabel(std::uint32_t n,
+                      std::initializer_list<std::pair<std::uint32_t, char>> letters,
+                      char fill = 'I') {
     std::string s(n, fill);
-    for (auto [qb, c] : letters) s[n - 1 - qb] = c;
+    for (auto [qb, c] : letters)
+        s[n - 1 - qb] = c;
     return s;
 }
 } // namespace
@@ -34,13 +37,14 @@ TEST_CASE("Stabilizer: a 2000-qubit GHZ state measures all-equal bits") {
         REQUIRE(out.has_value());
         REQUIRE(out->bits.size() == n);
         const auto first = out->bits[0];
-        REQUIRE(std::all_of(out->bits.begin(), out->bits.end(), [first](std::uint8_t b) { return b == first; }));
+        REQUIRE(std::all_of(out->bits.begin(), out->bits.end(),
+                            [first](std::uint8_t b) { return b == first; }));
         REQUIRE(out->probability == 0.5);
     }
     // Expectations of Pauli strings wider than 64 qubits (the former 64-bit mask overflow): the GHZ
     // generators of T09 §1.2 and products of them.
-    auto zz = PauliString::fromQubits(n, std::vector<std::pair<QubitIndex, char>>{
-                                             {QubitIndex{5}, 'Z'}, {QubitIndex{1234}, 'Z'}});
+    auto zz = PauliString::fromQubits(
+        n, std::vector<std::pair<QubitIndex, char>>{{QubitIndex{5}, 'Z'}, {QubitIndex{1234}, 'Z'}});
     REQUIRE(st.expectation(zz).value() == 1.0);
     auto zzParsed = PauliString::parse(wideLabel(n, {{5, 'Z'}, {1234, 'Z'}}));
     REQUIRE(zzParsed.has_value());
@@ -49,14 +53,19 @@ TEST_CASE("Stabilizer: a 2000-qubit GHZ state measures all-equal bits") {
     REQUIRE(st.expectation(*PauliString::parse(wideLabel(n, {{1999, 'Z'}}))).value() == 0.0);
     REQUIRE(st.expectation(*PauliString::parse(wideLabel(n, {}, 'X'))).value() == 1.0);
     // Y⊗Y on two GHZ qubits among X's: i·i = −1 on both branches.
-    REQUIRE(st.expectation(*PauliString::parse(wideLabel(n, {{0, 'Y'}, {1777, 'Y'}}, 'X'))).value() == -1.0);
-    REQUIRE(st.expectation(*PauliString::parse("-" + wideLabel(n, {{70, 'Z'}, {1500, 'Z'}}))).value() == -1.0);
+    REQUIRE(
+        st.expectation(*PauliString::parse(wideLabel(n, {{0, 'Y'}, {1777, 'Y'}}, 'X'))).value() ==
+        -1.0);
+    REQUIRE(
+        st.expectation(*PauliString::parse("-" + wideLabel(n, {{70, 'Z'}, {1500, 'Z'}}))).value() ==
+        -1.0);
     REQUIRE_FALSE(zz.isIdentity());
     REQUIRE(PauliString::parse(wideLabel(n, {{1900, 'X'}}))->isIdentity() == false);
     REQUIRE(st.entanglementEntropy(q({0, 1, 2})) == Approx(1.0).margin(1e-12));
     REQUIRE(std::isnan(st.entanglementEntropy(q({3, 3}))));
     REQUIRE(std::isnan(st.entanglementEntropy(q({n}))));
-    REQUIRE(st.bytesAllocated() >= std::size_t{2} * n * 2 * ((n + 63) / 64) * sizeof(std::uint64_t));
+    REQUIRE(st.bytesAllocated() >=
+            std::size_t{2} * n * 2 * ((n + 63) / 64) * sizeof(std::uint64_t));
 }
 
 TEST_CASE("Stabilizer: Bell generators, tableau export and clone independence") {
@@ -145,6 +154,7 @@ TEST_CASE("Stabilizer: argument validation, empty requests and reset") {
         StabilizerBackend r = st;
         core::Random rr(seed);
         REQUIRE(r.reset(allQubits(3), rr).has_value());
-        for (const char* label : {"IIZ", "IZI", "ZII"}) REQUIRE(r.expectation(*PauliString::parse(label)).value() == 1.0);
+        for (const char* label : {"IIZ", "IZI", "ZII"})
+            REQUIRE(r.expectation(*PauliString::parse(label)).value() == 1.0);
     }
 }

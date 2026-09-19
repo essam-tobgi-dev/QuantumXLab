@@ -15,9 +15,15 @@ inline ImU32 toU32(const glm::vec4& c) {
 inline ImU32 toU32(const glm::vec3& c, float alpha = 1.0f) {
     return ImGui::ColorConvertFloat4ToU32(ImVec4(c.r, c.g, c.b, alpha));
 }
-inline ImVec4 toImVec4(const glm::vec4& c) { return ImVec4(c.r, c.g, c.b, c.a); }
-inline ImVec2 toImVec2(glm::vec2 v) { return ImVec2(v.x, v.y); }
-inline glm::vec2 toGlm(ImVec2 v) { return {v.x, v.y}; }
+inline ImVec4 toImVec4(const glm::vec4& c) {
+    return ImVec4(c.r, c.g, c.b, c.a);
+}
+inline ImVec2 toImVec2(glm::vec2 v) {
+    return ImVec2(v.x, v.y);
+}
+inline glm::vec2 toGlm(ImVec2 v) {
+    return {v.x, v.y};
+}
 
 // ImGui text helpers over string_view (ImGui wants a begin/end pair, not a terminator).
 inline void text(const glm::vec4& color, std::string_view s) {
@@ -25,12 +31,15 @@ inline void text(const glm::vec4& color, std::string_view s) {
     ImGui::TextUnformatted(s.data(), s.data() + s.size());
     ImGui::PopStyleColor();
 }
-inline ImVec2 textSize(std::string_view s) { return ImGui::CalcTextSize(s.data(), s.data() + s.size()); }
+inline ImVec2 textSize(std::string_view s) {
+    return ImGui::CalcTextSize(s.data(), s.data() + s.size());
+}
 inline void drawText(ImDrawList* dl, ImVec2 pos, const glm::vec4& color, std::string_view s) {
     dl->AddText(pos, toU32(color), s.data(), s.data() + s.size());
 }
 // Text centred on `center`.
-inline void drawTextCentered(ImDrawList* dl, ImVec2 center, const glm::vec4& color, std::string_view s) {
+inline void drawTextCentered(ImDrawList* dl, ImVec2 center, const glm::vec4& color,
+                             std::string_view s) {
     const ImVec2 sz = textSize(s);
     drawText(dl, ImVec2(center.x - 0.5f * sz.x, center.y - 0.5f * sz.y), color, s);
 }

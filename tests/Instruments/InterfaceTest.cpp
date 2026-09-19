@@ -16,7 +16,8 @@ TEST_CASE("settings outside the schema are clamped, stored and reported") {
     b.bus = &bus;
     gen.bind(b);
     std::vector<SettingReport> posted;
-    auto sub = bus.subscribe<SettingClamped>([&](const SettingClamped& e) { posted.push_back(e.report); });
+    auto sub =
+        bus.subscribe<SettingClamped>([&](const SettingClamped& e) { posted.push_back(e.report); });
 
     // In range: stored as is, nothing reported. Frequency resolution is 1 Hz (silent rounding).
     REQUIRE(gen.set("frequency", 6.1234567894e9));
@@ -73,7 +74,8 @@ TEST_CASE("state machine: Off -> Idle -> Armed -> Acquiring -> Idle, with events
     b.bus = &bus;
     awg.bind(b);
     std::vector<std::pair<State, State>> transitions;
-    auto sub = bus.subscribe<StateChanged>([&](const StateChanged& e) { transitions.push_back({e.from, e.to}); });
+    auto sub = bus.subscribe<StateChanged>(
+        [&](const StateChanged& e) { transitions.push_back({e.from, e.to}); });
 
     REQUIRE(awg.state() == State::Off);
     auto off = acquire(awg, "ch[0].waveform");
@@ -102,9 +104,11 @@ TEST_CASE("state machine: Off -> Idle -> Armed -> Acquiring -> Idle, with events
 
     bus.drain();
     const std::vector<std::pair<State, State>> want = {
-        {State::Off, State::Idle},       {State::Idle, State::Armed},     {State::Armed, State::Acquiring},
-        {State::Acquiring, State::Idle}, {State::Idle, State::Acquiring}, {State::Acquiring, State::Idle},
-        {State::Idle, State::Armed},     {State::Armed, State::Idle},     {State::Idle, State::Off}};
+        {State::Off, State::Idle},        {State::Idle, State::Armed},
+        {State::Armed, State::Acquiring}, {State::Acquiring, State::Idle},
+        {State::Idle, State::Acquiring},  {State::Acquiring, State::Idle},
+        {State::Idle, State::Armed},      {State::Armed, State::Idle},
+        {State::Idle, State::Off}};
     REQUIRE(transitions == want);
     REQUIRE(acquire(awg, "no_such_channel").error().code == err::UnknownChannel);
 }
@@ -122,7 +126,8 @@ TEST_CASE("AWG memory overflow is a Fault carrying the sample count, cleared by 
     REQUIRE(awg.set("sample_rate", 1e9));
     REQUIRE(awg.set("memory_samples", std::int64_t{4096}));
     std::vector<std::string> faults;
-    auto sub = bus.subscribe<InstrumentFault>([&](const InstrumentFault& f) { faults.push_back(f.message); });
+    auto sub = bus.subscribe<InstrumentFault>(
+        [&](const InstrumentFault& f) { faults.push_back(f.message); });
 
     auto t = acquire(awg, "ch[0].waveform");
     REQUIRE_FALSE(t);
@@ -133,7 +138,8 @@ TEST_CASE("AWG memory overflow is a Fault carrying the sample count, cleared by 
     auto again = acquire(awg, "ch[0].waveform");
     REQUIRE(again.error().code == err::Faulted);
     REQUIRE(again.error().message.find("8000 samples") != std::string::npos);
-    REQUIRE(awg.execute(Command::of(Command::Kind::ClearFault))); // nothing changed: the next acquire faults again
+    REQUIRE(awg.execute(
+        Command::of(Command::Kind::ClearFault))); // nothing changed: the next acquire faults again
     REQUIRE(acquire(awg, "ch[0].waveform").error().code == err::MemoryOverflow);
     bus.drain();
     REQUIRE(faults.size() == 2);
@@ -168,10 +174,13 @@ TEST_CASE("settings schemas and values round-trip through JSON") {
         REQUIRE(back);
         REQUIRE(*back == schema);
         REQUIRE(back->find("refresh_hz") != nullptr);
-        REQUIRE(std::get<double>(back->find("refresh_hz")->defaultValue) == 10.0); // spec 12 §1 default
+        REQUIRE(std::get<double>(back->find("refresh_hz")->defaultValue) ==
+                10.0); // spec 12 §1 default
     }
-    REQUIRE(SettingSchema::fromJson(core::Json::parse(R"({"title":"x"})")).error().code == err::BadSchema);
-    auto noDefault = SettingSchema::fromJson(core::Json::parse(R"({"properties":{"f":{"type":"number"}}})"));
+    REQUIRE(SettingSchema::fromJson(core::Json::parse(R"({"title":"x"})")).error().code ==
+            err::BadSchema);
+    auto noDefault =
+        SettingSchema::fromJson(core::Json::parse(R"({"properties":{"f":{"type":"number"}}})"));
     REQUIRE(noDefault.error().message.find("properties.f.default") != std::string::npos);
 
     Generator a, b;

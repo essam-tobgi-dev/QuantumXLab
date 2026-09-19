@@ -15,9 +15,14 @@ int main(int argc, const char* const* argv) {
         return 2;
     }
     switch (options->mode) {
-    case Mode::Help: std::cout << usageText(); return 0;
-    case Mode::Version: std::cout << versionText() << "\n"; return 0;
-    default: break;
+    case Mode::Help:
+        std::cout << usageText();
+        return 0;
+    case Mode::Version:
+        std::cout << versionText() << "\n";
+        return 0;
+    default:
+        break;
     }
     // Spec 03 §6: `--assets <dir>` is the first of the resolution order; `core::assetDir()` reads
     // `QXL_ASSETS`, so the override is exported before anything asks for an asset.
@@ -37,20 +42,25 @@ int main(int argc, const char* const* argv) {
     }
 
     switch (options->mode) {
-    case Mode::Run: return runHeadless(*options, std::cout, std::cerr);
+    case Mode::Run:
+        return runHeadless(*options, std::cout, std::cerr);
     case Mode::SelfTest: {
         const Result<SelfTestReport> report = runSelfTest(*options, std::cout);
         if (!report) {
             std::cerr << "quantumxlab: " << report.error().format() << "\n";
             return 1;
         }
-        for (const std::string& note : report->notes) std::cout << "note: " << note << "\n";
-        std::cout << report->screenshots.size() << " screenshots, " << report->examples.size() << " examples\n";
+        for (const std::string& note : report->notes)
+            std::cout << "note: " << note << "\n";
+        std::cout << report->screenshots.size() << " screenshots, " << report->examples.size()
+                  << " examples\n";
         return report->ok() ? 0 : 1;
     }
-    case Mode::Gui: return runGui(*options);
+    case Mode::Gui:
+        return runGui(*options);
     case Mode::Help:
-    case Mode::Version: break;
+    case Mode::Version:
+        break;
     }
     return 0;
 }

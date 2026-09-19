@@ -1,8 +1,8 @@
 #pragma once
 // Spec 07 §1 — common types of the simulation engine.
 #include "Core/Error.hpp"
-#include "Core/StrongType.hpp"
 #include "Core/Fidelity.hpp"
+#include "Core/StrongType.hpp"
 #include "Numerics/Matrix.hpp"
 #include <cstdint>
 #include <optional>
@@ -14,9 +14,9 @@
 
 namespace qlab::qsim {
 
-using qlab::FidelityClass; // spec 00 §5 (Core vocabulary)
 using num::Complex;
 using num::Matrix;
+using qlab::FidelityClass; // spec 00 §5 (Core vocabulary)
 
 enum class Kind { StateVector, DensityMatrix, Stabilizer, Lindblad, Trajectories };
 std::string_view kindName(Kind k);
@@ -39,7 +39,15 @@ using Kraus = std::vector<Matrix>;
 // Gate classification used for kernel fast paths (spec 07 §2.2–2.3). Assigned by the IR, never by
 // inspecting matrix entries at run time.
 enum class GateClass : std::uint8_t {
-    Generic, Identity, Diagonal, PauliX, PauliZ, Cnot, Cz, Swap, Diagonal2
+    Generic,
+    Identity,
+    Diagonal,
+    PauliX,
+    PauliZ,
+    Cnot,
+    Cz,
+    Swap,
+    Diagonal2
 };
 
 // A gate ready for a backend: matrix (2^k × 2^k), little-endian targets, optional controls.
@@ -52,15 +60,17 @@ struct GateOp {
     std::uint64_t opIndex = 0;
 };
 
-// Pauli string. Label is written most-significant qubit first: "ZI" = Z on q1, I on q0 (T01 conventions).
-// Any width is allowed (the stabilizer register holds up to 10^4 qubits); op(q) is authoritative.
+// Pauli string. Label is written most-significant qubit first: "ZI" = Z on q1, I on q0 (T01
+// conventions). Any width is allowed (the stabilizer register holds up to 10^4 qubits); op(q) is
+// authoritative.
 class PauliString {
-public:
+  public:
     PauliString() = default;
     // Parse "IXYZ" (with optional leading sign/phase "-", "+", "i", "-i").
     static Result<PauliString> parse(std::string_view label);
     // From explicit per-qubit letters, index = qubit. Terms on qubits ≥ n are ignored.
-    static PauliString fromQubits(std::size_t n, std::span<const std::pair<QubitIndex, char>> terms, Complex phase = 1.0);
+    static PauliString fromQubits(std::size_t n, std::span<const std::pair<QubitIndex, char>> terms,
+                                  Complex phase = 1.0);
     std::size_t size() const { return ops_.size(); }
     char op(std::size_t qubit) const { return ops_[qubit]; } // 'I','X','Y','Z'
     Complex phase() const { return phase_; }
@@ -70,7 +80,8 @@ public:
     std::uint64_t xMask() const { return x_; }
     std::uint64_t zMask() const { return z_; }
     bool isIdentity() const;
-private:
+
+  private:
     void setLetter(std::size_t qubit, char c);
     std::vector<char> ops_;
     std::uint64_t x_ = 0, z_ = 0;
@@ -79,11 +90,12 @@ private:
 
 struct Outcome {
     std::vector<std::uint8_t> bits; // bits[i] = outcome of qubits[i] in the order requested
-    double probability = 1.0;      // joint probability of this branch
+    double probability = 1.0;       // joint probability of this branch
 };
 
-using Probabilities = std::vector<double>;           // index = little-endian over the requested qubits
-using Counts = std::unordered_map<std::string, std::uint64_t>; // key: bitstring MSB-first over requested qubits
+using Probabilities = std::vector<double>; // index = little-endian over the requested qubits
+using Counts = std::unordered_map<std::string,
+                                  std::uint64_t>; // key: bitstring MSB-first over requested qubits
 
 struct ReducedState {
     std::vector<QubitIndex> qubits;
@@ -93,7 +105,7 @@ struct ReducedState {
 // Stabilizer tableau export (spec 07 §1.1).
 struct TableauExport {
     std::uint32_t n = 0;
-    std::vector<std::string> stabilizers;   // n generators, "+ZZI" style
+    std::vector<std::string> stabilizers; // n generators, "+ZZI" style
     std::vector<std::string> destabilizers;
 };
 
@@ -113,9 +125,9 @@ struct Snapshot {
     double simTimePs = 0.0;
     std::optional<std::vector<Complex>> amplitudes; // Simulator-only
     std::optional<std::vector<double>> probabilities;
-    std::optional<Matrix> densityMatrix;            // Simulator-only (DM/Lindblad)
-    std::vector<ReducedState> reduced;              // Simulator-only
-    std::optional<TableauExport> tableau;           // Simulator-only
+    std::optional<Matrix> densityMatrix;  // Simulator-only (DM/Lindblad)
+    std::vector<ReducedState> reduced;    // Simulator-only
+    std::optional<TableauExport> tableau; // Simulator-only
     FidelityClass cls = FidelityClass::Exact;
 };
 
@@ -132,7 +144,7 @@ inline constexpr ErrorCode BadPauli = ErrorCode::QSim_ + 8;
 } // namespace err
 
 // Helpers shared by backends.
-std::string bitsToKey(std::span<const std::uint8_t> bits);          // MSB-first string
+std::string bitsToKey(std::span<const std::uint8_t> bits); // MSB-first string
 Counts countsFromIndices(std::span<const std::size_t> idx, std::size_t nBits);
 // Histogram form: hist[i] = number of shots that produced basis index i.
 Counts countsFromHistogram(std::span<const std::size_t> hist, std::size_t nBits);

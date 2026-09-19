@@ -9,17 +9,21 @@ namespace {
 // Strides for a little-endian site layout: site 0 has stride 1.
 std::vector<std::size_t> strides(std::span<const std::uint32_t> dims) {
     std::vector<std::size_t> s(dims.size(), 1);
-    for (std::size_t k = 1; k < dims.size(); ++k) s[k] = s[k - 1] * dims[k - 1];
+    for (std::size_t k = 1; k < dims.size(); ++k)
+        s[k] = s[k - 1] * dims[k - 1];
     return s;
 }
 std::size_t totalDim(std::span<const std::uint32_t> dims) {
     std::size_t d = 1;
-    for (auto x : dims) d *= x;
+    for (auto x : dims)
+        d *= x;
     return d;
 }
 } // namespace
 
-std::size_t SystemModelSpec::dimension() const { return totalDim(siteDims); }
+std::size_t SystemModelSpec::dimension() const {
+    return totalDim(siteDims);
+}
 
 SparseMatrix siteOperator(std::span<const std::uint32_t> dims, std::uint32_t site,
                           num::ConstMatrixView local) {
@@ -35,7 +39,8 @@ SparseMatrix siteOperator(std::span<const std::uint32_t> dims, std::uint32_t sit
             for (std::size_t r = 0; r < d; ++r)
                 for (std::size_t c = 0; c < d; ++c) {
                     Complex v = local(r, c);
-                    if (v == Complex(0.0, 0.0)) continue;
+                    if (v == Complex(0.0, 0.0))
+                        continue;
                     t.push_back({low + stride * r + d * stride * high,
                                  low + stride * c + d * stride * high, v});
                 }
@@ -45,14 +50,16 @@ SparseMatrix siteOperator(std::span<const std::uint32_t> dims, std::uint32_t sit
 SparseMatrix siteAnnihilate(std::span<const std::uint32_t> dims, std::uint32_t site) {
     const std::size_t d = dims[site];
     num::Matrix a(d, d);
-    for (std::size_t n = 1; n < d; ++n) a(n - 1, n) = std::sqrt(static_cast<double>(n));
+    for (std::size_t n = 1; n < d; ++n)
+        a(n - 1, n) = std::sqrt(static_cast<double>(n));
     return siteOperator(dims, site, a);
 }
 
 SparseMatrix siteNumber(std::span<const std::uint32_t> dims, std::uint32_t site) {
     const std::size_t d = dims[site];
     num::Matrix n(d, d);
-    for (std::size_t k = 0; k < d; ++k) n(k, k) = static_cast<double>(k);
+    for (std::size_t k = 0; k < d; ++k)
+        n(k, k) = static_cast<double>(k);
     return siteOperator(dims, site, n);
 }
 
@@ -60,7 +67,8 @@ SparseMatrix siteProjector(std::span<const std::uint32_t> dims, std::uint32_t si
                            std::uint32_t level) {
     const std::size_t d = dims[site];
     num::Matrix p(d, d);
-    if (level < d) p(level, level) = 1.0;
+    if (level < d)
+        p(level, level) = 1.0;
     return siteOperator(dims, site, p);
 }
 

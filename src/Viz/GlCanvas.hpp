@@ -22,8 +22,9 @@
 namespace qlab::viz {
 
 struct GlBackendDesc {
-    glm::vec3 background{0.086f, 0.102f, 0.125f}; // display colour behind every canvas (theme bg.panel)
-    int samples = 4;                              // spec 21 §1.2: 4× MSAA
+    glm::vec3 background{0.086f, 0.102f,
+                         0.125f}; // display colour behind every canvas (theme bg.panel)
+    int samples = 4;              // spec 21 §1.2: 4× MSAA
 };
 
 // Why ONE renderer for all canvases rather than one per view: `gfx::Renderer` binds its five UBOs
@@ -34,7 +35,7 @@ struct GlBackendDesc {
 // its image. The same defect applies between this backend and the lab viewport's renderer — that
 // has to be fixed in Graphics (re-`bindBase` the UBOs at the start of each frame), not here.
 class GlBackend {
-public:
+  public:
     // Needs a current GL context (the host's window, or a hidden one in tests). Create one per
     // context; re-create it when the theme's panel colour changes (the clear colour is fixed).
     static Result<std::unique_ptr<GlBackend>> create(const GlBackendDesc& desc = {});
@@ -46,18 +47,22 @@ public:
     // Unit meshes. `sphere`, `box` and `disc` carry baked directional shading in their vertex
     // colours and are drawn unlit, so a phase hue or a colormap value reaches the screen exactly
     // (math::displayToScene undoes the renderer's tone map). `cylinder` and `cone` are lit.
-    const gfx::Mesh& sphere() const { return sphere_; }      // radius 1
-    const gfx::Mesh& sphereLow() const { return sphereLow_; } // radius 1, few triangles (many nodes)
-    const gfx::Mesh& box() const { return box_; }            // unit cube, base at y = 0: x,z ∈ [−½, ½], y ∈ [0, 1]
-    const gfx::Mesh& disc() const { return disc_; }          // radius 1 in the xz plane, facing +y
-    const gfx::Mesh& cylinder() const { return cylinder_; }  // radius 1, y ∈ [0, 1]
-    const gfx::Mesh& cone() const { return cone_; }          // base radius 1 at y = 0, apex at y = 1
+    const gfx::Mesh& sphere() const { return sphere_; } // radius 1
+    const gfx::Mesh& sphereLow() const {
+        return sphereLow_;
+    } // radius 1, few triangles (many nodes)
+    const gfx::Mesh& box() const {
+        return box_;
+    } // unit cube, base at y = 0: x,z ∈ [−½, ½], y ∈ [0, 1]
+    const gfx::Mesh& disc() const { return disc_; }         // radius 1 in the xz plane, facing +y
+    const gfx::Mesh& cylinder() const { return cylinder_; } // radius 1, y ∈ [0, 1]
+    const gfx::Mesh& cone() const { return cone_; }         // base radius 1 at y = 0, apex at y = 1
 
     // Scene-linear colour that the renderer shows as the display colour `srgb`.
     static glm::vec4 exact(const glm::vec4& srgb);
     static glm::vec4 exact(const glm::vec3& srgb, float alpha = 1.0f);
 
-private:
+  private:
     GlBackend() = default;
     GlBackendDesc desc_;
     std::unique_ptr<gfx::Renderer> renderer_;
@@ -65,7 +70,7 @@ private:
 };
 
 class GlCanvas {
-public:
+  public:
     // Submits the scene between the renderer's beginFrame and endFrame.
     using SceneFn = std::function<void(gfx::Renderer&, GlBackend&)>;
 
@@ -77,9 +82,10 @@ public:
     void invalidate() { dirty_ = true; }
     bool dirty() const { return dirty_; }
 
-    // Renders the scene at widthPx × heightPx FRAMEBUFFER pixels (panel size × DPI scale) and copies
-    // the tone-mapped result into this canvas's texture. Returns whether it rendered.
-    Result<bool> render(GlBackend& gl, int widthPx, int heightPx, const SceneFn& scene, double timeS = 0.0);
+    // Renders the scene at widthPx × heightPx FRAMEBUFFER pixels (panel size × DPI scale) and
+    // copies the tone-mapped result into this canvas's texture. Returns whether it rendered.
+    Result<bool> render(GlBackend& gl, int widthPx, int heightPx, const SceneFn& scene,
+                        double timeS = 0.0);
     // Renders unconditionally and writes the image as PNG (spec 21 §3.13 export, 23 §8).
     Status renderToPng(GlBackend& gl, int widthPx, int heightPx, const SceneFn& scene,
                        const std::filesystem::path& png);
@@ -92,7 +98,7 @@ public:
     // Precondition: hasImage(). (Tests read pixels back through it.)
     const gfx::Framebuffer& framebuffer() const { return *fbo_; }
 
-private:
+  private:
     Status ensureTarget(int w, int h);
     gfx::Camera camera_;
     gfx::Texture2D color_;
@@ -107,7 +113,9 @@ private:
 // Quantum frame → renderer world frame. The Bloch and Q-spheres are drawn with z up (|0⟩ at the
 // top), x toward the viewer and y to the right; gfx is y-up, so (x, y, z) ↦ (y, z, x) — a proper
 // rotation, handedness preserved.
-inline glm::dvec3 quantumToWorld(const glm::dvec3& q) { return {q.y, q.z, q.x}; }
+inline glm::dvec3 quantumToWorld(const glm::dvec3& q) {
+    return {q.y, q.z, q.x};
+}
 
 // Model matrix that maps the unit +y axis onto the segment a → b with the given radius (for the
 // `cylinder` and `cone` meshes).

@@ -12,19 +12,44 @@ SettingSchema EntanglementProbe::makeSchema() {
     s.id = "instr/probe_entanglement.schema.json";
     s.instrument = "probe_entanglement";
     s.settings = {
-        SettingSpec::text("partitions", "", "Subsystems A of the `bipartition` channel, e.g. \"0;0,1;2,3\" (empty: every single qubit)"),
-        SettingSpec::text("qubits", "", "Qubits of the pair channels (empty: all; required above 20 qubits)"),
+        SettingSpec::text("partitions", "",
+                          "Subsystems A of the `bipartition` channel, e.g. \"0;0,1;2,3\" (empty: "
+                          "every single qubit)"),
+        SettingSpec::text("qubits", "",
+                          "Qubits of the pair channels (empty: all; required above 20 qubits)"),
         refreshRateSetting(),
     };
     return s;
 }
 
-EntanglementProbe::EntanglementProbe(std::uint32_t index) : ProbeBase({"probe_entanglement", index}, makeSchema()) {
+EntanglementProbe::EntanglementProbe(std::uint32_t index)
+    : ProbeBase({"probe_entanglement", index}, makeSchema()) {
     setProbeChannels({
         {{}, "entropy", "", "", FidelityClass::Exact, false, true, "S(ρ_q) in bits per qubit"},
-        {{}, "bipartition", "", "", FidelityClass::Exact, false, true, "S(ρ_A) in bits for each selected subsystem A"},
-        {{}, "concurrence", "", "", FidelityClass::Exact, false, true, "Concurrence of qubit pairs; aux `i`, `j`"},
-        {{}, "mutual_information", "", "", FidelityClass::Exact, false, true, "I(i:j) = S_i + S_j − S_ij in bits; aux `i`, `j`"},
+        {{},
+         "bipartition",
+         "",
+         "",
+         FidelityClass::Exact,
+         false,
+         true,
+         "S(ρ_A) in bits for each selected subsystem A"},
+        {{},
+         "concurrence",
+         "",
+         "",
+         FidelityClass::Exact,
+         false,
+         true,
+         "Concurrence of qubit pairs; aux `i`, `j`"},
+        {{},
+         "mutual_information",
+         "",
+         "",
+         FidelityClass::Exact,
+         false,
+         true,
+         "I(i:j) = S_i + S_j − S_ij in bits; aux `i`, `j`"},
     });
 }
 
@@ -50,17 +75,21 @@ Result<Trace> EntanglementProbe::doAcquire(const ChannelDesc& channel, AcquireCo
         std::string text = ctx.settings.text("partitions");
         std::vector<std::vector<std::uint32_t>> sets;
         if (text.empty())
-            for (std::uint32_t q = 0; q < s.nQubits; ++q) sets.push_back({q});
+            for (std::uint32_t q = 0; q < s.nQubits; ++q)
+                sets.push_back({q});
         std::string_view rest = text;
         while (!rest.empty()) {
             const auto semi = rest.find(';');
             const std::string_view item = rest.substr(0, semi);
             if (!item.empty()) {
                 auto set = parseQubitList(item, s.nQubits);
-                if (!set) return fail(err::BadInput, id().toString() + ": partitions: " + set.error().message);
+                if (!set)
+                    return fail(err::BadInput,
+                                id().toString() + ": partitions: " + set.error().message);
                 sets.push_back(std::move(*set));
             }
-            if (semi == std::string_view::npos) break;
+            if (semi == std::string_view::npos)
+                break;
             rest.remove_prefix(semi + 1);
         }
         for (std::size_t k = 0; k < sets.size(); ++k) {
@@ -68,19 +97,24 @@ Result<Trace> EntanglementProbe::doAcquire(const ChannelDesc& channel, AcquireCo
             t.x.push_back(static_cast<double>(k));
             t.y.push_back(e);
             std::string label = "S(";
-            for (std::size_t j = 0; j < sets[k].size(); ++j) label += (j ? "," : "") + std::to_string(sets[k][j]);
+            for (std::size_t j = 0; j < sets[k].size(); ++j)
+                label += (j ? "," : "") + std::to_string(sets[k][j]);
             t.markers.push_back({static_cast<double>(k), e, label + ")", e, 0.0, "bit"});
         }
         return t;
     }
-    // Pair channels: every pair of the selected qubits (spec 21 §3.8: all pairs only up to 20 qubits).
+    // Pair channels: every pair of the selected qubits (spec 21 §3.8: all pairs only up to 20
+    // qubits).
     auto qubits = parseQubitList(ctx.settings.text("qubits"), s.nQubits);
-    if (!qubits) return fail(err::BadInput, id().toString() + ": qubits: " + qubits.error().message);
+    if (!qubits)
+        return fail(err::BadInput, id().toString() + ": qubits: " + qubits.error().message);
     if (qubits->size() > kMaxPairQubits)
-        return fail(err::BadInput, std::format("{}: {} qubits selected; pick a subset of at most {} in `qubits`", id().toString(),
-                                               qubits->size(), kMaxPairQubits));
+        return fail(err::BadInput,
+                    std::format("{}: {} qubits selected; pick a subset of at most {} in `qubits`",
+                                id().toString(), qubits->size(), kMaxPairQubits));
     if (s.levels != 2 && channel.name == "concurrence")
-        return fail(err::BadInput, id().toString() + ": concurrence is defined for two-level sites");
+        return fail(err::BadInput,
+                    id().toString() + ": concurrence is defined for two-level sites");
     auto& ai = t.aux["i"];
     auto& aj = t.aux["j"];
     std::vector<double> single(s.nQubits, 0.0);

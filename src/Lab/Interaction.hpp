@@ -2,8 +2,8 @@
 // Spec 17 §7 — interaction state of the laboratory viewport, entirely headless: hover and tooltip,
 // selection and breadcrumbs, focus, exploded view, cutaway, X-ray, layer toggles,
 // search-to-select and camera bookmarks.
-#include "Graphics/Camera.hpp"
 #include "Data/Fidelity.hpp"
+#include "Graphics/Camera.hpp"
 #include "Lab/BindingRegistry.hpp"
 #include "Lab/Scene.hpp"
 #include <array>
@@ -15,7 +15,7 @@ namespace qlab::lab {
 
 struct SearchHit {
     ComponentId id{0};
-    std::string label;      // the instance name and component name that matched
+    std::string label; // the instance name and component name that matched
     double score = 0.0;
     bool operator==(const SearchHit& o) const { return id == o.id; }
 };
@@ -35,25 +35,25 @@ struct ViewState {
 // The hover card (spec 17 §7.1): what the component is, what it is for, and what it reads now.
 struct Tooltip {
     struct LiveRow {
-        std::string text;           // "field: value unit"
+        std::string text; // "field: value unit"
         data::FidelityClass cls = data::FidelityClass::Model;
         bool simulatorOnly = false;
     };
     ComponentId id{0};
-    std::string name;               // descriptor name, e.g. "HEMT low-noise amplifier"
-    std::string displayName;        // this instance, e.g. "Attenuator 20 dB"
-    std::string category;           // "stage", "amplifier", …
-    std::string text;               // descriptor one-line tooltip (spec 17 §4)
-    std::string function;           // the descriptor's `function` paragraph: purpose and physics
-    std::string theory;             // first theory anchor, e.g. "T08#1.2-cooling-power"; may be empty
-    std::vector<LiveRow> liveRows;  // up to three live spec-sheet rows, in sheet order
-    std::string liveRow;            // the first of them (kept for callers that show one line)
+    std::string name;        // descriptor name, e.g. "HEMT low-noise amplifier"
+    std::string displayName; // this instance, e.g. "Attenuator 20 dB"
+    std::string category;    // "stage", "amplifier", …
+    std::string text;        // descriptor one-line tooltip (spec 17 §4)
+    std::string function;    // the descriptor's `function` paragraph: purpose and physics
+    std::string theory;      // first theory anchor, e.g. "T08#1.2-cooling-power"; may be empty
+    std::vector<LiveRow> liveRows; // up to three live spec-sheet rows, in sheet order
+    std::string liveRow;           // the first of them (kept for callers that show one line)
     data::FidelityClass cls = data::FidelityClass::Model;
     bool simulatorOnly = false;
 };
 
 class Interaction {
-public:
+  public:
     // `bindings` may be null; it is only used for tooltips and inspector values.
     explicit Interaction(Scene& scene, const BindingRegistry* bindings = nullptr);
 
@@ -90,7 +90,9 @@ public:
     bool cansVisible() const { return view_.cansVisible; }
     void setLayerVisible(Group g, bool on) { view_.layers[static_cast<std::size_t>(g)] = on; }
     // The layers a bookmark would restore (tests); empty outside a chip bookmark.
-    const std::optional<std::array<bool, kGroupCount>>& layersBeforeIsland() const { return layersBeforeIsland_; }
+    const std::optional<std::array<bool, kGroupCount>>& layersBeforeIsland() const {
+        return layersBeforeIsland_;
+    }
     bool layerVisible(Group g) const { return view_.layers[static_cast<std::size_t>(g)]; }
     bool nodeVisible(const Node& n) const;
 
@@ -113,7 +115,7 @@ public:
     Scene& scene() { return *scene_; }
     const Scene& scene() const { return *scene_; }
 
-private:
+  private:
     Scene* scene_;
     const BindingRegistry* bindings_;
     ViewState view_;

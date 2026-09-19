@@ -19,15 +19,15 @@ namespace qlab::report {
 // An image the caller already rendered (a circuit diagram, an ImPlot capture, an equation).
 struct ReportImage {
     std::string caption;
-    std::string mime = "image/png";      // "image/png" or "image/svg+xml"
-    std::vector<std::uint8_t> bytes;     // embedded as a data URI
-    std::string svg;                     // inline SVG text; used when `bytes` is empty
+    std::string mime = "image/png";  // "image/png" or "image/svg+xml"
+    std::vector<std::uint8_t> bytes; // embedded as a data URI
+    std::string svg;                 // inline SVG text; used when `bytes` is empty
     bool empty() const { return bytes.empty() && svg.empty(); }
 };
 
 struct ReportEquation {
     std::string caption;
-    std::string latex;                   // shown as text when no pre-rendered image is given
+    std::string latex; // shown as text when no pre-rendered image is given
     ReportImage image;
 };
 
@@ -43,10 +43,10 @@ struct StateView {
 // A calibration recipe's fit plot and its result table (spec 22 §6).
 struct RecipeFigure {
     std::string name;
-    ReportImage plot;                                 // pre-rendered; else `trace` is drawn inline
+    ReportImage plot; // pre-rendered; else `trace` is drawn inline
     data::Trace2D trace;
     data::FidelityClass cls = data::FidelityClass::Statistical;
-    std::vector<std::pair<std::string, std::string>> values;   // "T1", "87.3 us ± 1.2"
+    std::vector<std::pair<std::string, std::string>> values; // "T1", "87.3 us ± 1.2"
 };
 
 // A link into the theory corpus; `anchor` is a document-relative URL (`T04.html#4-2`).
@@ -65,16 +65,16 @@ struct RunReportInput {
     std::string project;
     const runtime::RunResult* run = nullptr;
     const compiler::CompiledProgram* compiled = nullptr;
-    std::string source;                  // program text (syntax-highlighted into the report)
-    std::string compiledQasmText;        // "" = produced from `compiled` by `compiledQasm`
-    ReportImage circuit;                 // circuit diagram, SVG preferred (spec 23 §8)
+    std::string source;           // program text (syntax-highlighted into the report)
+    std::string compiledQasmText; // "" = produced from `compiled` by `compiledQasm`
+    ReportImage circuit;          // circuit diagram, SVG preferred (spec 23 §8)
     std::vector<ReportImage> plots;
     std::vector<StateView> states;
     std::vector<ReportEquation> equations;
     std::vector<RecipeFigure> recipes;
     std::vector<TheoryLink> theory;
     std::vector<ReportSection> extra;
-    std::filesystem::path templatePath;  // "" = Assets/Report/run.html.tmpl
+    std::filesystem::path templatePath; // "" = Assets/Report/run.html.tmpl
 };
 
 // The template of §10 (from `templatePath`, or the shipped asset).

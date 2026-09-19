@@ -1,7 +1,7 @@
 // Spec 21 §3.14 — pulse viewer layout (see PulseLayout.hpp).
 #include "Viz/Layout/PulseLayout.hpp"
-#include "Viz/Math/Phase.hpp"
 #include "Pulse/Frames.hpp"
+#include "Viz/Math/Phase.hpp"
 #include <algorithm>
 #include <cmath>
 #include <map>
@@ -14,25 +14,38 @@ constexpr double kNsPerS = 1e9;
 // Row order of spec 21 §3.14 ("drive, flux, measure, acquire"), then by qubit index.
 int kindOrder(pulse::ChannelKind k) {
     switch (k) {
-    case pulse::ChannelKind::Drive: return 0;
-    case pulse::ChannelKind::Control: return 1;
-    case pulse::ChannelKind::Raman: return 1;
-    case pulse::ChannelKind::GlobalRaman: return 2;
-    case pulse::ChannelKind::Bichromatic: return 2;
-    case pulse::ChannelKind::Flux: return 3;
-    case pulse::ChannelKind::Pump: return 4;
-    case pulse::ChannelKind::Measure: return 5;
-    case pulse::ChannelKind::Detect: return 5;
-    case pulse::ChannelKind::Acquire: return 6;
+    case pulse::ChannelKind::Drive:
+        return 0;
+    case pulse::ChannelKind::Control:
+        return 1;
+    case pulse::ChannelKind::Raman:
+        return 1;
+    case pulse::ChannelKind::GlobalRaman:
+        return 2;
+    case pulse::ChannelKind::Bichromatic:
+        return 2;
+    case pulse::ChannelKind::Flux:
+        return 3;
+    case pulse::ChannelKind::Pump:
+        return 4;
+    case pulse::ChannelKind::Measure:
+        return 5;
+    case pulse::ChannelKind::Detect:
+        return 5;
+    case pulse::ChannelKind::Acquire:
+        return 6;
     }
     return 7;
 }
 
 bool selected(pulse::ChannelId ch, std::span<const QubitIndex> qubits) {
-    if (qubits.empty()) return true;
+    if (qubits.empty())
+        return true;
     for (QubitIndex q : qubits) {
-        if (ch.a == q.get()) return true;
-        if (pulse::channelKindArity(ch.kind) == 2 && ch.b == q.get()) return true;
+        if (ch.a == q.get())
+            return true;
+        if (pulse::channelKindArity(ch.kind) == 2 && ch.b == q.get())
+            return true;
     }
     // Channels without an index (global beams) are never filtered out: they act on every ion.
     return pulse::channelKindArity(ch.kind) == 0;
@@ -48,14 +61,16 @@ struct Accumulator {
 void addPlay(Accumulator& acc, const pulse::Play& p, std::int64_t dtPs) {
     const std::vector<num::Complex> wave = p.wf.sampled(dtPs);
     const std::int64_t start = p.t0.value / dtPs;
-    for (std::size_t k = 0; k < wave.size(); ++k) acc.samples[start + static_cast<std::int64_t>(k)] += wave[k];
+    for (std::size_t k = 0; k < wave.size(); ++k)
+        acc.samples[start + static_cast<std::int64_t>(k)] += wave[k];
 }
 
 // Decimation of spec 22 §2: the window is split into `columns` bins; each bin keeps its mean and
 // its extrema, so a fast oscillation reads as a band rather than an aliased line.
 void decimate(PulseTrace& t, std::size_t columns) {
     const std::size_t n = t.tNs.size();
-    if (n <= columns || columns < 2) return;
+    if (n <= columns || columns < 2)
+        return;
     PulseTrace out;
     out.decimated = true;
     out.sourceSamples = n;
@@ -64,7 +79,8 @@ void decimate(PulseTrace& t, std::size_t columns) {
     const double span = last > first ? last - first : 1.0;
     std::size_t k = 0;
     for (std::size_t c = 0; c < columns && k < n; ++c) {
-        const double edge = first + span * static_cast<double>(c + 1) / static_cast<double>(columns);
+        const double edge =
+            first + span * static_cast<double>(c + 1) / static_cast<double>(columns);
         const std::size_t begin = k;
         double sumR = 0.0, sumI = 0.0, loR = t.re[k], hiR = t.re[k], loI = t.im[k], hiI = t.im[k];
         while (k < n && (t.tNs[k] <= edge || k == begin)) {
@@ -92,7 +108,8 @@ void decimate(PulseTrace& t, std::size_t columns) {
 
 const PulseRow* PulseModel::row(pulse::ChannelId ch) const {
     for (const PulseRow& r : rows)
-        if (r.channel == ch) return &r;
+        if (r.channel == ch)
+            return &r;
     return nullptr;
 }
 
@@ -102,7 +119,8 @@ PulseModel buildPulseModel(const pulse::Schedule& schedule, const PulseLayoutOpt
     model.dtNs = static_cast<double>(dtPs) * 1e-3;
     model.durationNs = pulse::secondsOf(schedule.duration()) * kNsPerS;
     model.t0Ns = options.t0Ns;
-    model.t1Ns = options.t1Ns > options.t0Ns ? options.t1Ns : std::max(model.durationNs, model.dtNs);
+    model.t1Ns =
+        options.t1Ns > options.t0Ns ? options.t1Ns : std::max(model.durationNs, model.dtNs);
 
     const pulse::FrameTimeline frames(schedule);
     std::map<pulse::ChannelId, Accumulator> envelopes;
@@ -123,24 +141,29 @@ PulseModel buildPulseModel(const pulse::Schedule& schedule, const PulseLayoutOpt
 
     for (const pulse::Instruction& instr : schedule.instructions()) {
         const pulse::ChannelId ch = pulse::instructionChannel(instr);
-        if (!selected(ch, options.qubits)) continue;
+        if (!selected(ch, options.qubits))
+            continue;
         if (const auto* play = std::get_if<pulse::Play>(&instr)) {
             rowFor(ch);
             addPlay(envelopes[ch], *play, dtPs);
         } else if (const auto* op = std::get_if<pulse::FrameOp>(&instr)) {
             PulseRow& r = rowFor(ch);
             const double tNs = pulse::secondsOf(op->t0) * kNsPerS;
-            if (op->op == pulse::FrameOp::Op::SetPhase || op->op == pulse::FrameOp::Op::ShiftPhase) {
+            if (op->op == pulse::FrameOp::Op::SetPhase ||
+                op->op == pulse::FrameOp::Op::ShiftPhase) {
                 const double after = frames.phaseOps(ch, pulse::secondsOf(op->t0));
-                r.phaseJumps.push_back({tNs, math::wrapPhase(after),
-                                        op->op == pulse::FrameOp::Op::ShiftPhase ? op->value : 0.0});
+                r.phaseJumps.push_back(
+                    {tNs, math::wrapPhase(after),
+                     op->op == pulse::FrameOp::Op::ShiftPhase ? op->value : 0.0});
             } else {
-                r.frequencyChanges.push_back({tNs, frames.frequencyHz(ch, pulse::secondsOf(op->t0))});
+                r.frequencyChanges.push_back(
+                    {tNs, frames.frequencyHz(ch, pulse::secondsOf(op->t0))});
             }
         } else if (const auto* acq = std::get_if<pulse::Acquire>(&instr)) {
             PulseRow& r = rowFor(ch);
             r.acquisitions.push_back({pulse::secondsOf(acq->t0) * kNsPerS,
-                                      pulse::secondsOf(acq->t0 + acq->length) * kNsPerS, acq->memorySlot});
+                                      pulse::secondsOf(acq->t0 + acq->length) * kNsPerS,
+                                      acq->memorySlot});
         } else if (const auto* d = std::get_if<pulse::Delay>(&instr)) {
             rowFor(d->ch); // a channel that only idles still gets its row
         }
@@ -173,32 +196,42 @@ PulseModel buildPulseModel(const pulse::Schedule& schedule, const PulseLayoutOpt
                   [](const AcquireSpan& a, const AcquireSpan& b) { return a.t0Ns < b.t0Ns; });
         model.rows.push_back(std::move(row));
     }
-    std::stable_sort(model.rows.begin(), model.rows.end(), [](const PulseRow& a, const PulseRow& b) {
-        const int ka = kindOrder(a.channel.kind), kb = kindOrder(b.channel.kind);
-        if (ka != kb) return ka < kb;
-        if (a.channel.a != b.channel.a) return a.channel.a < b.channel.a;
-        return a.channel.b < b.channel.b;
-    });
+    std::stable_sort(model.rows.begin(), model.rows.end(),
+                     [](const PulseRow& a, const PulseRow& b) {
+                         const int ka = kindOrder(a.channel.kind), kb = kindOrder(b.channel.kind);
+                         if (ka != kb)
+                             return ka < kb;
+                         if (a.channel.a != b.channel.a)
+                             return a.channel.a < b.channel.a;
+                         return a.channel.b < b.channel.b;
+                     });
     return model;
 }
 
 std::optional<PulseReadout> readoutAt(const PulseModel& model, std::size_t row, double tNs) {
-    if (row >= model.rows.size()) return std::nullopt;
+    if (row >= model.rows.size())
+        return std::nullopt;
     const PulseRow& r = model.rows[row];
     PulseReadout out;
     out.tNs = tNs;
     out.frequencyHz = r.frequencyHz;
     for (const FrequencyMark& f : r.frequencyChanges)
-        if (f.tNs <= tNs) out.frequencyHz = f.frequencyHz;
+        if (f.tNs <= tNs)
+            out.frequencyHz = f.frequencyHz;
     for (const FrameMark& p : r.phaseJumps)
-        if (p.tNs <= tNs) out.framePhase = p.phase;
-    for (const AcquireSpan& a : r.acquisitions) out.inAcquisition |= tNs >= a.t0Ns && tNs <= a.t1Ns;
+        if (p.tNs <= tNs)
+            out.framePhase = p.phase;
+    for (const AcquireSpan& a : r.acquisitions)
+        out.inAcquisition |= tNs >= a.t0Ns && tNs <= a.t1Ns;
     const std::vector<double>& ts = r.trace.tNs;
-    if (!ts.empty() && tNs >= ts.front() - 0.5 * model.dtNs && tNs <= ts.back() + 0.5 * model.dtNs) {
+    if (!ts.empty() && tNs >= ts.front() - 0.5 * model.dtNs &&
+        tNs <= ts.back() + 0.5 * model.dtNs) {
         const auto it = std::lower_bound(ts.begin(), ts.end(), tNs);
         std::size_t k = static_cast<std::size_t>(it - ts.begin());
-        if (k >= ts.size()) k = ts.size() - 1;
-        if (k > 0 && tNs - ts[k - 1] < ts[k] - tNs) --k;
+        if (k >= ts.size())
+            k = ts.size() - 1;
+        if (k > 0 && tNs - ts[k - 1] < ts[k] - tNs)
+            --k;
         out.re = r.trace.re[k];
         out.im = r.trace.im[k];
     }

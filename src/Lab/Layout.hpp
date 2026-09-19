@@ -16,7 +16,7 @@
 namespace qlab::lab {
 
 struct StageSpec {
-    std::string name;      // layout id: rt, s50, s4, still, cp, mxc
+    std::string name; // layout id: rt, s50, s4, still, cp, mxc
     cryo::Stage stage = cryo::Stage::RT;
     double height_m = 0.0; // plate centre
     double radius_m = 0.2;
@@ -102,7 +102,8 @@ struct RoutingSpec {
 
 // "sc_lab_standard" or a directory; relative ids resolve under core::assetDir()/Lab/Layouts.
 std::filesystem::path resolveLayoutDir(const std::filesystem::path& dirOrId);
-// Layout files name assets repo-relative ("Assets/Devices/x/wiring.json"); maps them onto assetDir().
+// Layout files name assets repo-relative ("Assets/Devices/x/wiring.json"); maps them onto
+// assetDir().
 std::filesystem::path resolveAssetPath(std::string_view path);
 
 Result<LayoutSpec> loadLayout(const std::filesystem::path& dirOrId);

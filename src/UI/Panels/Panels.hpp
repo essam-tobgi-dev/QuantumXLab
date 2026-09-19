@@ -25,7 +25,7 @@ PanelPtr makeTheoryPanel();
 PanelPtr makeExamplesPanel();
 PanelPtr makeProjectPanel();
 PanelPtr makeLogPanel();
-PanelPtr makeTourPanel();   // spec 17 §7.10 / 19 §3 "Guided tour"
+PanelPtr makeTourPanel(); // spec 17 §7.10 / 19 §3 "Guided tour"
 
 // Spec 17 §7.10 — the narration card the Viewport draws over its picture while a tour plays
 // (defined in TourPanel.cpp; draws nothing when `ctx.tour` is null or idle).

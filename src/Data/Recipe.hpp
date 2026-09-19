@@ -21,12 +21,12 @@ namespace qlab::data {
 
 // One swept axis. `values` is either an explicit list or {linear|log: [a, b, n]}.
 struct SweepAxis {
-    std::string input;            // `input` variable name in the program
-    std::string unit;             // display unit of the variable ("" = dimensionless)
-    std::vector<double> values;   // explicit values, or the expansion of linear/log
-    std::string scale = "list";   // list | linear | log (how `values` was written)
-    double from = 0, to = 0;      // the range, when scale is linear|log
-    int points = 0;               // the point count, when scale is linear|log
+    std::string input;               // `input` variable name in the program
+    std::string unit;                // display unit of the variable ("" = dimensionless)
+    std::vector<double> values;      // explicit values, or the expansion of linear/log
+    std::string scale = "list";      // list | linear | log (how `values` was written)
+    double from = 0, to = 0;         // the range, when scale is linear|log
+    int points = 0;                  // the point count, when scale is linear|log
     std::vector<std::string> labels; // optional display labels, parallel to `values`
     std::vector<double> expand() const { return values; }
 };
@@ -34,43 +34,43 @@ struct SweepAxis {
 // How the y value of each sweep point is taken from the run (spec 22 §6; the expression grammar
 // is spec 13 §8, shared with `pragma qlab.assert`, and is kept opaque here).
 struct ExtractSpec {
-    std::string channel;   // "t1.p1", "instr.dig.ch[q].iq"
-    std::string y;         // "counts['1'] / shots"
-    std::string sigma;     // binomial | multinomial | bootstrap | none
-    int sequences = 0;     // random sequences averaged per point (0 = not a sequence family)
+    std::string channel;     // "t1.p1", "instr.dig.ch[q].iq"
+    std::string y;           // "counts['1'] / shots"
+    std::string sigma;       // binomial | multinomial | bootstrap | none
+    int sequences = 0;       // random sequences averaged per point (0 = not a sequence family)
     std::string averageOver; // e.g. "sequences"
-    core::Json extra;      // any other keys, preserved
+    core::Json extra;        // any other keys, preserved
 };
 
 // A row of the results table: measured value against the device's calibration or theory.
 struct ResultRow {
     std::string label;
-    std::string measured;  // "fit.T1"
-    std::string model;     // "device.calibration.qubit[q].T1"
-    double tolerance = 0;  // relative
+    std::string measured; // "fit.T1"
+    std::string model;    // "device.calibration.qubit[q].T1"
+    double tolerance = 0; // relative
 };
 
 // Declares that the runtime generates the circuit family (no source program can express it).
 struct GeneratorSpec {
-    std::string kind;      // "interleaved_rb" | "xeb" | …
-    core::Json params;     // qubits, lengths/depths, sequences, interleave, seeded_by, …
+    std::string kind;  // "interleaved_rb" | "xeb" | …
+    core::Json params; // qubits, lengths/depths, sequences, interleave, seeded_by, …
 };
 
 struct Recipe {
-    std::string id;                       // "t1"
+    std::string id; // "t1"
     std::string title;
-    std::string theory;                   // theory anchor, e.g. "T04#3.2"
+    std::string theory; // theory anchor, e.g. "T04#3.2"
     std::string description;
-    std::string program;                  // asset-relative path; empty when `generator` is set
-    std::optional<SweepAxis> sweep;       // primary axis
-    std::optional<SweepAxis> sweep2;      // second axis (2D heatmap)
+    std::string program;             // asset-relative path; empty when `generator` is set
+    std::optional<SweepAxis> sweep;  // primary axis
+    std::optional<SweepAxis> sweep2; // second axis (2D heatmap)
     ExtractSpec extract;
-    std::string fitModel;                 // fit.model
-    std::vector<std::string> report;      // fit.report: parameter names to display
+    std::string fitModel;            // fit.model
+    std::vector<std::string> report; // fit.report: parameter names to display
     std::vector<ResultRow> results;
     std::optional<GeneratorSpec> generator;
     int shots = 1024;
-    core::Json extra;                     // unknown top-level keys, preserved on save
+    core::Json extra; // unknown top-level keys, preserved on save
 };
 
 Result<Recipe> recipeFromJson(const core::Json& data);

@@ -15,16 +15,19 @@ namespace {
 ir::Circuit build(const std::string& src) {
     auto p = lang::parseProgram(src, "branch_body_test.qasm");
     REQUIRE(p.has_value());
-    for (const auto& d : p->diagnostics) INFO(d.error.format());
+    for (const auto& d : p->diagnostics)
+        INFO(d.error.format());
     REQUIRE_FALSE(lang::hasErrors(p->diagnostics));
     auto c = ir::buildCircuit(*p);
-    if (!c) UNSCOPED_INFO(c.error().format());
+    if (!c)
+        UNSCOPED_INFO(c.error().format());
     REQUIRE(c.has_value());
     return std::move(*c);
 }
 const ir::Branch& onlyBranch(const ir::Circuit& c) {
     for (ir::NodeId id : c.topologicalOrder())
-        if (const auto* b = std::get_if<ir::Branch>(&c.node(id))) return *b;
+        if (const auto* b = std::get_if<ir::Branch>(&c.node(id)))
+            return *b;
     FAIL("no branch node");
     std::abort();
 }
@@ -59,7 +62,8 @@ if (c[0] == 1) { x $1; }
     REQUIRE(br.thenBody->qubitCount() == c.qubitCount());
     REQUIRE(br.thenBody->clbitCount() == c.clbitCount());
     auto st = ir::verify(c);
-    if (!st) UNSCOPED_INFO(st.error().format());
+    if (!st)
+        UNSCOPED_INFO(st.error().format());
     REQUIRE(st.has_value());
 }
 
@@ -93,7 +97,8 @@ if (c[0] == 1) { x q[1]; }
 )");
     // Corrupt only the nested body's flag: shapes stay equal, so the message must say "physical".
     for (ir::NodeId id : c.topologicalOrder())
-        if (auto* b = std::get_if<ir::Branch>(&c.node(id))) b->thenBody->setPhysical(true);
+        if (auto* b = std::get_if<ir::Branch>(&c.node(id)))
+            b->thenBody->setPhysical(true);
     auto st = ir::verify(c);
     REQUIRE_FALSE(st.has_value());
     const std::string msg = st.error().message;
@@ -134,7 +139,6 @@ if (c[0] == 1) { x q[1]; } else { z q[1]; }
 )");
     REQUIRE_FALSE(withElse.structurallyEqual(without, 0.0));
 }
-
 
 TEST_CASE("the ratio of two durations folds to a number (OpenQASM 3 §3)") {
     // Reported by the calibration-program author: `rz(2*pi*f*t / 1s)` failed with "unsupported
@@ -183,7 +187,8 @@ include "stdgates.inc";
 qubit[1] q;
 duration t = 10dt;
 rz(t / 1us) q[0];
-)", "dt_ratio.qasm");
+)",
+                                "dt_ratio.qasm");
     REQUIRE(p.has_value());
     REQUIRE_FALSE(lang::hasErrors(p->diagnostics));
     auto built = ir::buildCircuit(*p);

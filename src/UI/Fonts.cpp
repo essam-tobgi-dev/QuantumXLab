@@ -38,12 +38,14 @@ constexpr std::array<RoleSpec, kFontRoleCount> kRoles{{
 // The LaTeX face carries the whole mathematical repertoire: operators, relations, arrows, big
 // operators, delimiters, accents, and the italic/bold alphabets above U+FFFF (IMGUI_USE_WCHAR32).
 constexpr std::array<ImWchar, 21> kMathGlyphRanges{
-    0x0020, 0x00FF,   // Latin + Latin-1 (upright letters, digits, punctuation, ×, ±, µ)
-    0x02B0, 0x036F,   // modifier letters and combining marks (˙ ¨ ¯ ˆ ˜ and the accents)
-    0x0370, 0x03FF,   // Greek (upright)
-    0x2000, 0x2BFF,   // punctuation, super/subscripts, letterlike, arrows, operators, technical, shapes
-    0x1D400, 0x1D7FF, // mathematical alphanumerics: bold, italic, script, fraktur, double-struck, digits
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    0x0020,  0x00FF,  // Latin + Latin-1 (upright letters, digits, punctuation, ×, ±, µ)
+    0x02B0,  0x036F,  // modifier letters and combining marks (˙ ¨ ¯ ˆ ˜ and the accents)
+    0x0370,  0x03FF,  // Greek (upright)
+    0x2000,  0x2BFF,  // punctuation, super/subscripts, letterlike, arrows, operators, technical,
+                      // shapes
+    0x1D400, 0x1D7FF, // mathematical alphanumerics: bold, italic, script, fraktur, double-struck,
+                      // digits
+    0,       0,       0, 0, 0, 0, 0, 0, 0, 0, 0};
 constexpr std::array<ImWchar, 29> kGlyphRanges{
     0x0020, 0x00FF, // Latin + Latin-1 supplement
     0x0300, 0x036F, // combining marks (Q̇, n̄, X̄ in narration; zero-advance, drawn over the base)
@@ -61,18 +63,22 @@ constexpr std::array<ImWchar, 29> kGlyphRanges{
     0x2B00, 0x2BFF, // miscellaneous symbols and arrows (⬒)
     0};
 
-std::filesystem::path fontFile(const std::filesystem::path& dir, const char* name) { return dir / name; }
+std::filesystem::path fontFile(const std::filesystem::path& dir, const char* name) {
+    return dir / name;
+}
 
 } // namespace
 
 std::string_view fontRoleName(FontRole r) {
     for (const RoleSpec& s : kRoles)
-        if (s.role == r) return s.name;
+        if (s.role == r)
+            return s.name;
     return "?";
 }
 
 std::filesystem::path FontSet::defaultDir() {
-    if (const char* env = std::getenv("QXL_FONT_DIR"); env != nullptr && *env != '\0') return env;
+    if (const char* env = std::getenv("QXL_FONT_DIR"); env != nullptr && *env != '\0')
+        return env;
     return core::assetDir() / "Fonts";
 }
 
@@ -80,18 +86,21 @@ bool FontSet::available(const std::filesystem::path& fontDir) {
     const std::filesystem::path dir = fontDir.empty() ? defaultDir() : fontDir;
     std::error_code ec;
     for (const RoleSpec& s : kRoles)
-        if (!std::filesystem::exists(fontFile(dir, s.file), ec)) return false;
+        if (!std::filesystem::exists(fontFile(dir, s.file), ec))
+            return false;
     return true;
 }
 
-Result<FontSet> FontSet::build(ImFontAtlas* atlas, const Theme& theme, float dpiScale, float fontScale,
-                               const std::filesystem::path& fontDir) {
-    if (atlas == nullptr) return fail(err::NoContext, "font set: no ImGui font atlas");
+Result<FontSet> FontSet::build(ImFontAtlas* atlas, const Theme& theme, float dpiScale,
+                               float fontScale, const std::filesystem::path& fontDir) {
+    if (atlas == nullptr)
+        return fail(err::NoContext, "font set: no ImGui font atlas");
     const std::filesystem::path dir = fontDir.empty() ? defaultDir() : fontDir;
     std::error_code ec;
     for (const RoleSpec& s : kRoles)
         if (!std::filesystem::exists(fontFile(dir, s.file), ec))
-            return fail(err::NoFont, std::format("font '{}' is missing from {}", s.file, dir.string()));
+            return fail(err::NoFont,
+                        std::format("font '{}' is missing from {}", s.file, dir.string()));
 
     FontSet set;
     set.dpiScale = std::max(0.25f, dpiScale);
@@ -108,12 +117,14 @@ Result<FontSet> FontSet::build(ImFontAtlas* atlas, const Theme& theme, float dpi
         cfg.PixelSnapH = false;
         cfg.FontBuilderFlags = ImGuiFreeTypeBuilderFlags_NoHinting;
         cfg.GlyphRanges = s.role == FontRole::Math ? kMathGlyphRanges.data() : kGlyphRanges.data();
-        std::snprintf(cfg.Name, sizeof(cfg.Name), "%.*s", static_cast<int>(s.name.size()), s.name.data());
+        std::snprintf(cfg.Name, sizeof(cfg.Name), "%.*s", static_cast<int>(s.name.size()),
+                      s.name.data());
         const float px = std::round(m.*(s.size));
         ImFont* font = atlas->AddFontFromFileTTF(fontFile(dir, s.file).string().c_str(), px, &cfg);
         if (font == nullptr) {
             atlas->Clear();
-            return fail(err::NoFont, std::format("font '{}' could not be rasterised at {} px", s.file, px));
+            return fail(err::NoFont,
+                        std::format("font '{}' could not be rasterised at {} px", s.file, px));
         }
         const auto i = static_cast<std::size_t>(s.role);
         set.faces[i] = font;

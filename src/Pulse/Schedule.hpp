@@ -11,7 +11,9 @@
 #include <variant>
 #include <vector>
 
-namespace qlab::hw { struct Device; }
+namespace qlab::hw {
+struct Device;
+}
 
 namespace qlab::pulse {
 
@@ -21,7 +23,9 @@ using Duration = Picoseconds;
 inline Picoseconds psFromSeconds(double s) {
     return Picoseconds{static_cast<std::int64_t>(std::llround(s * 1e12))};
 }
-inline constexpr double secondsOf(Picoseconds p) { return static_cast<double>(p.value) * 1e-12; }
+inline constexpr double secondsOf(Picoseconds p) {
+    return static_cast<double>(p.value) * 1e-12;
+}
 
 // Spec 10 §1 — the sample grid. A duration is n·dt with n a multiple of `granularity`
 // (16 by default, the AWG memory alignment of spec 12 §3); `minSamples` raises the result,
@@ -61,7 +65,7 @@ struct FrameOp {
 enum class AcquireKind { Integrate, PhotonCount };
 
 struct Acquire {
-    ChannelId ch;          // a[i]
+    ChannelId ch; // a[i]
     Picoseconds t0{0};
     Picoseconds length{0};
     std::string weights = "matched"; // matched | boxcar
@@ -93,7 +97,7 @@ enum class AlignMode { Left, Sequential, Right };
 // ---- schedule -----------------------------------------------------------------------
 
 class Schedule {
-public:
+  public:
     Schedule() = default;
     explicit Schedule(Picoseconds dt) : dt_(dt) {}
 
@@ -134,7 +138,7 @@ public:
 
     void sort();
 
-private:
+  private:
     Picoseconds dt_{222};
     std::vector<Instruction> instrs_;
     std::vector<FrameDecl> frames_;

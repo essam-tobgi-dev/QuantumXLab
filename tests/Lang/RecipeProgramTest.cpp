@@ -26,7 +26,8 @@ std::string slurp(const fs::path& p) {
 std::vector<fs::path> jsonFiles(const fs::path& dir) {
     std::vector<fs::path> v;
     for (const auto& e : fs::directory_iterator(dir))
-        if (e.is_regular_file() && e.path().extension() == ".json") v.push_back(e.path());
+        if (e.is_regular_file() && e.path().extension() == ".json")
+            v.push_back(e.path());
     std::sort(v.begin(), v.end());
     return v;
 }
@@ -66,7 +67,8 @@ TEST_CASE("every analysis recipe resolves to a program that parses, or to a gene
         const lang::Program p = lang::analyzeProgram(slurp(path), path.filename().string());
         std::string diag;
         for (const auto& x : p.diagnostics)
-            if (x.isError()) diag += x.error.format() + "\n";
+            if (x.isError())
+                diag += x.error.format() + "\n";
         INFO(diag);
         CHECK(p.ok());
         CHECK((p.hasQuantumStatements || p.pragmas.rb.has_value() || !p.defcals.empty()));
@@ -79,13 +81,16 @@ TEST_CASE("every analysis recipe resolves to a program that parses, or to a gene
                 INFO("rb length " << v.get<int>());
                 CHECK(std::ranges::find(rb.lengths, v.get<int>()) != rb.lengths.end());
             }
-            if (d["extract"].contains("sequences")) CHECK(d["extract"]["sequences"].get<int>() == rb.samples);
+            if (d["extract"].contains("sequences"))
+                CHECK(d["extract"]["sequences"].get<int>() == rb.samples);
         } else {
             const auto declares = [&p](const std::string& name) {
-                return std::ranges::any_of(p.inputs, [&name](const lang::InputVar& v) { return v.name == name; });
+                return std::ranges::any_of(
+                    p.inputs, [&name](const lang::InputVar& v) { return v.name == name; });
             };
             for (const char* key : {"input", "input2"}) {
-                if (!sweep.contains(key)) continue;
+                if (!sweep.contains(key))
+                    continue;
                 const std::string name = sweep[key].get<std::string>();
                 INFO("sweep " << key << " = " << name);
                 CHECK(declares(name)); // an `input` the runtime can bind, not a display label

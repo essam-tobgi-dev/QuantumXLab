@@ -1,5 +1,5 @@
-// Spec 08 §5, spec 23 §1, spec 04 §8 — `qlab.noise/1`: lossless round trip, the spec example, unknown
-// fields written back, and loader errors that name the field path.
+// Spec 08 §5, spec 23 §1, spec 04 §8 — `qlab.noise/1`: lossless round trip, the spec example,
+// unknown fields written back, and loader errors that name the field path.
 #include "Hardware/Hardware.hpp"
 #include "NoiseTestSupport.hpp"
 #include <catch2/catch_approx.hpp>
@@ -10,7 +10,8 @@ using namespace qlab::noise;
 using Catch::Approx;
 
 namespace {
-void requireSameChannels(const std::vector<AttachedChannel>& a, const std::vector<AttachedChannel>& b) {
+void requireSameChannels(const std::vector<AttachedChannel>& a,
+                         const std::vector<AttachedChannel>& b) {
     REQUIRE(a.size() == b.size());
     for (std::size_t i = 0; i < a.size(); ++i) {
         REQUIRE(a[i].channel->id() == b[i].channel->id());
@@ -22,7 +23,8 @@ void requireSameChannels(const std::vector<AttachedChannel>& a, const std::vecto
         NOISE_REQUIRE_OK(ka);
         NOISE_REQUIRE_OK(kb);
         REQUIRE(ka->ops.size() == kb->ops.size());
-        for (std::size_t k = 0; k < ka->ops.size(); ++k) REQUIRE(ka->ops[k].data == kb->ops[k].data); // bit-exact
+        for (std::size_t k = 0; k < ka->ops.size(); ++k)
+            REQUIRE(ka->ops[k].data == kb->ops[k].data); // bit-exact
     }
 }
 // Everything a consumer can observe, compared exactly.
@@ -36,21 +38,30 @@ void requireIdentical(const NoiseModel& a, const NoiseModel& b) {
     for (std::uint32_t qb = 0; qb < a.qubitCount(); ++qb) {
         const QubitNoise& x = a.qubits()[qb];
         const QubitNoise& y = b.qubits()[qb];
-        REQUIRE((x.t1S == y.t1S && x.t2S == y.t2S && x.t2StarS == y.t2StarS && x.frequencyHz == y.frequencyHz));
-        REQUIRE((x.pThermal == y.pThermal && x.pThermalLine == y.pThermalLine && x.resetError == y.resetError));
-        REQUIRE((x.readoutAssignment == y.readoutAssignment && x.readoutDurationS == y.readoutDurationS));
+        REQUIRE((x.t1S == y.t1S && x.t2S == y.t2S && x.t2StarS == y.t2StarS &&
+                 x.frequencyHz == y.frequencyHz));
+        REQUIRE((x.pThermal == y.pThermal && x.pThermalLine == y.pThermalLine &&
+                 x.resetError == y.resetError));
+        REQUIRE((x.readoutAssignment == y.readoutAssignment &&
+                 x.readoutDurationS == y.readoutDurationS));
         REQUIRE((x.readoutDephasing == y.readoutDephasing && x.driftSigmaHz == y.driftSigmaHz));
-        requireSameChannels(a.idleChannels(QubitIndex{qb}, 3e-6), b.idleChannels(QubitIndex{qb}, 3e-6));
+        requireSameChannels(a.idleChannels(QubitIndex{qb}, 3e-6),
+                            b.idleChannels(QubitIndex{qb}, 3e-6));
     }
     const auto ga = a.gates(), gb = b.gates();
     REQUIRE(ga.size() == gb.size());
     for (std::size_t i = 0; i < ga.size(); ++i) {
-        REQUIRE((ga[i]->gate == gb[i]->gate && ga[i]->qubits == gb[i]->qubits && ga[i]->errorR == gb[i]->errorR));
-        REQUIRE((ga[i]->pRelaxation == gb[i]->pRelaxation && ga[i]->depolarizing == gb[i]->depolarizing));
-        REQUIRE((ga[i]->overRotationRad == gb[i]->overRotationRad && ga[i]->clamped == gb[i]->clamped));
+        REQUIRE((ga[i]->gate == gb[i]->gate && ga[i]->qubits == gb[i]->qubits &&
+                 ga[i]->errorR == gb[i]->errorR));
+        REQUIRE((ga[i]->pRelaxation == gb[i]->pRelaxation &&
+                 ga[i]->depolarizing == gb[i]->depolarizing));
+        REQUIRE(
+            (ga[i]->overRotationRad == gb[i]->overRotationRad && ga[i]->clamped == gb[i]->clamped));
         std::vector<QubitIndex> targets;
-        for (auto t : ga[i]->qubits) targets.push_back(QubitIndex{t});
-        requireSameChannels(a.channelsFor(ga[i]->gate, targets), b.channelsFor(gb[i]->gate, targets));
+        for (auto t : ga[i]->qubits)
+            targets.push_back(QubitIndex{t});
+        requireSameChannels(a.channelsFor(ga[i]->gate, targets),
+                            b.channelsFor(gb[i]->gate, targets));
     }
 }
 } // namespace
@@ -77,13 +88,15 @@ TEST_CASE("the JSON round trip is lossless for calibrated models") {
         NOISE_REQUIRE_OK(again);
         REQUIRE(again->toJson() == m->toJson());
     }
-    // Couplers have no lifetimes: omitted in JSON (no infinities, spec 23 §1) and still absent on reload.
+    // Couplers have no lifetimes: omitted in JSON (no infinities, spec 23 §1) and still absent on
+    // reload.
     auto grid = hw::loadShippedDevice("sc_tunable_grid_54");
     NOISE_REQUIRE_OK(grid);
     auto model = NoiseModel::fromCalibration(grid->device, grid->calibration);
     NOISE_REQUIRE_OK(model);
     std::uint32_t coupler = 0;
-    while (!grid->device.isCoupler(coupler)) ++coupler;
+    while (!grid->device.isCoupler(coupler))
+        ++coupler;
     REQUIRE_FALSE(model->toJson()["qubits"][std::to_string(coupler)].contains("t1_us"));
     const auto file = std::filesystem::temp_directory_path() / "qxl_noise_model_roundtrip.json";
     NOISE_REQUIRE_OK(model->save(file));
@@ -128,15 +141,18 @@ TEST_CASE("the spec 08 §5 example document loads with the §4.1 defaults") {
     REQUIRE(sx->pCoherent == Approx(2.0 * 0.1 * 2.1e-4).epsilon(1e-12));
     auto rotation = channels::overRotation("X", sx->overRotationRad);
     NOISE_REQUIRE_OK(rotation);
-    REQUIRE(1.0 - averageGateFidelity(*rotation) == Approx(0.1 * 2.1e-4).epsilon(1e-9)); // spec 08 §4.1
-    REQUIRE(sx->depolarizing == Approx(sx->pTotal - sx->pRelaxation - sx->pCoherent).epsilon(1e-15));
+    REQUIRE(1.0 - averageGateFidelity(*rotation) ==
+            Approx(0.1 * 2.1e-4).epsilon(1e-9)); // spec 08 §4.1
+    REQUIRE(sx->depolarizing ==
+            Approx(sx->pTotal - sx->pRelaxation - sx->pCoherent).epsilon(1e-15));
     const GateNoise* cx = m->gate("cx", q({1, 0}));
     REQUIRE(cx->leakage == 1.5e-4);
     REQUIRE(cx->seepage == 1.5e-4);
     REQUIRE(m->edge(1, 0)->zzHz == 42e3);
     auto ro = m->readout(q({0, 1, 2, 3}));
     NOISE_REQUIRE_OK(ro);
-    REQUIRE(ro->factors().size() == 4); // null group assignment: tensor product of the single-qubit matrices
+    REQUIRE(ro->factors().size() ==
+            4); // null group assignment: tensor product of the single-qubit matrices
     auto back = NoiseModel::fromJson(m->toJson());
     NOISE_REQUIRE_OK(back);
     requireIdentical(*m, *back);
@@ -175,9 +191,12 @@ TEST_CASE("unknown fields are written back and loader errors name the field path
     REQUIRE(e1.code == err::BadJson);
     REQUIRE(e1.message.find("noise.qubits.0.t1_us") != std::string::npos);
     REQUIRE(error(R"({"qubits": {"zero": {}}})").message.find("'zero'") != std::string::npos);
-    REQUIRE(error(R"({"gates": {"cx": {"0-x": {}}}})").message.find("noise.gates.cx.0-x") != std::string::npos);
+    REQUIRE(error(R"({"gates": {"cx": {"0-x": {}}}})").message.find("noise.gates.cx.0-x") !=
+            std::string::npos);
     REQUIRE(error(R"({"gates": {"cx": {"0-1-2": {}}}})").code == err::BadJson);
-    REQUIRE(error(R"({"readout_groups": [{"qubits": [0, 1], "assignment": [[1, 0], [0, 1]]}]})").code == err::BadReadout);
+    REQUIRE(
+        error(R"({"readout_groups": [{"qubits": [0, 1], "assignment": [[1, 0], [0, 1]]}]})").code ==
+        err::BadReadout);
     auto e2 = error(R"({"qubits": {"0": {"readout": {"assignment": [[0.9, 0.2], [0.1, 0.8]]}}}})");
     REQUIRE(e2.code == err::BadReadout);
     REQUIRE(e2.message.find("qubits.0.readout.assignment") != std::string::npos);
@@ -187,7 +206,10 @@ TEST_CASE("unknown fields are written back and loader errors name the field path
     REQUIRE(e3.code == err::InvalidParameter);
     REQUIRE(e3.message.find("qubits.0.t1_us") != std::string::npos);
     REQUIRE(error(R"([1, 2])").code == err::BadJson);
-    REQUIRE(error(R"({"overrides": {"disable": [3]}})").message.find("noise.overrides.disable[0]") != std::string::npos);
+    REQUIRE(
+        error(R"({"overrides": {"disable": [3]}})").message.find("noise.overrides.disable[0]") !=
+        std::string::npos);
     REQUIRE_FALSE(NoiseModel::parse("{ not json"));
-    REQUIRE_FALSE(NoiseModel::parse(core::JsonEnvelope::serialize("calibration", core::Json::object())));
+    REQUIRE_FALSE(
+        NoiseModel::parse(core::JsonEnvelope::serialize("calibration", core::Json::object())));
 }

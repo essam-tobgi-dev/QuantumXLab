@@ -1,14 +1,14 @@
 // Spec 20 §1/§5/§7 — the ImGui backend of the LaTeX engine and the interactive equation widget:
 // metrics from the rasterised face, painting into a draw list, hit testing over the symbol boxes,
 // the layout cache, and the corpora the Inspector, the tooltips and the editor read.
-#include "UI/Widgets/EquationView.hpp"
 #include "Data/Fidelity.hpp"
+#include "UI/Widgets/EquationView.hpp"
 #include "UI/Widgets/Equations.hpp"
 #include "UI/Widgets/MathImGui.hpp"
 #include "UiHarness.hpp"
+#include <algorithm>
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <algorithm>
 
 using namespace qlab;
 using namespace qlab::ui;
@@ -16,7 +16,8 @@ using Catch::Approx;
 
 TEST_CASE("Theory assets: equations, gates and assumptions load and cross-reference") {
     const auto assets = TheoryAssets::load();
-    if (!assets) SKIP("Assets/Theory is not available: " + assets.error().message);
+    if (!assets)
+        SKIP("Assets/Theory is not available: " + assets.error().message);
     CHECK(assets->equations().size() >= 100);
     CHECK(assets->gates().size() >= 40);
     CHECK(assets->assumptionCount() >= 20);
@@ -53,7 +54,8 @@ TEST_CASE("Theory assets: equations, gates and assumptions load and cross-refere
 
 TEST_CASE("Math backend: the ImGui face reports sane TeX metrics") {
     test::UiHarness ui;
-    if (!ui.ready()) SKIP("the pinned fonts are not available");
+    if (!ui.ready())
+        SKIP("the pinned fonts are not available");
     const ImGuiMathFont font(ui.resources().fonts);
     REQUIRE(font.valid());
 
@@ -84,21 +86,24 @@ TEST_CASE("Math backend: the ImGui face reports sane TeX metrics") {
     CHECK(ImGuiMathFont::variant(0x3B1, math::GlyphStyle::Italic) == 0x1D6FC);
     CHECK(ImGuiMathFont::variant(U'x', math::GlyphStyle::Upright) == U'x');
     CHECK(font.styled("x", math::GlyphStyle::Italic) == "\xF0\x9D\x91\xA5");
-    CHECK(font.styled("cool", math::GlyphStyle::Italic) == "cool");   // a run stays upright text
+    CHECK(font.styled("cool", math::GlyphStyle::Italic) == "cool"); // a run stays upright text
     // The face carries the repertoire an equation needs: big operators, accents, delimiters.
-    for (ImWchar cp : {ImWchar(0x222B), ImWchar(0x2211), ImWchar(0x02D9), ImWchar(0x27E8), ImWchar(0x27E9), ImWchar(0x210F), ImWchar(0x1D465), ImWchar(0x1D6FC)}) {
+    for (ImWchar cp : {ImWchar(0x222B), ImWchar(0x2211), ImWchar(0x02D9), ImWchar(0x27E8),
+                       ImWchar(0x27E9), ImWchar(0x210F), ImWchar(0x1D465), ImWchar(0x1D6FC)}) {
         INFO("code point U+" << std::hex << cp);
         CHECK(font.face(math::GlyphStyle::Upright)->FindGlyphNoFallback(cp) != nullptr);
     }
     // An italic letter is wider than the upright one on this face (the italic has a slant and
     // an italic correction), and an empty run has no metrics.
-    CHECK(font.metrics("f", 18.0, math::GlyphStyle::Italic).advance != Approx(font.metrics("f", 18.0, math::GlyphStyle::Upright).advance));
+    CHECK(font.metrics("f", 18.0, math::GlyphStyle::Italic).advance !=
+          Approx(font.metrics("f", 18.0, math::GlyphStyle::Upright).advance));
     CHECK(font.metrics("", 18.0, math::GlyphStyle::Italic).advance == Approx(0.0));
 }
 
 TEST_CASE("Math backend: an equation lays out, paints into a draw list and hit-tests") {
     test::UiHarness ui;
-    if (!ui.ready()) SKIP("the pinned fonts are not available");
+    if (!ui.ready())
+        SKIP("the pinned fonts are not available");
     MathRenderers& math = *ui.context().math;
     REQUIRE(math.ready());
 
@@ -118,9 +123,10 @@ TEST_CASE("Math backend: an equation lays out, paints into a draw list and hit-t
 
     // Every symbol has at least one hit box (spec 20 §9) and hit testing finds it.
     const std::vector<math::SymbolHit> rects = math::symbolRects(lr, 0.0, lr.height);
-    CHECK(rects.size() >= 4);                 // E = m c 2
+    CHECK(rects.size() >= 4); // E = m c 2
     const auto findSymbol = [&](std::string_view text) {
-        return std::find_if(rects.begin(), rects.end(), [&](const math::SymbolHit& h) { return h.text == text; });
+        return std::find_if(rects.begin(), rects.end(),
+                            [&](const math::SymbolHit& h) { return h.text == text; });
     };
     const auto e = findSymbol("E");
     REQUIRE(e != rects.end());
@@ -145,19 +151,23 @@ TEST_CASE("Math backend: an equation lays out, paints into a draw list and hit-t
     CHECK(after > before);
 
     // A fraction and a radical exercise the rule and the stretched delimiter paths.
-    const auto frac = math.renderer().render("\\frac{\\hbar\\omega}{2} + \\sqrt{E_J E_C}", math::MathStyle{18.0, true});
+    const auto frac = math.renderer().render("\\frac{\\hbar\\omega}{2} + \\sqrt{E_J E_C}",
+                                             math::MathStyle{18.0, true});
     REQUIRE(frac.has_value());
     CHECK((*frac)->errors.empty());
-    CHECK((*frac)->height + (*frac)->depth > lr.height + lr.depth);   // taller than the one-line formula
+    CHECK((*frac)->height + (*frac)->depth >
+          lr.height + lr.depth); // taller than the one-line formula
 }
 
 TEST_CASE("EquationView: hover symbols, live values and the theory link (spec 20 §5)") {
     test::UiHarness ui;
-    if (!ui.ready()) SKIP("the pinned fonts are not available");
+    if (!ui.ready())
+        SKIP("the pinned fonts are not available");
     const TheoryAssets* assets = ui.context().assets;
     REQUIRE(assets != nullptr);
     const EquationDoc* doc = assets->equation("lc_hamiltonian");
-    if (doc == nullptr) SKIP("Assets/Theory/equations.json is not available");
+    if (doc == nullptr)
+        SKIP("Assets/Theory/equations.json is not available");
 
     EquationView view;
     view.setDocument(doc);
@@ -166,7 +176,8 @@ TEST_CASE("EquationView: hover symbols, live values and the theory link (spec 20
 
     std::vector<TermValue> values;
     values.push_back(TermValue{"C", 65e-15, "F", data::FidelityClass::Model, false, true});
-    values.push_back(TermValue{"L", 0.0, "H", data::FidelityClass::Model, false, false});   // unavailable
+    values.push_back(
+        TermValue{"L", 0.0, "H", data::FidelityClass::Model, false, false}); // unavailable
     view.setValues(values);
     view.setWithValues(true);
 
@@ -175,12 +186,14 @@ TEST_CASE("EquationView: hover symbols, live values and the theory link (spec 20
     CHECK(size.x > 40.0f);
     CHECK(size.y > 10.0f);
     // A symbol of the equation is under its own box.
-    const auto laid = ui.context().math->renderer().render(doc->latex, math::MathStyle{
-                                                                          static_cast<double>(size.y), true});
+    const auto laid = ui.context().math->renderer().render(
+        doc->latex, math::MathStyle{static_cast<double>(size.y), true});
     CHECK(laid.has_value());
 
     std::string opened;
-    ui.context().cmd.openTheory = [&opened](std::string_view anchor) { opened = std::string(anchor); };
+    ui.context().cmd.openTheory = [&opened](std::string_view anchor) {
+        opened = std::string(anchor);
+    };
     int vertices = 0;
     ui.frame([&] {
         ImGui::SetNextWindowSize(ImVec2(800.0f, 400.0f));
@@ -190,7 +203,7 @@ TEST_CASE("EquationView: hover symbols, live values and the theory link (spec 20
         ImGui::End();
     });
     CHECK(vertices > 0);
-    CHECK(opened.empty());   // nothing was clicked
+    CHECK(opened.empty()); // nothing was clicked
 
     // `symbolAt` answers over the laid-out boxes.
     const std::string symbol = view.symbolAt(ui.context(), ImVec2(size.x * 0.02f, size.y * 0.5f));
@@ -213,17 +226,21 @@ TEST_CASE("EquationView: hover symbols, live values and the theory link (spec 20
 
 TEST_CASE("EduTooltip and the tooltip corpus render inside a frame (spec 19 §6)") {
     test::UiHarness ui;
-    if (!ui.ready()) SKIP("the pinned fonts are not available");
-    const std::array<TermValue, 1> values{TermValue{"C", 65e-15, "F", data::FidelityClass::Model, false, true}};
+    if (!ui.ready())
+        SKIP("the pinned fonts are not available");
+    const std::array<TermValue, 1> values{
+        TermValue{"C", 65e-15, "F", data::FidelityClass::Model, false, true}};
     const auto body = [&] {
         ImGui::SetNextWindowSize(ImVec2(600.0f, 400.0f));
         ImGui::Begin("tooltip", nullptr, ImGuiWindowFlags_NoSavedSettings);
-        eduCard(ui.context(), "lc_hamiltonian", "Node capacitance", "The capacitance of the LC mode.", values);
+        eduCard(ui.context(), "lc_hamiltonian", "Node capacitance",
+                "The capacitance of the LC mode.", values);
         ImGui::Button("hover me");
-        eduTooltip(ui.context(), "lc_hamiltonian", values);   // no hover: draws nothing, asserts nothing
+        eduTooltip(ui.context(), "lc_hamiltonian",
+                   values); // no hover: draws nothing, asserts nothing
         ImGui::End();
     };
-    ui.frame(body);   // ImGui hides a freshly created window while it sizes itself
+    ui.frame(body); // ImGui hides a freshly created window while it sizes itself
     ui.frame(body);
     CHECK(ui.vertices() > 0);
 }

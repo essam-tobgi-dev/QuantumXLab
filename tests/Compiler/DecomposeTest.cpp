@@ -7,7 +7,10 @@
 using namespace ctest;
 
 namespace {
-struct NativeCase { std::string label; compiler::Target target; };
+struct NativeCase {
+    std::string label;
+    compiler::Target target;
+};
 
 std::vector<NativeCase> nativeCases() {
     return {{"{U, cx}", compiler::Target::universal()},
@@ -26,7 +29,8 @@ ir::Circuit lowered(const ir::Circuit& source, const compiler::Target& target, d
     REQUIRE(st.has_value());
     REQUIRE(ir::verify(c).has_value());
     for (const ir::Gate* g : gatesOf(c)) {
-        INFO("emitted " << g->name << " on " << g->width() << " wire(s) for target " << target.name);
+        INFO("emitted " << g->name << " on " << g->width() << " wire(s) for target "
+                        << target.name);
         REQUIRE(target.accepts(*g));
         REQUIRE((g->targets.size() == 1 ? target.isNative1q(g->name) : target.isNative2q(g->name)));
     }
@@ -39,14 +43,18 @@ TEST_CASE("every library gate decomposes to every native set with the same unita
     core::Random rng(42);
     for (const auto& nc : nativeCases())
         for (const ir::GateDef& d : ir::gates::all()) {
-            if (d.name == "unitary" || d.name == "gphase") continue;
+            if (d.name == "unitary" || d.name == "gphase")
+                continue;
             for (int trial = 0; trial < (d.nParams > 0 ? 6 : 1); ++trial) {
                 std::vector<double> params;
-                for (int k = 0; k < d.nParams; ++k) params.push_back(angle(rng));
+                for (int k = 0; k < d.nParams; ++k)
+                    params.push_back(angle(rng));
                 std::vector<std::uint32_t> wires;
-                for (int q = 0; q < d.nQubits; ++q) wires.push_back(static_cast<std::uint32_t>(d.nQubits - 1 - q));
+                for (int q = 0; q < d.nQubits; ++q)
+                    wires.push_back(static_cast<std::uint32_t>(d.nQubits - 1 - q));
                 INFO(nc.label << ": " << d.name);
-                lowered(circuit(static_cast<std::uint32_t>(d.nQubits), {G(d.name, wires, params)}), nc.target);
+                lowered(circuit(static_cast<std::uint32_t>(d.nQubits), {G(d.name, wires, params)}),
+                        nc.target);
             }
         }
 }
@@ -56,12 +64,13 @@ TEST_CASE("random U(θ,φ,λ) and inverted gates decompose exactly") {
     for (const auto& nc : nativeCases())
         for (int trial = 0; trial < 40; ++trial) {
             ir::Gate inv = G("siswap", {1, 0});
-            inv.adjoint = true;   // no named inverse: lowered through the inverted rule
+            inv.adjoint = true; // no named inverse: lowered through the inverted rule
             ir::Gate invU = G("iswap", {0, 1});
             invU.adjoint = true;
             INFO(nc.label);
-            lowered(circuit(2, {G("U", {0}, {angle(rng), angle(rng), angle(rng)}), G("u3", {1}, {angle(rng), angle(rng), angle(rng)}),
-                                inv, G("u2", {0}, {angle(rng), angle(rng)}), invU}),
+            lowered(circuit(2, {G("U", {0}, {angle(rng), angle(rng), angle(rng)}),
+                                G("u3", {1}, {angle(rng), angle(rng), angle(rng)}), inv,
+                                G("u2", {0}, {angle(rng), angle(rng)}), invU}),
                     nc.target);
         }
 }
@@ -73,7 +82,8 @@ TEST_CASE("controlled gates: ABC, Gray code, negative controls, controlled multi
     for (const compiler::Target* t : {&universal, &transmon}) {
         // ctrl @ U with a random phase on U: the phase becomes a relative phase on the control.
         for (int trial = 0; trial < 10; ++trial)
-            lowered(circuit(2, {G("cu", {1, 0}, {angle(rng), angle(rng), angle(rng), angle(rng)})}), *t);
+            lowered(circuit(2, {G("cu", {1, 0}, {angle(rng), angle(rng), angle(rng), angle(rng)})}),
+                    *t);
         // negctrl @ x, mixed polarity ctrl/negctrl @ ry, ctrl(2) @ U, ctrl(3) @ x, ctrl(3) @ p.
         lowered(circuit(2, {controlled(G("x", {0}), {1}, {1})}), *t);
         lowered(circuit(3, {controlled(G("ry", {2}, {0.7}), {0, 1}, {0, 1})}), *t);
@@ -84,7 +94,7 @@ TEST_CASE("controlled gates: ABC, Gray code, negative controls, controlled multi
         // Controlled multi-qubit bases: the rule phase must become a controlled phase.
         lowered(circuit(4, {controlled(G("swap", {2, 3}), {0, 1})}), *t);
         lowered(circuit(3, {controlled(G("rxx", {1, 2}, {0.8}), {0})}), *t);
-        lowered(circuit(3, {controlled(G("ecr", {0, 2}), {1})}), *t);       // rule phase e^{iπ/4}
+        lowered(circuit(3, {controlled(G("ecr", {0, 2}), {1})}), *t); // rule phase e^{iπ/4}
         lowered(circuit(4, {controlled(G("cswap", {1, 2, 3}), {0}, {1})}), *t);
         // gphase under (negative) control is a phase gate on the control (spec 13 §3).
         lowered(circuit(2, {controlled(G("gphase", {}, {0.6}), {0, 1}, {1, 0})}), *t);
@@ -100,17 +110,18 @@ TEST_CASE("gate counts of the spec 14 §4.3 constructions") {
         REQUIRE(compiler::decompose(c, universal).has_value());
         return countGates(c, "cx");
     };
-    CHECK(cxCount(circuit(3, {G("ccx", {0, 1, 2})})) == 6);                       // Toffoli: 6 cx
-    CHECK(cxCount(circuit(3, {G("cswap", {0, 1, 2})})) == 8);                     // Fredkin: ccx + 2 cx
+    CHECK(cxCount(circuit(3, {G("ccx", {0, 1, 2})})) == 6);   // Toffoli: 6 cx
+    CHECK(cxCount(circuit(3, {G("cswap", {0, 1, 2})})) == 8); // Fredkin: ccx + 2 cx
     CHECK(cxCount(circuit(2, {G("swap", {0, 1})})) == 3);
-    CHECK(cxCount(circuit(2, {G("cu", {0, 1}, {0.3, 0.2, 0.1, 0.0})})) == 2);     // ABC: 2 cx
+    CHECK(cxCount(circuit(2, {G("cu", {0, 1}, {0.3, 0.2, 0.1, 0.0})})) == 2); // ABC: 2 cx
     // Gray code, n = 3: 2^3 − 1 controlled-V (2 cx each) + 2^3 − 2 cx between the controls.
     CHECK(cxCount(circuit(4, {controlled(G("U", {3}, {0.3, 0.2, 0.1}), {0, 1, 2})})) == 7 * 2 + 6);
     // The T-count of the Toffoli is 7 before single-qubit lowering (T02 §3.2).
     auto e = compiler::expandToCx(G("ccx", {0, 1, 2}));
     REQUIRE(e.has_value());
     std::size_t tCount = 0;
-    for (const auto& g : e->gates) tCount += (g.name == "t" || g.name == "tdg") ? 1 : 0;
+    for (const auto& g : e->gates)
+        tCount += (g.name == "t" || g.name == "tdg") ? 1 : 0;
     CHECK(tCount == 7);
     CHECK(e->phase == 0.0);
 }
@@ -118,7 +129,8 @@ TEST_CASE("gate counts of the spec 14 §4.3 constructions") {
 TEST_CASE("QL4050 above eight controls and QL4070 for a gate without a rule") {
     const auto universal = compiler::Target::universal();
     std::vector<std::uint32_t> nine;
-    for (std::uint32_t q = 0; q < 9; ++q) nine.push_back(q);
+    for (std::uint32_t q = 0; q < 9; ++q)
+        nine.push_back(q);
     ir::Gate big = controlled(G("x", {9}), nine, {1, 0, 0, 0, 0, 0, 0, 0, 0});
     big.span = SourceSpan{4, 3, 4, 20, "t.qasm"};
     ir::Circuit c = circuit(10, {big});
@@ -128,7 +140,7 @@ TEST_CASE("QL4050 above eight controls and QL4070 for a gate without a rule") {
     CHECK(st.error().code == compiler::err::TooManyControls);
     REQUIRE(st.error().span.has_value());
     CHECK(st.error().span->line == 4);
-    CHECK(c.nodeCount() == 1);   // a failed pass leaves the circuit untouched
+    CHECK(c.nodeCount() == 1); // a failed pass leaves the circuit untouched
 
     num::Matrix m = num::Matrix::identity(8);
     auto custom = ir::makeUnitary(m, {W(0), W(1), W(2)});
@@ -146,7 +158,8 @@ TEST_CASE("directed coupler: a cx against the native direction is reversed with 
     REQUIRE_FALSE(dev.nativeDirection(1, 0));
     for (const char* entangler : {"cx", "ecr"}) {
         const auto target = targetOf("sc_fixed_5", entangler);
-        ir::Circuit source = circuit(5, {G("cx", {1, 0}), G(entangler, {1, 0}), G("swap", {3, 4})}, true);
+        ir::Circuit source =
+            circuit(5, {G("cx", {1, 0}), G(entangler, {1, 0}), G("swap", {3, 4})}, true);
         ir::Circuit c = lowered(source, target);
         for (const ir::Gate* g : gatesOf(c))
             if (g->targets.size() == 2) {
@@ -169,10 +182,12 @@ TEST_CASE("ions: every entangler is one ms with |θ| ≤ π/2; larger angles spl
         const double w = compiler::wrapAngle(theta);
         const std::size_t want = std::abs(w) < 1e-12 ? 0 : std::abs(w) > kPi / 2 + 1e-12 ? 2 : 1;
         CHECK(countGates(c, "ms") == want);
-        for (const ir::Gate* g : gatesOf(c)) CHECK(std::abs(g->params[0]) <= kPi / 2 + 1e-12);
+        for (const ir::Gate* g : gatesOf(c))
+            CHECK(std::abs(g->params[0]) <= kPi / 2 + 1e-12);
     }
     // One MS per ZZ-type interaction: cp, cz, crz, rzz, ryy (T06 §6); a cx costs one as well.
-    for (const char* name : {"cp", "crz", "rzz", "ryy"}) CHECK(countGates(lowered(circuit(2, {G(name, {0, 1}, {0.9})}), ion), "ms") == 1);
+    for (const char* name : {"cp", "crz", "rzz", "ryy"})
+        CHECK(countGates(lowered(circuit(2, {G(name, {0, 1}, {0.9})}), ion), "ms") == 1);
     CHECK(countGates(lowered(circuit(2, {G("cz", {0, 1})}), ion), "ms") == 1);
     CHECK(countGates(lowered(circuit(2, {G("cx", {0, 1})}), ion), "ms") == 1);
 }

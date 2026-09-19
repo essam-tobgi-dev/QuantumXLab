@@ -13,14 +13,15 @@ enum class LindbladIntegrator { Rk4, Dopri5, Magnus2 };
 // Every integrator advances segment by segment on the `sampleS` grid (the AWG sample spacing), so
 // recorded samples and piecewise-constant envelopes coincide with step boundaries.
 struct LindbladSettings {
-    LindbladIntegrator integrator = LindbladIntegrator::Rk4; // spec 07 §5 default; Dopri5 MAY be selected
-    double stepS = 10e-12;          // RK4 / Magnus2 maximum step (spec 07 §5: 10 ps)
-    double sampleS = 1e-9;          // segment grid; ρ is recorded at each segment end (spec 12 §3)
+    LindbladIntegrator integrator =
+        LindbladIntegrator::Rk4; // spec 07 §5 default; Dopri5 MAY be selected
+    double stepS = 10e-12;       // RK4 / Magnus2 maximum step (spec 07 §5: 10 ps)
+    double sampleS = 1e-9;       // segment grid; ρ is recorded at each segment end (spec 12 §3)
     double rtol = 1e-9, atol = 1e-12; // Dopri5 only
     bool recordTrajectory = true;
     // With no enveloped drive (H constant) and a stretch of at least this many steps, the evolution
-    // uses the exact propagator e^{L Δt} from num::expm (dense superoperator; system dimension ≤ 16,
-    // larger systems keep the selected integrator, spec 06 §6).
+    // uses the exact propagator e^{L Δt} from num::expm (dense superoperator; system dimension ≤
+    // 16, larger systems keep the selected integrator, spec 06 §6).
     std::size_t constantPropagatorSteps = 100;
 };
 
@@ -33,7 +34,7 @@ struct TimeSample {
 };
 
 class LindbladBackend final : public IBackend {
-public:
+  public:
     static constexpr std::uint32_t kMaxSites = 5;
     static constexpr std::size_t kMaxDim = 243; // 3^5
 
@@ -52,7 +53,8 @@ public:
     Result<double> expectation(const PauliString& p) const override;
     Result<Probabilities> probabilities(std::span<const QubitIndex> qubits) const override;
     Result<Snapshot> snapshot(const SnapshotRequest& req) const override;
-    Result<Counts> sample(std::span<const QubitIndex> qubits, std::uint64_t shots, core::Random& rng) const override;
+    Result<Counts> sample(std::span<const QubitIndex> qubits, std::uint64_t shots,
+                          core::Random& rng) const override;
     std::size_t bytesAllocated() const override { return rho_.data.size() * sizeof(Complex); }
     double stateNorm() const override; // trace
     std::unique_ptr<IBackend> clone() const override;
@@ -78,7 +80,7 @@ public:
     // ρ restricted to the computational (two-level) subspace, renormalized; logs P_leak.
     Result<Matrix> computationalSubspace() const;
 
-private:
+  private:
     void derivative(double t, const Matrix& rho, Matrix& out);
     void vecDerivative(double t, std::span<const Complex> y, std::span<Complex> dy);
     void hamiltonianAt(double t, Matrix& h) const;
@@ -97,7 +99,7 @@ private:
     Matrix rho_;
     Matrix hCache_, k1_, k2_, k3_, k4_, tmp_, work1_, work2_;
     std::vector<Matrix> lAdj_, lDagL_;
-    Matrix lDagLSum_;                 // Σ_k L_k†L_k
+    Matrix lDagLSum_;                  // Σ_k L_k†L_k
     double segLo_ = 0.0, segHi_ = 0.0; // envelope sampling window of the current grid segment
     std::vector<TimeSample> samples_;
     double t_ = 0.0;

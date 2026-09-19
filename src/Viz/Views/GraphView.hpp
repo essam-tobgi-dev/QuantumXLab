@@ -11,8 +11,8 @@
 //                      I > 0.01, node colour by S(ρ_i).
 //
 // Click a node → select the qubit; click an edge → select the coupler (spec 21 §1.1).
-#include "Viz/GlCanvas.hpp"
 #include "Data/Fidelity.hpp"
+#include "Viz/GlCanvas.hpp"
 #include "Viz/Layout/GraphLayout.hpp"
 #include "Viz/StateView.hpp"
 
@@ -20,7 +20,7 @@ namespace qlab::viz {
 
 // Shared geometry, drawing and hit testing of a `layout::DeviceGraph`.
 class DeviceGraphView : public StateView {
-public:
+  public:
     std::optional<HitResult> hitTest(glm::vec2 local) const override;
     std::optional<std::string> exportCsv() const override;
     void frameContent() override { markLayoutDirty(); }
@@ -31,9 +31,10 @@ public:
     glm::vec2 toBody(glm::dvec2 layoutPos) const;
     glm::dvec2 toLayout(glm::vec2 body) const;
     double pixelsPerUnit() const { return pxPerUnit_; }
-    Status renderPng(GlBackend& gl, const VizTheme& theme, int widthPx, int heightPx, const std::filesystem::path& png);
+    Status renderPng(GlBackend& gl, const VizTheme& theme, int widthPx, int heightPx,
+                     const std::filesystem::path& png);
 
-protected:
+  protected:
     void layout() override;
     void drawBody(DrawContext& ctx) override;
     void onSelectionChanged(const SelectionModel&) override { canvas_.invalidate(); }
@@ -47,8 +48,9 @@ protected:
     virtual bool showNodeLegend() const { return graph_.nodeLegend.valid; }
     double nodeRadius() const { return nodeRadius_; }
 
-private:
-    GlCanvas::SceneFn scene(const VizTheme& theme, const SelectionModel* selection, float pxScale) const;
+  private:
+    GlCanvas::SceneFn scene(const VizTheme& theme, const SelectionModel* selection,
+                            float pxScale) const;
     void aimCamera(glm::vec2 body);
     glm::dvec2 center_{0.0};
     double pxPerUnit_ = 1.0, nodeRadius_ = 0.32;
@@ -56,7 +58,7 @@ private:
 };
 
 class CouplingView final : public DeviceGraphView {
-public:
+  public:
     std::string_view id() const override { return "coupling"; }
     std::string_view title() const override { return "Coupling graph"; }
     Observability observability() const override { return Observability::Physical; }
@@ -73,21 +75,22 @@ public:
     // Physical qubit pairs of the SWAPs the router inserted, pulsing as the playhead passes them.
     std::span<const std::pair<QubitIndex, QubitIndex>> activeEdges() const { return active_; }
 
-protected:
+  protected:
     void rebuild(const ViewInput& in) override;
-    void drawOverlay(gfx::Renderer& r, GlBackend& gl, const VizTheme& theme, float pxScale) const override;
+    void drawOverlay(gfx::Renderer& r, GlBackend& gl, const VizTheme& theme,
+                     float pxScale) const override;
     void fillNodeReadout(HitResult& h, const layout::GraphNode& n) const override;
     void fillEdgeReadout(HitResult& h, const layout::GraphEdge& e) const override;
 
-private:
+  private:
     layout::CouplingOptions options_;
     std::vector<std::uint32_t> layoutMap_;
-    std::vector<std::pair<QubitIndex, QubitIndex>> active_;   // gates at the playhead
-    std::vector<std::pair<QubitIndex, QubitIndex>> swaps_;    // routing SWAPs on those edges
+    std::vector<std::pair<QubitIndex, QubitIndex>> active_; // gates at the playhead
+    std::vector<std::pair<QubitIndex, QubitIndex>> swaps_;  // routing SWAPs on those edges
 };
 
 class EntanglementView final : public DeviceGraphView {
-public:
+  public:
     std::string_view id() const override { return "entanglement"; }
     std::string_view title() const override { return "Entanglement"; }
     Observability observability() const override { return Observability::SimulatorOnly; }
@@ -96,14 +99,15 @@ public:
     ReductionRequest wants(const ViewInput& in) const override;
     std::string statusLine() const override;
 
-protected:
+  protected:
     void rebuild(const ViewInput& in) override;
-    void drawOverlay(gfx::Renderer& r, GlBackend& gl, const VizTheme& theme, float pxScale) const override;
+    void drawOverlay(gfx::Renderer& r, GlBackend& gl, const VizTheme& theme,
+                     float pxScale) const override;
     void fillNodeReadout(HitResult& h, const layout::GraphNode& n) const override;
     void fillEdgeReadout(HitResult& h, const layout::GraphEdge& e) const override;
     bool showNodeLegend() const override { return true; }
 
-private:
+  private:
     std::uint32_t nQubits_ = 0;
     double totalMutualInformation_ = 0.0;
 };

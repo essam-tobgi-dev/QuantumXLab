@@ -15,18 +15,18 @@ namespace qlab::ui {
 
 // One `terms[]` entry: the symbol as it appears in the LaTeX, what it means, and its unit.
 struct EquationTerm {
-    std::string symbol;   // "\\Phi", "C", "\\omega_{01}"
+    std::string symbol; // "\\Phi", "C", "\\omega_{01}"
     std::string name;
-    std::string unit;     // catalog symbol, "" when dimensionless
+    std::string unit; // catalog symbol, "" when dimensionless
 };
 
 struct EquationDoc {
     std::string id;
     std::string latex;
-    std::string plain;                     // ASCII form for the clipboard and CSV (spec 20 §1)
+    std::string plain; // ASCII form for the clipboard and CSV (spec 20 §1)
     std::vector<EquationTerm> terms;
-    std::vector<std::string> assumptions;  // keys into the assumption table
-    std::string theory;                    // "T05#1-the-quantized-lc-oscillator"
+    std::vector<std::string> assumptions; // keys into the assumption table
+    std::string theory;                   // "T05#1-the-quantized-lc-oscillator"
     data::FidelityClass cls = data::FidelityClass::Model;
 
     const EquationTerm* term(std::string_view symbol) const;
@@ -43,7 +43,7 @@ struct GateDocEntry {
 };
 
 class TheoryAssets {
-public:
+  public:
     // Loads all three assets. A missing file is an error naming it; an unknown field is ignored.
     static Result<TheoryAssets> load();
     static Result<TheoryAssets> fromJson(const core::Json& equations, const core::Json& gates,
@@ -57,7 +57,7 @@ public:
     std::string_view assumption(std::string_view key) const;
     std::size_t assumptionCount() const { return assumptions_.size(); }
 
-private:
+  private:
     std::vector<EquationDoc> equations_;
     std::vector<GateDocEntry> gates_;
     std::map<std::string, std::string, std::less<>> assumptions_;

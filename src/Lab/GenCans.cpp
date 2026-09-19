@@ -48,14 +48,18 @@ Result<MeshData> can(const GenParams& p, const GenContext& c) {
         mesh::append(m, mesh::annulus(r, r + fw, 0.0f, seg, true));
         mesh::append(m, mesh::annulus(r, r + fw, -ft, seg, false));
         int bolts = full ? p.integer("flange_bolts", 0) : 0;
-        if (bolts > 0) { // hex-head bolts standing proud of the flange, M8 heads (13 mm across flats)
+        if (bolts >
+            0) { // hex-head bolts standing proud of the flange, M8 heads (13 mm across flats)
             float af = std::min(0.8f * fw, c.F(0.013)), hh = c.F(0.006);
             MeshData bolt = mesh::hexBolt(af, hh, 0.0f, 0.0f);
             bolt.setColor(kBolt);
             for (int k = 0; k < bolts; ++k) {
-                float a = glm::two_pi<float>() * (static_cast<float>(k) + 0.5f) / static_cast<float>(bolts);
+                float a = glm::two_pi<float>() * (static_cast<float>(k) + 0.5f) /
+                          static_cast<float>(bolts);
                 glm::vec3 at{(r + 0.5f * fw) * std::cos(a), -ft, (r + 0.5f * fw) * std::sin(a)};
-                mesh::append(m, bolt, glm::rotate(mesh::translate(at), -a, {0.0f, 1.0f, 0.0f}) * glm::mat4(glm::mat3(1.0f, 0, 0, 0, -1.0f, 0, 0, 0, 1.0f)));
+                mesh::append(m, bolt,
+                             glm::rotate(mesh::translate(at), -a, {0.0f, 1.0f, 0.0f}) *
+                                 glm::mat4(glm::mat3(1.0f, 0, 0, 0, -1.0f, 0, 0, 0, 1.0f)));
             }
         }
     }
@@ -77,12 +81,14 @@ Result<MeshData> post(const GenParams& p, const GenContext& c) {
     float wall = std::min(c.F(p.length("wall", 0.0005)), 0.45f * d);
     float collar = std::min(c.F(p.length("collar", 0.008)), 0.25f * L);
     float r = 0.5f * d;
-    if (c.detail == Detail::Simple) return mesh::ngonPrism(6, r, -0.5f * L, 0.5f * L);
+    if (c.detail == Detail::Simple)
+        return mesh::ngonPrism(6, r, -0.5f * L, 0.5f * L);
     MeshData m;
     int seg = 24;
     float y0 = -0.5f * L + collar, y1 = 0.5f * L - collar;
     mesh::append(m, mesh::wall(r, y0, y1, seg, true));
-    if (wall > 0.0f) mesh::append(m, mesh::wall(r - wall, y0, y1, seg, false));
+    if (wall > 0.0f)
+        mesh::append(m, mesh::wall(r - wall, y0, y1, seg, false));
     MeshData top = mesh::ngonPrism(6, 0.8f * d / std::sqrt(3.0f), y1, 0.5f * L);
     top.setColor(kCollar);
     mesh::append(m, top);

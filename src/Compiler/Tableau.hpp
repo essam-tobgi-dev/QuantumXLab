@@ -18,11 +18,11 @@ struct PauliString {
     std::vector<std::uint8_t> x, z;
     std::uint8_t phase = 0;
     bool operator==(const PauliString&) const = default;
-    std::string text() const;   // "+XIZY", most significant qubit first
+    std::string text() const; // "+XIZY", most significant qubit first
 };
 
 class CliffordTableau {
-public:
+  public:
     explicit CliffordTableau(std::uint32_t qubits);
     std::uint32_t qubits() const { return n_; }
     const PauliString& imageX(std::uint32_t q) const { return rows_[q]; }
@@ -32,9 +32,13 @@ public:
     // is not Clifford (to 1e-9), has no matrix, or acts on more than three wires.
     bool apply(const ir::Gate& g);
 
-private:
-    struct LocalPauli { std::uint8_t x = 0, z = 0, phase = 0; };           // bit j = wire j of the gate
-    struct GateTable { std::vector<LocalPauli> imageX, imageZ; };          // per local wire
+  private:
+    struct LocalPauli {
+        std::uint8_t x = 0, z = 0, phase = 0;
+    }; // bit j = wire j of the gate
+    struct GateTable {
+        std::vector<LocalPauli> imageX, imageZ;
+    }; // per local wire
     const GateTable* tableFor(const ir::Gate& g);
 
     std::uint32_t n_;

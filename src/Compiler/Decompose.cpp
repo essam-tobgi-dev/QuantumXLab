@@ -20,14 +20,15 @@ bool Decomposer::wrongDirection(const ir::Gate& g) const {
 
 Status Decomposer::lower(const ir::Gate& in, Out& out, int depth) {
     if (depth > kMaxLoweringDepth)
-        return fail(ErrorCode::Internal, std::format("decomposition of '{}' does not terminate", in.name));
+        return fail(ErrorCode::Internal,
+                    std::format("decomposition of '{}' does not terminate", in.name));
     if (in.opaque || (target_.accepts(in) && !wrongDirection(in))) {
         out.push_back(in);
         return {};
     }
     ir::Gate g = in;
     g.matrixCache.reset();
-    if (g.adjoint && !g.custom)   // a named inverse keeps the gate inside the rule table
+    if (g.adjoint && !g.custom) // a named inverse keeps the gate inside the rule table
         if (auto rw = ir::gates::inverseOf(g.name, g.params)) {
             g.name = rw->name;
             g.params = rw->params;
@@ -38,30 +39,40 @@ Status Decomposer::lower(const ir::Gate& in, Out& out, int depth) {
                 return {};
             }
         }
-    if (!g.controls.empty()) return lowerControlled(g, out, depth);
-    if (g.name == "gphase") return {};   // a global phase is unobservable outside `ctrl @` (spec 14 §4.2)
-    if (g.targets.size() == 1) return lower1q(g, out);
-    if (wrongDirection(g)) return lowerReversed(g, out, depth);
+    if (!g.controls.empty())
+        return lowerControlled(g, out, depth);
+    if (g.name == "gphase")
+        return {}; // a global phase is unobservable outside `ctrl @` (spec 14 §4.2)
+    if (g.targets.size() == 1)
+        return lower1q(g, out);
+    if (wrongDirection(g))
+        return lowerReversed(g, out, depth);
     if (target_.family == "rxx" && (g.name == "rxx" || g.name == "ms") && !g.adjoint && !g.custom)
         return lowerEntangler(g, out);
-    if (g.custom) {   // an explicit matrix: two qubits go through the Cartan decomposition (§5.5, T02 §6)
-        if (g.targets.size() != 2) return fail(notDecomposable(g));
+    if (g.custom) { // an explicit matrix: two qubits go through the Cartan decomposition (§5.5, T02
+                    // §6)
+        if (g.targets.size() != 2)
+            return fail(notDecomposable(g));
         auto m = ir::baseMatrixOf(g);
-        if (!m) return fail(notDecomposable(g));
+        if (!m)
+            return fail(notDecomposable(g));
         auto seq = synthesizeTwoQubit(m->view(), g.targets[0], g.targets[1], g.span);
-        if (!seq) return fail(notDecomposable(g));
+        if (!seq)
+            return fail(notDecomposable(g));
         return lowerAll(*seq, out, depth + 1);
     }
     return lowerByRule(g, out, depth);
 }
 
 Status Decomposer::lowerAll(const std::vector<ir::Gate>& seq, Out& out, int depth) {
-    for (const ir::Gate& s : seq) QXL_TRY(lower(s, out, depth));
+    for (const ir::Gate& s : seq)
+        QXL_TRY(lower(s, out, depth));
     return {};
 }
 
-Status Decomposer::emitNamed(std::string_view name, std::vector<ir::Wire> wires, std::vector<double> params,
-                             const SourceSpan& span, Out& out, int depth) {
+Status Decomposer::emitNamed(std::string_view name, std::vector<ir::Wire> wires,
+                             std::vector<double> params, const SourceSpan& span, Out& out,
+                             int depth) {
     QXL_TRY_ASSIGN(ir::Gate made, gate(name, std::move(wires), std::move(params), span));
     return lower(made, out, depth);
 }
@@ -71,7 +82,8 @@ Status Decomposer::lower1q(const ir::Gate& g, Out& out) {
     auto cached = named ? named1q_.find(g.name) : named1q_.end();
     if (cached == named1q_.end()) {
         auto m = ir::baseMatrixOf(g);
-        if (!m) return fail(notDecomposable(g));
+        if (!m)
+            return fail(notDecomposable(g));
         OneQubitSequence fresh = synthesize1q(m->view(), target_.basis);
         if (!named) {
             for (const auto& s : fresh.gates) {
@@ -92,10 +104,13 @@ Status Decomposer::lower1q(const ir::Gate& g, Out& out) {
 
 // T06 §6, spec 10 §6.6: one MS pulse realises |θ| ≤ π/2; rxx(θ + 2π) = −rxx(θ).
 Status Decomposer::lowerEntangler(const ir::Gate& g, Out& out) {
-    if (g.params.size() != 1) return fail(notDecomposable(g));
+    if (g.params.size() != 1)
+        return fail(notDecomposable(g));
     const double theta = wrapAngle(g.params[0]);
-    if (std::abs(theta) < kAngleEps) return {};
-    const bool split = target_.maxEntanglerAngle > 0.0 && std::abs(theta) > target_.maxEntanglerAngle + kAngleEps;
+    if (std::abs(theta) < kAngleEps)
+        return {};
+    const bool split =
+        target_.maxEntanglerAngle > 0.0 && std::abs(theta) > target_.maxEntanglerAngle + kAngleEps;
     const int pieces = split ? 2 : 1;
     for (int k = 0; k < pieces; ++k) {
         QXL_TRY_ASSIGN(ir::Gate made, gate(target_.entangler, g.targets, {theta / pieces}, g.span));
@@ -115,7 +130,8 @@ Status Decomposer::lowerReversed(const ir::Gate& g, Out& out, int depth) {
         return emitNamed("h", {b}, {}, g.span, out, depth + 1);
     }
     const Rule* rule = findGenericRule(g.name);
-    if (!rule) return fail(notDecomposable(g));
+    if (!rule)
+        return fail(notDecomposable(g));
     QXL_TRY_ASSIGN(RuleExpansion e, applyRule(*rule, g));
     return lowerAll(e.gates, out, depth + 1);
 }
@@ -130,9 +146,11 @@ Status Decomposer::lowerByRule(const ir::Gate& g, Out& out, int depth) {
         target_.device->nativeDirection(base.targets[1].index, base.targets[0].index))
         std::swap(base.targets[0], base.targets[1]);
     const Rule* rule = findRule(base.name, target_.family);
-    if (!rule) return fail(notDecomposable(g));
+    if (!rule)
+        return fail(notDecomposable(g));
     QXL_TRY_ASSIGN(RuleExpansion e, applyRule(*rule, base));
-    if (g.adjoint) e.gates = invertSequence(std::move(e.gates));
+    if (g.adjoint)
+        e.gates = invertSequence(std::move(e.gates));
     return lowerAll(e.gates, out, depth + 1);
 }
 
@@ -145,7 +163,8 @@ std::vector<ir::Gate> invertSequence(std::vector<ir::Gate> seq) {
         ir::Gate g = std::move(*it);
         g.matrixCache.reset();
         std::optional<ir::gates::GateRewrite> rw;
-        if (!g.opaque && !g.custom && !g.adjoint) rw = ir::gates::inverseOf(g.name, g.params);
+        if (!g.opaque && !g.custom && !g.adjoint)
+            rw = ir::gates::inverseOf(g.name, g.params);
         if (rw) {
             g.name = rw->name;
             g.params = rw->params;
@@ -161,37 +180,45 @@ std::vector<ir::Gate> invertSequence(std::vector<ir::Gate> seq) {
 
 namespace {
 Status expandInto(const ir::Gate& g, RuleExpansion& out, int depth) {
-    if (depth > detail::kMaxLoweringDepth) return fail(ErrorCode::Internal, "rule expansion does not terminate");
+    if (depth > detail::kMaxLoweringDepth)
+        return fail(ErrorCode::Internal, "rule expansion does not terminate");
     if (g.targets.size() <= 1 || (g.name == "cx" && !g.adjoint && !g.custom)) {
         out.gates.push_back(g);
         return {};
     }
     const Rule* rule = g.custom || g.opaque ? nullptr : findGenericRule(g.name);
-    if (!rule) return fail(err::NotDecomposable, std::format("gate '{}' has no expansion into single-qubit gates and cx", g.name));
+    if (!rule)
+        return fail(
+            err::NotDecomposable,
+            std::format("gate '{}' has no expansion into single-qubit gates and cx", g.name));
     ir::Gate base = g;
     base.adjoint = false;
     QXL_TRY_ASSIGN(RuleExpansion step, applyRule(*rule, base));
     RuleExpansion sub;
     sub.phase = step.phase;
-    for (const ir::Gate& s : step.gates) QXL_TRY(expandInto(s, sub, depth + 1));
+    for (const ir::Gate& s : step.gates)
+        QXL_TRY(expandInto(s, sub, depth + 1));
     if (g.adjoint) {
         sub.gates = invertSequence(std::move(sub.gates));
         sub.phase = -sub.phase;
     }
     out.phase += sub.phase;
-    for (auto& s : sub.gates) out.gates.push_back(std::move(s));
+    for (auto& s : sub.gates)
+        out.gates.push_back(std::move(s));
     return {};
 }
 } // namespace
 
 Result<RuleExpansion> expandToCx(const ir::Gate& g) {
-    if (!g.controls.empty()) return fail(ErrorCode::InvalidArgument, "expandToCx takes an uncontrolled gate");
+    if (!g.controls.empty())
+        return fail(ErrorCode::InvalidArgument, "expandToCx takes an uncontrolled gate");
     RuleExpansion out;
     QXL_TRY(expandInto(g, out, 0));
     return out;
 }
 
-Status decomposeGate(const ir::Gate& g, const Target& target, bool physical, std::vector<ir::Gate>& out) {
+Status decomposeGate(const ir::Gate& g, const Target& target, bool physical,
+                     std::vector<ir::Gate>& out) {
     detail::Decomposer d(target, physical);
     return d.lower(g, out);
 }
@@ -205,16 +232,19 @@ Status decompose(ir::Circuit& c, const Target& target, std::stop_token stop) {
     std::vector<ir::Gate> lowered;
     std::size_t tick = 0;
     for (ir::NodeId id : src.topologicalOrder()) {
-        if ((++tick & 0xFF) == 0 && stop.stop_requested()) return fail(ErrorCode::Cancelled, "compile cancelled");
+        if ((++tick & 0xFF) == 0 && stop.stop_requested())
+            return fail(ErrorCode::Cancelled, "compile cancelled");
         const ir::Node& n = src.node(id);
         if (const auto* g = std::get_if<ir::Gate>(&n)) {
             lowered.clear();
             QXL_TRY(d.lower(*g, lowered));
-            for (ir::Gate& l : lowered) result.emplace_back(std::move(l));
+            for (ir::Gate& l : lowered)
+                result.emplace_back(std::move(l));
             continue;
         }
         ir::Node copy = n;
-        QXL_TRY(forEachBody(copy, [&](ir::Circuit& body) { return decompose(body, target, stop); }));
+        QXL_TRY(
+            forEachBody(copy, [&](ir::Circuit& body) { return decompose(body, target, stop); }));
         result.push_back(std::move(copy));
     }
     setNodes(c, std::move(result));

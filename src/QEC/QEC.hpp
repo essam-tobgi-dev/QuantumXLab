@@ -1,6 +1,7 @@
 #pragma once
-// Umbrella header for qlab::qec (spec 16, theory T09): stabilizer codes as data, syndrome-extraction
-// circuits, noise injection, decoders, logical-error experiments, resource estimation, view data.
+// Umbrella header for qlab::qec (spec 16, theory T09): stabilizer codes as data,
+// syndrome-extraction circuits, noise injection, decoders, logical-error experiments, resource
+// estimation, view data.
 #include "QEC/Code.hpp"
 #include "QEC/Decoder.hpp"
 #include "QEC/Encoder.hpp"

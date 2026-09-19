@@ -21,7 +21,8 @@ lang::Diagnostic note(std::string message, std::uint32_t line) {
 
 std::string lowerExtension(const std::filesystem::path& p) {
     std::string e = p.extension().string();
-    std::transform(e.begin(), e.end(), e.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    std::transform(e.begin(), e.end(), e.begin(),
+                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
     return e;
 }
 
@@ -30,11 +31,15 @@ std::string_view firstStatement(std::string_view text) {
     std::size_t i = 0;
     while (i < text.size()) {
         const std::size_t eol = text.find('\n', i);
-        std::string_view line = text.substr(i, eol == std::string_view::npos ? std::string_view::npos : eol - i);
-        while (!line.empty() && (line.front() == ' ' || line.front() == '\t' || line.front() == '\r'))
+        std::string_view line =
+            text.substr(i, eol == std::string_view::npos ? std::string_view::npos : eol - i);
+        while (!line.empty() &&
+               (line.front() == ' ' || line.front() == '\t' || line.front() == '\r'))
             line.remove_prefix(1);
-        if (!line.empty() && !line.starts_with("//")) return line;
-        if (eol == std::string_view::npos) break;
+        if (!line.empty() && !line.starts_with("//"))
+            return line;
+        if (eol == std::string_view::npos)
+            break;
         i = eol + 1;
     }
     return {};
@@ -57,7 +62,8 @@ std::vector<std::string> splitLines(const std::string& text) {
 
 bool replaceFirst(std::string& line, std::string_view from, std::string_view to) {
     const std::size_t at = line.find(from);
-    if (at == std::string::npos) return false;
+    if (at == std::string::npos)
+        return false;
     line.replace(at, from.size(), to);
     return true;
 }
@@ -66,10 +72,14 @@ bool replaceFirst(std::string& line, std::string_view from, std::string_view to)
 
 std::string_view importKindName(ImportKind k) {
     switch (k) {
-    case ImportKind::Qasm3: return "openqasm3";
-    case ImportKind::Qasm2: return "openqasm2";
-    case ImportKind::DeviceDirectory: return "device_directory";
-    case ImportKind::Unknown: break;
+    case ImportKind::Qasm3:
+        return "openqasm3";
+    case ImportKind::Qasm2:
+        return "openqasm2";
+    case ImportKind::DeviceDirectory:
+        return "device_directory";
+    case ImportKind::Unknown:
+        break;
     }
     return "unknown";
 }
@@ -77,11 +87,14 @@ std::string_view importKindName(ImportKind k) {
 ImportKind classify(const std::filesystem::path& path) {
     std::error_code ec;
     if (std::filesystem::is_directory(path, ec))
-        return std::filesystem::exists(path / "device.json", ec) ? ImportKind::DeviceDirectory : ImportKind::Unknown;
+        return std::filesystem::exists(path / "device.json", ec) ? ImportKind::DeviceDirectory
+                                                                 : ImportKind::Unknown;
     const std::string ext = lowerExtension(path);
-    if (ext != ".qasm" && ext != ".qasm3" && ext != ".inc") return ImportKind::Unknown;
+    if (ext != ".qasm" && ext != ".qasm3" && ext != ".inc")
+        return ImportKind::Unknown;
     auto text = core::readTextFile(path);
-    if (!text) return ImportKind::Unknown;
+    if (!text)
+        return ImportKind::Unknown;
     return firstStatement(*text).starts_with("OPENQASM 2") ? ImportKind::Qasm2 : ImportKind::Qasm3;
 }
 
@@ -92,13 +105,16 @@ ImportedProgram convertQasm2(std::string text, const std::filesystem::path& orig
     for (std::size_t i = 0; i < lines.size(); ++i) {
         std::string& line = lines[i];
         const std::uint32_t lineNo = static_cast<std::uint32_t>(i + 1);
-        if (line.find("OPENQASM 2.0") != std::string::npos && replaceFirst(line, "OPENQASM 2.0", "OPENQASM 3.0")) {
+        if (line.find("OPENQASM 2.0") != std::string::npos &&
+            replaceFirst(line, "OPENQASM 2.0", "OPENQASM 3.0")) {
             out.diagnostics.push_back(note("rewrote 'OPENQASM 2.0;' to 'OPENQASM 3.0;'", lineNo));
             out.converted = true;
             continue;
         }
-        if (line.find("qelib1.inc") != std::string::npos && replaceFirst(line, "qelib1.inc", "stdgates.inc")) {
-            out.diagnostics.push_back(note("rewrote include \"qelib1.inc\" to \"stdgates.inc\"", lineNo));
+        if (line.find("qelib1.inc") != std::string::npos &&
+            replaceFirst(line, "qelib1.inc", "stdgates.inc")) {
+            out.diagnostics.push_back(
+                note("rewrote include \"qelib1.inc\" to \"stdgates.inc\"", lineNo));
             out.converted = true;
             continue;
         }
@@ -108,7 +124,8 @@ ImportedProgram convertQasm2(std::string text, const std::filesystem::path& orig
         trimmed.erase(0, trimmed.find_first_not_of(" \t"));
         if (trimmed.starts_with("opaque ")) {
             line = "// [import] " + line;
-            out.diagnostics.push_back(note("commented out an 'opaque' declaration; define it with 'defcal' instead", lineNo));
+            out.diagnostics.push_back(note(
+                "commented out an 'opaque' declaration; define it with 'defcal' instead", lineNo));
             out.converted = true;
             continue;
         }
@@ -116,31 +133,39 @@ ImportedProgram convertQasm2(std::string text, const std::filesystem::path& orig
     out.source.clear();
     for (std::size_t i = 0; i < lines.size(); ++i) {
         out.source += lines[i];
-        if (i + 1 < lines.size()) out.source += '\n';
+        if (i + 1 < lines.size())
+            out.source += '\n';
     }
     // `qreg`/`creg`, `measure q -> c;` and the legacy gate aliases are accepted as they are
     // (spec 13 §4); they are noted so the user sees what the file still contains.
-    if (out.source.find("qreg ") != std::string::npos || out.source.find("creg ") != std::string::npos)
-        out.diagnostics.push_back(note("'qreg'/'creg' declarations are read as 'qubit[n]'/'bit[n]'", 0));
+    if (out.source.find("qreg ") != std::string::npos ||
+        out.source.find("creg ") != std::string::npos)
+        out.diagnostics.push_back(
+            note("'qreg'/'creg' declarations are read as 'qubit[n]'/'bit[n]'", 0));
     return out;
 }
 
 Result<ImportedProgram> importProgram(const std::filesystem::path& path) {
     const ImportKind kind = classify(path);
     if (kind == ImportKind::DeviceDirectory)
-        return fail(ErrorCode::InvalidArgument, path.string() + " is a device directory, not a program");
+        return fail(ErrorCode::InvalidArgument,
+                    path.string() + " is a device directory, not a program");
     if (kind == ImportKind::Unknown)
         return fail(ErrorCode::Unsupported,
-                    "spec 23 §11: only .qasm, .qasm3 and .inc files are imported, not " + path.string());
+                    "spec 23 §11: only .qasm, .qasm3 and .inc files are imported, not " +
+                        path.string());
     QXL_TRY_ASSIGN(std::string text, core::readTextFile(path));
-    if (kind == ImportKind::Qasm2) return convertQasm2(std::move(text), path);
+    if (kind == ImportKind::Qasm2)
+        return convertQasm2(std::move(text), path);
     ImportedProgram out;
     out.source = std::move(text);
     out.origin = path;
     return out;
 }
 
-std::filesystem::path userDeviceDir() { return core::userDataDir() / "devices"; }
+std::filesystem::path userDeviceDir() {
+    return core::userDataDir() / "devices";
+}
 
 Result<std::filesystem::path> importDeviceDirectory(const std::filesystem::path& dir,
                                                     const std::filesystem::path& destRoot) {
@@ -155,11 +180,14 @@ Result<std::filesystem::path> importDeviceDirectory(const std::filesystem::path&
     const std::filesystem::path dest = root / id;
     std::error_code ec;
     if (std::filesystem::exists(dest, ec))
-        return fail(ErrorCode::InvalidArgument, "a device '" + id + "' is already installed at " + dest.string());
+        return fail(ErrorCode::InvalidArgument,
+                    "a device '" + id + "' is already installed at " + dest.string());
     std::filesystem::create_directories(root, ec);
-    if (ec) return fail(ErrorCode::Io, "cannot create " + root.string() + ": " + ec.message());
+    if (ec)
+        return fail(ErrorCode::Io, "cannot create " + root.string() + ": " + ec.message());
     std::filesystem::copy(dir, dest, std::filesystem::copy_options::recursive, ec);
-    if (ec) return fail(ErrorCode::Io, "cannot copy device directory: " + ec.message());
+    if (ec)
+        return fail(ErrorCode::Io, "cannot copy device directory: " + ec.message());
     return dest;
 }
 

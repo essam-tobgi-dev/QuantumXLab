@@ -11,8 +11,8 @@ namespace {
 struct ActionInfo {
     Action action;
     std::string_view name;
-    std::string_view label;   // strings.en.json key
-    std::string_view chord;   // spec 19 §5 default
+    std::string_view label; // strings.en.json key
+    std::string_view chord; // spec 19 §5 default
 };
 constexpr std::array<ActionInfo, 22> kActions{{
     {Action::Run, "run", "menu.run_program", "F5"},
@@ -41,17 +41,20 @@ constexpr std::array<ActionInfo, 22> kActions{{
 
 const ActionInfo* info(Action a) {
     for (const ActionInfo& e : kActions)
-        if (e.action == a) return &e;
+        if (e.action == a)
+            return &e;
     return nullptr;
 }
 
 // ImGui key of a chord's key name. `ImGui::GetKeyName` is the inverse, so the table stays in step
 // with whatever spelling this ImGui version uses.
 ImGuiKey keyFromName(std::string_view name) {
-    if (name.empty()) return ImGuiKey_None;
+    if (name.empty())
+        return ImGuiKey_None;
     for (int k = ImGuiKey_NamedKey_BEGIN; k < ImGuiKey_NamedKey_END; ++k) {
         const char* n = ImGui::GetKeyName(static_cast<ImGuiKey>(k));
-        if (n != nullptr && name == n) return static_cast<ImGuiKey>(k);
+        if (n != nullptr && name == n)
+            return static_cast<ImGuiKey>(k);
     }
     return ImGuiKey_None;
 }
@@ -68,7 +71,8 @@ std::string_view actionLabel(Action a) {
 }
 std::optional<Action> actionFromName(std::string_view name) {
     for (const ActionInfo& e : kActions)
-        if (e.name == name) return e.action;
+        if (e.name == name)
+            return e.action;
     return std::nullopt;
 }
 
@@ -76,9 +80,12 @@ std::optional<Action> actionFromName(std::string_view name) {
 
 std::string Chord::text() const {
     std::string out;
-    if (ctrl) out += "Ctrl+";
-    if (shift) out += "Shift+";
-    if (alt) out += "Alt+";
+    if (ctrl)
+        out += "Ctrl+";
+    if (shift)
+        out += "Shift+";
+    if (alt)
+        out += "Alt+";
     out += key;
     return out;
 }
@@ -88,16 +95,22 @@ Chord Chord::parse(std::string_view text) {
     std::size_t at = 0;
     while (true) {
         const std::size_t plus = text.find('+', at);
-        if (plus == std::string_view::npos) break;
+        if (plus == std::string_view::npos)
+            break;
         const std::string_view part = text.substr(at, plus - at);
-        if (part == "Ctrl" || part == "Cmd" || part == "Super") c.ctrl = true;
-        else if (part == "Shift") c.shift = true;
-        else if (part == "Alt" || part == "Option") c.alt = true;
-        else return {}; // unknown modifier: malformed
+        if (part == "Ctrl" || part == "Cmd" || part == "Super")
+            c.ctrl = true;
+        else if (part == "Shift")
+            c.shift = true;
+        else if (part == "Alt" || part == "Option")
+            c.alt = true;
+        else
+            return {}; // unknown modifier: malformed
         at = plus + 1;
     }
     c.key = std::string(text.substr(at));
-    if (c.key.empty()) return {};
+    if (c.key.empty())
+        return {};
     return c;
 }
 
@@ -105,12 +118,14 @@ Chord Chord::parse(std::string_view text) {
 
 Shortcuts Shortcuts::defaults() {
     Shortcuts s;
-    for (const ActionInfo& e : kActions) s.bind(e.action, Chord::parse(e.chord));
+    for (const ActionInfo& e : kActions)
+        s.bind(e.action, Chord::parse(e.chord));
     return s;
 }
 
 void Shortcuts::bind(Action a, Chord c) {
-    if (a == Action::None || !c.valid()) return;
+    if (a == Action::None || !c.valid())
+        return;
     for (auto& [action, chord] : bindings_)
         if (action == a) {
             chord = std::move(c);
@@ -125,7 +140,8 @@ void Shortcuts::unbind(Action a) {
 
 const Chord* Shortcuts::chord(Action a) const {
     for (const auto& [action, c] : bindings_)
-        if (action == a) return &c;
+        if (action == a)
+            return &c;
     return nullptr;
 }
 
@@ -136,30 +152,36 @@ std::string Shortcuts::text(Action a) const {
 
 Action Shortcuts::lookup(const Chord& c) const {
     for (const auto& [action, bound] : bindings_)
-        if (bound == c) return action;
+        if (bound == c)
+            return action;
     return Action::None;
 }
 
 core::Json Shortcuts::toJson() const {
     core::Json j = core::Json::object();
-    for (const auto& [action, c] : bindings_) j[std::string(actionName(action))] = c.text();
+    for (const auto& [action, c] : bindings_)
+        j[std::string(actionName(action))] = c.text();
     return j;
 }
 
 Result<Shortcuts> Shortcuts::fromJson(const core::Json& j) {
-    if (!j.is_object()) return fail(err::BadLayout, "shortcuts: not an object");
+    if (!j.is_object())
+        return fail(err::BadLayout, "shortcuts: not an object");
     Shortcuts s = defaults();
     for (const auto& [key, value] : j.items()) {
         const auto action = actionFromName(key);
-        if (!action) return fail(err::BadLayout, "shortcuts: unknown action '" + key + "'");
-        if (!value.is_string()) return fail(err::BadLayout, "shortcuts: '" + key + "' is not a string");
+        if (!action)
+            return fail(err::BadLayout, "shortcuts: unknown action '" + key + "'");
+        if (!value.is_string())
+            return fail(err::BadLayout, "shortcuts: '" + key + "' is not a string");
         const std::string text = value.get<std::string>();
         if (text.empty()) {
             s.unbind(*action);
             continue;
         }
         const Chord c = Chord::parse(text);
-        if (!c.valid()) return fail(err::BadLayout, "shortcuts: malformed chord '" + text + "'");
+        if (!c.valid())
+            return fail(err::BadLayout, "shortcuts: malformed chord '" + text + "'");
         s.bind(*action, c);
     }
     return s;
@@ -169,30 +191,40 @@ Result<Shortcuts> Shortcuts::fromJson(const core::Json& j) {
 
 std::vector<Action> pollShortcuts(const Shortcuts& map, bool textFocused) {
     std::vector<Action> fired;
-    if (ImGui::GetCurrentContext() == nullptr) return fired;
+    if (ImGui::GetCurrentContext() == nullptr)
+        return fired;
     const ImGuiIO& io = ImGui::GetIO();
     for (const ActionInfo& e : kActions) {
         const Chord* c = map.chord(e.action);
-        if (c == nullptr) continue;
+        if (c == nullptr)
+            continue;
         const ImGuiKey key = keyFromName(c->key);
-        if (key == ImGuiKey_None) continue;
+        if (key == ImGuiKey_None)
+            continue;
         // Spec 19 §5: the bare viewport letters must not steal keystrokes from the editor.
-        if (textFocused && !c->ctrl && !c->alt && c->key.size() == 1) continue;
-        if (!ImGui::IsKeyPressed(key, false)) continue;
-        if (io.KeyShift != c->shift || io.KeyAlt != c->alt) continue;
-        if ((io.KeyCtrl || io.KeySuper) != c->ctrl) continue;
+        if (textFocused && !c->ctrl && !c->alt && c->key.size() == 1)
+            continue;
+        if (!ImGui::IsKeyPressed(key, false))
+            continue;
+        if (io.KeyShift != c->shift || io.KeyAlt != c->alt)
+            continue;
+        if ((io.KeyCtrl || io.KeySuper) != c->ctrl)
+            continue;
         fired.push_back(e.action);
     }
     return fired;
 }
 
 int pollBookmarkDigit(bool textFocused) {
-    if (ImGui::GetCurrentContext() == nullptr || textFocused) return 0;
+    if (ImGui::GetCurrentContext() == nullptr || textFocused)
+        return 0;
     const ImGuiIO& io = ImGui::GetIO();
-    if (io.KeyShift || io.KeyAlt) return 0;
+    if (io.KeyShift || io.KeyAlt)
+        return 0;
     for (int n = 1; n <= 9; ++n) {
         const auto key = static_cast<ImGuiKey>(ImGuiKey_0 + n);
-        if (!ImGui::IsKeyPressed(key, false)) continue;
+        if (!ImGui::IsKeyPressed(key, false))
+            continue;
         return (io.KeyCtrl || io.KeySuper) ? -n : n;
     }
     return 0;

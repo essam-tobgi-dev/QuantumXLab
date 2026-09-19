@@ -1,8 +1,8 @@
 #pragma once
 // Spec 17 §8 — live overlays. Every overlay carries the fidelity class of what it shows
 // (spec 00 §5) and hides itself when its binding has no value (spec 17 §5).
-#include "Graphics/Colormap.hpp"
 #include "Data/Fidelity.hpp"
+#include "Graphics/Colormap.hpp"
 #include "Lab/BindingRegistry.hpp"
 #include "Lab/Scene.hpp"
 #include <string>
@@ -46,7 +46,7 @@ struct PulsePacket {
     std::size_t lineIndex = 0;
     ComponentId segment{0};
     glm::dvec3 position{0.0};
-    double amplitude = 1.0;   // relative to the launched amplitude
+    double amplitude = 1.0; // relative to the launched amplitude
     double sigma_m = 0.05;
     data::FidelityClass cls = data::FidelityClass::Illustrative;
 };
@@ -55,10 +55,10 @@ struct PulsePacket {
 struct BlochMarker {
     std::uint32_t qubit = 0;
     ComponentId node{0};
-    glm::dvec3 center{0.0};  // world, 0.6 mm above the pad
-    double radius_m = 2e-4;  // 0.4 mm sphere
+    glm::dvec3 center{0.0}; // world, 0.6 mm above the pad
+    double radius_m = 2e-4; // 0.4 mm sphere
     glm::dvec3 vector{0.0, 0.0, 1.0};
-    double purity = 1.0;     // sphere opacity
+    double purity = 1.0; // sphere opacity
     data::FidelityClass cls = data::FidelityClass::Exact;
     bool simulatorOnly = true;
 };
@@ -73,7 +73,7 @@ struct ResonatorGlow {
 };
 
 class LabOverlays {
-public:
+  public:
     LabOverlays(const Scene& scene, const BindingRegistry& bindings);
 
     // Reads every overlay binding once per frame (spec 17 §5).
@@ -99,7 +99,7 @@ public:
     // Coax phase velocity v = c / sqrt(eps_r) with PTFE dielectric (eps_r = 2.1).
     static double coaxVelocity_mps() { return 299792458.0 / std::sqrt(2.1); }
 
-private:
+  private:
     const Scene* scene_;
     const BindingRegistry* bindings_;
     std::vector<StageTemperature> stages_;

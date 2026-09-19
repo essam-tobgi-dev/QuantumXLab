@@ -15,11 +15,11 @@
 namespace qlab::report {
 
 struct ResultExportOptions {
-    std::string source;                            // program text stored under "program.source"
-    bool writeMemory = true;                       // write `memoryFile` beside the JSON
-    std::string memoryFile = "memory.bin";         // relative to the JSON's directory (§1)
-    std::string channelsFile;                      // "" = the document names no channel CSV
-    std::chrono::milliseconds compileTime{0};      // "timing.compile_ms" (the run supplies run_ms)
+    std::string source;                       // program text stored under "program.source"
+    bool writeMemory = true;                  // write `memoryFile` beside the JSON
+    std::string memoryFile = "memory.bin";    // relative to the JSON's directory (§1)
+    std::string channelsFile;                 // "" = the document names no channel CSV
+    std::chrono::milliseconds compileTime{0}; // "timing.compile_ms" (the run supplies run_ms)
 };
 
 // Spec 23 §6: per-shot bits packed little-endian, 8 shots per byte per bit column. Byte
@@ -34,7 +34,8 @@ Result<data::Histogram> decodeMemory(std::span<const std::uint8_t> blob, const c
 
 // The `run_result` document of spec 23 §6.
 core::Json runResultJson(const runtime::RunResult& r, const ResultExportOptions& options = {});
-std::string serializeRunResult(const runtime::RunResult& r, const ResultExportOptions& options = {});
+std::string serializeRunResult(const runtime::RunResult& r,
+                               const ResultExportOptions& options = {});
 // Writes `<path>` and, when the run kept its memory, `<path's directory>/<memoryFile>`.
 Status writeRunResult(const std::filesystem::path& path, const runtime::RunResult& r,
                       const ResultExportOptions& options = {});

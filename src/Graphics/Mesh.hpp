@@ -21,7 +21,7 @@ struct MeshData {
     Aabb bounds() const;
     void append(const MeshData& other, const glm::mat4& xf = glm::mat4(1.0f));
     void transform(const glm::mat4& xf);
-    void recomputeNormals();  // flat-averaged from triangles
+    void recomputeNormals(); // flat-averaged from triangles
     // Flip every triangle whose geometric normal (p1-p0)x(p2-p0) opposes its vertex normals, so
     // the mesh is counter-clockwise seen from outside and survives back-face culling. Returns the
     // number of triangles flipped. Every shapes:: generator ends with this pass.
@@ -30,20 +30,23 @@ struct MeshData {
     std::size_t triangleCount() const { return indices.size() / 3; }
 };
 
-// GPU mesh. Layout: 0 position, 1 normal, 2 uv, 3 color; per-instance attribs 4..9 (see Instancing).
+// GPU mesh. Layout: 0 position, 1 normal, 2 uv, 3 color; per-instance attribs 4..9 (see
+// Instancing).
 class Mesh {
-public:
+  public:
     Mesh() = default;
     explicit Mesh(const MeshData& d) { upload(d); }
     void upload(const MeshData& d);
     void draw() const;
     void drawInstanced(int count) const;
-    // Attach an instance buffer (mat4 model at 4..7 [0], uvec2 id/flags at 8 [64], vec4 color at 9 [80]; stride 96).
+    // Attach an instance buffer (mat4 model at 4..7 [0], uvec2 id/flags at 8 [64], vec4 color at 9
+    // [80]; stride 96).
     void bindInstanceBuffer(const Buffer& instances);
     std::uint32_t indexCount() const { return indexCount_; }
     const Aabb& bounds() const { return bounds_; }
     bool valid() const { return indexCount_ > 0; }
-private:
+
+  private:
     VertexArray vao_;
     Buffer vbo_{GL_ARRAY_BUFFER}, ibo_{GL_ELEMENT_ARRAY_BUFFER};
     std::uint32_t indexCount_ = 0;
@@ -58,9 +61,12 @@ MeshData cylinder(float radius, float height, int segments = 32, bool caps = tru
 MeshData cone(float radius, float height, int segments = 32);
 MeshData torus(float majorR, float minorR, int majorSeg = 48, int minorSeg = 16);
 // Tube of radius r swept along a polyline (Catmull–Rom smoothed if smooth); for coax runs.
-MeshData tube(const std::vector<glm::vec3>& path, float radius, int segments = 12, bool smooth = true);
-// Plate (box) with circular holes cut as inset rings (visual approximation: holes rendered as recessed cylinders).
-MeshData plateWithHoles(glm::vec2 size, float thickness, const std::vector<glm::vec3>& holes /* x,z,radius */);
+MeshData tube(const std::vector<glm::vec3>& path, float radius, int segments = 12,
+              bool smooth = true);
+// Plate (box) with circular holes cut as inset rings (visual approximation: holes rendered as
+// recessed cylinders).
+MeshData plateWithHoles(glm::vec2 size, float thickness,
+                        const std::vector<glm::vec3>& holes /* x,z,radius */);
 // Extrude a closed 2D polygon (xz plane, CCW) by height along +y (for CPW traces, pads).
 MeshData extrudePolygon(const std::vector<glm::vec2>& polygon, float height);
 // Ribbon of width w along a 2D path in the xz plane, extruded by height (for CPW centre traces).

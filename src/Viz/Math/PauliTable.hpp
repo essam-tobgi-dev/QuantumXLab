@@ -24,25 +24,25 @@ Result<double> pauliExpectation(const num::Matrix& rho, const qsim::PauliString&
 // How the program read its qubits out: per qubit the basis letter ('Z' unless the program rotated
 // into X or Y before measuring; 0 = not measured) and the classical bit holding the outcome.
 struct MeasurementMap {
-    std::vector<char> basis;                  // index = qubit
-    std::vector<std::int32_t> bitOfQubit;     // index = qubit; −1 = not measured
+    std::vector<char> basis;              // index = qubit
+    std::vector<std::int32_t> bitOfQubit; // index = qubit; −1 = not measured
     bool measures(std::uint32_t qubit, char letter) const;
 };
 
 struct PauliEstimate {
     double value = 0.0;
-    double standardError = 0.0;               // √((1 − ⟨P⟩²)/N)
+    double standardError = 0.0; // √((1 − ⟨P⟩²)/N)
     std::uint64_t shots = 0;
 };
 // nullopt when the string was not measured (some letter of supp P disagrees with the basis map).
-std::optional<PauliEstimate> pauliFromCounts(const data::Histogram& counts, const qsim::PauliString& p,
-                                             const MeasurementMap& map);
+std::optional<PauliEstimate> pauliFromCounts(const data::Histogram& counts,
+                                             const qsim::PauliString& p, const MeasurementMap& map);
 
 struct PauliRow {
-    std::string label;                        // "XZIY"; single-qubit rows are "X0", "Y0", "Z0", "X1", …
+    std::string label; // "XZIY"; single-qubit rows are "X0", "Y0", "Z0", "X1", …
     qsim::PauliString pauli;
-    std::optional<double> exact;              // from the snapshot (Simulator-only)
-    std::optional<PauliEstimate> estimate;    // from shots (Physical)
+    std::optional<double> exact;           // from the snapshot (Simulator-only)
+    std::optional<PauliEstimate> estimate; // from shots (Physical)
     bool userAdded = false;
     data::FidelityClass cls = data::FidelityClass::Exact;
 };

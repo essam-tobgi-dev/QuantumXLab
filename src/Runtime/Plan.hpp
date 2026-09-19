@@ -15,18 +15,19 @@ namespace qlab::runtime {
 struct ProgramPlan {
     std::vector<std::uint32_t> qubits;
     std::vector<std::int32_t> toSim;
-    std::vector<MeasuredBit> measurements;      // in execution order; the last one per qubit wins
-    std::vector<std::uint32_t> measuredQubits;  // simulator indices, first-measurement order
+    std::vector<MeasuredBit> measurements;     // in execution order; the last one per qubit wins
+    std::vector<std::uint32_t> measuredQubits; // simulator indices, first-measurement order
     ClassicalLayout layout;
 
-    bool terminalMeasurementOnly = true; // no Branch/Loop/ClassicalOp and every Measure last on its wire
-    bool hasFeedforward = false;         // Branch or Loop present
+    bool terminalMeasurementOnly =
+        true;                    // no Branch/Loop/ClassicalOp and every Measure last on its wire
+    bool hasFeedforward = false; // Branch or Loop present
     bool hasMidCircuitMeasure = false;
     bool hasReset = false;
     bool hasLoop = false;
-    bool cliffordOnly = true;            // Clifford gates + measure/reset only (spec 15 §2)
-    std::uint32_t branchCount = 0;       // static Branch/Loop nodes (per shot upper bound)
-    std::uint64_t gateCount = 0;         // gate applications of one shot, nested bodies included
+    bool cliffordOnly = true;      // Clifford gates + measure/reset only (spec 15 §2)
+    std::uint32_t branchCount = 0; // static Branch/Loop nodes (per shot upper bound)
+    std::uint64_t gateCount = 0;   // gate applications of one shot, nested bodies included
     std::uint32_t depth = 0;
 
     std::uint32_t nQubits() const { return static_cast<std::uint32_t>(qubits.size()); }
@@ -51,7 +52,7 @@ Picoseconds circuitCriticalPath(const ir::Circuit& c, const compiler::ScheduleIn
 // |0⟩ (spec 14 §9, 08 §4).
 struct IdleGap {
     std::uint32_t wire = 0;
-    std::size_t nodeIndex = 0;   // index into `topologicalOrder()`
+    std::size_t nodeIndex = 0; // index into `topologicalOrder()`
     Picoseconds length{0};
 };
 std::vector<IdleGap> idleGaps(const ir::Circuit& c, const compiler::ScheduleInfo& timing);

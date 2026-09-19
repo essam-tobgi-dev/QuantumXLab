@@ -24,22 +24,23 @@ struct ApplyOptions {
     // NoiseModel::drawShotDetunings or one Gauss–Hermite node. When set, `detuning_drift` acts as
     // the coherent R_Z(2π δf t) of that shot on the StateVector and DensityMatrix backends, so an
     // echo refocuses it. When empty it acts as the shot-averaged dephasing channel, which is exact
-    // for one uninterrupted window only (spec 08 §2.6). The stabilizer always uses the averaged form.
+    // for one uninterrupted window only (spec 08 §2.6). The stabilizer always uses the averaged
+    // form.
     std::span<const double> shotDetuningHz;
 };
 
 // Accumulated over the applications of one run or shot.
 struct ApplyReport {
     FidelityClass cls = FidelityClass::Exact;
-    std::size_t applied = 0;           // channels that acted on the state
-    std::size_t skipped = 0;           // identity channels (zero duration, zero strength)
-    std::vector<std::string> twirled;  // ids of non-Pauli channels applied as their Pauli twirl
+    std::size_t applied = 0;          // channels that acted on the state
+    std::size_t skipped = 0;          // identity channels (zero duration, zero strength)
+    std::vector<std::string> twirled; // ids of non-Pauli channels applied as their Pauli twirl
 };
 
 Status applyChannel(qsim::IBackend& backend, const AttachedChannel& channel, core::Random& rng,
                     const ApplyOptions& options, ApplyReport& report);
-Status applyChannels(qsim::IBackend& backend, std::span<const AttachedChannel> channels, core::Random& rng,
-                     const ApplyOptions& options, ApplyReport& report);
+Status applyChannels(qsim::IBackend& backend, std::span<const AttachedChannel> channels,
+                     core::Random& rng, const ApplyOptions& options, ApplyReport& report);
 
 // Terminal readout with assignment errors, bits in `readout.qubits()` order. DensityMatrix and
 // Lindblad apply Mᵀ to the exact distribution before sampling (§7.1, §7.4); the other backends
@@ -47,6 +48,7 @@ Status applyChannels(qsim::IBackend& backend, std::span<const AttachedChannel> c
 Result<qsim::Counts> sampleWithReadout(const qsim::IBackend& backend, const ReadoutModel& readout,
                                        std::uint64_t shots, core::Random& rng);
 // Mid-circuit measurement: projective collapse by the backend, then the classical assignment error.
-Result<qsim::Outcome> measureWithReadout(qsim::IBackend& backend, const ReadoutModel& readout, core::Random& rng);
+Result<qsim::Outcome> measureWithReadout(qsim::IBackend& backend, const ReadoutModel& readout,
+                                         core::Random& rng);
 
 } // namespace qlab::noise

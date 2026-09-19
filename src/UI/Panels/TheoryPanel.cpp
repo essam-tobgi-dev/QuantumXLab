@@ -14,8 +14,9 @@ namespace {
 constexpr float kMeasurePx = 720.0f; // spec 20 §6
 
 class TheoryPanel final : public BasicPanel {
-public:
-    TheoryPanel() : BasicPanel(PanelId::Theory, "theory", "panels.theory", "§", Workspace::Analysis) {}
+  public:
+    TheoryPanel()
+        : BasicPanel(PanelId::Theory, "theory", "panels.theory", "§", Workspace::Analysis) {}
 
     void draw(UiContext& ctx) override;
     core::Json serialize() const override {
@@ -25,12 +26,15 @@ public:
         return j;
     }
     void deserialize(const core::Json& j) override {
-        if (!j.is_object()) return;
-        if (const auto it = j.find("doc"); it != j.end() && it->is_string()) doc_ = it->get<std::string>();
-        if (const auto it = j.find("anchor"); it != j.end() && it->is_string()) anchor_ = it->get<std::string>();
+        if (!j.is_object())
+            return;
+        if (const auto it = j.find("doc"); it != j.end() && it->is_string())
+            doc_ = it->get<std::string>();
+        if (const auto it = j.find("anchor"); it != j.end() && it->is_string())
+            anchor_ = it->get<std::string>();
     }
 
-private:
+  private:
     void navigate(std::string doc, std::string anchor);
     void drawSpans(UiContext& ctx, const std::vector<theory::InlineSpan>& spans);
     void drawBlock(UiContext& ctx, const theory::Block& block, std::size_t index);
@@ -42,7 +46,8 @@ private:
 };
 
 void TheoryPanel::navigate(std::string doc, std::string anchor) {
-    if (doc == doc_ && anchor == anchor_) return;
+    if (doc == doc_ && anchor == anchor_)
+        return;
     back_.emplace_back(doc_, anchor_);
     forward_.clear();
     doc_ = std::move(doc);
@@ -54,7 +59,8 @@ void TheoryPanel::navigate(std::string doc, std::string anchor) {
 void TheoryPanel::drawSpans(UiContext& ctx, const std::vector<theory::InlineSpan>& spans) {
     bool first = true;
     for (const theory::InlineSpan& s : spans) {
-        if (!first) ImGui::SameLine(0.0f, 0.0f);
+        if (!first)
+            ImGui::SameLine(0.0f, 0.0f);
         first = false;
         if (s.math) {
             EquationView inlineEq;
@@ -66,12 +72,16 @@ void TheoryPanel::drawSpans(UiContext& ctx, const std::vector<theory::InlineSpan
         if (s.link.kind != theory::LinkKind::None) {
             widgets::text(ctx, Token::Accent, s.text);
             if (ImGui::IsItemClicked()) {
-                if (s.link.kind == theory::LinkKind::Theory) navigate(s.link.doc, s.link.anchor);
-                else if (s.link.kind == theory::LinkKind::Internal) scrollToAnchor_ = s.link.anchor;
-                else if (s.link.kind == theory::LinkKind::Component && ctx.interaction != nullptr && ctx.scene != nullptr) {
+                if (s.link.kind == theory::LinkKind::Theory)
+                    navigate(s.link.doc, s.link.anchor);
+                else if (s.link.kind == theory::LinkKind::Internal)
+                    scrollToAnchor_ = s.link.anchor;
+                else if (s.link.kind == theory::LinkKind::Component && ctx.interaction != nullptr &&
+                         ctx.scene != nullptr) {
                     // spec 20 §6: `component:` selects the component and focuses the camera.
                     const ComponentId id = ctx.interaction->searchSelect(s.link.id, ctx.camera);
-                    if (ctx.cmd.selectComponent) ctx.cmd.selectComponent(id);
+                    if (ctx.cmd.selectComponent)
+                        ctx.cmd.selectComponent(id);
                 }
             }
             continue;
@@ -109,11 +119,15 @@ void TheoryPanel::drawBlock(UiContext& ctx, const theory::Block& block, std::siz
         eq.setLatex(block.latex);
         if (ctx.assets != nullptr)
             for (const EquationDoc& d : ctx.assets->equations())
-                if (d.latex == block.latex) eq.setDocument(&d);
+                if (d.latex == block.latex)
+                    eq.setDocument(&d);
         eq.setDisplayStyle(true);
         const float width = eq.size(ctx).x;
-        ImGui::SetCursorPosX(ImGui::GetCursorPosX() +
-                             std::max(0.0f, (std::min(ctx.ui(kMeasurePx), ImGui::GetContentRegionAvail().x) - width) * 0.5f));
+        ImGui::SetCursorPosX(
+            ImGui::GetCursorPosX() +
+            std::max(0.0f,
+                     (std::min(ctx.ui(kMeasurePx), ImGui::GetContentRegionAvail().x) - width) *
+                         0.5f));
         eq.draw(ctx);
         if (!block.tag.empty()) {
             ImGui::SameLine();
@@ -125,7 +139,8 @@ void TheoryPanel::drawBlock(UiContext& ctx, const theory::Block& block, std::siz
         FontScope f(*ctx.fonts, FontRole::Code);
         widgets::text(ctx, Token::TextSecondary, block.plain);
         ImGui::PushID(static_cast<int>(index));
-        if (widgets::secondaryButton(ctx, "Copy")) ImGui::SetClipboardText(block.plain.c_str());
+        if (widgets::secondaryButton(ctx, "Copy"))
+            ImGui::SetClipboardText(block.plain.c_str());
         ImGui::PopID();
         break;
     }
@@ -139,9 +154,11 @@ void TheoryPanel::drawBlock(UiContext& ctx, const theory::Block& block, std::siz
         }
         break;
     case BlockKind::Table: {
-        if (block.rows.empty()) break;
+        if (block.rows.empty())
+            break;
         const auto columns = static_cast<int>(block.rows.front().size());
-        if (columns <= 0 || !ImGui::BeginTable("##t", columns, widgets::tableFlags(false))) break;
+        if (columns <= 0 || !ImGui::BeginTable("##t", columns, widgets::tableFlags(false)))
+            break;
         for (std::size_t r = 0; r < block.rows.size(); ++r) {
             ImGui::TableNextRow();
             for (const theory::TableCell& cell : block.rows[r]) {
@@ -167,8 +184,9 @@ void TheoryPanel::draw(UiContext& ctx) {
     if (!ctx.cmd.openTheory)
         ctx.cmd.openTheory = [this](std::string_view ref) {
             const std::size_t hash = ref.find('#');
-            navigate(std::string(ref.substr(0, hash)),
-                     hash == std::string_view::npos ? std::string{} : std::string(ref.substr(hash + 1)));
+            navigate(std::string(ref.substr(0, hash)), hash == std::string_view::npos
+                                                           ? std::string{}
+                                                           : std::string(ref.substr(hash + 1)));
         };
 
     {
@@ -200,13 +218,17 @@ void TheoryPanel::draw(UiContext& ctx) {
     for (const std::string& id : ctx.theoryIndex->documentIds()) {
         const bool current = id == doc_;
         widgets::text(ctx, current ? Token::Accent : Token::TextSecondary, id);
-        if (ImGui::IsItemClicked()) navigate(id, {});
-        if (!current || document == nullptr) continue;
+        if (ImGui::IsItemClicked())
+            navigate(id, {});
+        if (!current || document == nullptr)
+            continue;
         for (const theory::HeadingRef& h : document->headings) {
-            if (h.level > 2) continue;
+            if (h.level > 2)
+                continue;
             ImGui::Indent(ctx.metrics_px().spacing(2));
             widgets::text(ctx, Token::TextSecondary, h.text);
-            if (ImGui::IsItemClicked()) scrollToAnchor_ = h.anchor;
+            if (ImGui::IsItemClicked())
+                scrollToAnchor_ = h.anchor;
             ImGui::Unindent(ctx.metrics_px().spacing(2));
         }
     }
@@ -218,13 +240,16 @@ void TheoryPanel::draw(UiContext& ctx) {
     if (document == nullptr) {
         widgets::placeholder(ctx, "Document '" + doc_ + "' was not found.");
     } else {
-        for (std::size_t i = 0; i < document->blocks.size(); ++i) drawBlock(ctx, document->blocks[i], i);
+        for (std::size_t i = 0; i < document->blocks.size(); ++i)
+            drawBlock(ctx, document->blocks[i], i);
     }
     ImGui::EndChild();
 }
 
 } // namespace
 
-PanelPtr makeTheoryPanel() { return std::make_unique<TheoryPanel>(); }
+PanelPtr makeTheoryPanel() {
+    return std::make_unique<TheoryPanel>();
+}
 
 } // namespace qlab::ui

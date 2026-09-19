@@ -2,7 +2,8 @@
 #include <cmath>
 #include <glm/gtc/constants.hpp>
 namespace qlab::gfx {
-void LineBatch::segment(const glm::dvec3& wa, const glm::dvec3& wb, const glm::vec4& c, float w, float dash) {
+void LineBatch::segment(const glm::dvec3& wa, const glm::dvec3& wb, const glm::vec4& c, float w,
+                        float dash) {
     // World → origin-relative in double, then narrow to float for the GPU.
     const glm::vec3 a(wa - origin_), b(wb - origin_);
     // two triangles: (a,-1) (a,+1) (b,+1) / (a,-1) (b,+1) (b,-1)
@@ -13,13 +14,18 @@ void LineBatch::segment(const glm::dvec3& wa, const glm::dvec3& wb, const glm::v
     verts_.push_back({a, b, c, +1, 1, w, dash});
     verts_.push_back({a, b, c, -1, 1, w, dash});
 }
-void LineBatch::polyline(const std::vector<glm::vec3>& p, const glm::vec4& c, float w, bool closed) {
-    for (std::size_t i = 0; i + 1 < p.size(); ++i) segment(p[i], p[i + 1], c, w);
-    if (closed && p.size() > 2) segment(p.back(), p.front(), c, w);
+void LineBatch::polyline(const std::vector<glm::vec3>& p, const glm::vec4& c, float w,
+                         bool closed) {
+    for (std::size_t i = 0; i + 1 < p.size(); ++i)
+        segment(p[i], p[i + 1], c, w);
+    if (closed && p.size() > 2)
+        segment(p.back(), p.front(), c, w);
 }
-void LineBatch::circle(const glm::vec3& ctr, const glm::vec3& n, float r, const glm::vec4& c, int seg, float w) {
+void LineBatch::circle(const glm::vec3& ctr, const glm::vec3& n, float r, const glm::vec4& c,
+                       int seg, float w) {
     glm::vec3 nn = glm::normalize(n);
-    glm::vec3 u = std::abs(nn.y) < 0.9f ? glm::normalize(glm::cross(nn, {0, 1, 0})) : glm::normalize(glm::cross(nn, {1, 0, 0}));
+    glm::vec3 u = std::abs(nn.y) < 0.9f ? glm::normalize(glm::cross(nn, {0, 1, 0}))
+                                        : glm::normalize(glm::cross(nn, {1, 0, 0}));
     glm::vec3 v = glm::cross(nn, u);
     std::vector<glm::vec3> pts;
     for (int i = 0; i < seg; ++i) {
@@ -28,11 +34,13 @@ void LineBatch::circle(const glm::vec3& ctr, const glm::vec3& n, float r, const 
     }
     polyline(pts, c, w, true);
 }
-void LineBatch::arrow(const glm::dvec3& a, const glm::dvec3& b, const glm::vec4& c, float w, float headFrac) {
+void LineBatch::arrow(const glm::dvec3& a, const glm::dvec3& b, const glm::vec4& c, float w,
+                      float headFrac) {
     segment(a, b, c, w);
     glm::dvec3 d = b - a;
     const double l = glm::length(d);
-    if (l < 1e-15) return; // micrometre-scale arrows on the chip are legitimate
+    if (l < 1e-15)
+        return; // micrometre-scale arrows on the chip are legitimate
     d /= l;
     const glm::dvec3 u = std::abs(d.y) < 0.9 ? glm::normalize(glm::cross(d, glm::dvec3(0, 1, 0)))
                                              : glm::normalize(glm::cross(d, glm::dvec3(1, 0, 0)));
@@ -74,7 +82,8 @@ void LineBatch::upload() {
     uploaded_ = verts_.size();
 }
 void LineBatch::draw() const {
-    if (!init_ || uploaded_ == 0) return;
+    if (!init_ || uploaded_ == 0)
+        return;
     vao_.bind();
     glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(uploaded_));
 }

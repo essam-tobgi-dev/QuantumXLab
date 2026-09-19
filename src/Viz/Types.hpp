@@ -26,10 +26,14 @@ constexpr std::string_view observabilityName(Observability o) {
 enum class Backend : std::uint8_t { ImPlot, GlCanvas, DrawList, Table };
 constexpr std::string_view backendName(Backend b) {
     switch (b) {
-    case Backend::ImPlot: return "ImPlot";
-    case Backend::GlCanvas: return "GL canvas";
-    case Backend::DrawList: return "ImGui draw list";
-    case Backend::Table: return "ImGui table";
+    case Backend::ImPlot:
+        return "ImPlot";
+    case Backend::GlCanvas:
+        return "GL canvas";
+    case Backend::DrawList:
+        return "ImGui draw list";
+    case Backend::Table:
+        return "ImGui table";
     }
     return "?";
 }
@@ -42,8 +46,12 @@ struct Rect {
     constexpr double height() const { return y1 - y0; }
     constexpr double cx() const { return 0.5 * (x0 + x1); }
     constexpr double cy() const { return 0.5 * (y0 + y1); }
-    constexpr bool contains(double x, double y) const { return x >= x0 && x <= x1 && y >= y0 && y <= y1; }
-    constexpr bool overlaps(const Rect& o) const { return x0 < o.x1 && o.x0 < x1 && y0 < o.y1 && o.y0 < y1; }
+    constexpr bool contains(double x, double y) const {
+        return x >= x0 && x <= x1 && y >= y0 && y <= y1;
+    }
+    constexpr bool overlaps(const Rect& o) const {
+        return x0 < o.x1 && o.x0 < x1 && y0 < o.y1 && o.y0 < y1;
+    }
     constexpr Rect inset(double d) const { return {x0 + d, y0 + d, x1 - d, y1 - d}; }
     constexpr Rect unite(const Rect& o) const {
         return {std::min(x0, o.x0), std::min(y0, o.y0), std::max(x1, o.x1), std::max(y1, o.y1)};
@@ -59,19 +67,27 @@ struct ReadoutRow {
 };
 
 enum class HitKind : std::uint8_t {
-    None, Qubit, Edge, BasisState, MatrixElement, Gate, Channel, Sample, Row
+    None,
+    Qubit,
+    Edge,
+    BasisState,
+    MatrixElement,
+    Gate,
+    Channel,
+    Sample,
+    Row
 };
 
 // What lies under a view-local position (spec 21 §1 `hitTest`). Only the fields that apply to
 // `kind` are set. The readout is what the hover card shows (spec 21 §4).
 struct HitResult {
     HitKind kind = HitKind::None;
-    std::optional<QubitIndex> qubit;                          // Qubit, Sample
-    std::optional<std::pair<QubitIndex, QubitIndex>> edge;    // Edge (a < b)
-    std::optional<std::uint64_t> basisIndex;                  // BasisState (little-endian index)
+    std::optional<QubitIndex> qubit;                       // Qubit, Sample
+    std::optional<std::pair<QubitIndex, QubitIndex>> edge; // Edge (a < b)
+    std::optional<std::uint64_t> basisIndex;               // BasisState (little-endian index)
     std::optional<std::pair<std::uint32_t, std::uint32_t>> element; // MatrixElement (row, column)
-    std::optional<std::uint32_t> gate;                        // Gate: index in topological order
-    std::optional<std::uint32_t> row;                         // Channel / Row / Sample series
+    std::optional<std::uint32_t> gate; // Gate: index in topological order
+    std::optional<std::uint32_t> row;  // Channel / Row / Sample series
     std::string title;
     std::vector<ReadoutRow> readout;
     explicit operator bool() const { return kind != HitKind::None; }

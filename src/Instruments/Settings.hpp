@@ -17,27 +17,32 @@ std::string_view settingTypeName(SettingType t);
 struct SettingSpec {
     std::string key;
     SettingType type = SettingType::Real;
-    std::string unit; // catalog symbol of the stored value ("Hz", "dBm", "V", …); empty = dimensionless
+    std::string
+        unit; // catalog symbol of the stored value ("Hz", "dBm", "V", …); empty = dimensionless
     double min = -std::numeric_limits<double>::infinity();
     double max = std::numeric_limits<double>::infinity();
-    double step = 0.0;                // resolution the value is rounded to (silent); 0 = continuous
-    std::vector<double> allowed;      // Real/Int with discrete values (AWG sample rates); snapped and reported
+    double step = 0.0; // resolution the value is rounded to (silent); 0 = continuous
+    std::vector<double>
+        allowed; // Real/Int with discrete values (AWG sample rates); snapped and reported
     std::vector<std::string> options; // Enum
     SettingValue defaultValue;
     std::string description;
-    bool readOnly = false;            // a spec-sheet constant shown in the panel (resolution_bits)
+    bool readOnly = false; // a spec-sheet constant shown in the panel (resolution_bits)
 
-    static SettingSpec real(std::string key, std::string unit, double min, double max, double step, double def,
-                            std::string description);
-    static SettingSpec integer(std::string key, std::string unit, std::int64_t min, std::int64_t max,
-                               std::int64_t def, std::string description);
+    static SettingSpec real(std::string key, std::string unit, double min, double max, double step,
+                            double def, std::string description);
+    static SettingSpec integer(std::string key, std::string unit, std::int64_t min,
+                               std::int64_t max, std::int64_t def, std::string description);
     static SettingSpec boolean(std::string key, bool def, std::string description);
     static SettingSpec choice(std::string key, std::vector<std::string> options, std::string def,
                               std::string description);
     static SettingSpec text(std::string key, std::string def, std::string description);
-    static SettingSpec discrete(std::string key, std::string unit, std::vector<double> allowed, double def,
-                                std::string description);
-    SettingSpec& constant() { readOnly = true; return *this; }
+    static SettingSpec discrete(std::string key, std::string unit, std::vector<double> allowed,
+                                double def, std::string description);
+    SettingSpec& constant() {
+        readOnly = true;
+        return *this;
+    }
 
     bool operator==(const SettingSpec&) const = default;
 };
@@ -58,7 +63,8 @@ struct SettingSchema {
     // Type check, range clamp, discrete snap, step rounding. Errors: UnknownSetting, BadSettingType
     // (wrong type, NaN/inf, enum value not listed, write to a read-only setting unless
     // `allowReadOnly`, which tools writing derived values use).
-    Result<Coerced> coerce(std::string_view key, const SettingValue& v, bool allowReadOnly = false) const;
+    Result<Coerced> coerce(std::string_view key, const SettingValue& v,
+                           bool allowReadOnly = false) const;
 
     core::Json toJson() const;
     static Result<SettingSchema> fromJson(const core::Json& j);

@@ -19,18 +19,20 @@ using StageArray = std::array<double, kStageCount>;
 using LinePowers = std::map<std::string, double, std::less<>>;
 
 struct StageLoad {
-    double conduction_W = 0;   // wiring conduction arriving from the warmer stage
-    double radiation_W = 0;    // radiative load from the warmer shield
-    double dissipation_W = 0;  // attenuators, amplifiers, preamp pumps, heaters
-    double parasitic_W = 0;    // fixed residual load (supports, gas conduction, vibration)
+    double conduction_W = 0;  // wiring conduction arriving from the warmer stage
+    double radiation_W = 0;   // radiative load from the warmer shield
+    double dissipation_W = 0; // attenuators, amplifiers, preamp pumps, heaters
+    double parasitic_W = 0;   // fixed residual load (supports, gas conduction, vibration)
     double total() const { return conduction_W + radiation_W + dissipation_W + parasitic_W; }
 };
 
 struct LineLoad {
     std::string lineId;
-    StageArray conduction_W{};   // conducted into each stage by this line's coax segments
-    StageArray dissipation_W{};  // dissipated at each stage by attenuators/amplifiers
-    double totalAt(Stage s) const { return conduction_W[stageIndex(s)] + dissipation_W[stageIndex(s)]; }
+    StageArray conduction_W{};  // conducted into each stage by this line's coax segments
+    StageArray dissipation_W{}; // dissipated at each stage by attenuators/amplifiers
+    double totalAt(Stage s) const {
+        return conduction_W[stageIndex(s)] + dissipation_W[stageIndex(s)];
+    }
 };
 
 // Geometry of the radiation shields (spec 11 §2.2). Areas are the outer surface of each stage's
@@ -43,10 +45,12 @@ struct ShieldGeometry {
 
 // Fixed loads that do not scale with wiring (spec 11 §2.4): supports, residual gas, pulse-tube
 // vibration heating at the MXC, heat switches. Defaults from the worked example.
-inline StageArray defaultParasitic_W() { return {0.0, 2.0, 0.08, 0.3e-3, 8e-6, 8e-6}; }
+inline StageArray defaultParasitic_W() {
+    return {0.0, 2.0, 0.08, 0.3e-3, 8e-6, 8e-6};
+}
 
 class HeatLoadModel {
-public:
+  public:
     HeatLoadModel(const CoaxCatalog& coax, const MaterialCatalog& mats)
         : coax_(coax), mats_(mats) {}
 
@@ -58,14 +62,15 @@ public:
                               double inputPower_W = 0.0) const;
 
     // Sum over all lines + radiation + parasitic → per-stage loads.
-    Result<std::array<StageLoad, kStageCount>> stageLoads(const Wiring& wiring, const StageArray& T_K,
+    Result<std::array<StageLoad, kStageCount>> stageLoads(const Wiring& wiring,
+                                                          const StageArray& T_K,
                                                           const LinePowers& powers = {},
                                                           const CoolingParams& cool = {}) const;
 
     // Radiative load into stage s from the shield above it at the given temperatures.
     double radiation(Stage s, const StageArray& T_K) const;
 
-private:
+  private:
     const CoaxCatalog& coax_;
     const MaterialCatalog& mats_;
 };

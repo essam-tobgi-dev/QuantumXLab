@@ -11,11 +11,15 @@
 namespace qlab::lab {
 
 Status SceneBuilder::buildGasHandling(ComponentId root) {
-    if (!layout_.ghs) return {};
-    ComponentId ghs = addGroup(root, "ghs", "Gas handling system", Group::GasHandling, Transform::at(*layout_.ghs));
+    if (!layout_.ghs)
+        return {};
+    ComponentId ghs = addGroup(root, "ghs", "Gas handling system", Group::GasHandling,
+                               Transform::at(*layout_.ghs));
     const ComponentDescriptor* cab = scene_.catalog().find("ghs_cabinet");
-    if (!cab) return fail(kErrScene, "gas handling needs the 'ghs_cabinet' component");
-    const double W = cab->geometryNumber("w_m", 0.8), H = cab->geometryNumber("h_m", 1.9), D = cab->geometryNumber("d_m", 0.7);
+    if (!cab)
+        return fail(kErrScene, "gas handling needs the 'ghs_cabinet' component");
+    const double W = cab->geometryNumber("w_m", 0.8), H = cab->geometryNumber("h_m", 1.9),
+                 D = cab->geometryNumber("d_m", 0.7);
     NodeSpec cabinet;
     cabinet.descriptor = "ghs_cabinet";
     cabinet.instance = "ghs_cabinet";
@@ -28,8 +32,11 @@ Status SceneBuilder::buildGasHandling(ComponentId root) {
     // The panel face is 12 mm proud of the cabinet front (Box valve_mimic); discs and dials are
     // generated along +y and rotated to face the room.
     const double zPanel = 0.5 * D + 0.006;
-    auto onPanel = [&](double fx, double fy, double lift) { return Transform::rotated({fx * W, fy * H, zPanel + lift}, {1.0, 0.0, 0.0}, 90.0); };
-    for (int i = 0; i < kGhsValveRows * kGhsValveCols; ++i) { // valve mimic: rows are manifold lines, columns the branches
+    auto onPanel = [&](double fx, double fy, double lift) {
+        return Transform::rotated({fx * W, fy * H, zPanel + lift}, {1.0, 0.0, 0.0}, 90.0);
+    };
+    for (int i = 0; i < kGhsValveRows * kGhsValveCols;
+         ++i) { // valve mimic: rows are manifold lines, columns the branches
         const int row = i / kGhsValveCols, col = i % kGhsValveCols;
         NodeSpec valve;
         valve.descriptor = "valve";
@@ -39,9 +46,11 @@ Status SceneBuilder::buildGasHandling(ComponentId root) {
         valve.material = "stainless";
         valve.local = onPanel(ghsValveX(col), ghsValveY(row), 0.010);
         valve.params.setIndex("i", i);
-        QXL_TRY(addComponent(cabinetId, std::move(valve))); // its tag plate (V1 … V20) is part of the valve mesh
+        QXL_TRY(addComponent(
+            cabinetId, std::move(valve))); // its tag plate (V1 … V20) is part of the valve mesh
     }
-    for (int i = 0; i < kGhsGaugeCount; ++i) { // gauge row above the diagram: OVC, still, condensing, dumps, trap, He supply
+    for (int i = 0; i < kGhsGaugeCount;
+         ++i) { // gauge row above the diagram: OVC, still, condensing, dumps, trap, He supply
         NodeSpec gauge;
         gauge.descriptor = "pressure_gauge";
         gauge.instance = std::format("pressure_gauge[{}]", i);
@@ -83,16 +92,24 @@ Status SceneBuilder::buildGhsPlant(ComponentId ghs, double W, double H, double D
                          {"ln2_trap", "stainless", {-0.5 * W - 0.30, 0.0, 0.70}, 0, 90.0}};
     for (const auto& a : kPlant) {
         const ComponentDescriptor* d = scene_.catalog().find(a.id);
-        if (!d) continue;
+        if (!d)
+            continue;
         const std::string id = a.id;
-        const auto r = static_cast<float>(d->geometryNumber("r_m", 0.1)), h = static_cast<float>(d->geometryNumber("h_m", 0.3));
-        const auto w = static_cast<float>(d->geometryNumber("w_m", 0.3)), depth = static_cast<float>(d->geometryNumber("d_m", 0.5));
+        const auto r = static_cast<float>(d->geometryNumber("r_m", 0.1)),
+                   h = static_cast<float>(d->geometryNumber("h_m", 0.3));
+        const auto w = static_cast<float>(d->geometryNumber("w_m", 0.3)),
+                   depth = static_cast<float>(d->geometryNumber("d_m", 0.5));
         gfx::MeshData mesh;
-        if (id == "turbo_pump") mesh = props::turboPump(r, h);
-        else if (id == "scroll_pump") mesh = props::scrollPump(w, h, depth);
-        else if (id == "he3_compressor") mesh = props::he3Compressor(w, h, depth);
-        else if (id == "dump_tank") mesh = props::dumpTank(r, h);
-        else if (id == "ln2_trap") mesh = props::ln2Trap(r, h);
+        if (id == "turbo_pump")
+            mesh = props::turboPump(r, h);
+        else if (id == "scroll_pump")
+            mesh = props::scrollPump(w, h, depth);
+        else if (id == "he3_compressor")
+            mesh = props::he3Compressor(w, h, depth);
+        else if (id == "dump_tank")
+            mesh = props::dumpTank(r, h);
+        else if (id == "ln2_trap")
+            mesh = props::ln2Trap(r, h);
         NodeSpec spec;
         spec.descriptor = id;
         spec.instance = id == "dump_tank" ? std::format("dump_tank[{}]", a.index) : id;
@@ -106,15 +123,40 @@ Status SceneBuilder::buildGhsPlant(ComponentId ghs, double W, double H, double D
     // Interconnecting pipework (stainless, Ø 12 mm): turbo fore-line down the cabinet back,
     // dump manifold into the cabinet's left side, pump lines into its right side.
     gfx::MeshData pipes;
-    const float xL = static_cast<float>(-0.5 * W), xR = static_cast<float>(0.5 * W), Hf = static_cast<float>(H), Df = static_cast<float>(D);
+    const float xL = static_cast<float>(-0.5 * W), xR = static_cast<float>(0.5 * W),
+                Hf = static_cast<float>(H), Df = static_cast<float>(D);
     const glm::vec4 steel{0.72f, 0.73f, 0.74f, 1.0f};
-    mesh::appendColored(pipes, gfx::shapes::tube({{0.15f, Hf + 0.05f, -0.10f}, {0.15f, Hf + 0.05f, -0.5f * Df - 0.03f}, {0.15f, 0.25f, -0.5f * Df - 0.03f},
-                                                  {xR + 0.30f, 0.25f, -0.5f * Df - 0.03f}}, 0.006f, 8, false), steel);
-    mesh::appendColored(pipes, gfx::shapes::tube({{xL - 0.30f, 0.10f, -0.05f}, {xL - 0.30f, 0.10f, 0.05f}}, 0.006f, 8, false), steel);
-    mesh::appendColored(pipes, gfx::shapes::tube({{xL - 0.30f, 0.10f, 0.0f}, {xL - 0.02f, 0.10f, 0.0f}, {xL - 0.02f, 0.45f * Hf, 0.0f}}, 0.006f, 8, false), steel);
-    mesh::appendColored(pipes, gfx::shapes::tube({{xL - 0.30f, 0.62f, 0.70f}, {xL - 0.02f, 0.62f, 0.70f}, {xL - 0.02f, 0.62f, 0.30f}}, 0.006f, 8, false), steel);
-    mesh::appendColored(pipes, gfx::shapes::tube({{xR + 0.30f, 0.30f, 0.10f}, {xR + 0.02f, 0.30f, 0.10f}, {xR + 0.02f, 0.30f, -0.20f}}, 0.006f, 8, false), steel);
-    addScenery(ghs, "ghs_pipework", "GHS pipework", Group::GasHandling, {}, std::move(pipes), "stainless");
+    mesh::appendColored(pipes,
+                        gfx::shapes::tube({{0.15f, Hf + 0.05f, -0.10f},
+                                           {0.15f, Hf + 0.05f, -0.5f * Df - 0.03f},
+                                           {0.15f, 0.25f, -0.5f * Df - 0.03f},
+                                           {xR + 0.30f, 0.25f, -0.5f * Df - 0.03f}},
+                                          0.006f, 8, false),
+                        steel);
+    mesh::appendColored(pipes,
+                        gfx::shapes::tube({{xL - 0.30f, 0.10f, -0.05f}, {xL - 0.30f, 0.10f, 0.05f}},
+                                          0.006f, 8, false),
+                        steel);
+    mesh::appendColored(
+        pipes,
+        gfx::shapes::tube(
+            {{xL - 0.30f, 0.10f, 0.0f}, {xL - 0.02f, 0.10f, 0.0f}, {xL - 0.02f, 0.45f * Hf, 0.0f}},
+            0.006f, 8, false),
+        steel);
+    mesh::appendColored(
+        pipes,
+        gfx::shapes::tube(
+            {{xL - 0.30f, 0.62f, 0.70f}, {xL - 0.02f, 0.62f, 0.70f}, {xL - 0.02f, 0.62f, 0.30f}},
+            0.006f, 8, false),
+        steel);
+    mesh::appendColored(
+        pipes,
+        gfx::shapes::tube(
+            {{xR + 0.30f, 0.30f, 0.10f}, {xR + 0.02f, 0.30f, 0.10f}, {xR + 0.02f, 0.30f, -0.20f}},
+            0.006f, 8, false),
+        steel);
+    addScenery(ghs, "ghs_pipework", "GHS pipework", Group::GasHandling, {}, std::move(pipes),
+               "stainless");
     return {};
 }
 

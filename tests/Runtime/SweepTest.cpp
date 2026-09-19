@@ -14,7 +14,8 @@ SweepGrid rabiGrid(double from, double to, double step) {
     SweepAxis axis;
     axis.input = "amp";
     axis.unit = "a_pi";
-    for (double a = from; a <= to + 1e-9; a += step) axis.values.push_back(a);
+    for (double a = from; a <= to + 1e-9; a += step)
+        axis.values.push_back(a);
     SweepGrid grid;
     grid.axes.push_back(std::move(axis));
     return grid;
@@ -40,7 +41,8 @@ TEST_CASE("a Rabi-amplitude sweep reproduces the expected cosine") {
     for (const SweepPoint& p : s.points) {
         REQUIRE(p.coords.size() == 1);
         const double a = p.coords[0];
-        const double expected = std::sin(0.5 * kPi * a) * std::sin(0.5 * kPi * a); // P₁ = sin²(πa/2)
+        const double expected =
+            std::sin(0.5 * kPi * a) * std::sin(0.5 * kPi * a); // P₁ = sin²(πa/2)
         INFO("amp = " << a << ": measured " << p.p1 << ", expected " << expected);
         REQUIRE(p.counts.total() == 2048);
         REQUIRE(std::abs(p.p1 - expected) < 5.0 * sigma(std::max(expected, 1e-4), 2048) + 1e-9);
@@ -93,14 +95,16 @@ TEST_CASE("a two-axis grid is a row-major tensor with axis 0 slowest") {
     options.shots = 512;
     options.seed = 9;
     options.sweep = grid;
-    const RunResult r = l.run(source("input float x = 0.0;\ninput float y = 0.0;\nqubit[1] q;\nbit c;\n"
-                                     "rx(0.5 * x) q[0];\nrz(0.01 * y) q[0];\nc = measure q[0];\n"),
-                              options);
+    const RunResult r =
+        l.run(source("input float x = 0.0;\ninput float y = 0.0;\nqubit[1] q;\nbit c;\n"
+                     "rx(0.5 * x) q[0];\nrz(0.01 * y) q[0];\nc = measure q[0];\n"),
+              options);
     REQUIRE(r.sweep->shape() == std::vector<std::size_t>{3, 2});
     REQUIRE(r.sweep->points.size() == 6);
     // rz after rx does not change P₁, so both y values agree at each x; x does change it.
     for (std::size_t x = 0; x < 3; ++x) {
-        const double expected = std::sin(0.25 * static_cast<double>(x)) * std::sin(0.25 * static_cast<double>(x));
+        const double expected =
+            std::sin(0.25 * static_cast<double>(x)) * std::sin(0.25 * static_cast<double>(x));
         for (std::size_t y = 0; y < 2; ++y) {
             const SweepPoint& p = r.sweep->points[x * 2 + y];
             REQUIRE(p.coords[0] == Approx(static_cast<double>(x)).margin(1e-12));
@@ -115,9 +119,10 @@ TEST_CASE("a program's pragma qlab.sweep defines the grid when the run dialog do
     options.noise = NoiseSource::Ideal;
     options.shots = 1024;
     options.seed = 13;
-    const RunResult r = l.run(source("input float amp = 0.0;\npragma qlab.sweep amp from 0.0 to 1.0 step 0.25\n"
-                                     "qubit[1] q;\nbit c;\nrx(3.141592653589793 * amp) q[0];\nc = measure q[0];\n"),
-                              options);
+    const RunResult r =
+        l.run(source("input float amp = 0.0;\npragma qlab.sweep amp from 0.0 to 1.0 step 0.25\n"
+                     "qubit[1] q;\nbit c;\nrx(3.141592653589793 * amp) q[0];\nc = measure q[0];\n"),
+              options);
     REQUIRE(r.sweep.has_value());
     REQUIRE(r.sweep->axes.size() == 1);
     REQUIRE(r.sweep->axes[0].input == "amp");

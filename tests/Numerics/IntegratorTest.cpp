@@ -1,19 +1,23 @@
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/catch_approx.hpp>
 #include "Numerics/Numerics.hpp"
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <cmath>
 #include <numbers>
 using namespace qlab::num;
 using Catch::Approx;
 
 // Harmonic oscillator y'' = -y as (q, p): q' = p, p' = -q. Energy = (q²+p²)/2.
-static const OdeRhs kSho = [](double, std::span<const Complex> y, std::span<Complex> d) { d[0] = y[1]; d[1] = -y[0]; };
+static const OdeRhs kSho = [](double, std::span<const Complex> y, std::span<Complex> d) {
+    d[0] = y[1];
+    d[1] = -y[0];
+};
 
 TEST_CASE("rk4 has 4th-order convergence on SHO") {
     auto run = [](int steps) {
         Vector y = {1.0, 0.0};
         double h = 2 * std::numbers::pi / steps;
-        for (int i = 0; i < steps; ++i) rk4Step(kSho, y, i * h, h);
+        for (int i = 0; i < steps; ++i)
+            rk4Step(kSho, y, i * h, h);
         return std::abs(y[0] - 1.0);
     };
     double e1 = run(300), e2 = run(600);
@@ -37,9 +41,14 @@ TEST_CASE("magnus2 is exact for a constant generator") {
     Vector y = {1.0, 0.0};
     double t = 0.0, h = 0.37;
     for (int i = 0; i < 5; ++i) {
-        magnus2Step(2, [&](double, std::span<const Complex> x, std::span<Complex> out) {
-            matvecInto(H, x, out); for (auto& v : out) v *= Complex(0, -1);
-        }, y, t, h);
+        magnus2Step(
+            2,
+            [&](double, std::span<const Complex> x, std::span<Complex> out) {
+                matvecInto(H, x, out);
+                for (auto& v : out)
+                    v *= Complex(0, -1);
+            },
+            y, t, h);
         t += h;
     }
     auto U = expmHermitian(H, t);

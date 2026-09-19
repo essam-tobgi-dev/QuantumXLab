@@ -4,15 +4,15 @@
 // hover readout after 150 ms, click → shared selection, keyboard (F, R, 1–9), qubit subset.
 // A concrete view implements `rebuild` (model from the input), `layout` (geometry for the body
 // size), `drawBody` and `hitTest`.
-#include "Viz/IStateView.hpp"
 #include "Data/Fidelity.hpp"
+#include "Viz/IStateView.hpp"
 #include <array>
 #include <vector>
 
 namespace qlab::viz {
 
 class StateView : public IStateView {
-public:
+  public:
     // ---- IStateView, shared
     void update(const ViewInput& in) final;
     void draw(DrawContext& ctx) final;
@@ -21,7 +21,8 @@ public:
     glm::vec2 bodySize() const final { return bodySize_; }
     void setOnHover(HitCallback fn) final { onHover_ = std::move(fn); }
     void setOnClick(HitCallback fn) final { onClick_ = std::move(fn); }
-    std::optional<HitResult> click(glm::vec2 local, SelectionModel* selection, bool additive = false) final;
+    std::optional<HitResult> click(glm::vec2 local, SelectionModel* selection,
+                                   bool additive = false) final;
     void setQubitSubset(std::span<const QubitIndex> qubits) final;
     std::span<const QubitIndex> qubitSubset() const final { return subset_; }
     std::string statusLine() const override;
@@ -35,7 +36,7 @@ public:
     std::uint64_t rebuildCount() const { return rebuilds_; }
     const ViewInput& input() const { return input_; }
 
-protected:
+  protected:
     virtual void rebuild(const ViewInput& in) = 0;
     virtual void layout() {}
     virtual void drawBody(DrawContext& ctx) = 0;
@@ -52,7 +53,7 @@ protected:
     bool hasSnapshot() const { return static_cast<bool>(input_.snapshot); }
     void setStale(bool s) { stale_ = s; }
 
-private:
+  private:
     // Identity of everything a view may read; equal stamps mean nothing changed.
     struct Stamp {
         std::array<const void*, 16> pointers{};

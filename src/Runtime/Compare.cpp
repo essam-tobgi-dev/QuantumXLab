@@ -7,18 +7,24 @@
 namespace qlab::runtime {
 
 Result<std::vector<DeviceComparison>> compareDevices(const lang::Program& program,
-                                                     const compiler::CompileOptions& options, std::uint64_t shots,
-                                                     std::string_view skip, std::stop_token stop) {
+                                                     const compiler::CompileOptions& options,
+                                                     std::uint64_t shots, std::string_view skip,
+                                                     std::stop_token stop) {
     std::vector<DeviceComparison> rows;
     for (const std::string& id : hw::shippedDeviceIds()) {
-        if (stop.stop_requested()) return fail(ErrorCode::Cancelled, "device comparison cancelled");
-        if (id == skip) continue;
+        if (stop.stop_requested())
+            return fail(ErrorCode::Cancelled, "device comparison cancelled");
+        if (id == skip)
+            continue;
         auto loaded = hw::loadShippedDevice(id);
-        if (!loaded) continue;
-        // A device that cannot compile the circuit (native set, connectivity, qubit count) is simply
-        // not in the table; it is not an error of the run (spec 15 §9).
-        auto compiled = compiler::compile(program, loaded->device, loaded->calibration, options, stop);
-        if (!compiled) continue;
+        if (!loaded)
+            continue;
+        // A device that cannot compile the circuit (native set, connectivity, qubit count) is
+        // simply not in the table; it is not an error of the run (spec 15 §9).
+        auto compiled =
+            compiler::compile(program, loaded->device, loaded->calibration, options, stop);
+        if (!compiled)
+            continue;
         EstimateInput in;
         in.device = &loaded->device;
         in.calibration = &loaded->calibration;
@@ -33,7 +39,8 @@ Result<std::vector<DeviceComparison>> compareDevices(const lang::Program& progra
                                 in.measuredQubits.end());
         auto wall = estimateWallTime(in);
         auto fidelity = estimateFidelityFast(in);
-        if (!wall || !fidelity) continue;
+        if (!wall || !fidelity)
+            continue;
         rows.push_back(DeviceComparison{id, wall->valueS, fidelity->fast});
     }
     return rows;

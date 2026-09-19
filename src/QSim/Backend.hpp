@@ -7,7 +7,7 @@
 namespace qlab::qsim {
 
 class IBackend {
-public:
+  public:
     virtual ~IBackend() = default;
     virtual Capabilities capabilities() const = 0;
     virtual Kind kind() const = 0;
@@ -27,13 +27,15 @@ public:
     virtual Result<double> expectation(const PauliString& p) const = 0;
     virtual Result<Probabilities> probabilities(std::span<const QubitIndex> qubits) const = 0;
     virtual Result<Snapshot> snapshot(const SnapshotRequest& req) const = 0;
-    virtual Result<Counts> sample(std::span<const QubitIndex> qubits, std::uint64_t shots, core::Random& rng) const = 0;
+    virtual Result<Counts> sample(std::span<const QubitIndex> qubits, std::uint64_t shots,
+                                  core::Random& rng) const = 0;
     virtual std::size_t bytesAllocated() const = 0;
     virtual double stateNorm() const = 0;
     virtual std::unique_ptr<IBackend> clone() const = 0;
 
     std::uint64_t opCount() const { return ops_; }
-protected:
+
+  protected:
     std::uint64_t ops_ = 0;
 };
 
@@ -53,7 +55,12 @@ struct SelectionRequest {
     std::uint32_t levels = 2;
     std::optional<Kind> pinned;
 };
-struct Selection { Kind kind; FidelityClass cls; bool stochasticUnravelling = false; std::string reason; };
+struct Selection {
+    Kind kind;
+    FidelityClass cls;
+    bool stochasticUnravelling = false;
+    std::string reason;
+};
 Result<Selection> selectBackend(const SelectionRequest& req);
 
 } // namespace qlab::qsim

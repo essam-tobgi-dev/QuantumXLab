@@ -19,7 +19,8 @@ SystemModel drivenDampedQubit(double gamma, double gammaPhi) {
     return m;
 }
 
-TrajectoriesBackend ensemble(const SystemModel& m, double duration, std::uint64_t seed, TrajectorySettings s) {
+TrajectoriesBackend ensemble(const SystemModel& m, double duration, std::uint64_t seed,
+                             TrajectorySettings s) {
     TrajectoriesBackend tb;
     tb.setSettings(s);
     REQUIRE(tb.setModel(m).has_value());
@@ -49,20 +50,22 @@ TEST_CASE("Trajectories: 3000 seeded trajectories match the Lindblad populations
         const auto& s = tb.samples()[k];
         INFO("t = " << s.timeS);
         REQUIRE(s.timeS == Approx(double(k) * 1e-9).margin(1e-18));
-        REQUIRE(std::abs(s.populations[1] - lb.trajectory()[k].populations[1]) < 3.0 * s.stderrs[1]);
+        REQUIRE(std::abs(s.populations[1] - lb.trajectory()[k].populations[1]) <
+                3.0 * s.stderrs[1]);
     }
 }
 
 TEST_CASE("Trajectories: zero rates give the exact unitary evolution") {
-    // Collapse operators present but with zero rate: no jump can happen, every trajectory is the same
-    // pure-state evolution and the standard error vanishes.
+    // Collapse operators present but with zero rate: no jump can happen, every trajectory is the
+    // same pure-state evolution and the standard error vanishes.
     const SystemModel m = drivenDampedQubit(0.0, 0.0);
     const double duration = 20e-9;
     const auto tb = ensemble(m, duration, 7, TrajectorySettings{25, 10e-12, 1e-9, true});
     REQUIRE(tb.samples().size() == 21);
     for (const auto& s : tb.samples()) {
         INFO("t = " << s.timeS);
-        REQUIRE(s.populations[1] == Approx(std::pow(std::sin(0.5 * kOmega * s.timeS), 2)).margin(1e-9));
+        REQUIRE(s.populations[1] ==
+                Approx(std::pow(std::sin(0.5 * kOmega * s.timeS), 2)).margin(1e-9));
         REQUIRE(s.stderrs[1] == 0.0); // identical trajectories: no statistical spread at all
     }
     REQUIRE(tb.stateNorm() == Approx(1.0).margin(1e-12));
@@ -79,7 +82,8 @@ TEST_CASE("Trajectories: zero rates give the exact unitary evolution") {
 TEST_CASE("Trajectories: runs are bit-identical per seed and differ between seeds") {
     const SystemModel m = drivenDampedQubit(1.0 / 10e-9, 1.0 / 20e-9);
     const TrajectorySettings s{200, 50e-12, 1e-9, true};
-    const auto a = ensemble(m, 12e-9, 99, s), b = ensemble(m, 12e-9, 99, s), c = ensemble(m, 12e-9, 100, s);
+    const auto a = ensemble(m, 12e-9, 99, s), b = ensemble(m, 12e-9, 99, s),
+               c = ensemble(m, 12e-9, 100, s);
     REQUIRE(a.samples().size() == b.samples().size());
     bool anyDifferent = false;
     for (std::size_t k = 0; k < a.samples().size(); ++k) {
@@ -91,8 +95,9 @@ TEST_CASE("Trajectories: runs are bit-identical per seed and differ between seed
     auto sa = a.snapshot(SnapshotRequest{true, false, false, {}, false});
     auto sb = b.snapshot(SnapshotRequest{true, false, false, {}, false});
     REQUIRE(*sa->amplitudes == *sb->amplitudes);
-    // Trajectory i draws from stream(i): a run of N trajectories is a prefix of a run of 2N... in the
-    // sense that the same seed and N give the same ensemble whatever else ran before on the backend.
+    // Trajectory i draws from stream(i): a run of N trajectories is a prefix of a run of 2N... in
+    // the sense that the same seed and N give the same ensemble whatever else ran before on the
+    // backend.
     TrajectoriesBackend reused;
     reused.setSettings(s);
     REQUIRE(reused.setModel(m).has_value());
@@ -120,7 +125,8 @@ TEST_CASE("Trajectories: the end of the run is always recorded") {
     LindbladBackend lb;
     REQUIRE(lb.setModel(m).has_value());
     REQUIRE(lb.evolve(duration).has_value());
-    REQUIRE(std::abs(recorded.population(0, 1) - lb.population(0, 1)) < 3.0 * recorded.populationStdErr(0, 1));
+    REQUIRE(std::abs(recorded.population(0, 1) - lb.population(0, 1)) <
+            3.0 * recorded.populationStdErr(0, 1));
 }
 
 TEST_CASE("Trajectories: caps and argument validation") {
@@ -138,7 +144,8 @@ TEST_CASE("Trajectories: caps and argument validation") {
     const SystemModel good = drivenDampedQubit(1.0 / 10e-9, 0.0);
     REQUIRE(tb.setModel(good).has_value());
     SystemModel wrongDrive = bareModel(2, 2);
-    wrongDrive.drives.push_back(ladderDrive(bareModel(1, 2), 0, [](double) { return Complex(1.0); }));
+    wrongDrive.drives.push_back(
+        ladderDrive(bareModel(1, 2), 0, [](double) { return Complex(1.0); }));
     REQUIRE(tb.setModel(wrongDrive).error().code == err::BadTargets);
     SystemModel wrongCollapse = bareModel(1, 2);
     wrongCollapse.collapse.push_back(decay(bareModel(2, 2), 0, 1.0));

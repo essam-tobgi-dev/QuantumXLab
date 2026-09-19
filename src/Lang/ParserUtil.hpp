@@ -34,9 +34,12 @@ inline bool isBuiltinConstant(std::string_view s) {
            s == "\xCE\xB5";
 }
 inline std::string_view canonicalConstant(std::string_view s) {
-    if (s == "\xCF\x80") return "pi";
-    if (s == "\xCF\x84") return "tau";
-    if (s == "\xCE\xB5") return "euler";
+    if (s == "\xCF\x80")
+        return "pi";
+    if (s == "\xCF\x84")
+        return "tau";
+    if (s == "\xCE\xB5")
+        return "euler";
     return s;
 }
 
@@ -44,8 +47,11 @@ inline std::string_view canonicalConstant(std::string_view s) {
 // line, because statements are conventionally one per line and the ';' may have been lost.
 inline bool startsStatement(const Token& t) {
     switch (t.kind) {
-    case TokenKind::Identifier: case TokenKind::Type: case TokenKind::Gate:
-    case TokenKind::CalBlock: case TokenKind::Pragma:
+    case TokenKind::Identifier:
+    case TokenKind::Type:
+    case TokenKind::Gate:
+    case TokenKind::CalBlock:
+    case TokenKind::Pragma:
         return true;
     case TokenKind::Builtin:
         return !isBuiltinConstant(t.text);
@@ -56,8 +62,8 @@ inline bool startsStatement(const Token& t) {
     }
 }
 
-// Nesting overflow is reported once while the parser unwinds out of the too-deep region, even though
-// every nested statement resets panic mode.
+// Nesting overflow is reported once while the parser unwinds out of the too-deep region, even
+// though every nested statement resets panic mode.
 inline bool lastDiagnosticIs(const std::vector<Diagnostic>& diags, std::string_view id) {
     return !diags.empty() && diags.back().id() == id;
 }

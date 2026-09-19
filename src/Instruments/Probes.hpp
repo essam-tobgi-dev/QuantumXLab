@@ -18,43 +18,47 @@
 namespace qlab::instr {
 
 class ProbeBase : public InstrumentBase {
-public:
+  public:
     bool simulatorOnly() const final { return true; }
 
-protected:
-    ProbeBase(InstrumentId id, SettingSchema schema) : InstrumentBase(std::move(id), std::move(schema)) {}
+  protected:
+    ProbeBase(InstrumentId id, SettingSchema schema)
+        : InstrumentBase(std::move(id), std::move(schema)) {}
     // Channels of a probe: all Simulator-only.
     void setProbeChannels(std::vector<ChannelDesc> channels);
     bool triggerSourceSet(const SettingValues&) const override { return false; }
     // The run snapshot, or NotBound.
-    static Result<std::shared_ptr<const qsim::Snapshot>> stateOf(const AcquireContext& ctx, const InstrumentId& id);
+    static Result<std::shared_ptr<const qsim::Snapshot>> stateOf(const AcquireContext& ctx,
+                                                                 const InstrumentId& id);
 };
 
 // Parses "0,2,5" into qubit indices; empty text → every qubit below `nQubits`.
 Result<std::vector<std::uint32_t>> parseQubitList(std::string_view text, std::uint32_t nQubits);
 
 class StateProbe final : public ProbeBase {
-public:
+  public:
     explicit StateProbe(std::uint32_t index = 0);
     static SettingSchema makeSchema();
-    std::optional<double> query(std::string_view path) const override; // qubit[i].bloch[k], qubit[i].purity, purity
+    std::optional<double>
+    query(std::string_view path) const override; // qubit[i].bloch[k], qubit[i].purity, purity
 
-protected:
+  protected:
     Result<Trace> doAcquire(const ChannelDesc& channel, AcquireContext& ctx) override;
 };
 
 class EntanglementProbe final : public ProbeBase {
-public:
-    static constexpr std::uint32_t kMaxPairQubits = 20; // spec 21 §3.8: all-pairs reductions only up to here
+  public:
+    static constexpr std::uint32_t kMaxPairQubits =
+        20; // spec 21 §3.8: all-pairs reductions only up to here
     explicit EntanglementProbe(std::uint32_t index = 0);
     static SettingSchema makeSchema();
 
-protected:
+  protected:
     Result<Trace> doAcquire(const ChannelDesc& channel, AcquireContext& ctx) override;
 };
 
 class FidelityProbe final : public ProbeBase {
-public:
+  public:
     explicit FidelityProbe(std::uint32_t index = 0);
     static SettingSchema makeSchema();
     // F of a state against the ideal reference; both snapshots must describe the same register.
@@ -63,43 +67,47 @@ public:
     // (T10 §1.2); the average gate fidelity is (d F_pro + 1)/(d + 1) (T10 §1.3).
     static Result<double> processFidelity(const GateComparison& gate);
 
-protected:
+  protected:
     Result<Trace> doAcquire(const ChannelDesc& channel, AcquireContext& ctx) override;
 
-private:
-    std::deque<std::pair<std::uint64_t, double>> history_; // (gate index, F); touched only while Acquiring
+  private:
+    std::deque<std::pair<std::uint64_t, double>>
+        history_; // (gate index, F); touched only while Acquiring
 };
 
 class TrajectoryProbe final : public ProbeBase {
-public:
+  public:
     explicit TrajectoryProbe(std::uint32_t index = 0);
     static SettingSchema makeSchema();
 
-protected:
+  protected:
     Result<Trace> doAcquire(const ChannelDesc& channel, AcquireContext& ctx) override;
 };
 
 class ThermalTruthProbe final : public ProbeBase {
-public:
+  public:
     explicit ThermalTruthProbe(std::uint32_t index = 0);
     static SettingSchema makeSchema();
-    // Thermometers whose latest readings are listed beside the truth (the registry attaches all of them).
-    void attach(std::vector<const Thermometer*> thermometers) { thermometers_ = std::move(thermometers); }
+    // Thermometers whose latest readings are listed beside the truth (the registry attaches all of
+    // them).
+    void attach(std::vector<const Thermometer*> thermometers) {
+        thermometers_ = std::move(thermometers);
+    }
     std::optional<double> query(std::string_view path) const override; // stage.<NAME>.T
 
-protected:
+  protected:
     Result<Trace> doAcquire(const ChannelDesc& channel, AcquireContext& ctx) override;
 
-private:
+  private:
     std::vector<const Thermometer*> thermometers_;
 };
 
 class LeakageProbe final : public ProbeBase {
-public:
+  public:
     explicit LeakageProbe(std::uint32_t index = 0);
     static SettingSchema makeSchema();
 
-protected:
+  protected:
     Result<Trace> doAcquire(const ChannelDesc& channel, AcquireContext& ctx) override;
 };
 

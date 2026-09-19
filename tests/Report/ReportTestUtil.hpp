@@ -19,7 +19,7 @@ using namespace qlab;
 
 // A unique directory under the system temp path, removed when the object dies.
 class Sandbox {
-public:
+  public:
     explicit Sandbox(std::string_view name) {
         static std::atomic<unsigned> counter{0};
         dir_ = std::filesystem::temp_directory_path() /
@@ -37,7 +37,7 @@ public:
     const std::filesystem::path& path() const { return dir_; }
     std::filesystem::path operator/(std::string_view leaf) const { return dir_ / leaf; }
 
-private:
+  private:
     std::filesystem::path dir_;
 };
 
@@ -94,8 +94,8 @@ inline const Fixture& bell() {
         o.seed = 20250916ull;
         o.cadence = runtime::SnapshotCadence::End;
         o.maxSnapshots = 4;
-        return std::make_unique<Fixture>("sc_fixed_5", "qubit[2] q; bit[2] c;\nh q[0];\ncx q[0], q[1];\nc = measure q;\n",
-                                         o);
+        return std::make_unique<Fixture>(
+            "sc_fixed_5", "qubit[2] q; bit[2] c;\nh q[0];\ncx q[0], q[1];\nc = measure q;\n", o);
     }();
     return *f;
 }

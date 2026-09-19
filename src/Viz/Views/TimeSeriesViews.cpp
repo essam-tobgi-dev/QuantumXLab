@@ -16,11 +16,14 @@ const char* kLevelName[3] = {"P0", "P1", "P2 (leakage)"};
 
 // Nearest sample index to a data x, for the hover readout.
 std::size_t nearest(std::span<const double> xs, double x) {
-    if (xs.empty()) return 0;
+    if (xs.empty())
+        return 0;
     const auto it = std::lower_bound(xs.begin(), xs.end(), x);
     std::size_t k = static_cast<std::size_t>(it - xs.begin());
-    if (k >= xs.size()) k = xs.size() - 1;
-    if (k > 0 && x - xs[k - 1] < xs[k] - x) --k;
+    if (k >= xs.size())
+        k = xs.size() - 1;
+    if (k > 0 && x - xs[k - 1] < xs[k] - x)
+        --k;
     return k;
 }
 } // namespace
@@ -32,7 +35,8 @@ data::FidelityClass PopulationsView::fidelity(const ViewInput& in) const {
 }
 
 void PopulationsView::setSite(std::uint32_t site) {
-    if (site_ == site) return;
+    if (site_ == site)
+        return;
     site_ = site;
     markDirty();
 }
@@ -58,20 +62,26 @@ void PopulationsView::rebuild(const ViewInput& in) {
     const LindbladSeries& s = *in.lindblad;
     // The subset selects the site when one is set; otherwise the explicitly chosen site.
     std::uint32_t site = site_;
-    if (!qubitSubset().empty()) site = qubitSubset().front().get();
-    if (site >= std::max<std::uint32_t>(1, s.sites)) site = 0;
+    if (!qubitSubset().empty())
+        site = qubitSubset().front().get();
+    if (site >= std::max<std::uint32_t>(1, s.sites))
+        site = 0;
     site_ = site;
     const std::uint32_t levels = std::max<std::uint32_t>(2, s.levels);
     levels_.assign(levels, {});
     for (const qsim::TimeSample& sample : s.samples) {
         const std::size_t base = static_cast<std::size_t>(site) * levels;
-        if (base + levels > sample.populations.size()) continue;
+        if (base + levels > sample.populations.size())
+            continue;
         t_.push_back(sample.timeS * kNsPerS);
-        for (std::uint32_t j = 0; j < levels; ++j) levels_[j].push_back(sample.populations[base + j]);
+        for (std::uint32_t j = 0; j < levels; ++j)
+            levels_[j].push_back(sample.populations[base + j]);
     }
-    for (std::size_t k = 0; k < s.purity.size() && k < t_.size(); ++k) purity_.push_back(s.purity[k]);
+    for (std::size_t k = 0; k < s.purity.size() && k < t_.size(); ++k)
+        purity_.push_back(s.purity[k]);
     if (site < s.blochNorm.size())
-        for (std::size_t k = 0; k < s.blochNorm[site].size() && k < t_.size(); ++k) blochNorm_.push_back(s.blochNorm[site][k]);
+        for (std::size_t k = 0; k < s.blochNorm[site].size() && k < t_.size(); ++k)
+            blochNorm_.push_back(s.blochNorm[site][k]);
     // The drive envelope of this site's channel, drawn faintly underneath (spec 21 §3.15).
     if (in.schedule) {
         layout::PulseLayoutOptions o;
@@ -85,11 +95,13 @@ void PopulationsView::rebuild(const ViewInput& in) {
                 driveA_.push_back(std::hypot(row->trace.re[k], row->trace.im[k]));
         }
     }
-    if (t_.empty()) note_ = "The Lindblad series carries no samples for this site";
+    if (t_.empty())
+        note_ = "The Lindblad series carries no samples for this site";
 }
 
 std::optional<HitResult> PopulationsView::hitTest(glm::vec2 local) const {
-    if (t_.empty() || plot_.width() <= 0.0 || !plot_.contains(local.x, local.y)) return std::nullopt;
+    if (t_.empty() || plot_.width() <= 0.0 || !plot_.contains(local.x, local.y))
+        return std::nullopt;
     const double t = t_.front() + (t_.back() - t_.front()) * (local.x - plot_.x0) / plot_.width();
     const std::size_t k = nearest(t_, t);
     HitResult h;
@@ -99,37 +111,47 @@ std::optional<HitResult> PopulationsView::hitTest(glm::vec2 local) const {
     const data::FidelityClass cls = fidelity(input());
     h.title = "q" + std::to_string(site_) + "  t = " + math::formatTime(t_[k] / kNsPerS);
     for (std::size_t j = 0; j < levels_.size(); ++j)
-        h.readout.push_back({j < 3 ? kLevelName[j] : ("P" + std::to_string(j)), math::formatSig(levels_[j][k]), cls});
-    if (k < purity_.size()) h.readout.push_back({"Tr ρ²", math::formatSig(purity_[k]), cls});
-    if (k < blochNorm_.size()) h.readout.push_back({"|r|", math::formatSig(blochNorm_[k]), cls});
+        h.readout.push_back({j < 3 ? kLevelName[j] : ("P" + std::to_string(j)),
+                             math::formatSig(levels_[j][k]), cls});
+    if (k < purity_.size())
+        h.readout.push_back({"Tr ρ²", math::formatSig(purity_[k]), cls});
+    if (k < blochNorm_.size())
+        h.readout.push_back({"|r|", math::formatSig(blochNorm_[k]), cls});
     return h;
 }
 
 std::optional<std::string> PopulationsView::exportCsv() const {
-    if (t_.empty()) return std::nullopt;
+    if (t_.empty())
+        return std::nullopt;
     std::string csv = "t_ns";
-    for (std::size_t j = 0; j < levels_.size(); ++j) csv += ",P" + std::to_string(j);
+    for (std::size_t j = 0; j < levels_.size(); ++j)
+        csv += ",P" + std::to_string(j);
     csv += ",purity,bloch_norm\n";
     for (std::size_t k = 0; k < t_.size(); ++k) {
         csv += math::formatSig(t_[k], 12);
-        for (const auto& lv : levels_) csv += "," + math::formatSig(lv[k], 12);
+        for (const auto& lv : levels_)
+            csv += "," + math::formatSig(lv[k], 12);
         csv += "," + (k < purity_.size() ? math::formatSig(purity_[k], 12) : std::string());
-        csv += "," + (k < blochNorm_.size() ? math::formatSig(blochNorm_[k], 12) : std::string()) + "\n";
+        csv += "," + (k < blochNorm_.size() ? math::formatSig(blochNorm_[k], 12) : std::string()) +
+               "\n";
     }
     return csv;
 }
 
 std::string PopulationsView::statusLine() const {
-    if (t_.empty()) return {};
-    std::string s = "q" + std::to_string(site_) + "   " + std::to_string(t_.size()) + " samples over " +
-                    math::formatTime(t_.back() / kNsPerS);
+    if (t_.empty())
+        return {};
+    std::string s = "q" + std::to_string(site_) + "   " + std::to_string(t_.size()) +
+                    " samples over " + math::formatTime(t_.back() / kNsPerS);
     if (levels_.size() > 2 && !levels_[2].empty())
-        s += "   max leakage " + math::formatSig(*std::max_element(levels_[2].begin(), levels_[2].end()));
+        s += "   max leakage " +
+             math::formatSig(*std::max_element(levels_[2].begin(), levels_[2].end()));
     return s;
 }
 
 void PopulationsView::drawBody(DrawContext& ctx) {
-    if (t_.empty()) return widgets::placeholder(ctx, note_.empty() ? "No populations" : note_);
+    if (t_.empty())
+        return widgets::placeholder(ctx, note_.empty() ? "No populations" : note_);
     const VizTheme& theme = *ctx.theme;
     const PlotStyle style(theme);
     const glm::vec2 body = bodySize();
@@ -141,11 +163,14 @@ void PopulationsView::drawBody(DrawContext& ctx) {
         ImPlot::SetupAxisLimits(ImAxis_Y2, -0.02, 1.02, ImPlotCond_Always);
         if (!driveA_.empty()) { // the drive envelope, faint, under the curves
             ImPlot::SetNextFillStyle(toImVec4(glm::vec3(theme.textSecondary), 0.12f));
-            ImPlot::PlotShaded("drive", driveT_.data(), driveA_.data(), static_cast<int>(driveA_.size()), 0.0);
+            ImPlot::PlotShaded("drive", driveT_.data(), driveA_.data(),
+                               static_cast<int>(driveA_.size()), 0.0);
         }
         for (std::size_t j = 0; j < levels_.size(); ++j) {
-            ImPlot::SetNextLineStyle(toImVec4(glm::vec3(theme.qubitColor(static_cast<std::uint32_t>(j))), 1.0f), 1.8f);
-            ImPlot::PlotLine(j < 3 ? kLevelName[j] : "P", t_.data(), levels_[j].data(), static_cast<int>(t_.size()));
+            ImPlot::SetNextLineStyle(
+                toImVec4(glm::vec3(theme.qubitColor(static_cast<std::uint32_t>(j))), 1.0f), 1.8f);
+            ImPlot::PlotLine(j < 3 ? kLevelName[j] : "P", t_.data(), levels_[j].data(),
+                             static_cast<int>(t_.size()));
         }
         ImPlot::SetAxes(ImAxis_X1, ImAxis_Y2);
         if (!purity_.empty()) {
@@ -154,12 +179,15 @@ void PopulationsView::drawBody(DrawContext& ctx) {
         }
         if (!blochNorm_.empty()) {
             ImPlot::SetNextLineStyle(toImVec4(glm::vec3(theme.accentSoft), 0.9f), 1.2f);
-            ImPlot::PlotLine("|r|", t_.data(), blochNorm_.data(), static_cast<int>(blochNorm_.size()));
+            ImPlot::PlotLine("|r|", t_.data(), blochNorm_.data(),
+                             static_cast<int>(blochNorm_.size()));
         }
         ImPlot::SetAxes(ImAxis_X1, ImAxis_Y1);
-        if (hasPlayhead_) ImPlot::TagX(playheadNs_, toImVec4(theme.accent), "t");
+        if (hasPlayhead_)
+            ImPlot::TagX(playheadNs_, toImVec4(theme.accent), "t");
         const ImVec2 p0 = ImPlot::GetPlotPos(), sz = ImPlot::GetPlotSize();
-        plot_ = {p0.x - bodyOrigin.x, p0.y - bodyOrigin.y, p0.x - bodyOrigin.x + sz.x, p0.y - bodyOrigin.y + sz.y};
+        plot_ = {p0.x - bodyOrigin.x, p0.y - bodyOrigin.y, p0.x - bodyOrigin.x + sz.x,
+                 p0.y - bodyOrigin.y + sz.y};
         ImPlot::EndPlot();
     }
 }
@@ -203,11 +231,13 @@ void TrajectoryView::rebuild(const ViewInput& in) {
         }
         traces_.push_back(std::move(t));
     }
-    if (t_.empty() && traces_.empty()) note_ = "The ensemble carries no samples";
+    if (t_.empty() && traces_.empty())
+        note_ = "The ensemble carries no samples";
 }
 
 std::optional<HitResult> TrajectoryView::hitTest(glm::vec2 local) const {
-    if (t_.empty() || plot_.width() <= 0.0 || !plot_.contains(local.x, local.y)) return std::nullopt;
+    if (t_.empty() || plot_.width() <= 0.0 || !plot_.contains(local.x, local.y))
+        return std::nullopt;
     const double t = t_.front() + (t_.back() - t_.front()) * (local.x - plot_.x0) / plot_.width();
     const std::size_t k = nearest(t_, t);
     HitResult h;
@@ -215,14 +245,17 @@ std::optional<HitResult> TrajectoryView::hitTest(glm::vec2 local) const {
     h.qubit = QubitIndex{qubit_};
     h.row = static_cast<std::uint32_t>(k);
     h.title = "q" + std::to_string(qubit_) + "  t = " + math::formatTime(t_[k] / kNsPerS);
-    h.readout.push_back({"⟨Z⟩", math::formatSig(meanZ_[k]) + " ± " + math::formatSig(hi_[k] - meanZ_[k], 2),
-                         data::FidelityClass::Statistical});
-    h.readout.push_back({"trajectories", std::to_string(trajectories_), data::FidelityClass::Statistical});
+    h.readout.push_back(
+        {"⟨Z⟩", math::formatSig(meanZ_[k]) + " ± " + math::formatSig(hi_[k] - meanZ_[k], 2),
+         data::FidelityClass::Statistical});
+    h.readout.push_back(
+        {"trajectories", std::to_string(trajectories_), data::FidelityClass::Statistical});
     return h;
 }
 
 std::optional<std::string> TrajectoryView::exportCsv() const {
-    if (t_.empty()) return std::nullopt;
+    if (t_.empty())
+        return std::nullopt;
     std::string csv = "t_ns,mean_z,stderr\n";
     for (std::size_t k = 0; k < t_.size(); ++k)
         csv += math::formatSig(t_[k], 12) + "," + math::formatSig(meanZ_[k], 12) + "," +
@@ -231,15 +264,18 @@ std::optional<std::string> TrajectoryView::exportCsv() const {
 }
 
 std::string TrajectoryView::statusLine() const {
-    if (t_.empty() && traces_.empty()) return {};
-    std::string s = "q" + std::to_string(qubit_) + "   " + std::to_string(trajectories_) + " trajectories";
+    if (t_.empty() && traces_.empty())
+        return {};
+    std::string s =
+        "q" + std::to_string(qubit_) + "   " + std::to_string(trajectories_) + " trajectories";
     if (traces_.size() > drawn_ || drawn_ == kMaxDrawn)
         s += "   " + std::to_string(drawn_) + " drawn"; // the rest contribute to the mean only
     return s;
 }
 
 void TrajectoryView::drawBody(DrawContext& ctx) {
-    if (t_.empty() && traces_.empty()) return widgets::placeholder(ctx, note_.empty() ? "No trajectories" : note_);
+    if (t_.empty() && traces_.empty())
+        return widgets::placeholder(ctx, note_.empty() ? "No trajectories" : note_);
     const VizTheme& theme = *ctx.theme;
     const PlotStyle style(theme);
     const glm::vec2 body = bodySize();
@@ -249,24 +285,29 @@ void TrajectoryView::drawBody(DrawContext& ctx) {
         ImPlot::SetupAxisLimits(ImAxis_Y1, -1.05, 1.05, ImPlotCond_Always);
         ImPlot::PushStyleVar(ImPlotStyleVar_LineWeight, 1.0f);
         for (const Trace& tr : traces_) {
-            if (tr.t.size() < 2) continue;
+            if (tr.t.size() < 2)
+                continue;
             ImPlot::SetNextLineStyle(toImVec4(glm::vec3(theme.textSecondary), 0.14f), 1.0f);
             ImPlot::PlotLine("##traj", tr.t.data(), tr.z.data(), static_cast<int>(tr.t.size()));
             if (!tr.jumpT.empty()) {
-                ImPlot::SetNextMarkerStyle(ImPlotMarker_Cross, 3.0f, toImVec4(glm::vec3(theme.warn), 0.5f), 1.0f,
+                ImPlot::SetNextMarkerStyle(ImPlotMarker_Cross, 3.0f,
+                                           toImVec4(glm::vec3(theme.warn), 0.5f), 1.0f,
                                            toImVec4(glm::vec3(theme.warn), 0.5f));
-                ImPlot::PlotScatter("##jumps", tr.jumpT.data(), tr.jumpZ.data(), static_cast<int>(tr.jumpT.size()));
+                ImPlot::PlotScatter("##jumps", tr.jumpT.data(), tr.jumpZ.data(),
+                                    static_cast<int>(tr.jumpT.size()));
             }
         }
         ImPlot::PopStyleVar();
         if (!meanZ_.empty()) {
             ImPlot::SetNextFillStyle(toImVec4(glm::vec3(theme.accent), 0.22f));
-            ImPlot::PlotShaded("± σ/√N", t_.data(), lo_.data(), hi_.data(), static_cast<int>(t_.size()));
+            ImPlot::PlotShaded("± σ/√N", t_.data(), lo_.data(), hi_.data(),
+                               static_cast<int>(t_.size()));
             ImPlot::SetNextLineStyle(toImVec4(glm::vec3(theme.accent), 1.0f), 2.2f);
             ImPlot::PlotLine("mean ⟨Z⟩", t_.data(), meanZ_.data(), static_cast<int>(t_.size()));
         }
         const ImVec2 p0 = ImPlot::GetPlotPos(), sz = ImPlot::GetPlotSize();
-        plot_ = {p0.x - bodyOrigin.x, p0.y - bodyOrigin.y, p0.x - bodyOrigin.x + sz.x, p0.y - bodyOrigin.y + sz.y};
+        plot_ = {p0.x - bodyOrigin.x, p0.y - bodyOrigin.y, p0.x - bodyOrigin.x + sz.x,
+                 p0.y - bodyOrigin.y + sz.y};
         ImPlot::EndPlot();
     }
 }

@@ -10,7 +10,7 @@
 namespace qlab::viz {
 
 class SchmidtView final : public StateView {
-public:
+  public:
     std::string_view id() const override { return "schmidt"; }
     std::string_view title() const override { return "Schmidt spectrum"; }
     Observability observability() const override { return Observability::SimulatorOnly; }
@@ -31,11 +31,11 @@ public:
     void setLogScale(bool on);
     bool logScale() const { return log_; }
 
-protected:
+  protected:
     void rebuild(const ViewInput& in) override;
     void drawBody(DrawContext& ctx) override;
 
-private:
+  private:
     std::vector<QubitIndex> defaultPartition(std::uint32_t n) const;
     std::vector<QubitIndex> partition_;
     std::optional<math::SchmidtSpectrum> spectrum_;

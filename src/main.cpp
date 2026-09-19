@@ -2,4 +2,6 @@
 // that the GUI, the headless modes and the tests enter through the same door.
 #include "App/App.hpp"
 
-int main(int argc, char** argv) { return qlab::app::main(argc, argv); }
+int main(int argc, char** argv) {
+    return qlab::app::main(argc, argv);
+}

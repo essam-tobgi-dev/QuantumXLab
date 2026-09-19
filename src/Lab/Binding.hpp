@@ -70,6 +70,7 @@ bool isSimulatorOnlyPath(std::string_view path);
 
 // Inspector text of a value: "—" when absent/NaN, otherwise 4 significant digits and the unit
 // (the provider's unit, or `unitFallback` from the spec row).
-std::string formatBindingValue(const std::optional<BindingValue>& v, std::string_view unitFallback = {});
+std::string formatBindingValue(const std::optional<BindingValue>& v,
+                               std::string_view unitFallback = {});
 
 } // namespace qlab::lab

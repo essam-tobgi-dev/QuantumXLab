@@ -11,7 +11,8 @@ Stage warmerStage(Stage s) {
 }
 
 double HeatLoadModel::radiation(Stage s, const StageArray& T) const {
-    if (s == Stage::RT) return 0.0;
+    if (s == Stage::RT)
+        return 0.0;
     Stage w = warmerStage(s);
     int i = stageIndex(s), j = stageIndex(w);
     // Effective emissivity between the warmer shield (emitter) and this stage's can (absorber),
@@ -20,12 +21,13 @@ double HeatLoadModel::radiation(Stage s, const StageArray& T) const {
                                shields.mliLayers[i], T[j], T[i]);
 }
 
-Result<LineLoad> HeatLoadModel::lineLoad(const WiringLine& line, const StageArray& T, double Pin) const {
+Result<LineLoad> HeatLoadModel::lineLoad(const WiringLine& line, const StageArray& T,
+                                         double Pin) const {
     LineLoad L;
     L.lineId = line.id;
     bool output = line.kind == LineKind::ReadoutOut;
-    // Power tracking along the chain (input lines: RT → chip; output lines carry ~pW signal, so only
-    // amplifier dissipation counts).
+    // Power tracking along the chain (input lines: RT → chip; output lines carry ~pW signal, so
+    // only amplifier dissipation counts).
     double P = output ? 0.0 : Pin;
     for (const Element& e : line.elements) {
         int i = stageIndex(e.stage);
@@ -35,49 +37,68 @@ Result<LineLoad> HeatLoadModel::lineLoad(const WiringLine& line, const StageArra
             // output lines the element's stage is the colder end as well (chain is listed chip→RT
             // but each segment still spans warmer→e.stage). Guard the RT end.
             Stage cold = e.stage, hot = warmerStage(e.stage);
-            if (output) { // the output chain lists segments toward RT: the segment "to PT2" spans PT2..STILL
+            if (output) { // the output chain lists segments toward RT: the segment "to PT2" spans
+                          // PT2..STILL
                 // elements were built with stage = the warmer end of the run; conduction flows into
                 // the colder neighbour.
                 hot = e.stage;
                 cold = static_cast<Stage>(std::min(kStageCount - 1, stageIndex(e.stage) + 1));
-                if (e.stage == Stage::RT) { hot = Stage::RT; cold = Stage::PT1; }
+                if (e.stage == Stage::RT) {
+                    hot = Stage::RT;
+                    cold = Stage::PT1;
+                }
             }
-            if (hot == cold) break;
+            if (hot == cold)
+                break;
             auto spec = coax_.get(e.coax);
-            if (!spec) return std::unexpected(spec.error());
-            auto q = conductionLoad(**spec, e.length_m, T[stageIndex(cold)], T[stageIndex(hot)], mats_);
-            if (!q) return std::unexpected(q.error());
+            if (!spec)
+                return std::unexpected(spec.error());
+            auto q =
+                conductionLoad(**spec, e.length_m, T[stageIndex(cold)], T[stageIndex(hot)], mats_);
+            if (!q)
+                return std::unexpected(q.error());
             L.conduction_W[stageIndex(cold)] += q->total() * (*spec)->conductors;
-            if (!output) P *= std::pow(10.0, -coaxLoss_dB(**spec, e.length_m, 5e9, T[stageIndex(cold)]) / 10.0);
+            if (!output)
+                P *= std::pow(10.0,
+                              -coaxLoss_dB(**spec, e.length_m, 5e9, T[stageIndex(cold)]) / 10.0);
             break;
         }
         case ElementKind::Attenuator:
-            if (!output) { L.dissipation_W[i] += phys::attenuatorDissipation(P, e.attenuation_dB); P *= phys::dbToLinear(-e.attenuation_dB); }
+            if (!output) {
+                L.dissipation_W[i] += phys::attenuatorDissipation(P, e.attenuation_dB);
+                P *= phys::dbToLinear(-e.attenuation_dB);
+            }
             break;
         case ElementKind::IrFilter:
         case ElementKind::Isolator:
         case ElementKind::Circulator:
-            if (!output) { L.dissipation_W[i] += phys::attenuatorDissipation(P, e.attenuation_dB); P *= phys::dbToLinear(-e.attenuation_dB); }
+            if (!output) {
+                L.dissipation_W[i] += phys::attenuatorDissipation(P, e.attenuation_dB);
+                P *= phys::dbToLinear(-e.attenuation_dB);
+            }
             break;
         case ElementKind::Amplifier:
         case ElementKind::Preamp:
             L.dissipation_W[i] += e.dissipation_W;
             break;
-        default: break;
+        default:
+            break;
         }
     }
     return L;
 }
 
-Result<std::array<StageLoad, kStageCount>> HeatLoadModel::stageLoads(const Wiring& w, const StageArray& T,
-                                                                     const LinePowers& powers,
-                                                                     const CoolingParams& cool) const {
+Result<std::array<StageLoad, kStageCount>>
+HeatLoadModel::stageLoads(const Wiring& w, const StageArray& T, const LinePowers& powers,
+                          const CoolingParams& cool) const {
     std::array<StageLoad, kStageCount> out{};
     for (const auto& line : w.lines) {
         double P = 0.0;
-        if (auto it = powers.find(line.id); it != powers.end()) P = it->second;
+        if (auto it = powers.find(line.id); it != powers.end())
+            P = it->second;
         auto L = lineLoad(line, T, P);
-        if (!L) return std::unexpected(L.error());
+        if (!L)
+            return std::unexpected(L.error());
         for (int i = 0; i < kStageCount; ++i) {
             out[i].conduction_W += L->conduction_W[i];
             out[i].dissipation_W += L->dissipation_W[i];

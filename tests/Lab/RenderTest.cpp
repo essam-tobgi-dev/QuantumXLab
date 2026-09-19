@@ -25,7 +25,8 @@ std::unique_ptr<gfx::Window> hiddenWindow() {
 
 Scene build() {
     auto s = buildScene("sc_lab_standard");
-    if (!s) FAIL(s.error().format());
+    if (!s)
+        FAIL(s.error().format());
     return std::move(*s);
 }
 
@@ -50,7 +51,7 @@ TEST_CASE("culling and level of detail run without a GL context") {
     CHECK(overview.considered > 100);
     CHECK(overview.triangles > 0);
     CHECK(overview.triangles < 3'000'000); // spec 24 §6 budget at a bookmark
-    CHECK(overview.occluded > 0);          // the interior (chip included) is inside the closed vacuum can
+    CHECK(overview.occluded > 0); // the interior (chip included) is inside the closed vacuum can
 
     // Hiding the cans exposes the interior; the occlusion test then keeps nothing out, and the
     // chip, 8 m away, is hidden by its micrometre parts' LOD rule instead.
@@ -71,15 +72,18 @@ TEST_CASE("culling and level of detail run without a GL context") {
     renderer.prepare(far, ui);
     std::size_t plainWiring = 0;
     for (const auto& item : renderer.items())
-        if (scene.node(item.id)->group == Group::Wiring) ++plainWiring;
+        if (scene.node(item.id)->group == Group::Wiring)
+            ++plainWiring;
     ui.setXray(true);
     ui.setLayerVisible(Group::FridgeExterior, true);
     renderer.prepare(far, ui);
     std::size_t xrayWiring = 0;
     bool faded = false;
     for (const auto& item : renderer.items()) {
-        if (scene.node(item.id)->group == Group::Wiring) ++xrayWiring;
-        if (scene.node(item.id)->xrayFade) faded = faded || item.material.baseColor.a < 0.2f;
+        if (scene.node(item.id)->group == Group::Wiring)
+            ++xrayWiring;
+        if (scene.node(item.id)->xrayFade)
+            faded = faded || item.material.baseColor.a < 0.2f;
     }
     CHECK(plainWiring == 0); // hidden by their LOD rule at this distance
     CHECK(xrayWiring > 100);
@@ -92,7 +96,8 @@ TEST_CASE("culling and level of detail run without a GL context") {
     renderer.prepare(camera, ui);
     CHECK(renderer.stats().frustumCulled > 100);
     bool micro = false;
-    for (const auto& item : renderer.items()) micro = micro || scene.node(item.id)->group == Group::ChipMicro;
+    for (const auto& item : renderer.items())
+        micro = micro || scene.node(item.id)->group == Group::ChipMicro;
     CHECK(micro);
 }
 
@@ -122,7 +127,8 @@ TEST_CASE("headless render writes a PNG and picks the mixing-chamber plate") {
     gfx::Camera camera;
     camera.setFov(40.0);
     camera.setAspect(static_cast<double>(kWidth) / kHeight);
-    camera.lookAt(target + glm::dvec3(0.45 * std::cos(azimuth), 0.10, 0.45 * std::sin(azimuth)), target);
+    camera.lookAt(target + glm::dvec3(0.45 * std::cos(azimuth), 0.10, 0.45 * std::sin(azimuth)),
+                  target);
     fitClipPlanes(camera);
 
     for (int frame = 0; frame < 2; ++frame) { // the first frame settles the LOD hysteresis
@@ -134,7 +140,8 @@ TEST_CASE("headless render writes a PNG and picks the mixing-chamber plate") {
     glm::dvec2 pixel;
     REQUIRE(camera.project(target, kWidth, kHeight, pixel));
     ComponentId picked = renderer.pick(static_cast<int>(pixel.x), static_cast<int>(pixel.y));
-    INFO("picked " << picked.value << " = " << (scene.node(picked) ? scene.node(picked)->instanceName : "background"));
+    INFO("picked " << picked.value << " = "
+                   << (scene.node(picked) ? scene.node(picked)->instanceName : "background"));
     CHECK(picked == scene.stageNodes()[5]);
     CHECK(scene.inspect(picked).descriptorId == "stage_mxc");
     // repeated parts are drawn instanced with contiguous ids (spec 17 §9)
@@ -169,7 +176,8 @@ TEST_CASE("headless render writes a PNG and picks the mixing-chamber plate") {
     ui.setCutaway(true, 90.0);
     sceneRenderer.prepare(camera, ui);
     std::size_t clipped = 0;
-    for (const auto& item : sceneRenderer.items()) clipped += item.clipped ? 1 : 0;
+    for (const auto& item : sceneRenderer.items())
+        clipped += item.clipped ? 1 : 0;
     CHECK(clipped > 0);
     renderer.beginFrame(kWidth, kHeight, camera, 0.0);
     sceneRenderer.submit(renderer, ui);
@@ -193,7 +201,8 @@ TEST_CASE("every bookmark renders to a PNG within the triangle budget") {
     auto created = gfx::Renderer::create(desc);
     REQUIRE(created.has_value());
     gfx::Renderer& renderer = **created;
-    renderer.setSun(glm::normalize(glm::vec3(-0.35f, -0.85f, -0.4f)), glm::vec3(1.0f, 0.98f, 0.94f), 3.0f);
+    renderer.setSun(glm::normalize(glm::vec3(-0.35f, -0.85f, -0.4f)), glm::vec3(1.0f, 0.98f, 0.94f),
+                    3.0f);
     renderer.setAmbient(glm::vec3(0.22f));
     Scene scene = build();
     Interaction ui(scene);
@@ -204,14 +213,19 @@ TEST_CASE("every bookmark renders to a PNG within the triangle budget") {
         bool cans;
         const char* file;
     };
-    const Shot shots[]{{"Overview", true, "lab_bm_overview.png"}, {"Fridge", true, "lab_bm_fridge.png"},
-                       {"Fridge", false, "lab_bm_fridge_open.png"}, {"MXC", false, "lab_bm_mxc.png"},
-                       {"Chip", true, "lab_bm_chip.png"}, {"Rack", true, "lab_bm_rack.png"}, {"GHS", true, "lab_bm_ghs.png"}};
+    const Shot shots[]{{"Overview", true, "lab_bm_overview.png"},
+                       {"Fridge", true, "lab_bm_fridge.png"},
+                       {"Fridge", false, "lab_bm_fridge_open.png"},
+                       {"MXC", false, "lab_bm_mxc.png"},
+                       {"Chip", true, "lab_bm_chip.png"},
+                       {"Rack", true, "lab_bm_rack.png"},
+                       {"GHS", true, "lab_bm_ghs.png"}};
     for (const Shot& shot : shots) {
         INFO(shot.file);
         gfx::Camera camera;
         camera.setAspect(static_cast<double>(kWidth) / kHeight);
-        for (int g = 0; g < kGroupCount; ++g) ui.setLayerVisible(static_cast<Group>(g), true);
+        for (int g = 0; g < kGroupCount; ++g)
+            ui.setLayerVisible(static_cast<Group>(g), true);
         REQUIRE(ui.applyBookmark(shot.bookmark, camera, 0.0));
         ui.setCansVisible(shot.cans);
         for (int frame = 0; frame < 2; ++frame) {
@@ -233,18 +247,19 @@ TEST_CASE("every bookmark renders to a PNG within the triangle budget") {
         bool cans;
         const char* file;
     };
-    const Review reviews[]{{{-0.9, 3.1, 0.7}, {0.0, 2.3, 0.0}, true, "lab_bm_topplate.png"},
-                           {{0.75, 2.45, 0.55}, {0.15, 2.25, 0.0}, true, "lab_bm_ovc_flange.png"},
-                           {{1.1, 2.2, 0.9}, {0.0, 1.9, 0.0}, false, "lab_bm_stages.png"},
-                           {{0.55, 1.05, 0.5}, {0.0, 1.1, 0.0}, false, "lab_bm_sample_stage.png"},
-                           // rack detail pass: the instruments up close (rack B test gear, rack A control), the
-                           // gas-handling panel, the bench instruments, the workstation, the dewars and the door
-                           {{2.9, 1.65, -0.10}, {2.9, 1.50, -1.05}, true, "lab_bm_rack_b_close.png"},
-                           {{2.2, 1.55, -0.10}, {2.2, 1.45, -1.05}, true, "lab_bm_rack_a_close.png"},
-                           {{-2.5, 1.35, 0.05}, {-2.5, 1.20, -1.15}, true, "lab_bm_ghs_panel.png"},
-                           {{-1.5, 1.45, 3.2}, {-1.5, 0.95, 2.0}, true, "lab_bm_bench.png"},
-                           {{2.5, 1.55, 3.3}, {2.5, 0.85, 1.8}, true, "lab_bm_workstation.png"},
-                           {{-0.6, 1.9, 0.0}, {-3.4, 1.0, 1.7}, true, "lab_bm_door_dewars.png"}};
+    const Review reviews[]{
+        {{-0.9, 3.1, 0.7}, {0.0, 2.3, 0.0}, true, "lab_bm_topplate.png"},
+        {{0.75, 2.45, 0.55}, {0.15, 2.25, 0.0}, true, "lab_bm_ovc_flange.png"},
+        {{1.1, 2.2, 0.9}, {0.0, 1.9, 0.0}, false, "lab_bm_stages.png"},
+        {{0.55, 1.05, 0.5}, {0.0, 1.1, 0.0}, false, "lab_bm_sample_stage.png"},
+        // rack detail pass: the instruments up close (rack B test gear, rack A control), the
+        // gas-handling panel, the bench instruments, the workstation, the dewars and the door
+        {{2.9, 1.65, -0.10}, {2.9, 1.50, -1.05}, true, "lab_bm_rack_b_close.png"},
+        {{2.2, 1.55, -0.10}, {2.2, 1.45, -1.05}, true, "lab_bm_rack_a_close.png"},
+        {{-2.5, 1.35, 0.05}, {-2.5, 1.20, -1.15}, true, "lab_bm_ghs_panel.png"},
+        {{-1.5, 1.45, 3.2}, {-1.5, 0.95, 2.0}, true, "lab_bm_bench.png"},
+        {{2.5, 1.55, 3.3}, {2.5, 0.85, 1.8}, true, "lab_bm_workstation.png"},
+        {{-0.6, 1.9, 0.0}, {-3.4, 1.0, 1.7}, true, "lab_bm_door_dewars.png"}};
     for (const Review& view : reviews) {
         INFO(view.file);
         gfx::Camera cam;
@@ -261,7 +276,8 @@ TEST_CASE("every bookmark renders to a PNG within the triangle budget") {
         }
         REQUIRE(renderer.screenshot(buildDir() / view.file).has_value());
     }
-    // the open fridge shows the chandelier: the mixing-chamber plate is under the MXC bookmark's centre
+    // the open fridge shows the chandelier: the mixing-chamber plate is under the MXC bookmark's
+    // centre
     gfx::Camera camera;
     camera.setAspect(static_cast<double>(kWidth) / kHeight);
     REQUIRE(ui.applyBookmark("MXC", camera, 0.0));

@@ -25,7 +25,7 @@ struct SearchHit {
 };
 
 class TheoryIndex {
-public:
+  public:
     // Load every *.md in `dir` (non-recursive). `docs/theory/README.md` is loaded too; its id
     // is "README" and it never collides with a Txx id.
     static Result<TheoryIndex> load(const std::filesystem::path& dir);
@@ -45,7 +45,7 @@ public:
     // Case-insensitive term search over headings and paragraph text; headings score higher.
     std::vector<SearchHit> search(std::string_view query, std::size_t maxHits = 50) const;
 
-private:
+  private:
     std::map<std::string, TheoryDocument, std::less<>> docs_;
 };
 

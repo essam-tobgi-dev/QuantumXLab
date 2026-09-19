@@ -4,14 +4,15 @@
 // longitude spaced uniformly among the C(n, w) states of equal weight, ordered by index.
 // Node radius ∝ |a_i| so that the node's area is ∝ the probability; colour = phase hue (§2.4).
 #include "Viz/Math/Amplitudes.hpp"
-#include <glm/glm.hpp>
 #include <cstdint>
+#include <glm/glm.hpp>
 #include <span>
 #include <vector>
 
 namespace qlab::viz::math {
 
-inline constexpr std::uint32_t kQSphereMaxQubits = 12; // 4096 nodes; above it only the top-k are shown
+inline constexpr std::uint32_t kQSphereMaxQubits =
+    12; // 4096 nodes; above it only the top-k are shown
 
 // C(n, k) (exact for n ≤ 62).
 std::uint64_t binomial(std::uint32_t n, std::uint32_t k);
@@ -21,31 +22,31 @@ std::uint64_t rankAmongEqualWeight(std::uint64_t index);
 
 struct QSpherePlacement {
     std::uint32_t weight = 0;
-    std::uint64_t rank = 0, count = 1;   // rank among the `count` states of this weight
-    double z = 1.0;                      // 1 − 2w/n
-    double longitude = 0.0;              // 2π·rank/count ∈ [0, 2π)
-    glm::dvec3 position{0.0, 0.0, 1.0};  // on the unit sphere, quantum frame (z up)
+    std::uint64_t rank = 0, count = 1;  // rank among the `count` states of this weight
+    double z = 1.0;                     // 1 − 2w/n
+    double longitude = 0.0;             // 2π·rank/count ∈ [0, 2π)
+    glm::dvec3 position{0.0, 0.0, 1.0}; // on the unit sphere, quantum frame (z up)
 };
 QSpherePlacement qspherePlacement(std::uint64_t index, std::uint32_t nQubits);
 
 struct QSphereNode {
     BasisEntry state;
     QSpherePlacement place;
-    double radius = 0.0;                 // in sphere radii: maxRadius · |a_i|
-    glm::vec3 color{0.0f};               // display colour of the phase
-    bool spoke = false;                  // line from the centre (|a_i|² > ε)
+    double radius = 0.0;   // in sphere radii: maxRadius · |a_i|
+    glm::vec3 color{0.0f}; // display colour of the phase
+    bool spoke = false;    // line from the centre (|a_i|² > ε)
 };
 
 struct QSphereOptions {
     double epsilon = kDefaultAmplitudeThreshold; // spokes and the top-k cut use |a_i|² > ε
     std::size_t topK = kDefaultTopK;
-    double maxRadius = 0.16;                     // node radius for |a_i| = 1, in sphere radii
+    double maxRadius = 0.16; // node radius for |a_i| = 1, in sphere radii
 };
 
 struct QSphereModel {
     std::uint32_t nQubits = 0;
-    std::vector<QSphereNode> nodes;      // ascending index
-    bool topKOnly = false;               // n > 12: only the top-k nodes are shown, and the view says so
+    std::vector<QSphereNode> nodes; // ascending index
+    bool topKOnly = false;          // n > 12: only the top-k nodes are shown, and the view says so
     double shownProbability = 0.0;
     std::size_t totalStates = 0;
 };

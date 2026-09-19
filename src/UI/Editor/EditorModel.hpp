@@ -32,11 +32,21 @@ struct Marker {
     std::string id, message, fix;
 };
 
-enum class CompletionKind : std::uint8_t { Keyword, Type, Gate, Builtin, UserGate, Defcal, Qubit, Register, Pragma };
+enum class CompletionKind : std::uint8_t {
+    Keyword,
+    Type,
+    Gate,
+    Builtin,
+    UserGate,
+    Defcal,
+    Qubit,
+    Register,
+    Pragma
+};
 struct Completion {
     std::string text;
     CompletionKind kind = CompletionKind::Keyword;
-    std::string detail;     // signature or declaration, shown beside the entry
+    std::string detail; // signature or declaration, shown beside the entry
     bool operator==(const Completion& o) const { return text == o.text && kind == o.kind; }
 };
 
@@ -49,7 +59,7 @@ struct Definition {
 };
 
 class EditorModel {
-public:
+  public:
     Document& doc() { return doc_; }
     const Document& doc() const { return doc_; }
     void setSource(std::string text) { doc_.setText(std::move(text)); }
@@ -85,7 +95,7 @@ public:
     // Applies a completion at `p`, replacing the partial word. Returns the caret after it.
     Position applyCompletion(Position p, const Completion& c);
 
-private:
+  private:
     void analyse() const;
 
     Document doc_;
@@ -95,10 +105,10 @@ private:
     mutable std::uint64_t analysedRevision_ = 0;
     mutable std::vector<lang::Token> tokens_;
     mutable std::vector<HighlightSpan> highlights_;
-    mutable std::vector<std::size_t> lineIndex_;      // first highlight of each line, size lines + 1
+    mutable std::vector<std::size_t> lineIndex_; // first highlight of each line, size lines + 1
     mutable std::vector<Marker> markers_;
     mutable std::vector<Definition> definitions_;
-    mutable std::vector<Completion> declared_;        // qubits, registers and user gates in scope
+    mutable std::vector<Completion> declared_; // qubits, registers and user gates in scope
     mutable std::uint64_t markerRevision_ = 0;
 };
 

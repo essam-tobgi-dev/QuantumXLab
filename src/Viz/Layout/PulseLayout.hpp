@@ -22,17 +22,17 @@ struct PulseTrace {
     std::vector<double> reLo, reHi, imLo, imHi;
     bool decimated = false;
     double maxAbs = 0.0;
-    std::size_t sourceSamples = 0;   // samples before decimation
+    std::size_t sourceSamples = 0; // samples before decimation
 };
 
 struct FrameMark {
     double tNs = 0.0;
-    double phase = 0.0;              // accumulated frame phase after the op (rad, wrapped to (−π, π])
-    double deltaPhase = 0.0;         // the jump itself
+    double phase = 0.0;      // accumulated frame phase after the op (rad, wrapped to (−π, π])
+    double deltaPhase = 0.0; // the jump itself
 };
 struct FrequencyMark {
     double tNs = 0.0;
-    double frequencyHz = 0.0;        // frame frequency after the op
+    double frequencyHz = 0.0; // frame frequency after the op
 };
 struct AcquireSpan {
     double t0Ns = 0.0, t1Ns = 0.0;
@@ -41,10 +41,10 @@ struct AcquireSpan {
 
 struct PulseRow {
     pulse::ChannelId channel;
-    std::string label;               // "d[0]", "u[0,1]", "m[2]", "a[2]"
-    std::uint32_t qubit = 0;         // channel.primaryQubit()
-    bool acquire = false;            // acquisition row: windows only, no envelope
-    double frequencyHz = 0.0;        // declared carrier of the channel's frame (0 when undeclared)
+    std::string label;        // "d[0]", "u[0,1]", "m[2]", "a[2]"
+    std::uint32_t qubit = 0;  // channel.primaryQubit()
+    bool acquire = false;     // acquisition row: windows only, no envelope
+    double frequencyHz = 0.0; // declared carrier of the channel's frame (0 when undeclared)
     PulseTrace trace;
     std::vector<FrameMark> phaseJumps;
     std::vector<FrequencyMark> frequencyChanges;
@@ -52,17 +52,17 @@ struct PulseRow {
 };
 
 struct PulseLayoutOptions {
-    double t0Ns = 0.0, t1Ns = 0.0;         // visible window; t1 ≤ t0 means the whole schedule
-    std::size_t maxPoints = 2000;          // decimation target per row (spec 22 §2)
-    std::span<const QubitIndex> qubits;    // channel filter by qubit selection (empty = every channel)
+    double t0Ns = 0.0, t1Ns = 0.0;      // visible window; t1 ≤ t0 means the whole schedule
+    std::size_t maxPoints = 2000;       // decimation target per row (spec 22 §2)
+    std::span<const QubitIndex> qubits; // channel filter by qubit selection (empty = every channel)
 };
 
 struct PulseModel {
-    std::vector<PulseRow> rows;            // channel order: drive, control, flux, measure, acquire
-    double durationNs = 0.0;               // whole schedule
-    double t0Ns = 0.0, t1Ns = 0.0;         // window actually laid out
-    double dtNs = 0.0;                     // device sample period
-    double maxAbs = 0.0;                   // largest |envelope| over all rows (shared y scale)
+    std::vector<PulseRow> rows;    // channel order: drive, control, flux, measure, acquire
+    double durationNs = 0.0;       // whole schedule
+    double t0Ns = 0.0, t1Ns = 0.0; // window actually laid out
+    double dtNs = 0.0;             // device sample period
+    double maxAbs = 0.0;           // largest |envelope| over all rows (shared y scale)
     const PulseRow* row(pulse::ChannelId ch) const;
 };
 

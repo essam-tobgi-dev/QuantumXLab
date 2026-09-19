@@ -9,7 +9,8 @@ using namespace qtest;
 using Catch::Approx;
 
 namespace {
-constexpr LindbladIntegrator kIntegrators[] = {LindbladIntegrator::Rk4, LindbladIntegrator::Dopri5, LindbladIntegrator::Magnus2};
+constexpr LindbladIntegrator kIntegrators[] = {LindbladIntegrator::Rk4, LindbladIntegrator::Dopri5,
+                                               LindbladIntegrator::Magnus2};
 
 LindbladBackend install(const SystemModel& m, std::vector<Complex> psi, LindbladSettings s = {}) {
     LindbladBackend lb;
@@ -18,11 +19,14 @@ LindbladBackend install(const SystemModel& m, std::vector<Complex> psi, Lindblad
     REQUIRE(lb.setPure(psi).has_value());
     return lb;
 }
-double expect(const LindbladBackend& lb, const char* label) { return lb.expectation(*PauliString::parse(label)).value(); }
+double expect(const LindbladBackend& lb, const char* label) {
+    return lb.expectation(*PauliString::parse(label)).value();
+}
 } // namespace
 
 TEST_CASE("Lindblad: sqrt(gamma) sigma- decays |1> as exp(-gamma t)") {
-    // γ = 1/(100 µs), t = 50 µs; default settings take the exact propagator for this idle (spec 07 §5).
+    // γ = 1/(100 µs), t = 50 µs; default settings take the exact propagator for this idle (spec 07
+    // §5).
     const double gamma = 1.0 / 100e-6, t = 50e-6;
     SystemModel m = bareModel(1, 2);
     m.collapse.push_back(decay(m, 0, gamma));
@@ -72,7 +76,8 @@ TEST_CASE("Lindblad: resonant (Omega/2) X drive gives P1 = sin^2(Omega t / 2)") 
         REQUIRE(lb.trajectory().size() == 81);
         for (const auto& sample : lb.trajectory()) {
             INFO("t = " << sample.timeS);
-            REQUIRE(sample.populations[1] == Approx(std::pow(std::sin(0.5 * omega * sample.timeS), 2)).margin(1e-6));
+            REQUIRE(sample.populations[1] ==
+                    Approx(std::pow(std::sin(0.5 * omega * sample.timeS), 2)).margin(1e-6));
         }
     }
     // Spec 07 §9: ideal π/2 pulse versus the gate model RX(π/2)|0⟩.
@@ -102,13 +107,15 @@ TEST_CASE("Lindblad: drive quadratures follow T07 and a detuned drive follows th
     SystemModel detuned = bareModel(1, 2);
     detuned.h0 = Z();
     detuned.h0 *= -0.5 * delta;
-    detuned.drives.push_back(ladderDrive(detuned, 0, [omega](double) { return Complex(0.5 * omega, 0.0); }));
+    detuned.drives.push_back(
+        ladderDrive(detuned, 0, [omega](double) { return Complex(0.5 * omega, 0.0); }));
     auto lb = install(detuned, {1.0, 0.0});
     REQUIRE(lb.evolve(100e-9).has_value());
     const double wr = std::hypot(omega, delta);
     for (const auto& sample : lb.trajectory()) {
         INFO("t = " << sample.timeS);
-        const double p1 = omega * omega / (wr * wr) * std::pow(std::sin(0.5 * wr * sample.timeS), 2);
+        const double p1 =
+            omega * omega / (wr * wr) * std::pow(std::sin(0.5 * wr * sample.timeS), 2);
         REQUIRE(sample.populations[1] == Approx(p1).margin(1e-6));
     }
 }
@@ -125,7 +132,8 @@ TEST_CASE("Lindblad: pure dephasing decays <X> and leaves <Z>") {
     REQUIRE(expect(lb, "Y") == Approx(0.0).margin(1e-12));
     REQUIRE(expect(lb, "Z") == Approx(std::cos(theta)).margin(1e-12));
     REQUIRE(lb.stateNorm() == Approx(1.0).margin(1e-12));
-    for (const auto& sample : lb.trajectory()) REQUIRE(sample.populations[1] == Approx(std::pow(std::sin(theta / 2), 2)).margin(1e-12));
+    for (const auto& sample : lb.trajectory())
+        REQUIRE(sample.populations[1] == Approx(std::pow(std::sin(theta / 2), 2)).margin(1e-12));
     // On a d = 3 transmon the same operator dephases the qubit coherence at γφ as well.
     SystemModel transmon = bareModel(1, 3);
     transmon.collapse.push_back(dephasing(transmon, 0, gphi));
@@ -136,7 +144,8 @@ TEST_CASE("Lindblad: pure dephasing decays <X> and leaves <Z>") {
     REQUIRE(tr.leakage() == Approx(0.0).margin(1e-15));
 }
 
-TEST_CASE("Lindblad: measurement, reset, sampling and reduced states on the computational subspace") {
+TEST_CASE(
+    "Lindblad: measurement, reset, sampling and reduced states on the computational subspace") {
     // |ψ⟩ = (|00⟩ + |11⟩)/√2 on two d = 3 transmons plus 10 % of |2⟩ on site 0 through setRho.
     SystemModel m = bareModel(2, 3);
     const double s = 1.0 / std::sqrt(2.0);

@@ -12,7 +12,7 @@
 namespace qlab::viz {
 
 class QSphereView final : public StateView {
-public:
+  public:
     std::string_view id() const override { return "qsphere"; }
     std::string_view title() const override { return "Q-sphere"; }
     Observability observability() const override { return Observability::SimulatorOnly; }
@@ -32,17 +32,19 @@ public:
     glm::vec2 projectPoint(const glm::dvec3& p, double* depth = nullptr) const;
     glm::vec2 centerPx() const { return center_; }
     float radiusPx() const { return radius_; }
-    Status renderPng(GlBackend& gl, const VizTheme& theme, int widthPx, int heightPx, const std::filesystem::path& png);
+    Status renderPng(GlBackend& gl, const VizTheme& theme, int widthPx, int heightPx,
+                     const std::filesystem::path& png);
 
-protected:
+  protected:
     void rebuild(const ViewInput& in) override;
     void layout() override;
     void drawBody(DrawContext& ctx) override;
     void onSelectionChanged(const SelectionModel&) override { canvas_.invalidate(); }
 
-private:
+  private:
     glm::dmat3 rotation() const;
-    GlCanvas::SceneFn scene(const VizTheme& theme, const SelectionModel* selection, float pxScale) const;
+    GlCanvas::SceneFn scene(const VizTheme& theme, const SelectionModel* selection,
+                            float pxScale) const;
     void aimCamera();
     math::QSphereModel model_;
     math::QSphereOptions options_;

@@ -11,19 +11,19 @@ namespace qlab::ui::math {
 enum class AtomClass : std::uint8_t { Ord, Op, Bin, Rel, Open, Close, Punct, Inner };
 
 enum class NodeKind : std::uint8_t {
-    Row,       // horizontal list of children
-    Symbol,    // single glyph (codepoint) or short text run; `text` holds UTF-8
-    Text,      // upright text run (\text, \mathrm, \operatorname)
-    Frac,      // children[0] numerator, children[1] denominator
-    Scripts,   // children[0] base, children[1] sub (may be null), children[2] sup (may be null)
-    Sqrt,      // children[0] radicand, children[1] index (may be null)
-    Accent,    // children[0] base; `text` = accent glyph; `flag` = wide (overline/underline)
-    Style,     // children[0] row; `styleName` = mathbf/mathcal/mathbb/mathrm
-    BigOp,     // `text` = operator glyph; children[0] sub, [1] sup (may be null); `flag`=limits
-    Delim,     // `text` = left delimiter, `text2` = right delimiter; children[0] content row
-    Matrix,    // rows × cols: children in row-major order; `rows`, `cols`; `text` = env name
-    Space,     // `em` = width in em
-    Unknown,   // unknown command rendered verbatim in a distinguishable style
+    Row,     // horizontal list of children
+    Symbol,  // single glyph (codepoint) or short text run; `text` holds UTF-8
+    Text,    // upright text run (\text, \mathrm, \operatorname)
+    Frac,    // children[0] numerator, children[1] denominator
+    Scripts, // children[0] base, children[1] sub (may be null), children[2] sup (may be null)
+    Sqrt,    // children[0] radicand, children[1] index (may be null)
+    Accent,  // children[0] base; `text` = accent glyph; `flag` = wide (overline/underline)
+    Style,   // children[0] row; `styleName` = mathbf/mathcal/mathbb/mathrm
+    BigOp,   // `text` = operator glyph; children[0] sub, [1] sup (may be null); `flag`=limits
+    Delim,   // `text` = left delimiter, `text2` = right delimiter; children[0] content row
+    Matrix,  // rows × cols: children in row-major order; `rows`, `cols`; `text` = env name
+    Space,   // `em` = width in em
+    Unknown, // unknown command rendered verbatim in a distinguishable style
 };
 
 struct MathNode;
@@ -65,15 +65,18 @@ enum class MathStyleLevel : std::uint8_t { Display, Text, Script, ScriptScript }
 constexpr double styleScale(MathStyleLevel s) {
     switch (s) {
     case MathStyleLevel::Display:
-    case MathStyleLevel::Text: return 1.0;
-    case MathStyleLevel::Script: return 0.7;
-    case MathStyleLevel::ScriptScript: return 0.5;
+    case MathStyleLevel::Text:
+        return 1.0;
+    case MathStyleLevel::Script:
+        return 0.7;
+    case MathStyleLevel::ScriptScript:
+        return 0.5;
     }
     return 1.0;
 }
 constexpr MathStyleLevel scriptStyle(MathStyleLevel s) {
     return s == MathStyleLevel::ScriptScript ? MathStyleLevel::ScriptScript
-         : s == MathStyleLevel::Script       ? MathStyleLevel::ScriptScript
+           : s == MathStyleLevel::Script     ? MathStyleLevel::ScriptScript
                                              : MathStyleLevel::Script;
 }
 constexpr MathStyleLevel crampedFracStyle(MathStyleLevel s) {

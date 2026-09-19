@@ -29,7 +29,7 @@ namespace qlab::app {
 // the heat-load model and the material catalog), so the bundle is built in one place, never moved,
 // and rebuilt wholesale when the device changes.
 class CryoStack {
-public:
+  public:
     CryoStack(cryo::MaterialCatalog mats, cryo::Wiring w);
     CryoStack(const CryoStack&) = delete;
     CryoStack& operator=(const CryoStack&) = delete;
@@ -37,11 +37,11 @@ public:
     cryo::MaterialCatalog materials;
     cryo::CoaxCatalog coax;
     cryo::Wiring wiring;
-    cryo::HeatLoadModel loads;       // references `coax` and `materials`
-    cryo::ThermalNetwork network;    // references `wiring`, `loads` and `materials`
+    cryo::HeatLoadModel loads;    // references `coax` and `materials`
+    cryo::ThermalNetwork network; // references `wiring`, `loads` and `materials`
     cryo::GasHandlingSystem ghs;
-    cryo::CooldownSequencer sequencer;   // references `network` and `ghs`
-    cryo::NoiseBudget budget;            // references `coax`
+    cryo::CooldownSequencer sequencer; // references `network` and `ghs`
+    cryo::NoiseBudget budget;          // references `coax`
     cryo::ThermalSnapshot snapshot;
 
     // Spec 11 §8: the fridge is stepped at 10 Hz of lab time, whatever the frame rate.
@@ -51,7 +51,7 @@ public:
     // Starts at the steady state of the current wiring and cooling parameters (a cold fridge).
     void settle();
 
-private:
+  private:
     double carry_ = 0.0;
 };
 
@@ -63,7 +63,7 @@ Result<std::unique_ptr<CryoStack>> makeCryoStack(const hw::Device& device);
 // The 3D laboratory. `Interaction`, `SceneRenderer` and `LabOverlays` all point at `scene`, so the
 // bundle is likewise built once and replaced wholesale.
 class LabStack {
-public:
+  public:
     LabStack(lab::Scene s, const lab::BindingRegistry& bindings);
     LabStack(const LabStack&) = delete;
     LabStack& operator=(const LabStack&) = delete;
@@ -75,11 +75,11 @@ public:
 };
 
 class LabModel {
-public:
+  public:
     struct Config {
         std::string device = "sc_fixed_5";
-        std::string layout;            // empty: `defaultLayoutFor(device)`
-        bool buildLab = true;          // `--run` needs no scene
+        std::string layout;   // empty: `defaultLayoutFor(device)`
+        bool buildLab = true; // `--run` needs no scene
         bool instruments = true;
         bool physicalLab = false;
     };
@@ -122,7 +122,7 @@ public:
     // bindings, and republishes the environment. Diagnostics go to the log.
     Status selectDevice(std::string_view id);
     Status rebuildScene();
-    Status loadTour();   // (re)loads the layout's tour script against the current scene
+    Status loadTour(); // (re)loads the layout's tour script against the current scene
     void setPhysicalLab(bool on);
     bool physicalLab() const { return live_state_->physicalLab; }
 
@@ -155,14 +155,14 @@ public:
     // Spec 15 §3.5 (c): per-line drive power of a pulse-level run → the thermal network.
     void applyLinePowers(const cryo::LinePowers& powers);
 
-private:
+  private:
     LabModel();
     Status bindInstruments();
     void subscribeEvents();
     void publishInputs();
     void refreshViewInput();
     void collectReductions();
-    void recordChannels();   // spec 22 §1: the fridge channels the Plots panel draws
+    void recordChannels(); // spec 22 §1: the fridge channels the Plots panel draws
     void recordSamples();
 
     core::EventBus bus_;
@@ -171,11 +171,12 @@ private:
     std::unique_ptr<CryoStack> cryo_;
     // `instr::CryoCatalogs` owns a coax catalogue and the noise budget that points into it, and is
     // neither copyable nor movable: one instance is shared by every Environment the App publishes.
-    std::shared_ptr<const instr::CryoCatalogs> catalogs_ = std::make_shared<const instr::CryoCatalogs>();
+    std::shared_ptr<const instr::CryoCatalogs> catalogs_ =
+        std::make_shared<const instr::CryoCatalogs>();
     lab::BindingRegistry bindings_;
     lab::StaticProvider statics_;
     std::unique_ptr<LabStack> lab_;
-    std::unique_ptr<lab::Tour> tour_;   // after `lab_`: it points into the scene
+    std::unique_ptr<lab::Tour> tour_; // after `lab_`: it points into the scene
     instr::InstrumentRegistry instruments_;
     instr::LiveRunner live_;
     runtime::Session session_;

@@ -3,17 +3,23 @@
 // secondary, danger; §5.6), every value that has a fidelity class shows its badge (§5.4), every
 // Simulator-only value carries the `sim_only` colour (§5.5), and tables alternate rows at a 3 %
 // lightness delta with virtual scrolling above 200 rows (§5.7).
-#include "UI/Context.hpp"
 #include "Data/Fidelity.hpp"
+#include "UI/Context.hpp"
 #include <imgui.h>
 #include <string_view>
 
 namespace qlab::ui::widgets {
 
 // ---- colour conversion
-inline ImVec4 iv(const Color& c) { return ImVec4(c.r, c.g, c.b, c.a); }
-inline ImU32 u32(const Color& c) { return ImGui::ColorConvertFloat4ToU32(iv(c)); }
-inline Color toColor(const ImVec4& c) { return Color(c.x, c.y, c.z, c.w); }
+inline ImVec4 iv(const Color& c) {
+    return ImVec4(c.r, c.g, c.b, c.a);
+}
+inline ImU32 u32(const Color& c) {
+    return ImGui::ColorConvertFloat4ToU32(iv(c));
+}
+inline Color toColor(const ImVec4& c) {
+    return Color(c.x, c.y, c.z, c.w);
+}
 
 // ---- text
 void text(const UiContext& ctx, Token token, std::string_view s);
@@ -44,10 +50,12 @@ bool toggleChip(const UiContext& ctx, std::string_view label, bool* value);
 void sectionHeader(const UiContext& ctx, std::string_view label);
 // One "field: value unit" row of a spec sheet, with the class badge and an optional typical-range
 // bar (spec 19 §3 Inspector). `typicalLo/Hi` equal disables the bar.
-void specRow(const UiContext& ctx, std::string_view field, std::string_view value, data::FidelityClass cls,
-             bool simulatorOnly, double si, double typicalLo, double typicalHi);
+void specRow(const UiContext& ctx, std::string_view field, std::string_view value,
+             data::FidelityClass cls, bool simulatorOnly, double si, double typicalLo,
+             double typicalHi);
 // Slim progress bar of the top bar (spec 19 §5.8). `fraction` < 0 draws an indeterminate sweep.
-void progressBar(const UiContext& ctx, double fraction, std::string_view overlay, float width = -1.0f);
+void progressBar(const UiContext& ctx, double fraction, std::string_view overlay,
+                 float width = -1.0f);
 // Centred secondary message for an empty panel.
 void placeholder(const UiContext& ctx, std::string_view message);
 // "?" that shows `help` on hover (spec 19 §6 delay).
@@ -62,13 +70,13 @@ inline constexpr int kVirtualRowThreshold = 200;
 
 // RAII: grey out everything inside and show the Physical-lab tooltip on hover.
 class DisabledScope {
-public:
+  public:
     DisabledScope(const UiContext& ctx, bool disabled, std::string_view reason = {});
     ~DisabledScope();
     DisabledScope(const DisabledScope&) = delete;
     DisabledScope& operator=(const DisabledScope&) = delete;
 
-private:
+  private:
     const UiContext* ctx_;
     bool on_;
     std::string_view reason_;

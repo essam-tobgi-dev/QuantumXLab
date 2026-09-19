@@ -14,7 +14,8 @@
 namespace qlab::lab {
 
 enum class ConnectorType : std::uint8_t { Sma, N, Bnc, Iec, Dsub };
-std::optional<ConnectorType> connectorTypeFromName(std::string_view name); // "SMA", "N", "BNC", "IEC", "DSUB"
+std::optional<ConnectorType>
+connectorTypeFromName(std::string_view name); // "SMA", "N", "BNC", "IEC", "DSUB"
 std::string_view connectorTypeName(ConnectorType t);
 
 struct PanelConnector {
@@ -41,7 +42,8 @@ struct PanelVents {
     double x = 0.0, y = 0.0, w = 0.2, h = 0.6;
     int rows = 4;
 };
-struct PanelSlots { // a card cage: `count` plug-in cards each with `smaPerCard` SMA jacks and an LED
+struct PanelSlots { // a card cage: `count` plug-in cards each with `smaPerCard` SMA jacks and an
+                    // LED
     int count = 8;
     double x0 = -0.35, x1 = 0.35;
     int smaPerCard = 4;

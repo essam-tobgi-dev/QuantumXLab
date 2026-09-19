@@ -8,8 +8,8 @@
 namespace qlab::lab::mesh {
 
 MeshData dishedHead(float r, float depth, float yTop, int seg, int stacks, bool outward) {
-    // Profile: x = r sin φ, y = yTop − depth (1 − cos φ) … using the ellipse (x/r)² + (Δy/depth)² = 1
-    // parametrised by φ ∈ [0, π/2]: x = r cos φ, Δy = depth sin φ. Normal of the ellipse at φ is
+    // Profile: x = r sin φ, y = yTop − depth (1 − cos φ) … using the ellipse (x/r)² + (Δy/depth)² =
+    // 1 parametrised by φ ∈ [0, π/2]: x = r cos φ, Δy = depth sin φ. Normal of the ellipse at φ is
     // (depth cos φ, −r sin φ) in the (radial, y) plane, pointing outward/downward.
     MeshData m;
     float s = outward ? 1.0f : -1.0f;
@@ -21,8 +21,10 @@ MeshData dishedHead(float r, float depth, float yTop, int seg, int stacks, bool 
             float th = glm::two_pi<float>() * static_cast<float>(j) / static_cast<float>(seg);
             glm::vec3 d{std::cos(th), 0.0f, std::sin(th)};
             glm::vec3 n = glm::normalize(glm::vec3(d.x * n2.x, n2.y, d.z * n2.x));
-            if (i == stacks) n = {0.0f, -1.0f, 0.0f}; // crown
-            m.vertices.push_back({d * rad + glm::vec3(0.0f, yTop - dy, 0.0f), n * s,
+            if (i == stacks)
+                n = {0.0f, -1.0f, 0.0f}; // crown
+            m.vertices.push_back({d * rad + glm::vec3(0.0f, yTop - dy, 0.0f),
+                                  n * s,
                                   {static_cast<float>(j) / seg, static_cast<float>(i) / stacks}});
         }
     }
@@ -36,20 +38,26 @@ MeshData dishedHead(float r, float depth, float yTop, int seg, int stacks, bool 
     return m;
 }
 
-MeshData plateFace(float r, float y, float hx, float hz, float hr, int seg, bool up, std::vector<float>& angles) {
+MeshData plateFace(float r, float y, float hx, float hz, float hr, int seg, bool up,
+                   std::vector<float>& angles) {
     MeshData m;
     angles.clear();
     glm::vec3 n{0.0f, up ? 1.0f : -1.0f, 0.0f};
     const float rc2 = hx * hx + hz * hz;
     if (hr <= 0.0f || rc2 >= r * r) { // plain fan
-        for (int i = 0; i < seg; ++i) angles.push_back(glm::two_pi<float>() * static_cast<float>(i) / static_cast<float>(seg));
+        for (int i = 0; i < seg; ++i)
+            angles.push_back(glm::two_pi<float>() * static_cast<float>(i) /
+                             static_cast<float>(seg));
         m.vertices.push_back({{0.0f, y, 0.0f}, n, {0.5f, 0.5f}});
         for (int i = 0; i <= seg; ++i) {
             float t = angles[static_cast<std::size_t>(i % seg)];
-            m.vertices.push_back({{r * std::cos(t), y, r * std::sin(t)}, n, {0.5f + 0.5f * std::cos(t), 0.5f + 0.5f * std::sin(t)}});
+            m.vertices.push_back({{r * std::cos(t), y, r * std::sin(t)},
+                                  n,
+                                  {0.5f + 0.5f * std::cos(t), 0.5f + 0.5f * std::sin(t)}});
         }
         for (int i = 0; i < seg; ++i)
-            m.indices.insert(m.indices.end(), {0u, static_cast<std::uint32_t>(i + 1), static_cast<std::uint32_t>(i + 2)});
+            m.indices.insert(m.indices.end(), {0u, static_cast<std::uint32_t>(i + 1),
+                                               static_cast<std::uint32_t>(i + 2)});
         orientToNormals(m);
         return m;
     }
@@ -62,7 +70,8 @@ MeshData plateFace(float r, float y, float hx, float hz, float hr, int seg, bool
         float cd = glm::dot(c, d);
         float R = -cd + std::sqrt(std::max(0.0f, cd * cd + r * r - rc2));
         glm::vec2 inner = c + d * hr, outer = c + d * R;
-        if (i < seg) angles.push_back(std::atan2(outer.y, outer.x));
+        if (i < seg)
+            angles.push_back(std::atan2(outer.y, outer.x));
         m.vertices.push_back({{inner.x, y, inner.y}, n, {static_cast<float>(i) / seg, 0.0f}});
         m.vertices.push_back({{outer.x, y, outer.y}, n, {static_cast<float>(i) / seg, 1.0f}});
     }
@@ -77,7 +86,8 @@ MeshData plateFace(float r, float y, float hx, float hz, float hr, int seg, bool
 MeshData plateRim(float r, float yTop, float yBot, float c, const std::vector<float>& angles) {
     MeshData m;
     const std::size_t n = angles.size();
-    if (n < 3) return m;
+    if (n < 3)
+        return m;
     c = std::min(c, 0.45f * (yTop - yBot));
     const float k = glm::one_over_root_two<float>();
     // Four rings per azimuth: chamfer start on the top face, top edge, bottom edge, chamfer end.
@@ -85,7 +95,8 @@ MeshData plateRim(float r, float yTop, float yBot, float c, const std::vector<fl
         float t = angles[i % n];
         glm::vec3 d{std::cos(t), 0.0f, std::sin(t)};
         float u = static_cast<float>(i) / static_cast<float>(n);
-        glm::vec3 nTop = glm::normalize(glm::vec3(d.x * k, k, d.z * k)), nBot = glm::normalize(glm::vec3(d.x * k, -k, d.z * k));
+        glm::vec3 nTop = glm::normalize(glm::vec3(d.x * k, k, d.z * k)),
+                  nBot = glm::normalize(glm::vec3(d.x * k, -k, d.z * k));
         m.vertices.push_back({d * (r - c) + glm::vec3(0, yTop, 0), nTop, {u, 0.0f}});
         m.vertices.push_back({d * r + glm::vec3(0, yTop - c, 0), nTop, {u, 0.2f}});
         m.vertices.push_back({d * r + glm::vec3(0, yTop - c, 0), d, {u, 0.2f}});
@@ -122,7 +133,8 @@ std::vector<glm::vec2> tSlotProfile(float s, float slot, float slotDepth, float 
     for (int face = 0; face < 4; ++face) { // rotate the +X side by −90° per face: (x, z) → (z, −x)
         for (std::size_t i = 0; i + 1 < side.size(); ++i) {
             glm::vec2 p = side[i];
-            for (int k = 0; k < face; ++k) p = {p.y, -p.x};
+            for (int k = 0; k < face; ++k)
+                p = {p.y, -p.x};
             out.push_back(p);
         }
     }
@@ -133,7 +145,8 @@ std::vector<glm::vec2> tSlotProfile(float s, float slot, float slotDepth, float 
 
 MeshData extrudeBetween(const std::vector<glm::vec2>& profileXZ, glm::vec3 a, glm::vec3 b) {
     float len = glm::length(b - a);
-    if (len <= 0.0f) return {};
+    if (len <= 0.0f)
+        return {};
     MeshData m = prism(profileXZ, 0.0f, len);
     m.transform(translate(a) * alignY((b - a) / len));
     orientToNormals(m);
@@ -142,7 +155,8 @@ MeshData extrudeBetween(const std::vector<glm::vec2>& profileXZ, glm::vec3 a, gl
 
 MeshData hexBolt(float af, float hh, float rs, float ls) {
     MeshData m = ngonPrism(6, af / std::sqrt(3.0f), 0.0f, hh);
-    if (ls > 0.0f) append(m, gfx::shapes::cylinder(rs, ls, 12, true), translate({0.0f, -0.5f * ls, 0.0f}));
+    if (ls > 0.0f)
+        append(m, gfx::shapes::cylinder(rs, ls, 12, true), translate({0.0f, -0.5f * ls, 0.0f}));
     return m;
 }
 

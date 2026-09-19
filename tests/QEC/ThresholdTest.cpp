@@ -10,7 +10,9 @@ using namespace qlab::qec;
 using Catch::Approx;
 
 namespace {
-StabilizerCode shipped(const std::string& id) { return loadShippedCode(id).value(); }
+StabilizerCode shipped(const std::string& id) {
+    return loadShippedCode(id).value();
+}
 } // namespace
 
 TEST_CASE("Experiment: code-capacity threshold of the surface code with union-find") {
@@ -18,7 +20,8 @@ TEST_CASE("Experiment: code-capacity threshold of the surface code with union-fi
     // threshold distance helps, above it hurts, and the crossings of consecutive distances climb
     // towards the union-find threshold from below (finite-size drift).
     ThresholdSweep sweep;
-    for (std::uint32_t d : {3u, 5u, 7u}) sweep.codes.push_back(shipped("surface_rot_" + std::to_string(d)));
+    for (std::uint32_t d : {3u, 5u, 7u})
+        sweep.codes.push_back(shipped("surface_rot_" + std::to_string(d)));
     sweep.settings.noise = NoiseSetting::CodeCapacity;
     sweep.settings.dataError = DataErrorKind::BitFlip;
     sweep.settings.p = {0.04, 0.07, 0.09, 0.11, 0.14};
@@ -39,11 +42,12 @@ TEST_CASE("Experiment: code-capacity threshold of the surface code with union-fi
     REQUIRE(d7.back().pL_lo > d5.back().pL_hi);
     REQUIRE(d5.back().pL_lo > d3.back().pL_hi);
     for (const auto& curve : result->curves)
-        for (std::size_t i = 1; i < curve.points.size(); ++i) REQUIRE(curve.points[i].pL > curve.points[i - 1].pL);
+        for (std::size_t i = 1; i < curve.points.size(); ++i)
+            REQUIRE(curve.points[i].pL > curve.points[i - 1].pL);
     REQUIRE(result->crossing.has_value());
     INFO("crossing " << *result->crossing);
     REQUIRE(*result->crossing > 0.07);
-    REQUIRE(*result->crossing < 0.103);   // below the MWPM reference
+    REQUIRE(*result->crossing < 0.103); // below the MWPM reference
     REQUIRE(result->reference == Approx(0.103));
     REQUIRE(result->cls == FidelityClass::Statistical);
     // Depolarizing data errors put 2p/3 on the X component: same curve at p → 1.5 p.
@@ -53,11 +57,12 @@ TEST_CASE("Experiment: code-capacity threshold of the surface code with union-fi
     const auto depolarizing = runThresholdSweep(sweep).value();
     REQUIRE(depolarizing.reference == Approx(0.1545));
     const auto& dep3 = depolarizing.curves[0].points.front();
-    REQUIRE(dep3.pL_lo < d3.front().pL_hi);   // p_X = 0.04 in both
+    REQUIRE(dep3.pL_lo < d3.front().pL_hi); // p_X = 0.04 in both
     REQUIRE(d3.front().pL_lo < dep3.pL_hi);
 }
 
-TEST_CASE("Experiment: small codes with the lookup decoder beat the physical error rate (code capacity)") {
+TEST_CASE("Experiment: small codes with the lookup decoder beat the physical error rate (code "
+          "capacity)") {
     // Depolarizing p = 1 %: a distance-3 code fails only on ≥ 2 errors, p_L = O(p²) ≪ p. The
     // five-qubit code (not CSS) is prepared by its explicit encoder; the others by projection.
     for (const char* id : {"five_qubit", "steane_7", "shor_9"})
@@ -86,27 +91,29 @@ TEST_CASE("Experiment: a custom noise plan drives the runner (per-site probabili
     MemoryExperiment ex = planMemoryExperiment(code, x).value();
     NoisePlan plan;
     for (std::uint32_t i = 0; i < ex.schedule.ops.size(); ++i)
-        if (ex.schedule.ops[i].kind == OpKind::Measure && ex.schedule.ops[i].bit == ex.syndromeBit(1, 5))
+        if (ex.schedule.ops[i].kind == OpKind::Measure &&
+            ex.schedule.ops[i].bit == ex.syndromeBit(1, 5))
             plan.sites.push_back({i, SiteKind::RecordFlip, ex.syndromeBit(1, 5), 0, 0.5});
     REQUIRE(plan.sites.size() == 1);
     const auto runner = ExperimentRunner::fromPlan(code, ex, plan, "union_find").value();
-    REQUIRE(runner.graph()->edges.size() == 1);   // one time-like edge, probability 1/2
+    REQUIRE(runner.graph()->edges.size() == 1); // one time-like edge, probability 1/2
     REQUIRE(runner.graph()->edges[0].probability == Approx(0.5));
     auto worker = runner.worker();
     const core::Random master(31);
     std::size_t flipped = 0;
     for (std::uint64_t i = 0; i < 400; ++i) {
         const ShotResult shot = worker.shot(master, i, SampleEngine::Stabilizer).value();
-        REQUIRE_FALSE(shot.failure);   // a measurement fault never touches the logical readout
+        REQUIRE_FALSE(shot.failure); // a measurement fault never touches the logical readout
         REQUIRE(shot.faults.size() == (shot.correction.edges.empty() ? 0u : 1u));
         flipped += shot.faults.size();
     }
-    REQUIRE(flipped > 150);   // Binomial(400, 1/2): mean 200, σ = 10
+    REQUIRE(flipped > 150); // Binomial(400, 1/2): mean 200, σ = 10
     REQUIRE(flipped < 250);
     // A plan made for another schedule is refused.
     NoisePlan foreign;
     foreign.sites.push_back({1u << 30, SiteKind::RecordFlip, 0, 0, 0.1});
-    REQUIRE(ExperimentRunner::fromPlan(code, ex, foreign, "union_find").error().code == err::BadOptions);
+    REQUIRE(ExperimentRunner::fromPlan(code, ex, foreign, "union_find").error().code ==
+            err::BadOptions);
     REQUIRE(noiseSettingFromName("phenomenological") == NoiseSetting::Phenomenological);
     REQUIRE_FALSE(noiseSettingFromName("thermal").has_value());
 }

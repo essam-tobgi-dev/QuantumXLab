@@ -11,20 +11,20 @@
 namespace qlab::compiler {
 
 struct RouteOptions {
-    std::uint64_t seed = 0x51AB5EEDull;   // tie-breaks among equally good swaps
-    std::uint32_t trials = 1;             // seeds tried; fewest swaps wins, then smallest depth (level 2: 4)
-    bool bidirectional = true;            // forward → reverse → forward; the last pass is the output
-    bool noiseAware = false;              // D = reliability distance instead of hop count
-    std::uint32_t lookahead = 20;         // |E|, the extended set
-    double lookaheadWeight = 0.5;         // W
-    double decay = 0.001;                 // δ per recent use of a qubit
-    std::uint32_t decayReset = 5;         // swaps after which the decay counters are cleared
+    std::uint64_t seed = 0x51AB5EEDull; // tie-breaks among equally good swaps
+    std::uint32_t trials = 1;  // seeds tried; fewest swaps wins, then smallest depth (level 2: 4)
+    bool bidirectional = true; // forward → reverse → forward; the last pass is the output
+    bool noiseAware = false;   // D = reliability distance instead of hop count
+    std::uint32_t lookahead = 20; // |E|, the extended set
+    double lookaheadWeight = 0.5; // W
+    double decay = 0.001;         // δ per recent use of a qubit
+    std::uint32_t decayReset = 5; // swaps after which the decay counters are cleared
 };
 
 struct RoutingResult {
-    ir::Circuit circuit;                  // physical: qubitCount = device qubits, no qubit registers
-    Layout initialLayout, finalLayout;     // program qubit → physical qubit before / after the circuit
-    std::uint32_t swaps = 0;              // inserted at the top level and inside bodies
+    ir::Circuit circuit;               // physical: qubitCount = device qubits, no qubit registers
+    Layout initialLayout, finalLayout; // program qubit → physical qubit before / after the circuit
+    std::uint32_t swaps = 0;           // inserted at the top level and inside bodies
 };
 
 // Routes `c` (virtual wires). Bodies of Branch/Loop/Box nodes are routed from the layout at the
@@ -36,7 +36,8 @@ Result<RoutingResult> route(const ir::Circuit& c, const Layout& initial, const C
 
 // Applies a layout without routing (`qlab.routing none`): wires are renamed and every two-qubit
 // gate must already sit on a coupled pair, else QL4030.
-Result<RoutingResult> applyLayout(const ir::Circuit& c, const Layout& layout, const CouplingGraph& g);
+Result<RoutingResult> applyLayout(const ir::Circuit& c, const Layout& layout,
+                                  const CouplingGraph& g);
 
 // QL4030 unless every gate on two wires acts on a coupled pair of data qubits (bodies included).
 // Gates on three or more wires are rejected as not decomposed.

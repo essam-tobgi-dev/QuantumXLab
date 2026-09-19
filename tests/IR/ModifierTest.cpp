@@ -1,5 +1,5 @@
-// Spec 13 §3, 14 §2, T02 §3 — modifier expansion: node form and matrix for ctrl, negctrl, inv, pow on
-// library gates, global phase, and user gates. Oracles are unitaries of hand-built circuits.
+// Spec 13 §3, 14 §2, T02 §3 — modifier expansion: node form and matrix for ctrl, negctrl, inv, pow
+// on library gates, global phase, and user gates. Oracles are unitaries of hand-built circuits.
 #include "IrTestUtil.hpp"
 #include <cmath>
 #include <numbers>
@@ -8,7 +8,9 @@ using namespace qlab;
 using namespace irtest;
 
 namespace {
-num::Matrix unitaryOf(std::string_view body) { return unitary(build(program(body))); }
+num::Matrix unitaryOf(std::string_view body) {
+    return unitary(build(program(body)));
+}
 num::Matrix libraryMatrix(std::string_view name, std::vector<double> p = {}) {
     auto m = ir::gates::matrix(name, p);
     REQUIRE(m.has_value());
@@ -20,7 +22,8 @@ TEST_CASE("ctrl @ x is cx; negctrl @ x is cx with the control conjugated by x") 
     const auto c = build(program("qubit[2] q;\nctrl @ x q[0], q[1];\n"));
     REQUIRE(c.nodeCount() == 1);
     const auto& g = gateAt(c, 0);
-    CHECK((g.name == "cx" && g.controls.empty() && indices(g.targets) == std::vector<std::uint32_t>{0, 1}));
+    CHECK((g.name == "cx" && g.controls.empty() &&
+           indices(g.targets) == std::vector<std::uint32_t>{0, 1}));
     CHECK(g.cls == ir::GateClass::Cnot);
     CHECK(sameUnitary(unitary(c), unitaryOf("qubit[2] q;\ncx q[0], q[1];\n")));
 
@@ -34,7 +37,8 @@ TEST_CASE("ctrl @ x is cx; negctrl @ x is cx with the control conjugated by x") 
     // Matrix of the node itself: wires() = {target, control}, the control on the high bit.
     auto m = ir::matrixOf(ng);
     REQUIRE(m.has_value());
-    CHECK(sameUnitary(*m, num::Matrix::fromRows({{0, 1, 0, 0}, {1, 0, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}})));
+    CHECK(sameUnitary(
+        *m, num::Matrix::fromRows({{0, 1, 0, 0}, {1, 0, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}})));
 }
 
 TEST_CASE("inv @ s is sdg, pow(2) @ s is z, and other closed forms stay named") {
@@ -75,22 +79,27 @@ TEST_CASE("inv and pow without a closed form: adjoint flag and repetition") {
 }
 
 TEST_CASE("multiple controls: ccx forms, mixed polarity, controlled rotations and U") {
-    for (const char* stmt : {"ctrl(2) @ x q[0], q[1], q[2];", "ctrl @ ctrl @ x q[0], q[1], q[2];", "ctrl @ cx q[0], q[1], q[2];"}) {
+    for (const char* stmt : {"ctrl(2) @ x q[0], q[1], q[2];", "ctrl @ ctrl @ x q[0], q[1], q[2];",
+                             "ctrl @ cx q[0], q[1], q[2];"}) {
         const auto c = build(program("qubit[3] q;\n" + std::string(stmt) + "\n"));
         INFO(stmt);
         REQUIRE(c.nodeCount() == 1);
-        CHECK((gateAt(c, 0).name == "ccx" && indices(gateAt(c, 0).targets) == std::vector<std::uint32_t>{0, 1, 2}));
+        CHECK((gateAt(c, 0).name == "ccx" &&
+               indices(gateAt(c, 0).targets) == std::vector<std::uint32_t>{0, 1, 2}));
     }
     const auto mixed = build(program("qubit[3] q;\nnegctrl @ ctrl @ x q[0], q[1], q[2];\n"));
     const auto& mg = gateAt(mixed, 0);
-    CHECK((mg.name == "x" && indices(mg.controls) == std::vector<std::uint32_t>{0, 1} && mg.negControl == std::vector<std::uint8_t>{1, 0}));
-    CHECK(sameUnitary(unitary(mixed), unitaryOf("qubit[3] q;\nx q[0];\nccx q[0], q[1], q[2];\nx q[0];\n")));
+    CHECK((mg.name == "x" && indices(mg.controls) == std::vector<std::uint32_t>{0, 1} &&
+           mg.negControl == std::vector<std::uint8_t>{1, 0}));
+    CHECK(sameUnitary(unitary(mixed),
+                      unitaryOf("qubit[3] q;\nx q[0];\nccx q[0], q[1], q[2];\nx q[0];\n")));
 
     const auto crz = build(program("qubit[2] q;\nctrl @ rz(0.3) q[0], q[1];\n"));
     CHECK(gateAt(crz, 0).name == "crz");
     const auto ccrz = build(program("qubit[3] q;\nctrl @ ctrl @ rz(0.3) q[0], q[1], q[2];\n"));
     const auto& cg = gateAt(ccrz, 0);
-    CHECK((cg.name == "rz" && indices(cg.controls) == std::vector<std::uint32_t>{0, 1} && indices(cg.targets) == std::vector<std::uint32_t>{2}));
+    CHECK((cg.name == "rz" && indices(cg.controls) == std::vector<std::uint32_t>{0, 1} &&
+           indices(cg.targets) == std::vector<std::uint32_t>{2}));
     // |q2 q1 q0>: rz acts on q2 only where q0 = q1 = 1 (indices 3 and 7).
     num::Matrix expect = num::Matrix::identity(8);
     expect(3, 3) = std::polar(1.0, -0.15);
@@ -98,7 +107,8 @@ TEST_CASE("multiple controls: ccx forms, mixed polarity, controlled rotations an
     CHECK(sameUnitary(unitary(ccrz), expect));
 
     const auto cu = build(program("qubit[2] q;\nctrl @ U(0.3, 0.2, 0.1) q[0], q[1];\n"));
-    CHECK((gateAt(cu, 0).name == "cu" && gateAt(cu, 0).params == std::vector<double>{0.3, 0.2, 0.1, 0.0}));
+    CHECK((gateAt(cu, 0).name == "cu" &&
+           gateAt(cu, 0).params == std::vector<double>{0.3, 0.2, 0.1, 0.0}));
     CHECK(sameUnitary(unitary(cu), unitaryOf("qubit[2] q;\ncu(0.3, 0.2, 0.1, 0) q[0], q[1];\n")));
 }
 
@@ -110,7 +120,8 @@ TEST_CASE("gphase is a global phase alone and a phase gate under control") {
     const auto p = build(program("qubit q;\nctrl @ gphase(0.7) q;\n"));
     CHECK((gateAt(p, 0).name == "p" && gateAt(p, 0).params == std::vector<double>{0.7}));
     const auto cp = build(program("qubit[2] q;\nctrl(2) @ gphase(0.7) q[0], q[1];\n"));
-    CHECK((gateAt(cp, 0).name == "cp" && indices(gateAt(cp, 0).targets) == std::vector<std::uint32_t>{0, 1}));
+    CHECK((gateAt(cp, 0).name == "cp" &&
+           indices(gateAt(cp, 0).targets) == std::vector<std::uint32_t>{0, 1}));
     const auto neg = build(program("qubit q;\nnegctrl @ gphase(0.7) q;\n"));
     CHECK((gateAt(neg, 0).name == "gphase" && gateAt(neg, 0).isNegControl(0)));
     CHECK(sameUnitary(unitary(neg), num::Matrix::fromRows({{std::polar(1.0, 0.7), 0}, {0, 1}})));
@@ -121,7 +132,7 @@ TEST_CASE("user gates expand with parameters, and modifiers apply to the whole b
     const auto plain = build(program(decl + "qubit[3] q;\nmygate(0.3) q[0], q[1];\n"));
     REQUIRE(plain.nodeCount() == 2);
     CHECK((gateAt(plain, 0).name == "rz" && gateAt(plain, 1).name == "cx"));
-    const auto u = unitary(plain);   // oracle U on q0, q1 (q2 idle)
+    const auto u = unitary(plain); // oracle U on q0, q1 (q2 idle)
 
     const auto inv = build(program(decl + "qubit[3] q;\ninv @ mygate(0.3) q[0], q[1];\n"));
     CHECK((gateAt(inv, 0).name == "cx" && gateAt(inv, 1).params == std::vector<double>{-0.3}));
@@ -135,20 +146,25 @@ TEST_CASE("user gates expand with parameters, and modifiers apply to the whole b
     const auto ctl = build(program(decl + "qubit[3] q;\nctrl @ mygate(0.3) q[2], q[0], q[1];\n"));
     CHECK((gateAt(ctl, 0).name == "crz" && gateAt(ctl, 1).name == "ccx"));
     const auto u2 = unitary(build(program(decl + "qubit[2] q;\nmygate(0.3) q[0], q[1];\n")));
-    const num::Matrix p0 = num::Matrix::fromRows({{1, 0}, {0, 0}}), p1 = num::Matrix::fromRows({{0, 0}, {0, 1}});
+    const num::Matrix p0 = num::Matrix::fromRows({{1, 0}, {0, 0}}),
+                      p1 = num::Matrix::fromRows({{0, 0}, {0, 1}});
     const num::Matrix expect = num::add(num::kron(p0, num::Matrix::identity(4)), num::kron(p1, u2));
     CHECK(sameUnitary(unitary(ctl), expect));
 
     // gphase inside a controlled user gate becomes a phase on the control (spec 13 §3).
-    const auto phased = build(program("gate g2 a { gphase(0.7); x a; }\nqubit[2] q;\nctrl @ g2 q[1], q[0];\n"));
+    const auto phased =
+        build(program("gate g2 a { gphase(0.7); x a; }\nqubit[2] q;\nctrl @ g2 q[1], q[0];\n"));
     const num::Matrix ex = num::scale(libraryMatrix("x"), std::polar(1.0, 0.7));
-    CHECK(sameUnitary(unitary(phased), num::add(num::kron(p0, num::Matrix::identity(2)), num::kron(p1, ex))));
+    CHECK(sameUnitary(unitary(phased),
+                      num::add(num::kron(p0, num::Matrix::identity(2)), num::kron(p1, ex))));
 }
 
 TEST_CASE("broadcast over registers applies modifiers per element") {
     const auto c = build(program("qubit[2] a;\nqubit[2] b;\nctrl @ rx(0.2) a, b;\ninv @ t a;\n"));
     REQUIRE(c.nodeCount() == 4);
-    CHECK((gateAt(c, 0).name == "crx" && indices(gateAt(c, 0).targets) == std::vector<std::uint32_t>{0, 2}));
-    CHECK((gateAt(c, 1).name == "crx" && indices(gateAt(c, 1).targets) == std::vector<std::uint32_t>{1, 3}));
+    CHECK((gateAt(c, 0).name == "crx" &&
+           indices(gateAt(c, 0).targets) == std::vector<std::uint32_t>{0, 2}));
+    CHECK((gateAt(c, 1).name == "crx" &&
+           indices(gateAt(c, 1).targets) == std::vector<std::uint32_t>{1, 3}));
     CHECK((gateAt(c, 2).name == "tdg" && gateAt(c, 3).name == "tdg"));
 }

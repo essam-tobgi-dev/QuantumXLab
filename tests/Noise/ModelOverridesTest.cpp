@@ -1,8 +1,9 @@
-// Spec 08 §4.2, §3, §7.3, T08 §7 — overrides (scale, replace, disable), the line-photon floor on the
-// thermal population, measurement-induced dephasing on feedline neighbours, Pauli-only eligibility.
+// Spec 08 §4.2, §3, §7.3, T08 §7 — overrides (scale, replace, disable), the line-photon floor on
+// the thermal population, measurement-induced dephasing on feedline neighbours, Pauli-only
+// eligibility.
 #include "NoiseTestSupport.hpp"
-#include <catch2/catch_approx.hpp>
 #include <algorithm>
+#include <catch2/catch_approx.hpp>
 
 using namespace ntest;
 using namespace qlab::noise;
@@ -27,15 +28,19 @@ NoiseModel labModel() {
 }
 std::vector<std::string_view> ids(const std::vector<AttachedChannel>& list) {
     std::vector<std::string_view> out;
-    for (const auto& a : list) out.push_back(a.channel->id());
+    for (const auto& a : list)
+        out.push_back(a.channel->id());
     return out;
 }
-bool contains(const std::vector<std::string_view>& v, std::string_view x) { return std::find(v.begin(), v.end(), x) != v.end(); }
+bool contains(const std::vector<std::string_view>& v, std::string_view x) {
+    return std::find(v.begin(), v.end(), x) != v.end();
+}
 } // namespace
 
 TEST_CASE("overrides scale, replace and switch off channel classes, transactionally") {
     NoiseModel m = labModel();
-    for (const auto& w : m.warnings()) UNSCOPED_INFO(w);
+    for (const auto& w : m.warnings())
+        UNSCOPED_INFO(w);
     REQUIRE(m.warnings().empty());
     REQUIRE(m.gate("cx", q({0, 1}))->overRotationRad > 0.0);
     REQUIRE(contains(ids(m.channelsFor("cx", q({0, 1}))), id::OverRotation));
@@ -45,24 +50,28 @@ TEST_CASE("overrides scale, replace and switch off channel classes, transactiona
     lower.replaceEdge["0-1"]["gate_error_2q"] = 8e-3;
     NOISE_REQUIRE_OK(m.setOverrides(lower));
     const GateNoise* cx = m.gate("cx", q({0, 1}));
-    REQUIRE(cx->pRelaxation == Approx(8.844836071792532e-3).epsilon(1e-9)); // computed independently
+    REQUIRE(cx->pRelaxation ==
+            Approx(8.844836071792532e-3).epsilon(1e-9)); // computed independently
     REQUIRE(cx->pRelaxation < cx->pTotal);
     REQUIRE(cx->clamped);
     REQUIRE(cx->depolarizing == 0.0);
     REQUIRE(m.warnings().size() == 1);
-    REQUIRE(m.warnings()[0].find("relaxation plus coherent error exceed reported gate error for cx on 0-1") != std::string::npos);
+    REQUIRE(m.warnings()[0].find(
+                "relaxation plus coherent error exceed reported gate error for cx on 0-1") !=
+            std::string::npos);
     REQUIRE_FALSE(contains(ids(m.channelsFor("cx", q({0, 1}))), id::Depolarizing2q));
 
     Overrides o;
     o.scaleT1 = 0.5;
-    o.scaleT2 = 1.5;                            // qubit 1: 75 µs > 2·30 µs → clamped with a warning
-    o.replaceQubit[0]["t1_us"] = 10.0;          // absolute, wins over the scale
+    o.scaleT2 = 1.5;                   // qubit 1: 75 µs > 2·30 µs → clamped with a warning
+    o.replaceQubit[0]["t1_us"] = 10.0; // absolute, wins over the scale
     o.replaceQubit[0]["t2_us"] = 15.0;
     o.replaceQubit[0]["readout_e01"] = 0.2;
-    o.replaceQubit[0]["t1us"] = 3.0;            // typo: warned, ignored
-    o.replaceEdge["1-0"]["zz_hz"] = 0.0;        // either edge orientation
+    o.replaceQubit[0]["t1us"] = 3.0;     // typo: warned, ignored
+    o.replaceEdge["1-0"]["zz_hz"] = 0.0; // either edge orientation
     o.replaceEdge["0-1"]["gate_error_2q"] = 1e-2;
-    o.disable = {std::string(id::Depolarizing1q), std::string(id::DetuningDrift), std::string(id::Readout)};
+    o.disable = {std::string(id::Depolarizing1q), std::string(id::DetuningDrift),
+                 std::string(id::Readout)};
     NOISE_REQUIRE_OK(m.setOverrides(o));
     REQUIRE(m.overrides() == o);
     REQUIRE(m.qubit(QubitIndex{0})->t1S == Approx(10e-6).epsilon(1e-15));
@@ -73,7 +82,8 @@ TEST_CASE("overrides scale, replace and switch off channel classes, transactiona
     REQUIRE(m.edge(0, 1)->zzHz == 0.0);
     REQUIRE(m.crosstalkChannels(1e-6).empty());
     const auto has = [&](std::string_view text) {
-        return std::any_of(m.warnings().begin(), m.warnings().end(), [&](const std::string& w) { return w.find(text) != std::string::npos; });
+        return std::any_of(m.warnings().begin(), m.warnings().end(),
+                           [&](const std::string& w) { return w.find(text) != std::string::npos; });
     };
     REQUIRE(has("exceeds 2 T1 = 60 us on qubit 1"));
     REQUIRE(has("overrides.replace.qubits.0.t1us is not a known field"));
@@ -121,7 +131,8 @@ TEST_CASE("the drive-line photon number sets a floor on the thermal population (
     REQUIRE_FALSE(m.setLinePhotonNumbers(tooMany));
     const double negative[] = {-1.0};
     REQUIRE_FALSE(m.setLinePhotonNumbers(negative));
-    REQUIRE(m.qubit(QubitIndex{0})->pThermal == Approx(0.25 / 1.5).epsilon(1e-15)); // unchanged by the refusals
+    REQUIRE(m.qubit(QubitIndex{0})->pThermal ==
+            Approx(0.25 / 1.5).epsilon(1e-15)); // unchanged by the refusals
 }
 
 TEST_CASE("reading a qubit dephases its unmeasured feedline neighbours (spec 08 §3)") {
@@ -131,7 +142,8 @@ TEST_CASE("reading a qubit dephases its unmeasured feedline neighbours (spec 08 
     REQUIRE(chans[0].channel->id() == id::MeasurementDephasing);
     REQUIRE(chans[0].qubits == q({1}));
     REQUIRE(chans[0].placement == Placement::During);
-    REQUIRE(chans[0].context.durationS == Approx(500e-9).epsilon(1e-15)); // the measured qubit's pulse
+    REQUIRE(chans[0].context.durationS ==
+            Approx(500e-9).epsilon(1e-15)); // the measured qubit's pulse
     core::Random rng(1);
     qsim::DensityMatrixBackend dm;
     NOISE_REQUIRE_OK(dm.allocate(2));
@@ -147,11 +159,15 @@ TEST_CASE("isPauliOnly tells whether the stabilizer backend can run the model wi
     NoiseModel m = labModel();
     REQUIRE_FALSE(m.isPauliOnly()); // amplitude damping, over-rotation and ZZ are present
     Overrides o;
-    o.disable = {std::string(id::ThermalRelaxation), std::string(id::OverRotation), std::string(id::ZzCrosstalk)};
+    o.disable = {std::string(id::ThermalRelaxation), std::string(id::OverRotation),
+                 std::string(id::ZzCrosstalk)};
     NOISE_REQUIRE_OK(m.setOverrides(o));
-    REQUIRE(m.isPauliOnly()); // depolarizing, drift (averaged), reset and preparation are Pauli channels
-    auto pure = NoiseModel::fromJson(core::Json::parse(R"({"qubits": {"0": {"t2_us": 40}}, "gates": {"x": {"0": {"error": 1e-3}}}})"));
+    REQUIRE(m.isPauliOnly()); // depolarizing, drift (averaged), reset and preparation are Pauli
+                              // channels
+    auto pure = NoiseModel::fromJson(core::Json::parse(
+        R"({"qubits": {"0": {"t2_us": 40}}, "gates": {"x": {"0": {"error": 1e-3}}}})"));
     NOISE_REQUIRE_OK(pure);
     REQUIRE(pure->isPauliOnly()); // T1 absent: thermal_relaxation is pure dephasing
-    REQUIRE(ids(pure->idleChannels(QubitIndex{0}, 1e-6)) == std::vector<std::string_view>{id::ThermalRelaxation});
+    REQUIRE(ids(pure->idleChannels(QubitIndex{0}, 1e-6)) ==
+            std::vector<std::string_view>{id::ThermalRelaxation});
 }

@@ -14,7 +14,9 @@ using instrtest::powerOn;
 namespace {
 Environment fridge(double mxcK = 0.015) {
     Environment env;
-    for (cryo::Stage s : cryo::kStages) env.thermal.T_K[static_cast<std::size_t>(cryo::stageIndex(s))] = cryo::nominalTemperature(s);
+    for (cryo::Stage s : cryo::kStages)
+        env.thermal.T_K[static_cast<std::size_t>(cryo::stageIndex(s))] =
+            cryo::nominalTemperature(s);
     env.thermal.T_K[static_cast<std::size_t>(cryo::stageIndex(cryo::Stage::MXC))] = mxcK;
     return env;
 }
@@ -42,10 +44,13 @@ TEST_CASE("thermometer calibration curves invert to the temperature") {
             const double R = curve.resistanceOhm(T);
             REQUIRE(R < previous); // negative temperature coefficient, monotonic
             previous = R;
-            REQUIRE(curve.temperatureK(R) == Approx(T).epsilon(1e-9)); // spec 25 §3.7 asks for 0.1 %
+            REQUIRE(curve.temperatureK(R) ==
+                    Approx(T).epsilon(1e-9)); // spec 25 §3.7 asks for 0.1 %
             // sensitivity = −d ln R / d ln T, against a central difference
             const double h = 1e-5;
-            const double numeric = -(std::log(curve.resistanceOhm(T * (1 + h))) - std::log(curve.resistanceOhm(T * (1 - h)))) / (2 * h);
+            const double numeric = -(std::log(curve.resistanceOhm(T * (1 + h))) -
+                                     std::log(curve.resistanceOhm(T * (1 - h)))) /
+                                   (2 * h);
             REQUIRE(curve.sensitivity(T) == Approx(numeric).epsilon(1e-5));
         }
     }
@@ -53,7 +58,8 @@ TEST_CASE("thermometer calibration curves invert to the temperature") {
     const SensorCurve ruo2{SensorKind::RuO2};
     REQUIRE(ruo2.resistanceOhm(0.010) > 20e3);
     REQUIRE(ruo2.resistanceOhm(4.0) < 3e3);
-    REQUIRE(std::log(ruo2.resistanceOhm(0.02) / 800.0) == Approx(std::pow(2.15 / 0.02, 0.25)).epsilon(1e-12));
+    REQUIRE(std::log(ruo2.resistanceOhm(0.02) / 800.0) ==
+            Approx(std::pow(2.15 / 0.02, 0.25)).epsilon(1e-12));
 }
 
 TEST_CASE("thermometer readings track the cryo snapshot within their noise") {
@@ -77,15 +83,18 @@ TEST_CASE("thermometer readings track the cryo snapshot within their noise") {
     const double expected = Thermometer::sensorTemperature(0.020, 1e-10, 2.77);
     REQUIRE(expected == Approx(0.020).epsilon(1e-3));
     REQUIRE(instrtest::stddev(cold) == Approx(0.005 * expected).epsilon(0.12));
-    REQUIRE(instrtest::mean(cold) == Approx(expected).margin(4.0 * 0.005 * expected / std::sqrt(static_cast<double>(n))));
+    REQUIRE(instrtest::mean(cold) ==
+            Approx(expected).margin(4.0 * 0.005 * expected / std::sqrt(static_cast<double>(n))));
     // The stage warms to 100 mK: the reading follows.
     auto warm = readings(ruo2, *hub, fridge(0.100), n);
-    REQUIRE(instrtest::mean(warm) == Approx(0.100).margin(4.0 * 0.005 * 0.1 / std::sqrt(static_cast<double>(n)) + 1e-6));
+    REQUIRE(instrtest::mean(warm) ==
+            Approx(0.100).margin(4.0 * 0.005 * 0.1 / std::sqrt(static_cast<double>(n)) + 1e-6));
     auto last = ruo2.lastReading();
     REQUIRE(last->stageK == 0.100);
     REQUIRE(last->sigmaK == Approx(0.005 * last->temperatureK));
     REQUIRE(*ruo2.query("T") == last->temperatureK);
-    REQUIRE(*ruo2.query("R") == Approx(ruo2.curve().resistanceOhm(last->temperatureK)).epsilon(1e-9));
+    REQUIRE(*ruo2.query("R") ==
+            Approx(ruo2.curve().resistanceOhm(last->temperatureK)).epsilon(1e-9));
     // The strip chart holds the history with its σ; the R channel is the bridge's resistance.
     auto chart = acquire(ruo2, "T");
     REQUIRE(chart->size() == 2 * n + 1);
@@ -98,7 +107,8 @@ TEST_CASE("thermometer readings track the cryo snapshot within their noise") {
 
     // Cernox on PT2 (3.5 K): 0.1 % of reading.
     auto pt2 = readings(cernox, *hub, fridge(), n);
-    REQUIRE(instrtest::mean(pt2) == Approx(3.5).margin(4.0 * 0.001 * 3.5 / std::sqrt(static_cast<double>(n))));
+    REQUIRE(instrtest::mean(pt2) ==
+            Approx(3.5).margin(4.0 * 0.001 * 3.5 / std::sqrt(static_cast<double>(n))));
     REQUIRE(instrtest::stddev(pt2) == Approx(0.0035).epsilon(0.12));
     // Out of range (a RuO₂ on a 100 K plate during cooldown) clamps and says so.
     Environment cooldown = fridge();
@@ -111,10 +121,12 @@ TEST_CASE("thermometer readings track the cryo snapshot within their noise") {
 
 TEST_CASE("RuO2 self-heating: 10 nW reads 1-4 mK high at 10 mK, 0.1 nW less than 0.2 mK") {
     // Spec 12 §15. T_s⁴ = T⁴ + 4P/k: ΔT = P R_K with R_K = 1/(k T³) ∝ T⁻³ for small P.
-    REQUIRE(Thermometer::sensorTemperature(0.010, 1e-8, 2.77) - 0.010 == Approx(2.5e-3).epsilon(0.02));
+    REQUIRE(Thermometer::sensorTemperature(0.010, 1e-8, 2.77) - 0.010 ==
+            Approx(2.5e-3).epsilon(0.02));
     const double small = Thermometer::sensorTemperature(0.050, 1e-12, 2.77) - 0.050;
     REQUIRE(small == Approx(1e-12 / (2.77 * std::pow(0.050, 3))).epsilon(1e-4));
-    REQUIRE((Thermometer::sensorTemperature(0.100, 1e-12, 2.77) - 0.100) / small == Approx(1.0 / 8.0).epsilon(1e-3)); // R_K ∝ T⁻³
+    REQUIRE((Thermometer::sensorTemperature(0.100, 1e-12, 2.77) - 0.100) / small ==
+            Approx(1.0 / 8.0).epsilon(1e-3)); // R_K ∝ T⁻³
 
     auto hub = std::make_shared<InputHub>();
     Thermometer th(SensorKind::RuO2);
@@ -127,7 +139,8 @@ TEST_CASE("RuO2 self-heating: 10 nW reads 1-4 mK high at 10 mK, 0.1 nW less than
     REQUIRE(hot > 1e-3);
     REQUIRE(hot < 4e-3);
     REQUIRE(th.lastReading()->sensorK == Approx(0.0125).epsilon(0.01));
-    REQUIRE(th.lastReading()->stageK == 0.010); // the truth did not move: only the reading did (T08 §8)
+    REQUIRE(th.lastReading()->stageK ==
+            0.010); // the truth did not move: only the reading did (T08 §8)
     REQUIRE(th.set("excitation", 1e-10));
     const double gentle = instrtest::mean(readings(th, *hub, fridge(0.010), 400)) - 0.010;
     REQUIRE(std::abs(gentle) < 0.2e-3);
@@ -154,12 +167,14 @@ TEST_CASE("pressure gauge and flow meter read the gas-handling state") {
     powerOn(flow);
 
     std::vector<double> ovc;
-    for (int k = 0; k < 300; ++k) ovc.push_back(acquire(gauge, "p")->y.back());
+    for (int k = 0; k < 300; ++k)
+        ovc.push_back(acquire(gauge, "p")->y.back());
     REQUIRE(PressureGauge::technology("ovc", 2e-6) == "cold_cathode");
     REQUIRE(PressureGauge::technology("ovc", 0.5) == "pirani");
     REQUIRE(PressureGauge::technology("still", 0.12) == "capacitance");
     REQUIRE(instrtest::mean(ovc) == Approx(2.0e-6).epsilon(0.03));
-    REQUIRE(instrtest::stddev(ovc) == Approx(0.10 * 2.0e-6).epsilon(0.2)); // cold cathode: 10 % of reading
+    REQUIRE(instrtest::stddev(ovc) ==
+            Approx(0.10 * 2.0e-6).epsilon(0.2)); // cold cathode: 10 % of reading
     REQUIRE(gauge.set("node", std::string("still")));
     auto still = acquire(gauge, "p");
     REQUIRE(still->y.back() == Approx(0.12).epsilon(0.01)); // capacitance manometer: 0.25 %
@@ -173,7 +188,8 @@ TEST_CASE("pressure gauge and flow meter read the gas-handling state") {
     REQUIRE(under->marker("out_of_range") != nullptr);
 
     std::vector<double> n3;
-    for (int k = 0; k < 300; ++k) n3.push_back(acquire(flow, "n3")->y.back());
+    for (int k = 0; k < 300; ++k)
+        n3.push_back(acquire(flow, "n3")->y.back());
     REQUIRE(instrtest::mean(n3) == Approx(0.8).margin(0.003)); // mmol/s
     REQUIRE(instrtest::stddev(n3) == Approx(0.01 * 0.8 + 0.002).epsilon(0.2));
     REQUIRE(acquire(flow, "n3")->yUnit == "mmol/s");
@@ -204,7 +220,10 @@ TEST_CASE("power meter reads 10 log10(P/1 mW) of the routed node") {
     Bindings b;
     b.inputs = hub;
     b.routing = &graph;
-    for (IInstrument* i : std::initializer_list<IInstrument*>{&awg, &lo, &mixer, &meter}) { i->bind(b); powerOn(*i); }
+    for (IInstrument* i : std::initializer_list<IInstrument*>{&awg, &lo, &mixer, &meter}) {
+        i->bind(b);
+        powerOn(*i);
+    }
     mixer.attach(&awg, 0, &lo);
     REQUIRE(awg.set("sample_rate", 1e9));
     REQUIRE(lo.set("rf_on", true));
@@ -241,8 +260,10 @@ TEST_CASE("power meter reads 10 log10(P/1 mW) of the routed node") {
         REQUIRE(one);
         const double p = one->y.back();
         REQUIRE(p >= -70.0); // the head cannot read below its own floor
-        if (p == -70.0) ++atFloor;
-        if (one->marker("out_of_range") != nullptr) ++flagged;
+        if (p == -70.0)
+            ++atFloor;
+        if (one->marker("out_of_range") != nullptr)
+            ++flagged;
         floorDbm.push_back(p);
     }
     REQUIRE(flagged == atFloor); // every clamped reading says so (spec 12 §1: clamp and report)
@@ -250,7 +271,8 @@ TEST_CASE("power meter reads 10 log10(P/1 mW) of the routed node") {
     REQUIRE(atFloor < 130);
     // Mean of a normal truncated from below at its own centre: −70 + σ/√(2π).
     const double sigmaDb = 10.0 / std::numbers::ln10 * 0.05;
-    REQUIRE(instrtest::mean(floorDbm) == Approx(-70.0 + sigmaDb / std::sqrt(2.0 * std::numbers::pi)).margin(0.04));
+    REQUIRE(instrtest::mean(floorDbm) ==
+            Approx(-70.0 + sigmaDb / std::sqrt(2.0 * std::numbers::pi)).margin(0.04));
     REQUIRE(meter.set("input", std::string("nowhere")));
     REQUIRE(acquire(meter, "p").error().code == err::BadRouting);
 }

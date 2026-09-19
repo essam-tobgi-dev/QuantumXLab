@@ -56,31 +56,33 @@ struct Node {
     glm::dvec3 explodeOffset{0.0};     // parent-space translation from the exploded view
     glm::dmat4 world{1.0};
     Group group = Group::Room;
-    std::vector<LodLevel> lods;        // ascending distance; empty for groups
+    std::vector<LodLevel> lods; // ascending distance; empty for groups
     std::string material = "vertex";
     glm::vec4 tint{1.0f};
-    InstanceParams params;             // $line, $k, $j, $i, $q, $e, $stage + static numbers
-    std::vector<Binding> bindings;     // descriptor rows with placeholders substituted
+    InstanceParams params;                 // $line, $k, $j, $i, $q, $e, $stage + static numbers
+    std::vector<Binding> bindings;         // descriptor rows with placeholders substituted
     gfx::Aabb localBounds = emptyAabb();   // finest mesh, object space
     gfx::Aabb worldBounds = emptyAabb();   // own geometry, world space
     gfx::Aabb subtreeBounds = emptyAabb(); // own + descendants, world space
-    std::uint32_t subtreeEnd = 0;      // index one past the last descendant
+    std::uint32_t subtreeEnd = 0;          // index one past the last descendant
     Assembly assembly = Assembly::None;
-    int assemblyIndex = 0;             // stage k (FridgeStages), unit slot (RackUnits)
+    int assemblyIndex = 0; // stage k (FridgeStages), unit slot (RackUnits)
     bool visible = true;
     bool pickable = true;
-    bool can = false;                  // Can generator: cutaway clip and "hide cans" apply (spec 17 §7.5)
-    bool xrayFade = false;             // FridgeExterior or shield: 12 % opacity in X-ray (spec 17 §7.6)
+    bool can = false;      // Can generator: cutaway clip and "hide cans" apply (spec 17 §7.5)
+    bool xrayFade = false; // FridgeExterior or shield: 12 % opacity in X-ray (spec 17 §7.6)
     std::optional<SplineInfo> spline;
 
     bool hasGeometry() const {
         for (const auto& l : lods)
-            if (l.mesh.valid()) return true;
+            if (l.mesh.valid())
+                return true;
         return false;
     }
     MeshHandle finestMesh() const {
         for (const auto& l : lods)
-            if (l.mesh.valid()) return l.mesh;
+            if (l.mesh.valid())
+                return l.mesh;
         return {};
     }
 };
@@ -90,8 +92,8 @@ struct WiringRun {
     std::string lineId;
     std::size_t lineIndex = 0;
     cryo::LineKind kind = cryo::LineKind::XY;
-    std::vector<ComponentId> segments;              // RT → chip for inputs, chip → RT for outputs
-    std::vector<std::pair<ComponentId, double>> attenuators; // node, dB
+    std::vector<ComponentId> segments; // RT → chip for inputs, chip → RT for outputs
+    std::vector<std::pair<ComponentId, double>> attenuators;  // node, dB
     std::array<ComponentId, cryo::kStageCount> stageAnchor{}; // a node of this line at each stage
 };
 
@@ -103,7 +105,7 @@ struct SceneStats {
 };
 
 class Scene {
-public:
+  public:
     explicit Scene(ComponentCatalog catalog);
     Scene(Scene&&) noexcept = default;
     Scene& operator=(Scene&&) noexcept = default;
@@ -125,7 +127,7 @@ public:
     const ComponentDescriptor* descriptor(const Node& n) const;
     std::vector<ComponentId> findByDescriptor(std::string_view descriptorId) const;
     ComponentId findByInstance(std::string_view instanceName) const;
-    std::vector<ComponentId> breadcrumb(ComponentId id) const;        // root → id
+    std::vector<ComponentId> breadcrumb(ComponentId id) const; // root → id
     std::string breadcrumbText(ComponentId id, std::string_view separator = " › ") const;
     Inspectable inspect(ComponentId id) const;
 
@@ -144,9 +146,11 @@ public:
     const LayoutSpec& layout() const { return layout_; }
     std::optional<ChipLayout>& chipLayout() { return chip_; }
     const std::optional<ChipLayout>& chipLayout() const { return chip_; }
-    std::vector<ComponentId>& qubitNodes() { return qubitNodes_; }          // pad node per qubit index
+    std::vector<ComponentId>& qubitNodes() { return qubitNodes_; } // pad node per qubit index
     std::span<const ComponentId> qubitNodes() const { return qubitNodes_; }
-    std::vector<ComponentId>& resonatorNodes() { return resonatorNodes_; }  // per qubit index (0 if none)
+    std::vector<ComponentId>& resonatorNodes() {
+        return resonatorNodes_;
+    } // per qubit index (0 if none)
     std::span<const ComponentId> resonatorNodes() const { return resonatorNodes_; }
     std::array<ComponentId, cryo::kStageCount>& stageNodes() { return stageNodes_; }
     const std::array<ComponentId, cryo::kStageCount>& stageNodes() const { return stageNodes_; }
@@ -158,7 +162,7 @@ public:
     const std::vector<std::string>& diagnostics() const { return diagnostics_; }
     const SceneStats& stats() const { return stats_; }
 
-private:
+  private:
     void regenerateSplines();
     ComponentCatalog catalog_;
     std::vector<Node> nodes_;

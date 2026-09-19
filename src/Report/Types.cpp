@@ -24,7 +24,9 @@ std::uint64_t fnv1a64(std::string_view text) {
     return h;
 }
 
-std::string hashHex(std::uint64_t h) { return std::format("fnv1a64:{:016x}", h); }
+std::string hashHex(std::uint64_t h) {
+    return std::format("fnv1a64:{:016x}", h);
+}
 
 core::Json RunIdentity::toJson() const {
     core::Json j;
@@ -38,8 +40,9 @@ core::Json RunIdentity::toJson() const {
     return j;
 }
 
-RunIdentity RunIdentity::of(std::uint64_t programHash, std::string_view device, std::string_view calibrationTime,
-                            std::string_view backend, std::uint64_t shots, std::uint64_t seed) {
+RunIdentity RunIdentity::of(std::uint64_t programHash, std::string_view device,
+                            std::string_view calibrationTime, std::string_view backend,
+                            std::uint64_t shots, std::uint64_t seed) {
     RunIdentity id;
     id.programHash = hashHex(programHash);
     id.device = device;
@@ -52,27 +55,38 @@ RunIdentity RunIdentity::of(std::uint64_t programHash, std::string_view device, 
 }
 
 RunIdentity RunIdentity::of(const runtime::RunResult& r) {
-    return of(r.programHash, r.device, r.calibrationTimestamp, backendName(r.backend), r.options.shots, r.seed);
+    return of(r.programHash, r.device, r.calibrationTimestamp, backendName(r.backend),
+              r.options.shots, r.seed);
 }
 
 std::string_view backendName(qsim::Kind k) {
     switch (k) {
-    case qsim::Kind::StateVector: return "state_vector";
-    case qsim::Kind::DensityMatrix: return "density_matrix";
-    case qsim::Kind::Stabilizer: return "stabilizer";
-    case qsim::Kind::Lindblad: return "lindblad";
-    case qsim::Kind::Trajectories: return "trajectories";
+    case qsim::Kind::StateVector:
+        return "state_vector";
+    case qsim::Kind::DensityMatrix:
+        return "density_matrix";
+    case qsim::Kind::Stabilizer:
+        return "stabilizer";
+    case qsim::Kind::Lindblad:
+        return "lindblad";
+    case qsim::Kind::Trajectories:
+        return "trajectories";
     }
     return "unknown";
 }
 
 std::string_view backendName(runtime::BackendChoice c) {
     switch (c) {
-    case runtime::BackendChoice::Auto: return "auto";
-    case runtime::BackendChoice::StateVector: return "state_vector";
-    case runtime::BackendChoice::DensityMatrix: return "density_matrix";
-    case runtime::BackendChoice::Stabilizer: return "stabilizer";
-    case runtime::BackendChoice::Lindblad: return "lindblad";
+    case runtime::BackendChoice::Auto:
+        return "auto";
+    case runtime::BackendChoice::StateVector:
+        return "state_vector";
+    case runtime::BackendChoice::DensityMatrix:
+        return "density_matrix";
+    case runtime::BackendChoice::Stabilizer:
+        return "stabilizer";
+    case runtime::BackendChoice::Lindblad:
+        return "lindblad";
     }
     return "auto";
 }
@@ -82,8 +96,10 @@ runtime::BackendChoice backendChoiceFrom(std::string_view name) {
         return runtime::BackendChoice::StateVector;
     if (name == "density_matrix" || name == "densitymatrix" || name == "DensityMatrix")
         return runtime::BackendChoice::DensityMatrix;
-    if (name == "stabilizer" || name == "Stabilizer") return runtime::BackendChoice::Stabilizer;
-    if (name == "lindblad" || name == "Lindblad") return runtime::BackendChoice::Lindblad;
+    if (name == "stabilizer" || name == "Stabilizer")
+        return runtime::BackendChoice::Stabilizer;
+    if (name == "lindblad" || name == "Lindblad")
+        return runtime::BackendChoice::Lindblad;
     return runtime::BackendChoice::Auto;
 }
 
@@ -95,10 +111,12 @@ std::string_view simulatorOnlyNotice() {
 }
 
 bool allFinite(const core::Json& j) {
-    if (j.is_number_float()) return std::isfinite(j.get<double>());
+    if (j.is_number_float())
+        return std::isfinite(j.get<double>());
     if (j.is_array() || j.is_object())
         for (const auto& v : j)
-            if (!allFinite(v)) return false;
+            if (!allFinite(v))
+                return false;
     return true;
 }
 

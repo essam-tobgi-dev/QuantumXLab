@@ -11,7 +11,7 @@
 namespace qlab::instr {
 
 class DcSource final : public InstrumentBase {
-public:
+  public:
     static constexpr std::uint32_t kChannels = 8;
 
     explicit DcSource(std::uint32_t index = 0);
@@ -26,19 +26,23 @@ public:
     // transmon formula for the same E_J(Φ), E_C. Errors: NotBound, BadInput (no calibration entry).
     Result<double> qubitFrequencyHz(std::uint32_t k, double currentA) const;
     Result<double> theoryFrequencyHz(std::uint32_t k, double currentA) const;
-    std::optional<double> query(std::string_view path) const override; // ch[k].I, ch[k].V, ch[k].f01
+    std::optional<double>
+    query(std::string_view path) const override; // ch[k].I, ch[k].V, ch[k].f01
 
-protected:
+  protected:
     Result<Trace> doAcquire(const ChannelDesc& channel, AcquireContext& ctx) override;
     bool triggerSourceSet(const SettingValues&) const override { return false; }
     void settingChanged(std::string_view key) override;
 
-private:
-    struct Junction { double ejSumHz = 0.0, ecHz = 0.0; }; // E_JΣ/h, E_C/h
+  private:
+    struct Junction {
+        double ejSumHz = 0.0, ecHz = 0.0;
+    }; // E_JΣ/h, E_C/h
     Result<Junction> junction(std::uint32_t k) const;
     mutable std::mutex cacheMu_;
     mutable std::map<std::uint32_t, std::pair<const hw::Calibration*, Junction>> cache_;
-    mutable std::shared_ptr<const hw::Calibration> cacheOwner_; // keeps the cached calibration's address alive
+    mutable std::shared_ptr<const hw::Calibration>
+        cacheOwner_; // keeps the cached calibration's address alive
 };
 
 } // namespace qlab::instr

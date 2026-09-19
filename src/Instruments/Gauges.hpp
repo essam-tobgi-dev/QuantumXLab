@@ -17,15 +17,16 @@ struct ScalarReading {
 
 // Common strip-chart behaviour of the three meters.
 class StripChartInstrument : public InstrumentBase {
-public:
+  public:
     std::optional<ScalarReading> lastReading() const;
 
-protected:
+  protected:
     using InstrumentBase::InstrumentBase;
-    Trace chart(const ChannelDesc& channel, const AcquireContext& ctx, const ScalarReading& reading);
+    Trace chart(const ChannelDesc& channel, const AcquireContext& ctx,
+                const ScalarReading& reading);
     bool triggerSourceSet(const SettingValues&) const override { return false; }
 
-private:
+  private:
     mutable std::mutex historyMu_;
     std::deque<ScalarReading> history_;
 };
@@ -33,31 +34,31 @@ private:
 // Pirani + cold cathode on the vacuum can, capacitance manometers on the still, condensing line
 // and dump: 1e−8 … 3000 mbar.
 class PressureGauge final : public StripChartInstrument {
-public:
+  public:
     explicit PressureGauge(std::uint32_t index = 0);
     static SettingSchema makeSchema();
     // Gauge technology in use for a node and pressure: "cold_cathode", "pirani" or "capacitance".
     static std::string_view technology(std::string_view node, double mbar);
     std::optional<double> query(std::string_view path) const override; // p
 
-protected:
+  protected:
     Result<Trace> doAcquire(const ChannelDesc& channel, AcquireContext& ctx) override;
 };
 
 // Thermal mass-flow meter in the circulation loop: ṅ₃ in mmol/s, 0 … 5.
 class FlowMeter final : public StripChartInstrument {
-public:
+  public:
     explicit FlowMeter(std::uint32_t index = 0);
     static SettingSchema makeSchema();
     std::optional<double> query(std::string_view path) const override; // n3
 
-protected:
+  protected:
     Result<Trace> doAcquire(const ChannelDesc& channel, AcquireContext& ctx) override;
 };
 
 // RF power at a routing node, −70 … +20 dBm, over the head's calibrated band.
 class PowerMeter final : public StripChartInstrument {
-public:
+  public:
     explicit PowerMeter(std::uint32_t index = 0);
     static SettingSchema makeSchema();
     // Point-to-point scatter of a reading at an averaging time, in dB: 0.02 dB at 100 ms, improving
@@ -65,7 +66,7 @@ public:
     static double repeatabilityDb(double averagingMs);
     std::optional<double> query(std::string_view path) const override; // p, P_dBm
 
-protected:
+  protected:
     Result<Trace> doAcquire(const ChannelDesc& channel, AcquireContext& ctx) override;
 };
 

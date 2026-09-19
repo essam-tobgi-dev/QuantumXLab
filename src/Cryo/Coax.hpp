@@ -9,12 +9,12 @@
 namespace qlab::cryo {
 
 struct CoaxSpec {
-    std::string id;              // SS_086, CuNi_086, NbTi_086, Cu_141, SS_219, Cu_086, DC_loom_12
+    std::string id; // SS_086, CuNi_086, NbTi_086, Cu_141, SS_219, Cu_086, DC_loom_12
     double od_mm = 2.19;
-    double areaInner_m2 = 0;     // centre conductor cross-section
+    double areaInner_m2 = 0; // centre conductor cross-section
     double areaDielectric_m2 = 0;
-    double areaOuter_m2 = 0;     // outer conductor cross-section
-    std::string innerMaterial;   // material ids from the MaterialCatalog
+    double areaOuter_m2 = 0;   // outer conductor cross-section
+    std::string innerMaterial; // material ids from the MaterialCatalog
     std::string dielectricMaterial = "PTFE";
     std::string outerMaterial;
     double loss_dB_per_m_5GHz = 0; // at 300 K (Model)
@@ -28,13 +28,14 @@ struct ConductionLoad {
 };
 
 class CoaxCatalog {
-public:
+  public:
     CoaxCatalog(); // populated with the standard entries of spec 11 §2.1 and T08 §4.1
     const CoaxSpec* find(std::string_view id) const;
     Result<const CoaxSpec*> get(std::string_view id) const;
     std::vector<std::string> ids() const;
     void add(CoaxSpec s);
-private:
+
+  private:
     std::vector<CoaxSpec> specs_;
 };
 

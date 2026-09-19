@@ -10,7 +10,7 @@
 namespace qlab::viz {
 
 class PhaseDiskView final : public StateView {
-public:
+  public:
     std::string_view id() const override { return "phasedisk"; }
     std::string_view title() const override { return "Phase disks"; }
     Observability observability() const override { return Observability::SimulatorOnly; }
@@ -31,12 +31,12 @@ public:
     glm::vec2 discCenter(std::size_t k) const;
     float discRadius(std::size_t k) const;
 
-protected:
+  protected:
     void rebuild(const ViewInput& in) override;
     void layout() override;
     void drawBody(DrawContext& ctx) override;
 
-private:
+  private:
     math::AmplitudeFilter filter_;
     math::AmplitudeSelection selection_;
     std::string note_;

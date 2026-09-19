@@ -4,29 +4,45 @@
 
 namespace qlab::cryo {
 
-double thermalPhotons(double f, double T) { return phys::thermalPhotons(f, T); }
-double effectiveTemperature(double f, double n) { return phys::effectiveTemperature(f, n); }
+double thermalPhotons(double f, double T) {
+    return phys::thermalPhotons(f, T);
+}
+double effectiveTemperature(double f, double n) {
+    return phys::effectiveTemperature(f, n);
+}
 
-LineNoise NoiseBudget::inputLine(const WiringLine& line, const StageArray& T, NoiseBudgetOptions opt) const {
+LineNoise NoiseBudget::inputLine(const WiringLine& line, const StageArray& T,
+                                 NoiseBudgetOptions opt) const {
     LineNoise r;
     r.lineId = line.id;
     r.f_Hz = opt.f_Hz;
-    r.n_in = opt.n_in < 0 ? phys::thermalPhotons(opt.f_Hz, nominalTemperature(Stage::RT)) : opt.n_in;
+    r.n_in =
+        opt.n_in < 0 ? phys::thermalPhotons(opt.f_Hz, nominalTemperature(Stage::RT)) : opt.n_in;
     double n = r.n_in;
     for (const Element& e : line.elements) {
         double A_dB = 0;
         switch (e.kind) {
-        case ElementKind::Attenuator: A_dB = e.attenuation_dB; break;
-        case ElementKind::IrFilter: A_dB = 0.0; break; // not part of the photon budget (T07 §9)
+        case ElementKind::Attenuator:
+            A_dB = e.attenuation_dB;
+            break;
+        case ElementKind::IrFilter:
+            A_dB = 0.0;
+            break; // not part of the photon budget (T07 §9)
         case ElementKind::CoaxSegment:
             if (opt.includeCableLoss)
-                if (const CoaxSpec* c = coax_.find(e.coax)) A_dB = coaxLoss_dB(*c, e.length_m, opt.f_Hz, T[stageIndex(e.stage)]);
+                if (const CoaxSpec* c = coax_.find(e.coax))
+                    A_dB = coaxLoss_dB(*c, e.length_m, opt.f_Hz, T[stageIndex(e.stage)]);
             break;
-        default: break;
+        default:
+            break;
         }
-        if (e.kind == ElementKind::Bulkhead || e.kind == ElementKind::Chip) continue;
+        if (e.kind == ElementKind::Bulkhead || e.kind == ElementKind::Chip)
+            continue;
         PhotonStep s;
-        s.stage = e.stage; s.elementId = e.id; s.A_dB = A_dB; s.n_in = n;
+        s.stage = e.stage;
+        s.elementId = e.id;
+        s.A_dB = A_dB;
+        s.n_in = n;
         double A = phys::dbToLinear(A_dB);
         s.emitted = (1.0 - 1.0 / A) * phys::thermalPhotons(opt.f_Hz, T[stageIndex(e.stage)]);
         s.n_out = n / A + s.emitted;
@@ -40,7 +56,8 @@ LineNoise NoiseBudget::inputLine(const WiringLine& line, const StageArray& T, No
     return r;
 }
 
-OutputChainNoise NoiseBudget::outputLine(const WiringLine& line, const StageArray& T, double f) const {
+OutputChainNoise NoiseBudget::outputLine(const WiringLine& line, const StageArray& T,
+                                         double f) const {
     OutputChainNoise o;
     o.lineId = line.id;
     // Forward direction chip → RT: Friis T_sys = Σ T_i / G_before_i, with passive lossy elements at
@@ -55,7 +72,9 @@ OutputChainNoise NoiseBudget::outputLine(const WiringLine& line, const StageArra
             double L = phys::dbToLinear(e.attenuation_dB);
             double Tn = Ts * (L - 1.0);
             o.contributions_K.push_back({e.id, Tn / Gbefore});
-            Tsys += Tn / Gbefore; Gbefore /= L; break;
+            Tsys += Tn / Gbefore;
+            Gbefore /= L;
+            break;
         }
         case ElementKind::CoaxSegment: {
             const CoaxSpec* c = coax_.find(e.coax);
@@ -63,15 +82,20 @@ OutputChainNoise NoiseBudget::outputLine(const WiringLine& line, const StageArra
             double L = phys::dbToLinear(loss);
             double Tn = Ts * (L - 1.0);
             o.contributions_K.push_back({e.id, Tn / Gbefore});
-            Tsys += Tn / Gbefore; Gbefore /= L; break;
+            Tsys += Tn / Gbefore;
+            Gbefore /= L;
+            break;
         }
         case ElementKind::Preamp:
         case ElementKind::Amplifier: {
             double G = phys::dbToLinear(e.gain_dB);
             o.contributions_K.push_back({e.id, e.noiseTemperature_K / Gbefore});
-            Tsys += e.noiseTemperature_K / Gbefore; Gbefore *= G; break;
+            Tsys += e.noiseTemperature_K / Gbefore;
+            Gbefore *= G;
+            break;
         }
-        default: break;
+        default:
+            break;
         }
     }
     o.T_sys_K = Tsys;
@@ -84,17 +108,25 @@ OutputChainNoise NoiseBudget::outputLine(const WiringLine& line, const StageArra
     double isoTotal_dB = 0.0;
     Stage hemtStage = Stage::PT2;
     for (const Element& e : line.elements) {
-        if (e.kind == ElementKind::Isolator || e.kind == ElementKind::Circulator) isoTotal_dB += e.isolation_dB;
-        if (e.kind == ElementKind::Amplifier) { hemtStage = e.stage; break; }
+        if (e.kind == ElementKind::Isolator || e.kind == ElementKind::Circulator)
+            isoTotal_dB += e.isolation_dB;
+        if (e.kind == ElementKind::Amplifier) {
+            hemtStage = e.stage;
+            break;
+        }
     }
     nWarm = phys::thermalPhotons(f, T[stageIndex(hemtStage)]);
-    o.n_backaction = nWarm * phys::dbToLinear(-isoTotal_dB) + phys::thermalPhotons(f, T[stageIndex(Stage::MXC)]);
+    o.n_backaction =
+        nWarm * phys::dbToLinear(-isoTotal_dB) + phys::thermalPhotons(f, T[stageIndex(Stage::MXC)]);
     return o;
 }
 
-std::vector<LineNoise> NoiseBudget::allInputs(const Wiring& w, const StageArray& T, NoiseBudgetOptions opt) const {
+std::vector<LineNoise> NoiseBudget::allInputs(const Wiring& w, const StageArray& T,
+                                              NoiseBudgetOptions opt) const {
     std::vector<LineNoise> v;
-    for (auto& l : w.lines) if (l.kind != LineKind::ReadoutOut && l.kind != LineKind::DC) v.push_back(inputLine(l, T, opt));
+    for (auto& l : w.lines)
+        if (l.kind != LineKind::ReadoutOut && l.kind != LineKind::DC)
+            v.push_back(inputLine(l, T, opt));
     return v;
 }
 

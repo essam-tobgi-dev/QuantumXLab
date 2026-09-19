@@ -2,10 +2,10 @@
 // runs fire no detector, single faults fire the detectors the theory predicts, the noise plans hold
 // the sites of each setting, and the Pauli-frame engine reproduces the tableau engine shot by shot.
 #include "QEC/Sampler.hpp"
-#include <catch2/catch_approx.hpp>
-#include <catch2/catch_test_macros.hpp>
 #include <algorithm>
 #include <array>
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <map>
 
 using namespace qlab;
@@ -13,9 +13,12 @@ using namespace qlab::qec;
 using Catch::Approx;
 
 namespace {
-StabilizerCode shipped(const std::string& id) { return loadShippedCode(id).value(); }
+StabilizerCode shipped(const std::string& id) {
+    return loadShippedCode(id).value();
+}
 
-MemoryExperiment plan(const std::string& id, std::uint32_t rounds, LogicalBasis basis = LogicalBasis::Z) {
+MemoryExperiment plan(const std::string& id, std::uint32_t rounds,
+                      LogicalBasis basis = LogicalBasis::Z) {
     ExtractionOptions opt;
     opt.rounds = rounds;
     opt.basis = basis;
@@ -24,7 +27,8 @@ MemoryExperiment plan(const std::string& id, std::uint32_t rounds, LogicalBasis 
 
 std::uint32_t roundStartOp(const MemoryExperiment& ex, std::uint32_t round) {
     for (std::uint32_t i = 0; i < ex.schedule.ops.size(); ++i)
-        if (ex.schedule.ops[i].kind == OpKind::RoundStart && ex.schedule.ops[i].a == round) return i;
+        if (ex.schedule.ops[i].kind == OpKind::RoundStart && ex.schedule.ops[i].a == round)
+            return i;
     FAIL("round start not found");
     return 0;
 }
@@ -32,12 +36,14 @@ std::uint32_t roundStartOp(const MemoryExperiment& ex, std::uint32_t round) {
 std::vector<std::uint32_t> fired(const std::vector<std::uint8_t>& events) {
     std::vector<std::uint32_t> f;
     for (std::uint32_t i = 0; i < events.size(); ++i)
-        if (events[i]) f.push_back(i);
+        if (events[i])
+            f.push_back(i);
     return f;
 }
 } // namespace
 
-TEST_CASE("Sampler: fault-free memory experiments fire no detector and read the prepared logical state") {
+TEST_CASE(
+    "Sampler: fault-free memory experiments fire no detector and read the prepared logical state") {
     for (const std::string& id : shippedCodeIds())
         for (LogicalBasis basis : {LogicalBasis::Z, LogicalBasis::X}) {
             INFO(id << " basis " << basisName(basis));
@@ -54,11 +60,13 @@ TEST_CASE("Sampler: fault-free memory experiments fire no detector and read the 
                 REQUIRE(std::count(events.begin(), events.end(), 1) == 0);
                 const auto logical = ex.observableValues(bits);
                 REQUIRE(logical == std::vector<std::uint8_t>{0});
-                sawRandomSyndrome = sawRandomSyndrome || std::count(bits.begin(), bits.end(), 1) > 0;
+                sawRandomSyndrome =
+                    sawRandomSyndrome || std::count(bits.begin(), bits.end(), 1) > 0;
             }
             // Projection onto the code space draws random first-round syndromes for the checks the
             // product state does not fix (every code here has some, except in its protected basis).
-            if (id == "surface_rot_5") REQUIRE(sawRandomSyndrome);
+            if (id == "surface_rot_5")
+                REQUIRE(sawRandomSyndrome);
         }
 }
 
@@ -108,33 +116,37 @@ TEST_CASE("Sampler: single faults fire the detectors of T09 §5.3") {
 TEST_CASE("Sampler: noise plans hold the sites of spec 16 §4") {
     const MemoryExperiment ex = plan("surface_rot_3", 3);
     auto count = [](const NoisePlan& p, SiteKind k) {
-        return std::count_if(p.sites.begin(), p.sites.end(), [k](const NoiseSite& s) { return s.kind == k; });
+        return std::count_if(p.sites.begin(), p.sites.end(),
+                             [k](const NoiseSite& s) { return s.kind == k; });
     };
     NoiseParams n;
     n.p = 1e-3;
     n.setting = NoiseSetting::CodeCapacity;
     const NoisePlan cc = planNoise(ex, n).value();
-    REQUIRE(cc.sites.size() == 9);   // each data qubit once
+    REQUIRE(cc.sites.size() == 9); // each data qubit once
     REQUIRE(cc.sites[0].px == Approx(1e-3 / 3));
     REQUIRE(cc.sites[0].total() == Approx(1e-3));
     n.setting = NoiseSetting::Phenomenological;
     const NoisePlan ph = planNoise(ex, n).value();
-    REQUIRE(count(ph, SiteKind::Pauli1) == 9 * 3);       // data errors every round
-    REQUIRE(count(ph, SiteKind::RecordFlip) == 8 * 3);   // q = p on every syndrome bit, none on the readout
+    REQUIRE(count(ph, SiteKind::Pauli1) == 9 * 3); // data errors every round
+    REQUIRE(count(ph, SiteKind::RecordFlip) ==
+            8 * 3); // q = p on every syndrome bit, none on the readout
     n.q = 0.0;
     REQUIRE(count(planNoise(ex, n).value(), SiteKind::RecordFlip) == 0);
     n.q = -1.0;
     n.setting = NoiseSetting::CircuitLevel;
     const NoisePlan cl = planNoise(ex, n).value();
-    REQUIRE(count(cl, SiteKind::Depolarize2) == 24 * 3);              // every CNOT
-    REQUIRE(count(cl, SiteKind::RecordFlip) == 8 * 3 + 9);           // every measurement
-    REQUIRE(count(cl, SiteKind::Pauli1) == (8 + 8) * 3 + 9);         // h and reset per round + data resets
-    REQUIRE(std::is_sorted(cl.sites.begin(), cl.sites.end(), [](const auto& a, const auto& b) { return a.afterOp < b.afterOp; }));
+    REQUIRE(count(cl, SiteKind::Depolarize2) == 24 * 3);     // every CNOT
+    REQUIRE(count(cl, SiteKind::RecordFlip) == 8 * 3 + 9);   // every measurement
+    REQUIRE(count(cl, SiteKind::Pauli1) == (8 + 8) * 3 + 9); // h and reset per round + data resets
+    REQUIRE(std::is_sorted(cl.sites.begin(), cl.sites.end(),
+                           [](const auto& a, const auto& b) { return a.afterOp < b.afterOp; }));
     // 15 two-qubit Paulis with p/15 each, 3 letters with p/3, resets flip with p (T09 §5.4).
     const auto faults = enumerateFaults(cl);
     REQUIRE(faults.size() == 24u * 3 * 15 + 8u * 3 * 3 + (8u * 3 + 9) * 1 + (8u * 3 + 9));
     double expectedFaults = 0.0;
-    for (const auto& f : faults) expectedFaults += f.probability;
+    for (const auto& f : faults)
+        expectedFaults += f.probability;
     REQUIRE(expectedFaults == Approx(1e-3 * double(cl.sites.size())).epsilon(1e-12));
     // Idle depolarizing (T09 §5.4) adds sites on the qubits a moment leaves untouched.
     n.pIdle = 1e-3;
@@ -159,7 +171,8 @@ TEST_CASE("Sampler: fault draws follow the channel probabilities") {
     const int shots = 60000;
     for (int i = 0; i < shots; ++i) {
         drawFaults(plan, rng, faults);
-        if (!faults.empty()) ++histogram[std::string{faults[0].pauliA, faults[0].pauliB}];
+        if (!faults.empty())
+            ++histogram[std::string{faults[0].pauliA, faults[0].pauliB}];
     }
     REQUIRE(histogram.size() == 15);
     REQUIRE(histogram.count("II") == 0);
@@ -171,7 +184,12 @@ TEST_CASE("Sampler: fault draws follow the channel probabilities") {
 }
 
 TEST_CASE("Sampler: the Pauli-frame engine reproduces the stabilizer backend shot by shot") {
-    struct Case { const char* id; NoiseSetting setting; double p; LogicalBasis basis; };
+    struct Case {
+        const char* id;
+        NoiseSetting setting;
+        double p;
+        LogicalBasis basis;
+    };
     const Case cases[] = {{"surface_rot_3", NoiseSetting::CircuitLevel, 0.02, LogicalBasis::Z},
                           {"surface_rot_3", NoiseSetting::CircuitLevel, 0.02, LogicalBasis::X},
                           {"surface_rot_5", NoiseSetting::Phenomenological, 0.03, LogicalBasis::Z},
@@ -202,6 +220,6 @@ TEST_CASE("Sampler: the Pauli-frame engine reproduces the stabilizer backend sho
             REQUIRE(ex.observableValues(bits) == ex.observableValues(flips));
             shotsWithEvents += std::count(events.begin(), events.end(), 1) > 0 ? 1 : 0;
         }
-        REQUIRE(shotsWithEvents > 30);   // the comparison is not vacuous
+        REQUIRE(shotsWithEvents > 30); // the comparison is not vacuous
     }
 }

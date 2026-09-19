@@ -10,7 +10,7 @@
 namespace qlab::ui::test {
 
 class UiHarness {
-public:
+  public:
     explicit UiHarness(float width = 1600.0f, float height = 1000.0f) : size_(width, height) {
         IMGUI_CHECKVERSION();
         ctx_ = ImGui::CreateContext();
@@ -61,7 +61,7 @@ public:
 
     int vertices() const { return vertices_; }
 
-private:
+  private:
     ImVec2 size_;
     ImGuiContext* ctx_ = nullptr;
     ImPlotContext* plot_ = nullptr;

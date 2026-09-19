@@ -1,11 +1,11 @@
 #pragma once
 // Shared helpers for the IR tests: parse + build from source, node access, unitary comparison.
-#include <catch2/catch_test_macros.hpp>
 #include "IR/IR.hpp"
 #include "Lang/Sema.hpp"
 #include "Numerics/Checks.hpp"
 #include "Numerics/Matrix.hpp"
 #include "Numerics/Tensor.hpp"
+#include <catch2/catch_test_macros.hpp>
 #include <string>
 #include <vector>
 
@@ -17,13 +17,16 @@ inline std::string program(std::string_view body) {
 }
 
 // Parse and build; the diagnostic text is attached to the failure.
-inline Result<ir::Circuit> tryBuild(std::string_view src, const ir::ParamMap& inputs = {}, const ir::BuildOptions& opts = {}) {
+inline Result<ir::Circuit> tryBuild(std::string_view src, const ir::ParamMap& inputs = {},
+                                    const ir::BuildOptions& opts = {}) {
     auto prog = lang::parseProgram(src, "test.qasm");
-    if (!prog) return std::unexpected(prog.error());
+    if (!prog)
+        return std::unexpected(prog.error());
     return ir::buildCircuit(*prog, inputs, opts);
 }
 
-inline ir::Circuit build(std::string_view src, const ir::ParamMap& inputs = {}, const ir::BuildOptions& opts = {}) {
+inline ir::Circuit build(std::string_view src, const ir::ParamMap& inputs = {},
+                         const ir::BuildOptions& opts = {}) {
     auto c = tryBuild(src, inputs, opts);
     INFO(std::string(src) << "\n" << (c ? std::string() : c.error().format()));
     REQUIRE(c.has_value());
@@ -36,7 +39,8 @@ inline ir::Circuit build(std::string_view src, const ir::ParamMap& inputs = {}, 
 // Top-level nodes in topological order.
 inline std::vector<const ir::Node*> nodes(const ir::Circuit& c) {
     std::vector<const ir::Node*> v;
-    for (auto id : c.topologicalOrder()) v.push_back(&c.node(id));
+    for (auto id : c.topologicalOrder())
+        v.push_back(&c.node(id));
     return v;
 }
 
@@ -49,7 +53,8 @@ inline const ir::Gate& gateAt(const ir::Circuit& c, std::size_t i) {
 
 inline std::vector<std::uint32_t> indices(const std::vector<ir::Wire>& ws) {
     std::vector<std::uint32_t> v;
-    for (auto w : ws) v.push_back(w.index);
+    for (auto w : ws)
+        v.push_back(w.index);
     return v;
 }
 

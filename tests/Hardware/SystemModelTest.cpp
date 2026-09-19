@@ -22,8 +22,8 @@ TEST_CASE("site operators embed little-endian") {
     auto a1 = siteAnnihilate(dims, 1);
     REQUIRE(a0.rows == 9);
     // Site 0 is the least significant index: |n1 n0> has index n0 + 3 n1.
-    REQUIRE(a0.at(0, 1).real() == Approx(1.0));  // |01> -> |00>
-    REQUIRE(a1.at(0, 3).real() == Approx(1.0));  // |10> -> |00>
+    REQUIRE(a0.at(0, 1).real() == Approx(1.0)); // |01> -> |00>
+    REQUIRE(a1.at(0, 3).real() == Approx(1.0)); // |10> -> |00>
     REQUIRE(a0.at(0, 3) == num::Complex(0.0, 0.0));
     auto n0 = siteNumber(dims, 0);
     REQUIRE(n0.at(1, 1).real() == Approx(1.0));
@@ -39,7 +39,8 @@ TEST_CASE("a transmon model is Hermitian with the right dimension and frame") {
     REQUIRE(ld);
     const std::vector<std::uint32_t> qs{0, 1};
     auto m = buildSystemModel(ld->device, ld->calibration, opts(qs));
-    if (!m) FAIL(m.error().format());
+    if (!m)
+        FAIL(m.error().format());
     REQUIRE(m->siteDims == std::vector<std::uint32_t>{3, 3});
     REQUIRE(m->dimension() == 9);
     REQUIRE(m->h0.rows == 9);
@@ -75,8 +76,10 @@ TEST_CASE("drives cover every qubit and native cross-resonance direction") {
     REQUIRE(m);
     bool d0 = false, d1 = false, cr = false;
     for (const auto& d : m->drives) {
-        if (d.channel == "d[0]") d0 = true;
-        if (d.channel == "d[1]") d1 = true;
+        if (d.channel == "d[0]")
+            d0 = true;
+        if (d.channel == "d[1]")
+            d1 = true;
         if (d.channel == "u[0,1]") {
             cr = true;
             // A CR channel drives the control but rotates at the target frequency (T05 §8).
@@ -104,7 +107,8 @@ TEST_CASE("drive operators reduce to X/2 and +Y/2 on the qubit levels (T05 (7.1)
     REQUIRE(m);
     const DriveSpec* drive = nullptr;
     for (const auto& d : m->drives)
-        if (d.channel == "d[0]") drive = &d;
+        if (d.channel == "d[0]")
+            drive = &d;
     REQUIRE(drive != nullptr);
     const auto X = drive->inPhase.toDense();
     const auto Y = drive->quadrature.toDense();
@@ -139,10 +143,12 @@ TEST_CASE("collapse operators follow the calibration") {
             // L = sqrt(gamma1 (nbar+1)) a, so |<0|L|1>|^2 = gamma1 (nbar+1) ~ 1/T1.
             const double rate = std::norm(c.op.at(0, 1));
             const double g1 = 1.0 / ld->calibration.qubits[0].t1.value.v;
-            REQUIRE(rate == Approx(g1 * (1.0 + 2.0 * ld->calibration.qubits[0].thermalPopulation.value))
-                                .epsilon(0.05));
+            REQUIRE(rate ==
+                    Approx(g1 * (1.0 + 2.0 * ld->calibration.qubits[0].thermalPopulation.value))
+                        .epsilon(0.05));
         }
-        if (c.name == "Tphi q0") tphi = true;
+        if (c.name == "Tphi q0")
+            tphi = true;
         REQUIRE(c.op.rows == 3);
     }
     REQUIRE(t1);
@@ -151,13 +157,15 @@ TEST_CASE("collapse operators follow the calibration") {
     // Thermal excitation adds an upward jump; switching it off removes it.
     bool up = false;
     for (const auto& c : m->collapse)
-        if (c.name == "Tth q0") up = true;
+        if (c.name == "Tth q0")
+            up = true;
     REQUIRE(up);
     auto o = opts(qs);
     o.includeThermal = false;
     auto cold = buildSystemModel(ld->device, ld->calibration, o);
     REQUIRE(cold);
-    for (const auto& c : cold->collapse) REQUIRE(c.name != "Tth q0");
+    for (const auto& c : cold->collapse)
+        REQUIRE(c.name != "Tth q0");
 
     o = opts(qs);
     o.includeDecoherence = false;
@@ -173,7 +181,8 @@ TEST_CASE("an ion model carries the motional mode and heating") {
     auto o = opts(qs);
     o.fockCutoff = 4;
     auto m = buildSystemModel(ld->device, ld->calibration, o);
-    if (!m) FAIL(m.error().format());
+    if (!m)
+        FAIL(m.error().format());
     // Two two-level ions plus one Fock mode.
     REQUIRE(m->siteDims == std::vector<std::uint32_t>{2, 2, 4});
     REQUIRE(m->dimension() == 16);
@@ -183,9 +192,11 @@ TEST_CASE("an ion model carries the motional mode and heating") {
     REQUIRE(m->h0.at(4, 4).real() == Approx(kTwoPi * modeHz).epsilon(1e-9)); // |n=1> of the mode
     bool ms = false, heat = false;
     for (const auto& d : m->drives)
-        if (d.channel == "ms[0,1]") ms = true;
+        if (d.channel == "ms[0,1]")
+            ms = true;
     for (const auto& c : m->collapse)
-        if (c.name == "heating") heat = true;
+        if (c.name == "heating")
+            heat = true;
     REQUIRE(ms);
     REQUIRE(heat);
 }
@@ -276,7 +287,8 @@ TEST_CASE("the calibration names the MS gate mode and the ion model uses it") {
 
 TEST_CASE("the MS drive operator is (eta_n/2) sigma (a + a^dagger) per ion (T06 (6.1))") {
     // Regression: the operator was (eta/4) S (a + a†) with one averaged eta — half the strength
-    // that Pulse's envelope F(t) = 2 Omega cos(mu t) assumes, so XX(pi/2) would come out as XX(pi/8).
+    // that Pulse's envelope F(t) = 2 Omega cos(mu t) assumes, so XX(pi/2) would come out as
+    // XX(pi/8).
     auto ld = loadShippedDevice("ion_chain_11");
     REQUIRE(ld);
     const std::vector<std::uint32_t> qs{2, 7};
@@ -287,7 +299,8 @@ TEST_CASE("the MS drive operator is (eta_n/2) sigma (a + a^dagger) per ion (T06 
     REQUIRE(m);
     const DriveSpec* ms = nullptr;
     for (const auto& d : m->drives)
-        if (d.channel == "ms[2,7]") ms = &d;
+        if (d.channel == "ms[2,7]")
+            ms = &d;
     REQUIRE(ms != nullptr);
     const double etaI = ld->calibration.qubits[2].lambDicke->value;
     const double etaJ = ld->calibration.qubits[7].lambDicke->value;

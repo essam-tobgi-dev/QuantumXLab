@@ -10,7 +10,7 @@
 namespace qlab::viz::test {
 
 class ImGuiHarness {
-public:
+  public:
     explicit ImGuiHarness(float width = 900.0f, float height = 600.0f) : size_(width, height) {
         IMGUI_CHECKVERSION();
         ctx_ = ImGui::CreateContext();
@@ -51,7 +51,9 @@ public:
         ImGui::NewFrame();
         ImGui::SetNextWindowPos(windowPos());
         ImGui::SetNextWindowSize(windowSize());
-        ImGui::Begin("view", nullptr, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
+        ImGui::Begin("view", nullptr,
+                     ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar |
+                         ImGuiWindowFlags_NoScrollbar);
         view.draw(ctx);
         drawCommands_ = ImGui::GetWindowDrawList()->CmdBuffer.Size;
         vertices_ = ImGui::GetWindowDrawList()->VtxBuffer.Size;
@@ -60,7 +62,7 @@ public:
     }
     int vertices() const { return vertices_; }
 
-private:
+  private:
     ImVec2 size_;
     ImGuiContext* ctx_ = nullptr;
     ImPlotContext* plot_ = nullptr;

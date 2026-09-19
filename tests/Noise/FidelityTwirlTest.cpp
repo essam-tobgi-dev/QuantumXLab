@@ -11,7 +11,8 @@ namespace {
 // Haar-average fidelity of a qubit channel from the six Pauli eigenstates, a state 2-design.
 double sixStateFidelity(const Kraus& k) {
     const double s = 1.0 / std::numbers::sqrt2;
-    const std::vector<std::vector<Complex>> states{{1, 0}, {0, 1}, {s, s}, {s, -s}, {s, Complex(0, s)}, {s, Complex(0, -s)}};
+    const std::vector<std::vector<Complex>> states{
+        {1, 0}, {0, 1}, {s, s}, {s, -s}, {s, Complex(0, s)}, {s, Complex(0, -s)}};
     double sum = 0.0;
     for (const auto& psi : states) {
         auto out = applyToDensity(k, num::projector(psi));
@@ -30,7 +31,8 @@ double entanglementFidelity2q(const ChannelPtr& c) {
         NOISE_REQUIRE_OK(dm.applyGate(CX(), q({k, k + 2})));
     }
     std::vector<Complex> phi(16, 0.0);
-    for (std::size_t j = 0; j < 4; ++j) phi[j | (j << 2)] = 0.5;
+    for (std::size_t j = 0; j < 4; ++j)
+        phi[j | (j << 2)] = 0.5;
     REQUIRE(num::fidelity(std::span<const Complex>(phi), dm.rho()) == Approx(1.0).margin(1e-14));
     apply(dm, attach(c, q({0, 1})), rng);
     return num::fidelity(std::span<const Complex>(phi), dm.rho());
@@ -52,8 +54,10 @@ TEST_CASE("depolarizing average gate fidelity is 1 - p(d-1)/d and p = d r/(d-1) 
         INFO("p = " << p);
         auto one = channels::depolarizing1q(p);
         NOISE_REQUIRE_OK(one);
-        REQUIRE(averageGateFidelity(*one) == Approx(1.0 - p / 2.0).margin(1e-12)); // T10 (1.3)–(1.5)
-        REQUIRE(sixStateFidelity(*one) == Approx(1.0 - p / 2.0).margin(1e-12));    // independent 2-design average
+        REQUIRE(averageGateFidelity(*one) ==
+                Approx(1.0 - p / 2.0).margin(1e-12)); // T10 (1.3)–(1.5)
+        REQUIRE(sixStateFidelity(*one) ==
+                Approx(1.0 - p / 2.0).margin(1e-12)); // independent 2-design average
         REQUIRE(depolarizingEquivalent(*one) == Approx(p).margin(1e-12));
         auto two = channels::depolarizing2q(p);
         NOISE_REQUIRE_OK(two);
@@ -69,7 +73,8 @@ TEST_CASE("depolarizing average gate fidelity is 1 - p(d-1)/d and p = d r/(d-1) 
             REQUIRE(channels::gateErrorFromDepolarizing(p, n) == Approx(r).epsilon(1e-15));
             auto k = channels::depolarizingNq(n, p);
             NOISE_REQUIRE_OK(k);
-            REQUIRE(1.0 - averageGateFidelity(*k) == Approx(r).epsilon(1e-10)); // the channel realises r
+            REQUIRE(1.0 - averageGateFidelity(*k) ==
+                    Approx(r).epsilon(1e-10)); // the channel realises r
         }
     }
 }
@@ -83,11 +88,14 @@ TEST_CASE("thermal relaxation infidelity matches T04 (4.6) and ignores p_th") {
             const double closed = 0.5 + (2.0 * std::exp(-t / t2) + std::exp(-t / t1)) / 6.0;
             REQUIRE(averageGateFidelity(*k) == Approx(closed).margin(1e-14));
             REQUIRE(sixStateFidelity(*k) == Approx(closed).margin(1e-14));
-            REQUIRE(channels::thermalRelaxationInfidelity(t1, t2, t) == Approx(1.0 - closed).epsilon(1e-9));
+            REQUIRE(channels::thermalRelaxationInfidelity(t1, t2, t) ==
+                    Approx(1.0 - closed).epsilon(1e-9));
         }
     }
-    // T04 §4.3 example: 35 ns, T1 = 150 µs, T2 = 100 µs gives 1 − F = 1.6e-4 (two significant digits).
-    REQUIRE(channels::thermalRelaxationInfidelity(150e-6, 100e-6, 35e-9) == Approx(1.556e-4).epsilon(1e-3));
+    // T04 §4.3 example: 35 ns, T1 = 150 µs, T2 = 100 µs gives 1 − F = 1.6e-4 (two significant
+    // digits).
+    REQUIRE(channels::thermalRelaxationInfidelity(150e-6, 100e-6, 35e-9) ==
+            Approx(1.556e-4).epsilon(1e-3));
 }
 
 TEST_CASE("over-rotation infidelity is d sin^2(eps/2)/(d+1) and the calibration angle inverts it") {
@@ -97,14 +105,16 @@ TEST_CASE("over-rotation infidelity is d sin^2(eps/2)/(d+1) and the calibration 
         for (double eps : {1e-3, 0.05, 0.7}) {
             auto k = channels::overRotation(axis, eps);
             NOISE_REQUIRE_OK(k);
-            REQUIRE(1.0 - averageGateFidelity(*k) == Approx(d * std::pow(std::sin(eps / 2), 2) / (d + 1)).margin(1e-15));
+            REQUIRE(1.0 - averageGateFidelity(*k) ==
+                    Approx(d * std::pow(std::sin(eps / 2), 2) / (d + 1)).margin(1e-15));
             const double r = 1.0 - averageGateFidelity(*k);
             REQUIRE(channels::overRotationAngleForInfidelity(r, n) == Approx(eps).epsilon(1e-9));
         }
     }
 }
 
-TEST_CASE("Pauli twirl of amplitude damping: p_x = p_y = gamma/4, p_z = (2 - gamma - 2 sqrt(1-gamma))/4") {
+TEST_CASE("Pauli twirl of amplitude damping: p_x = p_y = gamma/4, p_z = (2 - gamma - 2 "
+          "sqrt(1-gamma))/4") {
     for (double gamma : {0.0, 1e-4, 0.1, 0.5, 0.99, 1.0}) {
         auto ad = channels::amplitudeDamping(gamma);
         NOISE_REQUIRE_OK(ad);

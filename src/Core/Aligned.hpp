@@ -11,13 +11,17 @@ template <class T, std::size_t Align = 64> struct AlignedAllocator {
     AlignedAllocator() = default;
     template <class U> AlignedAllocator(const AlignedAllocator<U, Align>&) noexcept {}
     T* allocate(std::size_t n) {
-        if (n == 0) return nullptr;
+        if (n == 0)
+            return nullptr;
         void* p = ::operator new(n * sizeof(T), kAlign, std::nothrow);
-        if (!p) throw std::bad_alloc();
+        if (!p)
+            throw std::bad_alloc();
         return static_cast<T*>(p);
     }
     void deallocate(T* p, std::size_t) noexcept { ::operator delete(p, kAlign); }
-    template <class U> struct rebind { using other = AlignedAllocator<U, Align>; };
+    template <class U> struct rebind {
+        using other = AlignedAllocator<U, Align>;
+    };
     bool operator==(const AlignedAllocator&) const { return true; }
 };
 template <class T> using aligned_vector = std::vector<T, AlignedAllocator<T>>;

@@ -30,19 +30,20 @@ struct TourStep {
     double dwell_s = 8.0;                       // time on the stop before auto-advance
     double orbitDegPerS = 4.0;                  // slow drift around the focus while dwelling
     double marginFactor = 1.6;                  // framing (spec 18 §6) relative to the AABB
-    std::optional<double> azimuthDeg, elevationDeg; // approach direction; absent: keep the current one
+    std::optional<double> azimuthDeg,
+        elevationDeg; // approach direction; absent: keep the current one
     struct View {
         std::optional<bool> xray, cutaway, cans;
-        std::optional<double> explode;          // Assembly::FridgeStages, 0..1
+        std::optional<double> explode; // Assembly::FridgeStages, 0..1
         std::vector<std::pair<Group, bool>> layers;
-    } view;                                     // applied on arrival
-    std::vector<std::string> highlight;         // extra instances outlined at this stop
+    } view;                             // applied on arrival
+    std::vector<std::string> highlight; // extra instances outlined at this stop
 };
 
 class Tour {
-public:
+  public:
     enum class Phase : std::uint8_t { Idle, Flying, Dwelling, Paused };
-    static constexpr double kFlight_s = 0.9;    // spec 17 §7.10: one eased flight per stop
+    static constexpr double kFlight_s = 0.9; // spec 17 §7.10: one eased flight per stop
 
     // `bindings` feeds the live rows (may be null: rows read "—"). `theoryDir` is where the anchors
     // are checked; empty means `QXL_SOURCE_DIR/docs/theory` when that exists (a source tree), and
@@ -54,7 +55,7 @@ public:
     // ---- transport
     void play();
     void pause();
-    void stop();                                // restores the view state saved on play()
+    void stop(); // restores the view state saved on play()
     void next();
     void prev();
     void seek(std::size_t step);
@@ -73,7 +74,7 @@ public:
     Phase phase() const { return phase_; }
     std::size_t step() const { return step_; }
     std::size_t size() const { return steps_.size(); }
-    double stepProgress() const;                // 0..1 within the current step (flight + dwell)
+    double stepProgress() const; // 0..1 within the current step (flight + dwell)
     const TourStep& current() const { return steps_[step_]; }
     std::span<const TourStep> steps() const { return steps_; }
     const std::string& id() const { return id_; }
@@ -81,7 +82,7 @@ public:
     // The node a step frames (0 when the step uses a bookmark only) and its extra outlines.
     ComponentId focusId(std::size_t step) const;
     ComponentId focusId() const { return focusId(step_); }
-    std::string focusName() const;              // display name of the current focus
+    std::string focusName() const; // display name of the current focus
     std::span<const ComponentId> highlightIds() const { return highlight_[step_]; }
     // Spec 19 §2 Physical-lab mode: steps whose focus is Simulator-only are skipped.
     void setPhysicalLab(bool on) { physicalLab_ = on; }
@@ -99,9 +100,9 @@ public:
     // Interaction API (a private probe Interaction, so the viewport's hover state is untouched).
     std::vector<Tooltip::LiveRow> liveRows() const;
 
-private:
+  private:
     Tour() = default;
-    void arrive(gfx::Camera& camera);           // start the flight to `step_` and apply its view
+    void arrive(gfx::Camera& camera); // start the flight to `step_` and apply its view
     void applyView(const TourStep::View& v, const gfx::Bookmark& target);
     std::optional<std::size_t> nextVisible(std::size_t from, int direction) const;
     bool cameraMovedExternally(const gfx::Camera& camera) const;
@@ -109,21 +110,21 @@ private:
 
     const Scene* scene_ = nullptr;
     Interaction* ui_ = nullptr;
-    std::unique_ptr<Interaction> probe_;        // tooltip rows without touching the live hover
+    std::unique_ptr<Interaction> probe_; // tooltip rows without touching the live hover
     std::string id_, title_;
     std::vector<TourStep> steps_;
     std::vector<ComponentId> focus_;
     std::vector<std::vector<ComponentId>> highlight_;
     std::vector<bool> simulatorOnly_;
-    std::vector<bool> unresolved_;              // focus/highlight absent from this scene
+    std::vector<bool> unresolved_; // focus/highlight absent from this scene
     std::vector<std::string> warnings_;
     Phase phase_ = Phase::Idle;
     std::size_t step_ = 0;
-    double t_ = 0.0;                            // seconds into the current phase
+    double t_ = 0.0; // seconds into the current phase
     bool finished_ = false, physicalLab_ = false, pendingArrive_ = false;
-    double pausedProgress_ = 0.0;               // stepProgress() frozen while paused
-    core::Json savedView_;                      // Interaction::saveViewState() at play()
-    gfx::Bookmark target_, lastCamera_;         // where the flight goes; what we left the camera at
+    double pausedProgress_ = 0.0;       // stepProgress() frozen while paused
+    core::Json savedView_;              // Interaction::saveViewState() at play()
+    gfx::Bookmark target_, lastCamera_; // where the flight goes; what we left the camera at
     bool haveLast_ = false;
 };
 

@@ -14,10 +14,11 @@ struct GateInfo {
     int nParams;
     int nQubits;
     GateKind kind;
-    bool isRotation;       // pow(k) with real k allowed (rx, ry, rz, p, cp, crx, cry, crz, u1, phase, gphase)
+    bool isRotation; // pow(k) with real k allowed (rx, ry, rz, p, cp, crx, cry, crz, u1, phase,
+                     // gphase)
     std::string_view signature;
     std::string_view description;
-    std::string_view matrixId;   // id in Assets/Theory/gates.json
+    std::string_view matrixId; // id in Assets/Theory/gates.json
 };
 
 struct GateDoc {
@@ -25,7 +26,7 @@ struct GateDoc {
 };
 
 class StdGates {
-public:
+  public:
     static const std::vector<GateInfo>& all();
     static const GateInfo* find(std::string_view name);
     static bool isStd(std::string_view name) { return find(name) != nullptr; }

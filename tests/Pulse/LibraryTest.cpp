@@ -13,12 +13,14 @@ using Catch::Approx;
 using pulsetest::library;
 
 namespace {
-Result<void> verifyGate(const PulseLibrary& lib, const std::string& gate, std::span<const std::uint32_t> qubits,
-                        std::size_t& count) {
+Result<void> verifyGate(const PulseLibrary& lib, const std::string& gate,
+                        std::span<const std::uint32_t> qubits, std::size_t& count) {
     const Defcal* d = lib.find(gate, qubits);
-    if (!d) return fail(kErrNoDefcal, "missing defcal");
+    if (!d)
+        return fail(kErrNoDefcal, "missing defcal");
     ParamMap params;
-    for (auto const& p : d->params) params[p] = 0.7;
+    for (auto const& p : d->params)
+        params[p] = 0.7;
     QXL_TRY_ASSIGN(const Schedule s, lib.scheduleFor(gate, qubits, params));
     std::vector<Warning> warnings;
     QXL_TRY(s.verify(lib.device(), &warnings));
@@ -39,7 +41,8 @@ TEST_CASE("all six shipped pulse tables load and resolve cal.* against hw::Calib
         const ChannelId drive0 = lib.isIonDevice() ? ChannelId::raman(0) : ChannelId::drive(0);
         const FrameDecl* f = lib.frameFor(drive0);
         REQUIRE(f != nullptr);
-        // frame frequency_ghz "cal.qubits.0.f01_ghz" is the calibrated f01 (Hz), not a copy of the file
+        // frame frequency_ghz "cal.qubits.0.f01_ghz" is the calibrated f01 (Hz), not a copy of the
+        // file
         REQUIRE(f->frequencyHz == Approx(lib.calibration().qubit(0)->f01.value.v).epsilon(1e-15));
         REQUIRE(lib.has(lib.isIonDevice() ? "rx" : "sx", q0));
     }
@@ -59,14 +62,16 @@ TEST_CASE("every native gate on every qubit and edge yields a schedule that pass
         auto check = [&](const std::string& gate, std::span<const std::uint32_t> qs) {
             if (auto r = verifyGate(lib, gate, qs, count); !r) {
                 std::string where = gate + "(";
-                for (std::size_t i = 0; i < qs.size(); ++i) where += (i ? "," : "") + std::to_string(qs[i]);
+                for (std::size_t i = 0; i < qs.size(); ++i)
+                    where += (i ? "," : "") + std::to_string(qs[i]);
                 failures.push_back(where + "): " + r.error().message);
             }
         };
         const auto data = dev.dataQubits();
         for (auto q : data) {
             const std::uint32_t one[1] = {q};
-            for (auto const& gate : dev.gates.single) check(gate, one);
+            for (auto const& gate : dev.gates.single)
+                check(gate, one);
             check("measure", one);
             check("reset", one);
         }
@@ -74,18 +79,22 @@ TEST_CASE("every native gate on every qubit and edge yields a schedule that pass
             for (std::size_t i = 0; i < data.size(); ++i)
                 for (std::size_t j = i + 1; j < data.size(); ++j) {
                     const std::uint32_t pair[2] = {data[i], data[j]};
-                    for (auto const& gate : dev.gates.two) check(gate, pair);
+                    for (auto const& gate : dev.gates.two)
+                        check(gate, pair);
                 }
         } else {
             for (auto const& e : dev.edges) {
                 const std::uint32_t pair[2] = {e.a, e.b};
-                for (auto const& gate : dev.gates.two) check(gate, pair);
+                for (auto const& gate : dev.gates.two)
+                    check(gate, pair);
             }
         }
         INFO((failures.empty() ? std::string{} : failures.front()));
         REQUIRE(failures.empty());
-        const std::size_t pairs = dev.allToAll ? data.size() * (data.size() - 1) / 2 : dev.edges.size();
-        REQUIRE(count == data.size() * (dev.gates.single.size() + 2) + pairs * dev.gates.two.size());
+        const std::size_t pairs =
+            dev.allToAll ? data.size() * (data.size() - 1) / 2 : dev.edges.size();
+        REQUIRE(count ==
+                data.size() * (dev.gates.single.size() + 2) + pairs * dev.gates.two.size());
     }
 }
 
@@ -109,8 +118,10 @@ TEST_CASE("a native gate without a defcal fails the load with E_NO_DEFCAL") {
     REQUIRE(lib.error().code == kErrNoDefcal);
     REQUIRE(lib.error().diagnosticId == "E_NO_DEFCAL");
     REQUIRE(lib.error().notes.size() == 2);
-    REQUIRE(std::find(lib.error().notes.begin(), lib.error().notes.end(), "sx(3)") != lib.error().notes.end());
-    REQUIRE(std::find(lib.error().notes.begin(), lib.error().notes.end(), "ecr(1,3)") != lib.error().notes.end());
+    REQUIRE(std::find(lib.error().notes.begin(), lib.error().notes.end(), "sx(3)") !=
+            lib.error().notes.end());
+    REQUIRE(std::find(lib.error().notes.begin(), lib.error().notes.end(), "ecr(1,3)") !=
+            lib.error().notes.end());
 
     // Loader errors name the field.
     core::Json broken = env->data;
@@ -132,12 +143,14 @@ TEST_CASE("cal references follow a recalibration without editing pulses.json") {
     auto moved = lib.withCalibration(recal);
     REQUIRE(moved);
     for (std::uint32_t q = 0; q < 5; ++q) {
-        REQUIRE(moved->frameFor(ChannelId::drive(q))->frequencyHz == Approx(recal.qubit(q)->f01.value.v).epsilon(1e-15));
+        REQUIRE(moved->frameFor(ChannelId::drive(q))->frequencyHz ==
+                Approx(recal.qubit(q)->f01.value.v).epsilon(1e-15));
         REQUIRE(moved->frameFor(ChannelId::measure(q))->frequencyHz ==
                 Approx(recal.qubit(q)->readoutFrequency->value.v).epsilon(1e-15));
     }
     // CR frames sit at the (recalibrated) target frequency (spec 10 §3).
-    REQUIRE(moved->frameFor(ChannelId::control(3, 4))->frequencyHz == Approx(recal.qubit(4)->f01.value.v).epsilon(1e-15));
+    REQUIRE(moved->frameFor(ChannelId::control(3, 4))->frequencyHz ==
+            Approx(recal.qubit(4)->f01.value.v).epsilon(1e-15));
     // The original library is untouched.
     REQUIRE(lib.frameFor(ChannelId::drive(2))->frequencyHz ==
             Approx(lib.calibration().qubit(2)->f01.value.v).epsilon(1e-15));

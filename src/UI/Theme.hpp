@@ -25,20 +25,35 @@ using Color = glm::vec4;
 
 // Error codes owned by this module (ErrorCode::Ui_ block, spec 04 §2).
 namespace err {
-inline constexpr ErrorCode BadToken = ErrorCode::Ui_ + 1;     // malformed colour / unknown token
-inline constexpr ErrorCode BadAsset = ErrorCode::Ui_ + 2;     // theme.json / strings.en.json problem
-inline constexpr ErrorCode NoFont = ErrorCode::Ui_ + 3;       // a pinned font file is missing
-inline constexpr ErrorCode NoContext = ErrorCode::Ui_ + 4;    // an ImGui/GL call without a context
+inline constexpr ErrorCode BadToken = ErrorCode::Ui_ + 1;  // malformed colour / unknown token
+inline constexpr ErrorCode BadAsset = ErrorCode::Ui_ + 2;  // theme.json / strings.en.json problem
+inline constexpr ErrorCode NoFont = ErrorCode::Ui_ + 3;    // a pinned font file is missing
+inline constexpr ErrorCode NoContext = ErrorCode::Ui_ + 4; // an ImGui/GL call without a context
 inline constexpr ErrorCode UnknownPanel = ErrorCode::Ui_ + 5;
-inline constexpr ErrorCode BadLayout = ErrorCode::Ui_ + 6;    // layout JSON does not match the schema
+inline constexpr ErrorCode BadLayout = ErrorCode::Ui_ + 6; // layout JSON does not match the schema
 } // namespace err
 
 // The §1 table, in table order. `Count` is the number of colour tokens.
 enum class Token : std::uint8_t {
-    BgBase, BgPanel, BgRaised, BgViewport, Border,
-    TextPrimary, TextSecondary, TextDisabled,
-    Accent, AccentSoft, Ok, Warn, Err, SimOnly,
-    ClassExact, ClassNumerical, ClassStatistical, ClassModel, ClassIllustrative,
+    BgBase,
+    BgPanel,
+    BgRaised,
+    BgViewport,
+    Border,
+    TextPrimary,
+    TextSecondary,
+    TextDisabled,
+    Accent,
+    AccentSoft,
+    Ok,
+    Warn,
+    Err,
+    SimOnly,
+    ClassExact,
+    ClassNumerical,
+    ClassStatistical,
+    ClassModel,
+    ClassIllustrative,
     Count
 };
 inline constexpr std::size_t kTokenCount = static_cast<std::size_t>(Token::Count);
@@ -65,7 +80,7 @@ struct Metrics {
 };
 
 class Theme {
-public:
+  public:
     // Loads `Assets/Lang/theme.json` (envelope kind "ui.theme"); falls back to the built-in table
     // only when the asset cannot be read, and then reports the failure.
     static Result<Theme> load(std::string_view palette = "dark");
@@ -98,13 +113,17 @@ public:
     // helper: it returns `fg` when the pair already clears `minRatio`, else the same hue darkened
     // (light theme) or lightened (dark theme) until it does. Deterministic, 24 bisection steps.
     static Color readableText(const Color& fg, const Color& bg, double minRatio = 4.5);
-    Color textOn(Token fg, Token bg, double minRatio = 4.5) const { return readableText(color(fg), color(bg), minRatio); }
-    Color textOn(const Color& fg, Token bg, double minRatio = 4.5) const { return readableText(fg, color(bg), minRatio); }
+    Color textOn(Token fg, Token bg, double minRatio = 4.5) const {
+        return readableText(color(fg), color(bg), minRatio);
+    }
+    Color textOn(const Color& fg, Token bg, double minRatio = 4.5) const {
+        return readableText(fg, color(bg), minRatio);
+    }
 
     // "#RRGGBB" / "#RRGGBBAA".
     static Result<Color> parseHex(std::string_view hex);
 
-private:
+  private:
     std::array<Color, kTokenCount> colors_{};
     std::array<Color, 8> qubits_{};
     Metrics metrics_;

@@ -23,7 +23,8 @@ void setNodes(ir::Circuit& c, std::vector<ir::Node> nodes);
 template <class F> Status forEachBody(ir::Node& n, F&& fn) {
     if (auto* b = std::get_if<ir::Branch>(&n)) {
         QXL_TRY(fn(*b->thenBody));
-        if (b->elseBody.present()) QXL_TRY(fn(*b->elseBody));
+        if (b->elseBody.present())
+            QXL_TRY(fn(*b->elseBody));
     } else if (auto* l = std::get_if<ir::Loop>(&n)) {
         QXL_TRY(fn(*l->body));
     } else if (auto* bx = std::get_if<ir::Box>(&n)) {
@@ -34,7 +35,8 @@ template <class F> Status forEachBody(ir::Node& n, F&& fn) {
 template <class F> void forEachBody(const ir::Node& n, F&& fn) {
     if (const auto* b = std::get_if<ir::Branch>(&n)) {
         fn(*b->thenBody);
-        if (b->elseBody.present()) fn(*b->elseBody);
+        if (b->elseBody.present())
+            fn(*b->elseBody);
     } else if (const auto* l = std::get_if<ir::Loop>(&n)) {
         fn(*l->body);
     } else if (const auto* bx = std::get_if<ir::Box>(&n)) {
@@ -53,8 +55,8 @@ void normalizeBodies(ir::Circuit& c);
 
 // Library gate with `cls` filled in; the names passed by the compiler are library names, so a
 // failure is a programming error and is returned as such.
-Result<ir::Gate> gate(std::string_view name, std::vector<ir::Wire> targets, std::vector<double> params = {},
-                      const SourceSpan& span = {});
+Result<ir::Gate> gate(std::string_view name, std::vector<ir::Wire> targets,
+                      std::vector<double> params = {}, const SourceSpan& span = {});
 
 // Spec 14 §1 PassMetrics of a circuit. `swapCount` and `estimatedDuration` are pipeline state and
 // are filled by the pass manager.

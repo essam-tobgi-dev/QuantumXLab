@@ -16,16 +16,18 @@ namespace qlab::ui::format {
 // dimension, "" for dimensionless) and how precise it is.
 struct Quantity {
     double si = 0.0;
-    std::string unit;                                        // catalog symbol, e.g. "Hz", "K", "s"
+    std::string unit; // catalog symbol, e.g. "Hz", "K", "s"
     data::FidelityClass cls = data::FidelityClass::Model;
-    bool simulatorOnly = false;                              // spec 19 §5.5
+    bool simulatorOnly = false; // spec 19 §5.5
 };
 
 // "12.4 GHz" — value with the auto-selected SI prefix and a space before the symbol. An empty or
 // unknown unit formats the bare number; a non-finite value is "—" (spec 17 §5).
 std::string value(double si, std::string_view unit, int digits = 4,
                   units::FormatContext ctx = units::FormatContext::Default);
-inline std::string value(const Quantity& q, int digits = 4) { return value(q.si, q.unit, digits); }
+inline std::string value(const Quantity& q, int digits = 4) {
+    return value(q.si, q.unit, digits);
+}
 
 // Just the number, 4 significant figures by default, with the same prefix choice as `value`.
 std::string number(double v, int digits = 4);
@@ -55,7 +57,8 @@ struct DragModifiers {
 double dragScale(DragModifiers mods);
 // New value after dragging `pixels` on a field whose coarse step is `step` per pixel, clamped to
 // [lo, hi] (either may be infinite).
-double applyDrag(double current, double pixels, double step, DragModifiers mods, double lo, double hi);
+double applyDrag(double current, double pixels, double step, DragModifiers mods, double lo,
+                 double hi);
 
 // Spec 19 §5.1 default format context for a unit symbol: gate durations in ns, cryogenic
 // temperatures in mK, RF powers in dBm.

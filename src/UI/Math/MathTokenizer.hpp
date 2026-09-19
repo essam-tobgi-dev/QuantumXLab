@@ -8,9 +8,14 @@
 namespace qlab::ui::math {
 
 enum class TokKind : std::uint8_t {
-    Command,    // \name or \<single non-letter>  (text = name without backslash)
-    Char,       // a single UTF-8 character (text)
-    LBrace, RBrace, Caret, Underscore, Amp, NewRow, // braces, ^, _, & and the row break
+    Command, // \name or \<single non-letter>  (text = name without backslash)
+    Char,    // a single UTF-8 character (text)
+    LBrace,
+    RBrace,
+    Caret,
+    Underscore,
+    Amp,
+    NewRow, // braces, ^, _, & and the row break
     End
 };
 

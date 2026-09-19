@@ -54,7 +54,8 @@ TEST_CASE("Pauli: single-qubit products follow XY = iZ and its cyclic images") {
     REQUIRE((P("Y") * P("X")) == P("-iZ"));
     REQUIRE((P("Z") * P("Y")) == P("-iX"));
     REQUIRE((P("X") * P("Z")) == P("-iY"));
-    for (const char* l : {"X", "Y", "Z"}) REQUIRE((P(l) * P(l)) == P("I"));
+    for (const char* l : {"X", "Y", "Z"})
+        REQUIRE((P(l) * P(l)) == P("I"));
     // Phases multiply: (−X)(iY) = −i · (iZ) = +Z, and (iX)(iZ) = −(−iY) = iY.
     REQUIRE((P("-X") * P("iY")) == P("Z"));
     REQUIRE((P("iX") * P("iZ")) == P("iY"));
@@ -126,7 +127,8 @@ TEST_CASE("Wilson interval matches the closed form") {
     // p̂ = 1/2, n = 100, z = 2: centre 1/2, half width z·sqrt(1/400 + 4/40000)/(1 + 4/100).
     const Interval half = wilsonInterval(50, 100, 2.0);
     REQUIRE(half.center == Approx(0.5).epsilon(1e-12));
-    REQUIRE(half.hi - half.center == Approx(2.0 * std::sqrt(0.0025 + 0.0001) / 1.04).epsilon(1e-12));
+    REQUIRE(half.hi - half.center ==
+            Approx(2.0 * std::sqrt(0.0025 + 0.0001) / 1.04).epsilon(1e-12));
     REQUIRE(half.center - half.lo == Approx(half.hi - half.center).epsilon(1e-12));
     const Interval none = wilsonInterval(0, 0);
     REQUIRE(none.lo == 0.0);

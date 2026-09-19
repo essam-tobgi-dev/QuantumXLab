@@ -24,27 +24,80 @@ struct Entry {
 // maps are normalised to their means (gfx::Material::normalizeMaps), so these colours remain
 // the mean colour of every textured surface.
 constexpr std::array<Entry, 29> kMaterials{{
-    {"gold_plated_cu", {1.00f, 0.71f, 0.29f, 1.0f}, 1.0f, 0.28f, 0.0f, "gold_plated", 4.0f, 0.5f},   // satin brush, fine scratches
+    {"gold_plated_cu",
+     {1.00f, 0.71f, 0.29f, 1.0f},
+     1.0f,
+     0.28f,
+     0.0f,
+     "gold_plated",
+     4.0f,
+     0.5f}, // satin brush, fine scratches
     {"copper", {0.95f, 0.64f, 0.54f, 1.0f}, 1.0f, 0.38f, 0.0f, "copper", 4.0f, 0.5f},
-    {"aluminium", {0.91f, 0.92f, 0.92f, 1.0f}, 1.0f, 0.55f, 0.0f, "blasted_aluminium", 3.0f, 0.5f},   // bead-blasted
-    {"stainless", {0.56f, 0.57f, 0.58f, 1.0f}, 1.0f, 0.35f, 0.0f, "brushed_stainless", 4.0f, 0.6f},   // brushed
-    {"nickel_plated", {0.66f, 0.61f, 0.53f, 1.0f}, 1.0f, 0.30f, 0.0f, "blasted_aluminium", 4.0f, 0.4f},
-    {"g10", {0.58f, 0.57f, 0.40f, 1.0f}, 0.0f, 0.55f, 0.0f, "g10", 20.0f, 0.5f},          // glass-epoxy laminate (olive, not lime)
+    {"aluminium",
+     {0.91f, 0.92f, 0.92f, 1.0f},
+     1.0f,
+     0.55f,
+     0.0f,
+     "blasted_aluminium",
+     3.0f,
+     0.5f}, // bead-blasted
+    {"stainless",
+     {0.56f, 0.57f, 0.58f, 1.0f},
+     1.0f,
+     0.35f,
+     0.0f,
+     "brushed_stainless",
+     4.0f,
+     0.6f}, // brushed
+    {"nickel_plated",
+     {0.66f, 0.61f, 0.53f, 1.0f},
+     1.0f,
+     0.30f,
+     0.0f,
+     "blasted_aluminium",
+     4.0f,
+     0.4f},
+    {"g10",
+     {0.58f, 0.57f, 0.40f, 1.0f},
+     0.0f,
+     0.55f,
+     0.0f,
+     "g10",
+     20.0f,
+     0.5f}, // glass-epoxy laminate (olive, not lime)
     {"mu_metal", {0.55f, 0.55f, 0.58f, 1.0f}, 1.0f, 0.60f, 0.0f, "blasted_aluminium", 3.0f, 0.4f},
-    {"niobium_film", {0.62f, 0.63f, 0.70f, 1.0f}, 1.0f, 0.20f},   // chip films at micrometres: no map resolves
+    {"niobium_film",
+     {0.62f, 0.63f, 0.70f, 1.0f},
+     1.0f,
+     0.20f}, // chip films at micrometres: no map resolves
     {"silicon", {0.25f, 0.26f, 0.30f, 1.0f}, 0.0f, 0.15f},
     {"sapphire", {0.75f, 0.85f, 1.0f, 0.55f}, 0.0f, 0.05f},
-    {"pcb_green", {0.05f, 0.30f, 0.12f, 1.0f}, 0.0f, 0.60f, 0.0f, "pcb", 12.0f, 0.5f},     // solder mask with a trace pattern (8 cm tile)
+    {"pcb_green",
+     {0.05f, 0.30f, 0.12f, 1.0f},
+     0.0f,
+     0.60f,
+     0.0f,
+     "pcb",
+     12.0f,
+     0.5f}, // solder mask with a trace pattern (8 cm tile)
     {"rack_black", {0.05f, 0.05f, 0.06f, 1.0f}, 0.0f, 0.70f, 0.0f, "black_anodised", 3.0f, 0.5f},
     {"plastic_grey", {0.40f, 0.40f, 0.42f, 1.0f}, 0.0f, 0.80f, 0.0f, "plastic_grey", 4.0f, 0.5f},
     {"glass", {0.90f, 0.95f, 1.0f, 0.25f}, 0.0f, 0.05f},
     {"eccosorb", {0.03f, 0.03f, 0.03f, 1.0f}, 0.0f, 0.95f, 0.0f, "rubber", 8.0f, 0.6f},
-    {"rubber", {0.04f, 0.04f, 0.04f, 1.0f}, 0.0f, 0.90f, 0.0f, "rubber", 8.0f, 0.6f},      // feet, cable jackets
+    {"rubber", {0.04f, 0.04f, 0.04f, 1.0f}, 0.0f, 0.90f, 0.0f, "rubber", 8.0f, 0.6f}, // feet, cable
+                                                                                      // jackets
     {"cuni", {0.72f, 0.68f, 0.62f, 1.0f}, 1.0f, 0.45f, 0.0f, "brushed_stainless", 20.0f, 0.4f},
     {"nbti", {0.70f, 0.72f, 0.76f, 1.0f}, 1.0f, 0.35f, 0.0f, "blasted_aluminium", 20.0f, 0.4f},
     {"phosphor_bronze", {0.80f, 0.65f, 0.40f, 1.0f}, 1.0f, 0.50f, 0.0f, "copper", 20.0f, 0.4f},
     {"ptfe", {0.95f, 0.95f, 0.93f, 1.0f}, 0.0f, 0.35f, 0.0f, "plastic_grey", 10.0f, 0.3f},
-    {"floor", {0.62f, 0.63f, 0.65f, 1.0f}, 0.0f, 0.25f, 0.0f, "epoxy_floor", 0.5f, 0.4f},   // epoxy resin: soft reflections
+    {"floor",
+     {0.62f, 0.63f, 0.65f, 1.0f},
+     0.0f,
+     0.25f,
+     0.0f,
+     "epoxy_floor",
+     0.5f,
+     0.4f}, // epoxy resin: soft reflections
     {"wall", {0.80f, 0.80f, 0.78f, 1.0f}, 0.0f, 0.85f, 0.0f, "painted_wall", 0.5f, 0.5f},
     {"desk", {0.45f, 0.35f, 0.28f, 1.0f}, 0.0f, 0.70f, 0.0f, "powder_coated", 2.0f, 0.4f},
     {"glow", {1.0f, 0.85f, 0.45f, 1.0f}, 0.0f, 0.40f, 6.0f},
@@ -61,7 +114,8 @@ constexpr std::array<Entry, 29> kMaterials{{
 
 constexpr auto kNames = [] {
     std::array<std::string_view, kMaterials.size()> n{};
-    for (std::size_t i = 0; i < kMaterials.size(); ++i) n[i] = kMaterials[i].name;
+    for (std::size_t i = 0; i < kMaterials.size(); ++i)
+        n[i] = kMaterials[i].name;
     return n;
 }();
 } // namespace
@@ -69,7 +123,8 @@ constexpr auto kNames = [] {
 gfx::Material labMaterial(std::string_view name) {
     gfx::Material m;
     for (const auto& e : kMaterials) {
-        if (e.name != name) continue;
+        if (e.name != name)
+            continue;
         m.baseColor = e.baseColor;
         m.metallic = e.metallic;
         m.roughness = e.roughness;
@@ -94,24 +149,34 @@ gfx::Material labMaterial(std::string_view name) {
 
 bool isKnownMaterial(std::string_view name) {
     for (const auto& e : kMaterials)
-        if (e.name == name) return true;
+        if (e.name == name)
+            return true;
     return false;
 }
 
-std::span<const std::string_view> labMaterialNames() { return kNames; }
+std::span<const std::string_view> labMaterialNames() {
+    return kNames;
+}
 
 std::string_view coaxMaterial(std::string_view coaxId) {
-    if (coaxId.rfind("SS", 0) == 0) return "stainless";
-    if (coaxId.rfind("CuNi", 0) == 0) return "cuni";
-    if (coaxId.rfind("NbTi", 0) == 0) return "nbti";
-    if (coaxId.rfind("Cu", 0) == 0) return "copper";
-    if (coaxId.rfind("DC", 0) == 0) return "phosphor_bronze";
+    if (coaxId.rfind("SS", 0) == 0)
+        return "stainless";
+    if (coaxId.rfind("CuNi", 0) == 0)
+        return "cuni";
+    if (coaxId.rfind("NbTi", 0) == 0)
+        return "nbti";
+    if (coaxId.rfind("Cu", 0) == 0)
+        return "copper";
+    if (coaxId.rfind("DC", 0) == 0)
+        return "phosphor_bronze";
     return "stainless";
 }
 
 double coaxRadius_m(std::string_view coaxId) {
-    if (coaxId.find("219") != std::string_view::npos) return 0.5 * 2.19e-3;
-    if (coaxId.rfind("DC", 0) == 0) return 1.2e-3; // one insulated pair of the 12-way loom ribbon
+    if (coaxId.find("219") != std::string_view::npos)
+        return 0.5 * 2.19e-3;
+    if (coaxId.rfind("DC", 0) == 0)
+        return 1.2e-3; // one insulated pair of the 12-way loom ribbon
     return 0.5 * 0.86e-3;
 }
 

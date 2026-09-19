@@ -15,22 +15,24 @@
 namespace qlab::instr {
 
 class Oscilloscope final : public InstrumentBase {
-public:
+  public:
     static constexpr std::uint32_t kChannels = 4;
-    static constexpr std::size_t kMemoryDepth = 200000; // samples per channel; longer records sample slower
+    static constexpr std::size_t kMemoryDepth =
+        200000; // samples per channel; longer records sample slower
 
     explicit Oscilloscope(std::uint32_t index = 0);
     static SettingSchema makeSchema();
-    std::optional<double> query(std::string_view path) const override; // ch[k]: value at the playhead
+    std::optional<double>
+    query(std::string_view path) const override; // ch[k]: value at the playhead
 
-protected:
+  protected:
     Result<Trace> doAcquire(const ChannelDesc& channel, AcquireContext& ctx) override;
     bool triggerSourceSet(const SettingValues& values) const override;
 
-private:
+  private:
     struct Capture {
-        Signal signal;          // the node's record (whole schedule)
-        std::string component;  // I | Q | magnitude
+        Signal signal;         // the node's record (whole schedule)
+        std::string component; // I | Q | magnitude
         bool envelope = true;
     };
     Result<Capture> capture(std::uint32_t k, const SettingValues& v, std::uint64_t seed) const;

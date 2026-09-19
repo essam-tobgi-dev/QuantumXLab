@@ -22,8 +22,9 @@ TEST_CASE("program export: the compiled QASM carries mapping, schedule and estim
     CHECK(text->starts_with("OPENQASM 3.0;\n// compiled by quantumxlab "));
     CHECK(text->find(" for sc_fixed_5 (calibration ") != std::string::npos);
     CHECK(text->find("pragma qlab.layout physical\n") != std::string::npos);
-    const std::string mapping = std::format("pragma qlab.mapping q[0]->${}, q[1]->${}\n", f.compiled->initialLayout.v2p[0],
-                                            f.compiled->initialLayout.v2p[1]);
+    const std::string mapping =
+        std::format("pragma qlab.mapping q[0]->${}, q[1]->${}\n", f.compiled->initialLayout.v2p[0],
+                    f.compiled->initialLayout.v2p[1]);
     CHECK(text->find(mapping) != std::string::npos);
     CHECK(text->find("pragma qlab.schedule ") != std::string::npos);
     CHECK(text->find("pragma qlab.estimate wall_s=") != std::string::npos);
@@ -52,12 +53,14 @@ TEST_CASE("program export: the compiled QASM carries mapping, schedule and estim
     }
 }
 
-TEST_CASE("program export: the compiled QASM re-compiles to an equivalent circuit (spec 23 §5, §12)") {
+TEST_CASE(
+    "program export: the compiled QASM re-compiles to an equivalent circuit (spec 23 §5, §12)") {
     auto loaded = hw::loadShippedDevice("sc_fixed_5");
     REQUIRE(loaded.has_value());
-    const auto source = std::string("OPENQASM 3.0;\ninclude \"stdgates.inc\";\n"
-                                    "qubit[3] q; bit[3] c;\nh q[0];\ncx q[0], q[1];\nt q[2];\ncx q[1], q[2];\n"
-                                    "ry(0.4) q[1];\nc = measure q;\n");
+    const auto source =
+        std::string("OPENQASM 3.0;\ninclude \"stdgates.inc\";\n"
+                    "qubit[3] q; bit[3] c;\nh q[0];\ncx q[0], q[1];\nt q[2];\ncx q[1], q[2];\n"
+                    "ry(0.4) q[1];\nc = measure q;\n");
     auto program = lang::parseProgram(source, "source.qasm");
     REQUIRE(program.has_value());
     compiler::CompileOptions options;
@@ -68,12 +71,14 @@ TEST_CASE("program export: the compiled QASM re-compiles to an equivalent circui
 
     auto text = compiledQasm(*first);
     REQUIRE(text.has_value());
-    auto again = compiler::compileSource(*text, "exported.qasm", &loaded->device, &loaded->calibration);
+    auto again =
+        compiler::compileSource(*text, "exported.qasm", &loaded->device, &loaded->calibration);
     INFO((again ? std::string() : compiler::formatError(again.error())));
     REQUIRE(again.has_value());
     CHECK(again->circuit.isPhysical());
-    CHECK(again->metrics.swapCount == 0);                    // already routed
-    CHECK(again->timing.duration == first->timing.duration); // explicit delays reproduce the schedule
+    CHECK(again->metrics.swapCount == 0); // already routed
+    CHECK(again->timing.duration ==
+          first->timing.duration); // explicit delays reproduce the schedule
 
     // The mapping pragma round-trips: the physical qubits it names are the ones the re-imported
     // program acts on, and the re-compiled circuit implements the original source under it.
@@ -100,8 +105,9 @@ TEST_CASE("program export: the compiled QASM re-compiles to an equivalent circui
 }
 
 TEST_CASE("program export: a device-independent compile exports without mapping or schedule") {
-    auto program = lang::parseProgram("OPENQASM 3.0;\ninclude \"stdgates.inc\";\nqubit[2] q;\nh q[0];\ncx q[0], q[1];\n",
-                                      "plain.qasm");
+    auto program = lang::parseProgram(
+        "OPENQASM 3.0;\ninclude \"stdgates.inc\";\nqubit[2] q;\nh q[0];\ncx q[0], q[1];\n",
+        "plain.qasm");
     REQUIRE(program.has_value());
     auto plain = compiler::compile(*program);
     REQUIRE(plain.has_value());
@@ -118,19 +124,21 @@ TEST_CASE("program export: a device-independent compile exports without mapping 
     options.estimate = &estimate;
     auto withEstimate = compiledQasm(*plain, options);
     REQUIRE(withEstimate.has_value());
-    CHECK(withEstimate->find("pragma qlab.estimate wall_s=4.21 fidelity=0.91\n") != std::string::npos);
+    CHECK(withEstimate->find("pragma qlab.estimate wall_s=4.21 fidelity=0.91\n") !=
+          std::string::npos);
     const std::size_t include = withEstimate->find("include \"stdgates.inc\";");
     CHECK(include < withEstimate->find("pragma qlab.estimate"));
     CHECK(compiler::compileSource(*withEstimate, "plain.qasm", nullptr, nullptr).has_value());
 }
 
 TEST_CASE("program export: the pulse schedule is sampled per channel on the dt grid (spec 23 §5)") {
-    const Picoseconds dt{1000};   // 1 ns
+    const Picoseconds dt{1000}; // 1 ns
     pulse::Schedule schedule(dt);
     const pulse::ChannelId d0 = pulse::ChannelId::drive(0);
     const pulse::ChannelId d1 = pulse::ChannelId::drive(1);
     schedule.insert(pulse::Play{d0, pulse::Waveform::constant(4e-9, 0.5, 0.0), {}}, Picoseconds{0});
-    schedule.insert(pulse::Play{d1, pulse::Waveform::constant(2e-9, 0.25, 0.0), {}}, Picoseconds{2000});
+    schedule.insert(pulse::Play{d1, pulse::Waveform::constant(2e-9, 0.25, 0.0), {}},
+                    Picoseconds{2000});
 
     const std::string csv = scheduleSamplesCsv(schedule);
     INFO(csv);
@@ -138,9 +146,9 @@ TEST_CASE("program export: the pulse schedule is sampled per channel on the dt g
     // 4 ns of samples plus the end point, on a 1 ns grid.
     const std::size_t rows = static_cast<std::size_t>(std::count(csv.begin(), csv.end(), '\n')) - 1;
     CHECK(rows == 5u);
-    CHECK(csv.find("\n0,0.5,0,0,0\n") != std::string::npos);      // only d[0] plays at t = 0
+    CHECK(csv.find("\n0,0.5,0,0,0\n") != std::string::npos);        // only d[0] plays at t = 0
     CHECK(csv.find("\n2e-09,0.5,0,0.25,0\n") != std::string::npos); // both play at t = 2 ns
-    CHECK(csv.find("\n4e-09,0,0,0,0\n") != std::string::npos);    // both finished at t = 4 ns
+    CHECK(csv.find("\n4e-09,0,0,0,0\n") != std::string::npos);      // both finished at t = 4 ns
 
     rtest::Sandbox box("schedule_csv");
     REQUIRE(writeScheduleSamplesCsv(box / "channels.csv", schedule).has_value());

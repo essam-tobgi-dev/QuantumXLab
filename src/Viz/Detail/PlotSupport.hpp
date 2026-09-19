@@ -12,18 +12,21 @@
 
 namespace qlab::viz::detail {
 
-inline ImVec4 toImVec4(const glm::vec3& c, float a = 1.0f) { return ImVec4(c.r, c.g, c.b, a); }
+inline ImVec4 toImVec4(const glm::vec3& c, float a = 1.0f) {
+    return ImVec4(c.r, c.g, c.b, a);
+}
 
 // Styles the current ImPlot context from the theme for the lifetime of the object (spec 19 §1:
 // no view holds a colour of its own).
 class PlotStyle {
-public:
+  public:
     explicit PlotStyle(const VizTheme& theme) {
         ImPlot::PushStyleColor(ImPlotCol_FrameBg, toImVec4(theme.bgPanel));
         ImPlot::PushStyleColor(ImPlotCol_PlotBg, toImVec4(theme.bgPanel));
         ImPlot::PushStyleColor(ImPlotCol_PlotBorder, toImVec4(theme.border));
         ImPlot::PushStyleColor(ImPlotCol_AxisText, toImVec4(theme.textSecondary));
-        ImPlot::PushStyleColor(ImPlotCol_AxisGrid, toImVec4(glm::vec4(glm::vec3(theme.border), 0.5f)));
+        ImPlot::PushStyleColor(ImPlotCol_AxisGrid,
+                               toImVec4(glm::vec4(glm::vec3(theme.border), 0.5f)));
         ImPlot::PushStyleColor(ImPlotCol_LegendBg, toImVec4(theme.bgRaised));
         ImPlot::PushStyleColor(ImPlotCol_LegendText, toImVec4(theme.textPrimary));
         ImPlot::PushStyleColor(ImPlotCol_InlayText, toImVec4(theme.textSecondary));
@@ -48,22 +51,24 @@ inline ImPlotColormap colormap(Colormap which) {
                        : which == Colormap::Sequential ? "qxlSequential"
                                                        : "qxlDiverging";
     const ImPlotColormap existing = ImPlot::GetColormapIndex(name);
-    if (existing != -1) return existing;
+    if (existing != -1)
+        return existing;
     constexpr int kEntries = 64;
     std::vector<ImVec4> cols;
     cols.reserve(kEntries);
     for (int k = 0; k < kEntries; ++k) {
         const double t = static_cast<double>(k) / (kEntries - 1);
-        cols.push_back(toImVec4(which == Colormap::Phase          ? math::phaseColorAtHue(static_cast<double>(k) / kEntries)
-                                : which == Colormap::Sequential   ? math::sequentialColor(t)
-                                                                  : math::divergingColor(2.0 * t - 1.0)));
+        cols.push_back(toImVec4(
+            which == Colormap::Phase ? math::phaseColorAtHue(static_cast<double>(k) / kEntries)
+            : which == Colormap::Sequential ? math::sequentialColor(t)
+                                            : math::divergingColor(2.0 * t - 1.0)));
     }
     return ImPlot::AddColormap(name, cols.data(), kEntries, false);
 }
 
 // RAII colormap push.
 class ColormapScope {
-public:
+  public:
     explicit ColormapScope(Colormap which) { ImPlot::PushColormap(colormap(which)); }
     ~ColormapScope() { ImPlot::PopColormap(); }
     ColormapScope(const ColormapScope&) = delete;
@@ -71,11 +76,12 @@ public:
 };
 
 // Axis flags shared by the categorical axes (bar charts): no grid, ticks supplied by the view.
-inline constexpr ImPlotAxisFlags kCategoryAxis = ImPlotAxisFlags_NoGridLines | ImPlotAxisFlags_NoHighlight;
+inline constexpr ImPlotAxisFlags kCategoryAxis =
+    ImPlotAxisFlags_NoGridLines | ImPlotAxisFlags_NoHighlight;
 
 // Tick label storage for SetupAxisTicks, which takes `const char* const*`.
 class TickLabels {
-public:
+  public:
     void add(double value, std::string label) {
         values_.push_back(value);
         labels_.push_back(std::move(label));
@@ -83,14 +89,16 @@ public:
     void apply(ImAxis axis, bool keepDefault = false) {
         pointers_.clear();
         pointers_.reserve(labels_.size());
-        for (const std::string& s : labels_) pointers_.push_back(s.c_str());
+        for (const std::string& s : labels_)
+            pointers_.push_back(s.c_str());
         if (!values_.empty())
-            ImPlot::SetupAxisTicks(axis, values_.data(), static_cast<int>(values_.size()), pointers_.data(), keepDefault);
+            ImPlot::SetupAxisTicks(axis, values_.data(), static_cast<int>(values_.size()),
+                                   pointers_.data(), keepDefault);
     }
     bool empty() const { return values_.empty(); }
     std::size_t size() const { return values_.size(); }
 
-private:
+  private:
     std::vector<double> values_;
     std::vector<std::string> labels_;
     std::vector<const char*> pointers_;

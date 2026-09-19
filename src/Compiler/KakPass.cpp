@@ -16,7 +16,7 @@ constexpr std::uint32_t kNone = 0xFFFFFFFFu;
 
 struct Block {
     std::uint32_t q0 = 0, q1 = 0;
-    std::vector<std::uint32_t> members;   // node indices in order
+    std::vector<std::uint32_t> members; // node indices in order
     std::uint32_t twoQubit = 0;
     bool open = true;
 };
@@ -28,14 +28,16 @@ Result<num::Matrix> unitaryOf(const Block& b, const std::vector<ir::Node>& nodes
         const ir::Gate& g = std::get<ir::Gate>(nodes[i]);
         QXL_TRY_ASSIGN(const num::Matrix m, ir::matrixOf(g));
         std::vector<std::size_t> at;
-        for (ir::Wire w : g.wires()) at.push_back(w.index == b.q0 ? 0u : 1u);
+        for (ir::Wire w : g.wires())
+            at.push_back(w.index == b.q0 ? 0u : 1u);
         u = num::matmul(num::embed(m.view(), at, 2), u);
     }
     return u;
 }
 } // namespace
 
-Result<KakStats> resynthesizeTwoQubitBlocks(ir::Circuit& c, const Target& target, std::stop_token stop) {
+Result<KakStats> resynthesizeTwoQubitBlocks(ir::Circuit& c, const Target& target,
+                                            std::stop_token stop) {
     KakStats stats;
     std::vector<ir::Node> nodes = takeNodes(c);
     Status bodies;
@@ -46,7 +48,8 @@ Result<KakStats> resynthesizeTwoQubitBlocks(ir::Circuit& c, const Target& target
             stats.replaced += inner.replaced;
             return {};
         });
-        if (!bodies) break;
+        if (!bodies)
+            break;
     }
     // Collect the blocks.
     std::vector<Block> blocks;
@@ -62,12 +65,14 @@ Result<KakStats> resynthesizeTwoQubitBlocks(ir::Circuit& c, const Target& target
         const auto* g = std::get_if<ir::Gate>(&nodes[i]);
         const bool plain = g && !g->opaque && g->width() >= 1 && g->width() <= 2;
         if (!plain) {
-            for (ir::Wire w : ir::nodeWiresIn(nodes[i], c.qubitCount())) close(w.index);
+            for (ir::Wire w : ir::nodeWiresIn(nodes[i], c.qubitCount()))
+                close(w.index);
             continue;
         }
         const auto ws = g->wires();
         if (ws.size() == 1) {
-            if (openOn[ws[0].index] != kNone) blocks[openOn[ws[0].index]].members.push_back(i);
+            if (openOn[ws[0].index] != kNone)
+                blocks[openOn[ws[0].index]].members.push_back(i);
             continue;
         }
         const std::uint32_t a = ws[0].index, b = ws[1].index;
@@ -86,35 +91,48 @@ Result<KakStats> resynthesizeTwoQubitBlocks(ir::Circuit& c, const Target& target
     std::vector<std::vector<ir::Gate>> replacement(nodes.size());
     std::vector<std::uint8_t> dead(nodes.size(), 0);
     for (const Block& b : blocks) {
-        if (!bodies || b.twoQubit < 2) continue;
-        if (stop.stop_requested()) { bodies = fail(ErrorCode::Cancelled, "compile cancelled"); break; }
+        if (!bodies || b.twoQubit < 2)
+            continue;
+        if (stop.stop_requested()) {
+            bodies = fail(ErrorCode::Cancelled, "compile cancelled");
+            break;
+        }
         ++stats.blocks;
         stats.twoQubitBefore += b.twoQubit;
         stats.twoQubitAfter += b.twoQubit;
         auto u = unitaryOf(b, nodes);
-        if (!u) continue;
+        if (!u)
+            continue;
         const SourceSpan& span = std::get<ir::Gate>(nodes[b.members.front()]).span;
         auto abstract = synthesizeTwoQubit(u->view(), ir::Wire{b.q0}, ir::Wire{b.q1}, span);
-        if (!abstract) continue;
+        if (!abstract)
+            continue;
         std::vector<ir::Gate> native;
         bool lowered = true;
-        for (const ir::Gate& g : *abstract) lowered = lowered && decomposeGate(g, target, c.isPhysical(), native).has_value();
+        for (const ir::Gate& g : *abstract)
+            lowered = lowered && decomposeGate(g, target, c.isPhysical(), native).has_value();
         std::uint32_t after = 0;
-        for (const ir::Gate& g : native) after += g.width() == 2 ? 1u : 0u;
-        if (!lowered || after >= b.twoQubit) continue;
+        for (const ir::Gate& g : native)
+            after += g.width() == 2 ? 1u : 0u;
+        if (!lowered || after >= b.twoQubit)
+            continue;
         stats.twoQubitAfter -= b.twoQubit - after;
         ++stats.replaced;
-        for (std::uint32_t i : b.members) dead[i] = 1;
+        for (std::uint32_t i : b.members)
+            dead[i] = 1;
         replacement[b.members.front()] = std::move(native);
     }
     std::vector<ir::Node> out;
     out.reserve(nodes.size());
     for (std::size_t i = 0; i < nodes.size(); ++i) {
-        for (ir::Gate& g : replacement[i]) out.emplace_back(std::move(g));
-        if (!dead[i]) out.push_back(std::move(nodes[i]));
+        for (ir::Gate& g : replacement[i])
+            out.emplace_back(std::move(g));
+        if (!dead[i])
+            out.push_back(std::move(nodes[i]));
     }
     setNodes(c, std::move(out));
-    if (!bodies) return std::unexpected(bodies.error());
+    if (!bodies)
+        return std::unexpected(bodies.error());
     return stats;
 }
 

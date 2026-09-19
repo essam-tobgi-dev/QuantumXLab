@@ -56,7 +56,8 @@ glm::dvec2 DeviceGraphView::toLayout(glm::vec2 p) const {
 }
 
 std::optional<HitResult> DeviceGraphView::hitTest(glm::vec2 local) const {
-    if (graph_.nodes.empty() || pxPerUnit_ <= 0.0) return std::nullopt;
+    if (graph_.nodes.empty() || pxPerUnit_ <= 0.0)
+        return std::nullopt;
     const glm::dvec2 p = toLayout(local);
     if (const auto k = graph_.nodeAt(p, nodeRadius_ * 1.15)) {
         const layout::GraphNode& n = graph_.nodes[*k];
@@ -64,7 +65,9 @@ std::optional<HitResult> DeviceGraphView::hitTest(glm::vec2 local) const {
         h.kind = HitKind::Qubit;
         h.qubit = n.qubit;
         h.title = "q" + std::to_string(n.qubit.get()) + (n.coupler ? "  (coupler)" : "");
-        if (n.virtualQubit) h.readout.push_back({"program qubit", "q" + std::to_string(*n.virtualQubit), data::FidelityClass::Exact});
+        if (n.virtualQubit)
+            h.readout.push_back({"program qubit", "q" + std::to_string(*n.virtualQubit),
+                                 data::FidelityClass::Exact});
         fillNodeReadout(h, n);
         return h;
     }
@@ -74,8 +77,11 @@ std::optional<HitResult> DeviceGraphView::hitTest(glm::vec2 local) const {
         HitResult h;
         h.kind = HitKind::Edge;
         h.edge = std::pair<QubitIndex, QubitIndex>{e.a, e.b};
-        h.title = "q" + std::to_string(e.a.get()) + (e.directed ? " → q" : " – q") + std::to_string(e.b.get());
-        if (e.coupler) h.readout.push_back({"coupler", "q" + std::to_string(e.coupler->get()), data::FidelityClass::Exact});
+        h.title = "q" + std::to_string(e.a.get()) + (e.directed ? " → q" : " – q") +
+                  std::to_string(e.b.get());
+        if (e.coupler)
+            h.readout.push_back(
+                {"coupler", "q" + std::to_string(e.coupler->get()), data::FidelityClass::Exact});
         fillEdgeReadout(h, e);
         return h;
     }
@@ -83,11 +89,13 @@ std::optional<HitResult> DeviceGraphView::hitTest(glm::vec2 local) const {
 }
 
 std::optional<std::string> DeviceGraphView::exportCsv() const {
-    if (graph_.nodes.empty()) return std::nullopt;
+    if (graph_.nodes.empty())
+        return std::nullopt;
     std::string csv = "kind,a,b,value,text\n";
     for (const layout::GraphNode& n : graph_.nodes)
-        csv += std::string(n.coupler ? "coupler" : "qubit") + "," + std::to_string(n.qubit.get()) + ",," +
-               (n.value ? math::formatSig(*n.value, 12) : std::string()) + "," + n.valueText + "\n";
+        csv += std::string(n.coupler ? "coupler" : "qubit") + "," + std::to_string(n.qubit.get()) +
+               ",," + (n.value ? math::formatSig(*n.value, 12) : std::string()) + "," +
+               n.valueText + "\n";
     for (const layout::GraphEdge& e : graph_.edges)
         csv += "edge," + std::to_string(e.a.get()) + "," + std::to_string(e.b.get()) + "," +
                (e.value ? math::formatSig(*e.value, 12) : std::string()) + "," + e.valueText + "\n";
@@ -108,25 +116,35 @@ void DeviceGraphView::aimCamera(glm::vec2 body) {
     cam.set(b);
 }
 
-GlCanvas::SceneFn DeviceGraphView::scene(const VizTheme& theme, const SelectionModel* selection, float pxScale) const {
+GlCanvas::SceneFn DeviceGraphView::scene(const VizTheme& theme, const SelectionModel* selection,
+                                         float pxScale) const {
     return [this, &theme, selection, pxScale](gfx::Renderer& r, GlBackend& gl) {
         // World frame: x as in the device layout, y flipped (the layout's y goes down the page).
-        const auto world = [this](glm::dvec2 p) { return glm::dvec3(p.x - center_.x, center_.y - p.y, 0.0); };
-        const float labelPx = std::clamp(static_cast<float>(0.7 * nodeRadius_ * pxPerUnit_), 8.0f, 16.0f) * pxScale;
+        const auto world = [this](glm::dvec2 p) {
+            return glm::dvec3(p.x - center_.x, center_.y - p.y, 0.0);
+        };
+        const float labelPx =
+            std::clamp(static_cast<float>(0.7 * nodeRadius_ * pxPerUnit_), 8.0f, 16.0f) * pxScale;
 
         for (const layout::GraphEdge& e : graph_.edges) {
-            if (e.a.get() >= graph_.nodes.size() || e.b.get() >= graph_.nodes.size()) continue;
-            const glm::dvec3 a = world(graph_.nodes[e.a.get()].pos), b = world(graph_.nodes[e.b.get()].pos);
-            const bool picked = selection && selection->edge() &&
-                                selection->edge()->first == e.a && selection->edge()->second == e.b;
+            if (e.a.get() >= graph_.nodes.size() || e.b.get() >= graph_.nodes.size())
+                continue;
+            const glm::dvec3 a = world(graph_.nodes[e.a.get()].pos),
+                             b = world(graph_.nodes[e.b.get()].pos);
+            const bool picked = selection && selection->edge() && selection->edge()->first == e.a &&
+                                selection->edge()->second == e.b;
             // Entanglement graph: width and opacity carry I(i:j)/2. Coupling graph: constant width.
             const float alpha = static_cast<float>(0.25 + 0.7 * std::clamp(e.weight, 0.0, 1.0));
-            const float width = static_cast<float>(1.4 + 4.0 * std::clamp(e.weight, 0.0, 1.0)) * pxScale;
-            r.linesNoDepth().segment(a, b, GlBackend::exact(picked ? glm::vec3(theme.accent) : e.color, picked ? 1.0f : alpha),
-                                     picked ? width + 1.5f * pxScale : width);
+            const float width =
+                static_cast<float>(1.4 + 4.0 * std::clamp(e.weight, 0.0, 1.0)) * pxScale;
+            r.linesNoDepth().segment(
+                a, b,
+                GlBackend::exact(picked ? glm::vec3(theme.accent) : e.color, picked ? 1.0f : alpha),
+                picked ? width + 1.5f * pxScale : width);
             if (e.concurrence)
-                r.text().label3D(0.5 * (a + b), "C = " + math::formatSig(*e.concurrence, 3), 0.85f * labelPx,
-                                 GlBackend::exact(theme.textSecondary), gfx::TextAnchor::BottomCenter);
+                r.text().label3D(0.5 * (a + b), "C = " + math::formatSig(*e.concurrence, 3),
+                                 0.85f * labelPx, GlBackend::exact(theme.textSecondary),
+                                 gfx::TextAnchor::BottomCenter);
         }
         for (const layout::GraphNode& n : graph_.nodes) {
             const double radius = nodeRadius_ * (n.coupler ? kCouplerScale : 1.0);
@@ -135,7 +153,8 @@ GlCanvas::SceneFn DeviceGraphView::scene(const VizTheme& theme, const SelectionM
             m.unlit = true; // a colormap value must reach the screen exactly (spec 22 §4)
             m.baseColor = GlBackend::exact(n.color, 1.0f);
             const glm::dvec3 c = world(n.pos);
-            r.submit(gl.sphereLow(), m, glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(c)), glm::vec3(radius)),
+            r.submit(gl.sphereLow(), m,
+                     glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(c)), glm::vec3(radius)),
                      ComponentId{0}, flat());
             if (picked || n.syndromeFired) {
                 const glm::vec4 ring = n.syndromeFired && !picked ? theme.warn : theme.accent;
@@ -143,46 +162,62 @@ GlCanvas::SceneFn DeviceGraphView::scene(const VizTheme& theme, const SelectionM
                 for (int k = 0; k < kSeg; ++k) {
                     const double t0 = kTwoPi * k / kSeg, t1 = kTwoPi * (k + 1) / kSeg;
                     const double rr = radius * 1.28;
-                    r.linesNoDepth().segment(c + glm::dvec3(rr * std::cos(t0), rr * std::sin(t0), 0.01),
-                                             c + glm::dvec3(rr * std::cos(t1), rr * std::sin(t1), 0.01),
-                                             GlBackend::exact(glm::vec3(ring), 1.0f), 2.0f * pxScale);
+                    r.linesNoDepth().segment(
+                        c + glm::dvec3(rr * std::cos(t0), rr * std::sin(t0), 0.01),
+                        c + glm::dvec3(rr * std::cos(t1), rr * std::sin(t1), 0.01),
+                        GlBackend::exact(glm::vec3(ring), 1.0f), 2.0f * pxScale);
                 }
             }
-            if (n.coupler) continue;
-            // Spec 21 §3.12: the mapped program qubit is printed inside the node, the index below it.
-            const glm::vec4 ink = GlBackend::exact(math::readableOn(n.color, glm::vec3(1.0f), glm::vec3(0.0f)), 1.0f);
+            if (n.coupler)
+                continue;
+            // Spec 21 §3.12: the mapped program qubit is printed inside the node, the index below
+            // it.
+            const glm::vec4 ink =
+                GlBackend::exact(math::readableOn(n.color, glm::vec3(1.0f), glm::vec3(0.0f)), 1.0f);
             if (n.virtualQubit)
-                r.text().label3D(c, std::to_string(*n.virtualQubit), labelPx, ink, gfx::TextAnchor::Center);
-            r.text().label3D(c - glm::dvec3(0.0, radius * 1.35, 0.0), "q" + std::to_string(n.qubit.get()), 0.85f * labelPx,
-                             GlBackend::exact(picked ? glm::vec3(theme.accent) : glm::vec3(theme.textSecondary), 1.0f),
-                             gfx::TextAnchor::TopCenter);
+                r.text().label3D(c, std::to_string(*n.virtualQubit), labelPx, ink,
+                                 gfx::TextAnchor::Center);
+            r.text().label3D(
+                c - glm::dvec3(0.0, radius * 1.35, 0.0), "q" + std::to_string(n.qubit.get()),
+                0.85f * labelPx,
+                GlBackend::exact(picked ? glm::vec3(theme.accent) : glm::vec3(theme.textSecondary),
+                                 1.0f),
+                gfx::TextAnchor::TopCenter);
         }
         drawOverlay(r, gl, theme, pxScale);
     };
 }
 
 void DeviceGraphView::drawBody(DrawContext& ctx) {
-    if (graph_.nodes.empty()) return widgets::placeholder(ctx, note_.empty() ? "No device loaded" : note_);
-    if (!ctx.gl) return widgets::placeholder(ctx, "The graph needs the GL canvas (no GL context)");
+    if (graph_.nodes.empty())
+        return widgets::placeholder(ctx, note_.empty() ? "No device loaded" : note_);
+    if (!ctx.gl)
+        return widgets::placeholder(ctx, "The graph needs the GL canvas (no GL context)");
     const glm::vec2 body = bodySize();
     aimCamera(body);
     const float scale = std::max(1.0f, ctx.dpiScale);
-    auto rendered = canvas_.render(*ctx.gl, static_cast<int>(body.x * scale), static_cast<int>(body.y * scale),
-                                   scene(*ctx.theme, ctx.selection, scale), ctx.timeS);
-    if (!rendered || !canvas_.hasImage()) return widgets::placeholder(ctx, "GL canvas unavailable");
+    auto rendered =
+        canvas_.render(*ctx.gl, static_cast<int>(body.x * scale), static_cast<int>(body.y * scale),
+                       scene(*ctx.theme, ctx.selection, scale), ctx.timeS);
+    if (!rendered || !canvas_.hasImage())
+        return widgets::placeholder(ctx, "GL canvas unavailable");
     const ImVec2 origin = ImGui::GetCursorScreenPos();
-    ImGui::Image(static_cast<ImTextureID>(canvas_.textureId()), ImVec2(body.x, body.y), ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::Image(static_cast<ImTextureID>(canvas_.textureId()), ImVec2(body.x, body.y),
+                 ImVec2(0, 1), ImVec2(1, 0));
     // Spec 22 §4: a colour-coded scalar always carries its min/max legend.
     if (showNodeLegend() && graph_.nodeLegend.valid) {
-        const Rect bar{origin.x + 10.0, origin.y + 24.0, origin.x + 24.0, origin.y + std::min(180.0f, 0.6f * body.y)};
-        widgets::colorBar(ctx, bar, [](double t) { return math::sequentialColor(t); }, graph_.nodeLegend.minLabel,
-                          graph_.nodeLegend.maxLabel, graph_.nodeLegend.title);
+        const Rect bar{origin.x + 10.0, origin.y + 24.0, origin.x + 24.0,
+                       origin.y + std::min(180.0f, 0.6f * body.y)};
+        widgets::colorBar(
+            ctx, bar, [](double t) { return math::sequentialColor(t); }, graph_.nodeLegend.minLabel,
+            graph_.nodeLegend.maxLabel, graph_.nodeLegend.title);
     }
     if (graph_.edgeLegend.valid) {
         const float x = origin.x + body.x - 60.0f;
         const Rect bar{x, origin.y + 24.0, x + 14.0, origin.y + std::min(180.0f, 0.6f * body.y)};
-        widgets::colorBar(ctx, bar, [](double t) { return math::sequentialColor(t); }, graph_.edgeLegend.minLabel,
-                          graph_.edgeLegend.maxLabel, graph_.edgeLegend.title);
+        widgets::colorBar(
+            ctx, bar, [](double t) { return math::sequentialColor(t); }, graph_.edgeLegend.minLabel,
+            graph_.edgeLegend.maxLabel, graph_.edgeLegend.title);
     }
 }
 

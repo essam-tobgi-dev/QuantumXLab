@@ -18,7 +18,8 @@ glm::mat4 alignY(glm::vec3 dir);
 
 // Appends `part` transformed by `xf`; if `color` is given, the appended vertices take it.
 void append(MeshData& into, const MeshData& part, const glm::mat4& xf = glm::mat4(1.0f));
-void appendColored(MeshData& into, MeshData part, const glm::vec4& color, const glm::mat4& xf = glm::mat4(1.0f));
+void appendColored(MeshData& into, MeshData part, const glm::vec4& color,
+                   const glm::mat4& xf = glm::mat4(1.0f));
 
 // Axis-aligned box with centre and full size.
 MeshData box(glm::vec3 center, glm::vec3 size);
@@ -60,7 +61,8 @@ MeshData dishedHead(float r, float depth, float yTop, int seg, int stacks, bool 
 // all in the plate's XZ plane): a generalised annulus swept around the hole so the hole is a real
 // opening. `angles` receives the plate-centred azimuth of each outer boundary vertex, so the rim
 // built by plateRim shares those vertices. Without a hole (hr <= 0) it is a fan of `seg` steps.
-MeshData plateFace(float r, float y, float hx, float hz, float hr, int seg, bool up, std::vector<float>& angles);
+MeshData plateFace(float r, float y, float hx, float hz, float hr, int seg, bool up,
+                   std::vector<float>& angles);
 // Chamfered rim of a plate between yTop and yBot: 45° chamfer bands of size `c` on both edges and
 // the vertical wall between them, on the boundary azimuths of plateFace.
 MeshData plateRim(float r, float yTop, float yBot, float c, const std::vector<float>& angles);

@@ -4,23 +4,23 @@
 // sparkline of its history over snapshots. Exact from a state or density snapshot; from shots, the
 // estimator with σ = √((1 − ⟨P⟩²)/N) when the program measured every qubit of supp P in the basis
 // P names — otherwise the row reads "not measured".
-#include "Viz/Math/PauliTable.hpp"
 #include "Data/Fidelity.hpp"
+#include "Viz/Math/PauliTable.hpp"
 #include "Viz/StateView.hpp"
 #include <deque>
 
 namespace qlab::viz {
 
 class PauliView final : public StateView {
-public:
-    static constexpr std::size_t kHistory = 64;          // sparkline window, as the Bloch trail
+  public:
+    static constexpr std::size_t kHistory = 64; // sparkline window, as the Bloch trail
     // Single-qubit rows are 3n; the O(2^n) expectation per row is affordable here only this small.
     static constexpr std::uint32_t kInlineQubits = 14;
 
     struct Row {
         math::PauliRow data;
-        std::deque<double> history;                      // oldest first, one point per snapshot
-        bool measured = true;                            // false: shots exist but not in this basis
+        std::deque<double> history; // oldest first, one point per snapshot
+        bool measured = true;       // false: shots exist but not in this basis
     };
 
     std::string_view id() const override { return "pauli"; }
@@ -41,12 +41,12 @@ public:
     const Row* row(std::string_view label) const;
     float rowHeight() const { return rowHeight_; }
 
-protected:
+  protected:
     void rebuild(const ViewInput& in) override;
     void layout() override;
     void drawBody(DrawContext& ctx) override;
 
-private:
+  private:
     void push(Row& row, std::optional<double> value);
     std::vector<Row> rows_;
     std::vector<std::string> user_;

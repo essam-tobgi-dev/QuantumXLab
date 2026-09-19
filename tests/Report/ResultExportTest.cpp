@@ -1,7 +1,7 @@
 // Spec 23 §6, §7, §12 — the `run_result` document, the packed per-shot memory, the sweep CSV and
 // the trace CSV with its provenance comments.
-#include "ReportTestUtil.hpp"
 #include "Data/Fidelity.hpp"
+#include "ReportTestUtil.hpp"
 
 #include "Data/Writers.hpp"
 
@@ -67,7 +67,8 @@ TEST_CASE("run_result: memory.bin decodes to the counts in the same document (sp
 
     // 8 shots per byte per bit column: 256 shots x 2 bits = 64 bytes.
     const std::vector<std::uint8_t> blob = rtest::readBytes(box / "memory.bin");
-    const std::size_t expected = static_cast<std::size_t>(f.result.layout.bits) * ((f.result.memory.size() + 7) / 8);
+    const std::size_t expected =
+        static_cast<std::size_t>(f.result.layout.bits) * ((f.result.memory.size() + 7) / 8);
     CHECK(blob.size() == expected);
     CHECK(blob.size() == 64u);
 
@@ -81,7 +82,8 @@ TEST_CASE("run_result: memory.bin decodes to the counts in the same document (sp
     std::vector<std::uint8_t> broken = blob;
     broken[0] = static_cast<std::uint8_t>(~broken[0]);
     std::ofstream out(box / "memory.bin", std::ios::binary | std::ios::trunc);
-    out.write(reinterpret_cast<const char*>(broken.data()), static_cast<std::streamsize>(broken.size()));
+    out.write(reinterpret_cast<const char*>(broken.data()),
+              static_cast<std::streamsize>(broken.size()));
     out.close();
     auto bad = verifyRunResult(file);
     CHECK_FALSE(bad.has_value());
@@ -99,10 +101,11 @@ TEST_CASE("run_result: the packing of spec 23 §6 is bit-column major, 8 shots p
         r.memory.push_back(std::move(shot));
     }
     r.counts = data::Histogram(r.layout.bits);
-    for (const auto& shot : r.memory) r.counts.add(r.layout.key(shot.bits));
+    for (const auto& shot : r.memory)
+        r.counts.add(r.layout.key(shot.bits));
 
     const std::vector<std::uint8_t> blob = packMemory(r);
-    REQUIRE(blob.size() == 3u * 2u);   // 3 columns x ceil(10/8) bytes
+    REQUIRE(blob.size() == 3u * 2u); // 3 columns x ceil(10/8) bytes
     for (std::uint32_t b = 0; b < 3; ++b)
         for (std::uint32_t s = 0; s < 10; ++s) {
             const std::uint8_t byte = blob[b * 2 + s / 8];
@@ -166,7 +169,8 @@ TEST_CASE("traces: CSV keeps its provenance in '#' comments before the header (s
     TraceProvenance p;
     p.instrument = "vna";
     p.timestamp = "2026-09-18T12:00:00Z";
-    p.settings = {{"span_hz", "2e8"}, {"rbw_hz", "1e3"}, {"averages", "16"}, {"sample_rate_hz", "1e6"}};
+    p.settings = {
+        {"span_hz", "2e8"}, {"rbw_hz", "1e3"}, {"averages", "16"}, {"sample_rate_hz", "1e6"}};
     const std::string csv = traceToCsv(t, p);
     INFO(csv);
 

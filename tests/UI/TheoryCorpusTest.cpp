@@ -1,15 +1,15 @@
 // Spec 20 §3/§5 — the shipped theory corpus must parse, and every display equation in it must
 // lay out in the fallback renderer. Also checks that every `theory` anchor used by the lab
 // component descriptors resolves (spec 17 §4).
-#include <catch2/catch_test_macros.hpp>
 #include "Core/Json.hpp"
 #include "Core/Paths.hpp"
+#include "MathTestFont.hpp"
 #include "UI/Math/BasicMathRenderer.hpp"
 #include "UI/Theory/TheoryIndex.hpp"
-#include "MathTestFont.hpp"
+#include <catch2/catch_test_macros.hpp>
 #include <filesystem>
-#include <iostream>
 #include <functional>
+#include <iostream>
 #include <map>
 #include <set>
 
@@ -18,7 +18,9 @@ using namespace qlab::ui;
 using namespace qlab::ui::theory;
 
 namespace {
-std::filesystem::path theoryDir() { return TheoryIndex::defaultDir(); }
+std::filesystem::path theoryDir() {
+    return TheoryIndex::defaultDir();
+}
 } // namespace
 
 TEST_CASE("theory corpus parses and every display equation lays out") {
@@ -44,19 +46,21 @@ TEST_CASE("theory corpus parses and every display equation lays out") {
                 ++totalEq;
                 auto lr = renderer.render(b.latex, math::MathStyle{20.0, true});
                 INFO(id << " line " << b.line << ": " << b.latex);
-                REQUIRE(lr);                       // a structural failure is an error
+                REQUIRE(lr); // a structural failure is an error
                 REQUIRE((*lr)->width > 0.0);
                 if (!(*lr)->warnings.empty()) {
                     ++warned;
                     ++warnedEq;
                     for (const auto& w : (*lr)->warnings)
-                        if (sampleWarnings.size() < 12) sampleWarnings.insert(id + ": " + w);
+                        if (sampleWarnings.size() < 12)
+                            sampleWarnings.insert(id + ": " + w);
                 }
             }
             // Inline math in paragraphs, headings, list items and table cells.
             auto checkSpans = [&](const std::vector<InlineSpan>& spans) {
                 for (const auto& s : spans) {
-                    if (!s.math || s.text.empty()) continue;
+                    if (!s.math || s.text.empty())
+                        continue;
                     ++totalInline;
                     auto lr = renderer.render(s.text, math::MathStyle{18.0, false});
                     INFO(id << " line " << b.line << " inline: " << s.text);
@@ -64,24 +68,31 @@ TEST_CASE("theory corpus parses and every display equation lays out") {
                     if (!(*lr)->warnings.empty()) {
                         ++warnedInline;
                         for (const auto& w : (*lr)->warnings)
-                            if (sampleWarnings.size() < 12) sampleWarnings.insert(id + ": " + w);
+                            if (sampleWarnings.size() < 12)
+                                sampleWarnings.insert(id + ": " + w);
                     }
                 }
             };
             checkSpans(b.spans);
-            for (const auto& it : b.items) checkSpans(it.spans);
+            for (const auto& it : b.items)
+                checkSpans(it.spans);
             for (const auto& row : b.rows)
-                for (const auto& c : row) checkSpans(c.spans);
+                for (const auto& c : row)
+                    checkSpans(c.spans);
         }
         perDoc[id] = {eq, warned};
     }
 
     std::cout << "\n[theory corpus] display equations: " << totalEq << ", warned: " << warnedEq
-              << " (" << (totalEq ? 100.0 * static_cast<double>(warnedEq) / static_cast<double>(totalEq) : 0.0)
-              << " %)\n[theory corpus] inline math: " << totalInline << ", warned: " << warnedInline << "\n";
+              << " ("
+              << (totalEq ? 100.0 * static_cast<double>(warnedEq) / static_cast<double>(totalEq)
+                          : 0.0)
+              << " %)\n[theory corpus] inline math: " << totalInline << ", warned: " << warnedInline
+              << "\n";
     for (const auto& [id, s] : perDoc)
         std::cout << "  " << id << ": " << s.first << " equations, " << s.second << " warned\n";
-    for (const auto& w : sampleWarnings) std::cout << "  warning sample — " << w << "\n";
+    for (const auto& w : sampleWarnings)
+        std::cout << "  warning sample — " << w << "\n";
     std::cout.flush();
 
     REQUIRE(totalEq > 200); // the corpus really does carry its equations
@@ -104,19 +115,24 @@ TEST_CASE("component descriptors' theory anchors all resolve") {
         if (j.is_object()) {
             for (auto it = j.begin(); it != j.end(); ++it) {
                 if (it.key() == "theory") {
-                    if (it->is_string()) anchors.insert(it->get<std::string>());
+                    if (it->is_string())
+                        anchors.insert(it->get<std::string>());
                     else if (it->is_array())
                         for (const auto& a : *it)
-                            if (a.is_string()) anchors.insert(a.get<std::string>());
-                } else walk(*it);
+                            if (a.is_string())
+                                anchors.insert(a.get<std::string>());
+                } else
+                    walk(*it);
             }
         } else if (j.is_array()) {
-            for (const auto& v : j) walk(v);
+            for (const auto& v : j)
+                walk(v);
         }
     };
     for (const auto& e : std::filesystem::directory_iterator(compDir)) {
         auto f = e.path() / "component.json";
-        if (!std::filesystem::exists(f)) continue;
+        if (!std::filesystem::exists(f))
+            continue;
         ++files;
         auto text = core::readTextFile(f);
         REQUIRE(text);
@@ -128,8 +144,10 @@ TEST_CASE("component descriptors' theory anchors all resolve") {
     REQUIRE(anchors.size() > 10);
     std::vector<std::string> unresolved;
     for (const auto& a : anchors)
-        if (!idx->resolve(a)) unresolved.push_back(a);
-    for (const auto& u : unresolved) std::cout << "  unresolved anchor: " << u << "\n";
+        if (!idx->resolve(a))
+            unresolved.push_back(a);
+    for (const auto& u : unresolved)
+        std::cout << "  unresolved anchor: " << u << "\n";
     INFO("checked " << anchors.size() << " distinct anchors from " << files << " components");
     REQUIRE(unresolved.empty());
 }
@@ -138,11 +156,16 @@ TEST_CASE("anchors named in the spec resolve to their headings") {
     auto idx = TheoryIndex::load(theoryDir());
     REQUIRE(idx);
     const char* kRefs[] = {
-        "T05#5.1-direct-capacitive-coupling", "T05#5.2-tunable-coupler",
-        "T05#6.3-dispersive-readout",         "T05#6.4-purcell-decay-and-the-purcell-filter",
-        "T06#1.1-rf-confinement-and-the-pseudopotential", "T06#1.3-normal-modes",
-        "T06#3-laser-ion-interaction-in-the-lamb-dicke-regime", "T06#7.1-fluorescence",
-        "T08#1.2-cooling-power", "T08#1.3-the-circulation-loop",
+        "T05#5.1-direct-capacitive-coupling",
+        "T05#5.2-tunable-coupler",
+        "T05#6.3-dispersive-readout",
+        "T05#6.4-purcell-decay-and-the-purcell-filter",
+        "T06#1.1-rf-confinement-and-the-pseudopotential",
+        "T06#1.3-normal-modes",
+        "T06#3-laser-ion-interaction-in-the-lamb-dicke-regime",
+        "T06#7.1-fluorescence",
+        "T08#1.2-cooling-power",
+        "T08#1.3-the-circulation-loop",
     };
     for (const char* r : kRefs) {
         INFO(r);
@@ -167,7 +190,8 @@ TEST_CASE("search finds headings and body text") {
     REQUIRE_FALSE(hits.empty());
     REQUIRE(hits.front().score >= 50);
     bool inT05 = false;
-    for (const auto& h : hits) inT05 |= h.docId == "T05";
+    for (const auto& h : hits)
+        inT05 |= h.docId == "T05";
     REQUIRE(inT05);
     REQUIRE_FALSE(hits.front().snippet.empty());
     REQUIRE(idx->search("").empty());

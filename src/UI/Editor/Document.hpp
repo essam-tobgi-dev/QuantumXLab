@@ -14,25 +14,25 @@
 namespace qlab::ui::editor {
 
 struct Position {
-    std::uint32_t line = 1;    // 1-based
-    std::uint32_t column = 1;  // 1-based, in code points
+    std::uint32_t line = 1;   // 1-based
+    std::uint32_t column = 1; // 1-based, in code points
     auto operator<=>(const Position&) const = default;
 };
 
 class Document {
-public:
+  public:
     Document() { setText({}); }
     explicit Document(std::string text) { setText(std::move(text)); }
 
     // ---- content
-    void setText(std::string text);                      // clears the undo journal
+    void setText(std::string text); // clears the undo journal
     const std::string& text() const { return text_; }
     std::uint32_t lineCount() const { return static_cast<std::uint32_t>(lineStart_.size()); }
-    std::string_view line(std::uint32_t line) const;     // without the line terminator
-    std::uint32_t lineLength(std::uint32_t line) const;  // in code points
+    std::string_view line(std::uint32_t line) const;    // without the line terminator
+    std::uint32_t lineLength(std::uint32_t line) const; // in code points
     Position end() const;
     Position clamp(Position p) const;
-    std::size_t offsetOf(Position p) const;              // byte offset, clamped into the buffer
+    std::size_t offsetOf(Position p) const; // byte offset, clamped into the buffer
     Position positionOf(std::size_t offset) const;
     // Byte offset of code-point column `column` on `line` (clamped to the line end).
     std::size_t columnToByte(std::uint32_t line, std::uint32_t column) const;
@@ -56,7 +56,7 @@ public:
     // Bumped by every content change; the analysis caches key off it.
     std::uint64_t revision() const { return revision_; }
 
-private:
+  private:
     struct Edit {
         std::size_t offset = 0;
         std::string removed, inserted;

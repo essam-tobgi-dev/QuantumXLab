@@ -11,19 +11,19 @@ namespace qlab::runtime::detail {
 
 // Classical state of one shot (spec 15 §3.5 (b)).
 struct ShotContext {
-    std::vector<std::uint8_t> bits;      // flat classical memory
-    std::vector<std::int8_t> measured;   // per simulated qubit, −1 = not measured yet
+    std::vector<std::uint8_t> bits;    // flat classical memory
+    std::vector<std::int8_t> measured; // per simulated qubit, −1 = not measured yet
     core::Random* rng = nullptr;
-    bool truncated = false;              // QL5020
-    std::uint32_t branches = 0;          // executed Branch / Loop iterations (T12 (1.1) T_ff)
+    bool truncated = false;     // QL5020
+    std::uint32_t branches = 0; // executed Branch / Loop iterations (T12 (1.1) T_ff)
     std::uint32_t shot = 0;
 };
 
 class Engine {
-public:
+  public:
     Engine(const ExecutionInput& in, const ProgramPlan& plan);
 
-    Status allocate();                                   // backend + memory budget (QL5012)
+    Status allocate(); // backend + memory budget (QL5012)
     // |0…0⟩ with the state-preparation channels of the calibration (T04 §10.3).
     Status prepare(ShotContext& ctx);
     // Walks the compiled circuit for one shot; `topLevel` applies idle intervals and snapshots.
@@ -45,7 +45,7 @@ public:
     // Classical bit each measured qubit ends up in, −1 when its outcome is discarded.
     const std::vector<std::int64_t>& classicalBitOfMeasured() const { return cbitOfMeasured_; }
 
-private:
+  private:
     Status applyGate(const ir::Gate& g, ShotContext& ctx);
     Status applyMeasure(const ir::Measure& m, ShotContext& ctx);
     Status applyReset(const ir::Reset& r, ShotContext& ctx);
@@ -62,11 +62,11 @@ private:
     std::unique_ptr<qsim::IBackend> backend_;
     noise::ApplyOptions apply_;
     noise::ApplyReport report_;
-    std::vector<double> detuning_;                  // per simulated qubit, this shot
+    std::vector<double> detuning_; // per simulated qubit, this shot
     std::vector<IdleGap> idle_;
     std::size_t idleCursor_ = 0;
-    std::vector<std::uint32_t> layerOf_;             // per node index: ASAP layer
-    std::vector<std::int64_t> cbitOfMeasured_;       // parallel to plan.measuredQubits
+    std::vector<std::uint32_t> layerOf_;       // per node index: ASAP layer
+    std::vector<std::int64_t> cbitOfMeasured_; // parallel to plan.measuredQubits
     std::map<std::uint32_t, noise::ReadoutModel> readout1q_;
     std::vector<RunSnapshot> snapshots_;
     SnapshotCadence cadence_ = SnapshotCadence::None;
@@ -76,7 +76,7 @@ private:
     bool project_ = true;
     bool perShotDrift_ = false;
 
-public:
+  public:
     // Terminal readout over `plan.measuredQubits` in simulator indices (ideal when noise is off).
     Result<noise::ReadoutModel> terminalReadout() const;
 };

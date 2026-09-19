@@ -39,12 +39,15 @@ MeshData labDoor();
 MeshData safetySign(std::string_view kind, float w, float h);
 
 // ---- gas handling plant (GhsMeshes.cpp)
-MeshData scrollPump(float w, float h, float d);     // motor, scroll head, fan cowl, feet; floor at y = 0
-MeshData he3Compressor(float w, float h, float d);  // hermetic compressor on a skid; floor at y = 0
-MeshData dumpTank(float r, float h);                // vertical tank with dished ends, valve, gauge, stand; floor at y = 0
-MeshData turboPump(float r, float h);               // turbo with its inlet flange up and controller box; base at y = 0
-MeshData ln2Trap(float r, float h);                 // LN2 dewar with the trap coil and lid; floor at y = 0
-MeshData valveLabel(float w, float h);              // engraved label plate facing +z
+MeshData scrollPump(float w, float h,
+                    float d); // motor, scroll head, fan cowl, feet; floor at y = 0
+MeshData he3Compressor(float w, float h, float d); // hermetic compressor on a skid; floor at y = 0
+MeshData dumpTank(float r,
+                  float h); // vertical tank with dished ends, valve, gauge, stand; floor at y = 0
+MeshData turboPump(float r,
+                   float h); // turbo with its inlet flange up and controller box; base at y = 0
+MeshData ln2Trap(float r, float h);    // LN2 dewar with the trap coil and lid; floor at y = 0
+MeshData valveLabel(float w, float h); // engraved label plate facing +z
 
 // ---- rack (RackMeshes.cpp)
 // 19-inch cabinet of W × H × D centred on the origin: corner posts, side and rear panels, plinth,

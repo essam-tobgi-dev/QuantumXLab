@@ -1,9 +1,9 @@
 // Spec 20 §3/§6/§7 — fallback math engine: acceptance set, layout geometry, hit-test, cache.
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/catch_approx.hpp>
+#include "MathTestFont.hpp"
 #include "UI/Math/BasicMathRenderer.hpp"
 #include "UI/Math/MathParser.hpp"
-#include "MathTestFont.hpp"
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <functional>
 
 using namespace qlab;
@@ -56,7 +56,9 @@ TEST_CASE("acceptance render set lays out without errors (spec 20 §3)") {
         REQUIRE(lr.errors.empty());
         REQUIRE(lr.width > 0.0);
         REQUIRE(lr.height + lr.depth > 0.0);
-        if (!lr.warnings.empty()) { INFO("warning: " << lr.warnings.front()); }
+        if (!lr.warnings.empty()) {
+            INFO("warning: " << lr.warnings.front());
+        }
         REQUIRE(lr.warnings.empty());
     }
 }
@@ -69,8 +71,8 @@ TEST_CASE("fraction places numerator above denominator with a rule between") {
     const auto* b = cv.find("b");
     REQUIRE(a);
     REQUIRE(b);
-    REQUIRE(a->baselineY < b->baselineY);          // y grows downward
-    REQUIRE(cv.lines.size() >= 1);                 // the fraction rule
+    REQUIRE(a->baselineY < b->baselineY); // y grows downward
+    REQUIRE(cv.lines.size() >= 1);        // the fraction rule
     double ruleY = cv.lines.front().y0;
     REQUIRE(a->baselineY < ruleY);
     REQUIRE(b->baselineY > ruleY);
@@ -113,9 +115,11 @@ TEST_CASE("matrix environment lays out rows and columns") {
     // Find the Matrix node.
     const MathNode* m = nullptr;
     std::function<void(const MathNode&)> walk = [&](const MathNode& n) {
-        if (n.kind == NodeKind::Matrix) m = &n;
+        if (n.kind == NodeKind::Matrix)
+            m = &n;
         for (const auto& c : n.children)
-            if (c) walk(*c);
+            if (c)
+                walk(*c);
     };
     walk(*po.root);
     REQUIRE(m != nullptr);
@@ -131,7 +135,7 @@ TEST_CASE("matrix environment lays out rows and columns") {
     REQUIRE(a);
     REQUIRE(b);
     REQUIRE(c);
-    REQUIRE(b->x > a->x);            // same row, next column
+    REQUIRE(b->x > a->x);                 // same row, next column
     REQUIRE(c->baselineY > a->baselineY); // next row is lower
     REQUIRE(cv.glyphs.size() >= 4);
 }
@@ -144,7 +148,8 @@ TEST_CASE("delimiters grow with their content") {
     paintMath(big, cv, 0.0, 0.0, font());
     bool scaled = false;
     for (const auto& g : cv.glyphs)
-        if (g.text == "(" && g.size > 20.0 * 1.2) scaled = true;
+        if (g.text == "(" && g.size > 20.0 * 1.2)
+            scaled = true;
     REQUIRE(scaled);
 }
 
@@ -220,9 +225,13 @@ TEST_CASE("the ASCII hyphen of math mode is set as the minus sign, as TeX does")
     REQUIRE(parsed.root != nullptr);
     bool minus = false, hyphen = false;
     std::function<void(const MathNode&)> walk = [&](const MathNode& n) {
-        if (n.kind == NodeKind::Symbol && n.text == "\u2212") minus = true;
-        if (n.kind == NodeKind::Symbol && n.text == "-") hyphen = true;
-        for (const auto& c : n.children) if (c) walk(*c);
+        if (n.kind == NodeKind::Symbol && n.text == "\u2212")
+            minus = true;
+        if (n.kind == NodeKind::Symbol && n.text == "-")
+            hyphen = true;
+        for (const auto& c : n.children)
+            if (c)
+                walk(*c);
     };
     walk(*parsed.root);
     CHECK(minus);
@@ -233,8 +242,11 @@ TEST_CASE("the ASCII hyphen of math mode is set as the minus sign, as TeX does")
     REQUIRE(text.root != nullptr);
     bool textHyphen = false;
     std::function<void(const MathNode&)> walk2 = [&](const MathNode& n) {
-        if (n.kind == NodeKind::Text && n.text.find('-') != std::string::npos) textHyphen = true;
-        for (const auto& c : n.children) if (c) walk2(*c);
+        if (n.kind == NodeKind::Text && n.text.find('-') != std::string::npos)
+            textHyphen = true;
+        for (const auto& c : n.children)
+            if (c)
+                walk2(*c);
     };
     walk2(*text.root);
     CHECK(textHyphen);

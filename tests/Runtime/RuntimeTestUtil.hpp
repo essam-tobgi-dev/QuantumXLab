@@ -35,7 +35,7 @@ inline std::string source(std::string_view body) {
 // One session per device id, shared by every test in the binary: loading and compiling the shipped
 // devices dominates the run time otherwise.
 class Lab {
-public:
+  public:
     explicit Lab(std::string_view deviceId) {
         auto st = session.selectDevice(deviceId);
         INFO("selectDevice " << deviceId << ": " << (st ? std::string() : st.error().format()));
@@ -70,7 +70,8 @@ public:
         return r;
     }
 
-    RunResult run(std::string_view text, RunOptions options = {}, compiler::CompileOptions copts = {}) {
+    RunResult run(std::string_view text, RunOptions options = {},
+                  compiler::CompileOptions copts = {}) {
         const Job job = compile(text, std::move(copts));
         auto out = session.runSync(request(job, std::move(options)));
         INFO("run: " << (out ? std::string() : out.error().format()));
@@ -85,13 +86,18 @@ public:
 inline Lab& lab(const std::string& deviceId) {
     static std::map<std::string, std::unique_ptr<Lab>> cache;
     auto it = cache.find(deviceId);
-    if (it == cache.end()) it = cache.emplace(deviceId, std::make_unique<Lab>(deviceId)).first;
+    if (it == cache.end())
+        it = cache.emplace(deviceId, std::make_unique<Lab>(deviceId)).first;
     return *it->second;
 }
 
 // Probability of a bitstring with its 1σ binomial error, for "within 5σ" assertions.
-inline double sigma(double p, std::uint64_t n) { return n ? std::sqrt(std::max(p * (1.0 - p), 1e-12) / n) : 1.0; }
+inline double sigma(double p, std::uint64_t n) {
+    return n ? std::sqrt(std::max(p * (1.0 - p), 1e-12) / n) : 1.0;
+}
 
-inline const Expectation* find(const RunResult& r, std::string_view name) { return r.expectation(name); }
+inline const Expectation* find(const RunResult& r, std::string_view name) {
+    return r.expectation(name);
+}
 
 } // namespace rtest

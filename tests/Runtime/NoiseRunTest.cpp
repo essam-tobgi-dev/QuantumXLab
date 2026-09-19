@@ -1,8 +1,8 @@
 // Spec 15 §3–§4, §7 (ii) — a calibration-derived noisy run: the density-matrix backend lowers the
 // Bell success probability by the amount the calibration predicts, and the accurate fidelity of
 // §7 (ii) compares it with the ideal run.
-#include "RuntimeTestUtil.hpp"
 #include "Data/Fidelity.hpp"
+#include "RuntimeTestUtil.hpp"
 #include <cmath>
 
 using namespace rtest;
@@ -49,11 +49,12 @@ TEST_CASE("a noisy density-matrix run lowers the Bell fidelity as the calibratio
     const double fast = r.estimate.fidelity.fast;
     INFO("success " << success << " vs fast estimate " << fast);
     REQUIRE(fast < 1.0);
-    REQUIRE(std::abs(success - fast) < 0.05);            // the two models agree to a few percent
-    REQUIRE(success > 0.5 * fast);                        // spec 15 §7: a factor 2 would be a red flag
+    REQUIRE(std::abs(success - fast) < 0.05); // the two models agree to a few percent
+    REQUIRE(success > 0.5 * fast);            // spec 15 §7: a factor 2 would be a red flag
     // The dominant term is readout: two qubits at the calibrated assignment fidelity.
     double roProduct = 1.0;
-    for (std::uint32_t q : r.qubits) roProduct *= l.session.calibration()->qubit(q)->readoutFidelity();
+    for (std::uint32_t q : r.qubits)
+        roProduct *= l.session.calibration()->qubit(q)->readoutFidelity();
     REQUIRE(r.estimate.fidelity.readoutProduct == Approx(roProduct).epsilon(1e-12));
 
     // §7 (ii): the noisy-versus-ideal comparison.
@@ -81,13 +82,15 @@ TEST_CASE("an ideal run of the same circuit is exact and has no simulated compar
     REQUIRE(r.backend == qsim::Kind::StateVector);
     REQUIRE(r.backendClass == data::FidelityClass::Exact);
     REQUIRE(r.probability("00") + r.probability("11") == Approx(1.0).margin(1e-12));
-    REQUIRE_FALSE(r.estimate.fidelity.simulated.has_value()); // nothing to compare an ideal run with
+    REQUIRE_FALSE(
+        r.estimate.fidelity.simulated.has_value()); // nothing to compare an ideal run with
     // The estimate still describes the hardware, which is noisy.
     REQUIRE(r.estimate.fidelity.fast < 1.0);
     REQUIRE(r.estimate.cls == data::FidelityClass::Model);
 }
 
-TEST_CASE("noise trajectories on the state vector agree with the density matrix within statistics") {
+TEST_CASE(
+    "noise trajectories on the state vector agree with the density matrix within statistics") {
     Lab& l = lab("sc_fixed_5");
     RunOptions dm = noisyBell(21);
     dm.accurateFidelity = false;
@@ -104,7 +107,8 @@ TEST_CASE("noise trajectories on the state vector agree with the density matrix 
     for (const char* key : {"00", "01", "10", "11"}) {
         const double a = exact.probability(key), b = sampled.probability(key);
         INFO(key << ": density matrix " << a << ", trajectories " << b);
-        REQUIRE(std::abs(a - b) < 5.0 * std::sqrt(sigma(a, 8192) * sigma(a, 8192) + sigma(b, 8192) * sigma(b, 8192)));
+        REQUIRE(std::abs(a - b) <
+                5.0 * std::sqrt(sigma(a, 8192) * sigma(a, 8192) + sigma(b, 8192) * sigma(b, 8192)));
     }
 }
 
@@ -122,14 +126,17 @@ TEST_CASE("the noise model is built from the session's calibration and reacts to
         q.t2star.value = units::Time{q.t2star.value.v * 0.1};
         q.readoutAssignment = {{{0.90, 0.10}, {0.10, 0.90}}};
     }
-    for (auto& [key, e] : worse.calibration.edges) e.gateError2q.value = std::min(0.2, e.gateError2q.value * 10.0);
+    for (auto& [key, e] : worse.calibration.edges)
+        e.gateError2q.value = std::min(0.2, e.gateError2q.value * 10.0);
 
     Lab degraded("sc_fixed_5");
     degraded.session.setDevice(std::move(worse));
-    const RunResult bad = degraded.run(readAsset("Programs/Examples/Basics/bell.qasm"), noisyBell(31));
+    const RunResult bad =
+        degraded.run(readAsset("Programs/Examples/Basics/bell.qasm"), noisyBell(31));
     INFO("base " << base.probability("00") + base.probability("11") << " vs degraded "
                  << bad.probability("00") + bad.probability("11"));
     REQUIRE(bad.estimate.fidelity.fast < base.estimate.fidelity.fast);
-    REQUIRE(bad.probability("00") + bad.probability("11") < base.probability("00") + base.probability("11"));
+    REQUIRE(bad.probability("00") + bad.probability("11") <
+            base.probability("00") + base.probability("11"));
     REQUIRE(bad.estimate.fidelity.readoutProduct == Approx(0.9 * 0.9).epsilon(1e-12));
 }

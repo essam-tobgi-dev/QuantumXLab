@@ -17,7 +17,8 @@ namespace {
 const Scene& standardScene() {
     static Scene scene = [] {
         auto s = buildScene("sc_lab_standard");
-        if (!s) FAIL(s.error().format());
+        if (!s)
+            FAIL(s.error().format());
         return std::move(*s);
     }();
     return scene;
@@ -34,9 +35,11 @@ TEST_CASE("the standard laboratory builds with unique non-zero ids in depth-firs
         REQUIRE(n.id.value != 0);
         REQUIRE(n.id.value == i + 1); // ids index the depth-first array (spec 17 §1, §9)
         REQUIRE(ids.insert(n.id.value).second);
-        if (n.parent.value != 0) REQUIRE(n.parent.value - 1 < i); // parents before children
+        if (n.parent.value != 0)
+            REQUIRE(n.parent.value - 1 < i); // parents before children
         REQUIRE(n.subtreeEnd >= i + 1);
-        for (ComponentId c : n.children) REQUIRE(scene.node(c)->parent == n.id);
+        for (ComponentId c : n.children)
+            REQUIRE(scene.node(c)->parent == n.id);
     }
     // instance names are unique, so search-to-select and the component tree are unambiguous
     std::set<std::string> names;
@@ -87,7 +90,8 @@ TEST_CASE("every component node resolves to a descriptor and every group is geom
 TEST_CASE("a prop with no descriptor is reported and drawn as scenery, not dropped") {
     // The guard above only proves the shipped catalog is complete; this proves the reporting path
     // still works, by building a layout that names a prop the catalog does not have.
-    const std::filesystem::path dir = std::filesystem::temp_directory_path() / "qxl_lab_missing_prop";
+    const std::filesystem::path dir =
+        std::filesystem::temp_directory_path() / "qxl_lab_missing_prop";
     std::filesystem::create_directories(dir);
     auto text = core::readTextFile(core::assetDir() / "Lab/Layouts/sc_lab_standard/layout.json");
     REQUIRE(text.has_value());
@@ -133,7 +137,8 @@ TEST_CASE("the fridge stages are ordered RT to MXC, top to bottom, at the layout
     }
     // the shields nest: each one closes below the next colder assembly
     double innerBottom = 1e9;
-    for (const char* id : {"mag_shield_mumetal", "shield_still", "shield_4K", "shield_50K", "ovc"}) {
+    for (const char* id :
+         {"mag_shield_mumetal", "shield_still", "shield_4K", "shield_50K", "ovc"}) {
         auto ids = scene.findByDescriptor(id);
         REQUIRE(ids.size() == 1);
         const Node* n = scene.node(ids.front());
@@ -150,7 +155,8 @@ TEST_CASE("the fridge stages are ordered RT to MXC, top to bottom, at the layout
 
 TEST_CASE("every wiring line has nodes at each stage it passes") {
     const Scene& scene = standardScene();
-    REQUIRE(scene.wiringRuns().size() == 40); // sc_heavyhex_27: 27 drive, 4+4 readout, 4 pump, 1 loom
+    REQUIRE(scene.wiringRuns().size() ==
+            40); // sc_heavyhex_27: 27 drive, 4+4 readout, 4 pump, 1 loom
     for (const auto& run : scene.wiringRuns()) {
         INFO(run.lineId);
         for (int k = 0; k < cryo::kStageCount; ++k) {
@@ -166,16 +172,19 @@ TEST_CASE("every wiring line has nodes at each stage it passes") {
     // attenuation budget of a drive line: 20 dB at 4 K + 20 dB at MXC (spec 11 §4.1)
     const WiringRun* drive = nullptr;
     for (const auto& run : scene.wiringRuns())
-        if (run.lineId == "drive_q0") drive = &run;
+        if (run.lineId == "drive_q0")
+            drive = &run;
     REQUIRE(drive != nullptr);
     double total = 0.0;
-    for (const auto& [node, dB] : drive->attenuators) total += dB;
+    for (const auto& [node, dB] : drive->attenuators)
+        total += dB;
     CHECK(total == Catch::Approx(40.0));
     // and the readout input line carries 70 dB
     for (const auto& run : scene.wiringRuns())
         if (run.lineId == "ro_in_f0") {
             double sum = 0.0;
-            for (const auto& [node, dB] : run.attenuators) sum += dB;
+            for (const auto& [node, dB] : run.attenuators)
+                sum += dB;
             CHECK(sum == Catch::Approx(70.0));
         }
 }
@@ -218,9 +227,11 @@ TEST_CASE("the chip carries one node per qubit and stays inside the triangle bud
     CHECK(scene.stats().trianglesFinest < 800'000);
     CHECK(scene.stats().trianglesFinest < 3'000'000);
     CHECK(scene.stats().cacheHits > 100); // repeated parts share one mesh
-    WARN(std::format("nodes {} ({} components), meshes {} ({} cache hits), triangles {} (unique {}), build {:.0f} ms",
-                     scene.stats().nodes, scene.stats().components, scene.stats().meshes, scene.stats().cacheHits,
-                     scene.stats().trianglesFinest, scene.stats().uniqueTriangles, scene.stats().buildMs));
+    WARN(std::format("nodes {} ({} components), meshes {} ({} cache hits), triangles {} (unique "
+                     "{}), build {:.0f} ms",
+                     scene.stats().nodes, scene.stats().components, scene.stats().meshes,
+                     scene.stats().cacheHits, scene.stats().trianglesFinest,
+                     scene.stats().uniqueTriangles, scene.stats().buildMs));
 }
 
 TEST_CASE("the shipped layouts instantiate every descriptor in the catalog") {
@@ -231,7 +242,8 @@ TEST_CASE("the shipped layouts instantiate every descriptor in the catalog") {
     std::set<std::string> used;
     auto collect = [&used](const Scene& scene) {
         for (const Node& n : scene.nodes())
-            if (n.kind == NodeKind::Component) used.insert(n.descriptorId);
+            if (n.kind == NodeKind::Component)
+                used.insert(n.descriptorId);
     };
     collect(standardScene());
     {
@@ -244,18 +256,23 @@ TEST_CASE("the shipped layouts instantiate every descriptor in the catalog") {
         REQUIRE(scene.has_value());
         collect(*scene);
     }
-    {   // a readout line with a JPA instead of a TWPA: no shipped device uses one (spec 11 §4.4)
-        std::filesystem::path file = std::filesystem::path(QXL_SOURCE_DIR) / "build" / "lab_jpa_wiring.json";
+    { // a readout line with a JPA instead of a TWPA: no shipped device uses one (spec 11 §4.4)
+        std::filesystem::path file =
+            std::filesystem::path(QXL_SOURCE_DIR) / "build" / "lab_jpa_wiring.json";
         std::error_code ec;
         std::filesystem::create_directories(file.parent_path(), ec);
         core::Json lines = core::Json::array();
         lines.push_back({{"id", "drive_q0"}, {"channel", "d[0]"}, {"chain", "drive_std"}});
         lines.push_back({{"id", "ro_in_f0"}, {"channel", "m[0]"}, {"chain", "readout_in_std"}});
-        lines.push_back({{"id", "ro_out_f0"}, {"channel", "a[0]"}, {"chain", "readout_out_std"}, {"preamp", "jpa"}});
+        lines.push_back({{"id", "ro_out_f0"},
+                         {"channel", "a[0]"},
+                         {"chain", "readout_out_std"},
+                         {"preamp", "jpa"}});
         lines.push_back({{"id", "pump_f0"}, {"channel", "pump[0]"}, {"chain", "pump_std"}});
         lines.push_back({{"id", "dc_loom_0"}, {"channel", "dc[0..11]"}, {"chain", "dc_loom_std"}});
-        REQUIRE(core::JsonEnvelope::save(file, "wiring",
-                                         {{"device", "sc_heavyhex_27"}, {"layout", "sc_lab_standard"}, {"lines", lines}})
+        REQUIRE(core::JsonEnvelope::save(
+                    file, "wiring",
+                    {{"device", "sc_heavyhex_27"}, {"layout", "sc_lab_standard"}, {"lines", lines}})
                     .has_value());
         BuildOptions options;
         options.wiringOverride = file;
@@ -283,7 +300,8 @@ TEST_CASE("bounds and breadcrumbs follow the hierarchy") {
     REQUIRE(root->subtreeBounds.valid());
     CHECK(aabbSize(root->subtreeBounds).x >= scene.layout().roomWidth_m * 0.5);
     for (const Node& n : scene.nodes()) {
-        if (!n.worldBounds.valid()) continue;
+        if (!n.worldBounds.valid())
+            continue;
         INFO(n.instanceName);
         CHECK(n.subtreeBounds.min.x <= n.worldBounds.min.x + 1e-9);
         CHECK(n.subtreeBounds.max.y + 1e-9 >= n.worldBounds.max.y);

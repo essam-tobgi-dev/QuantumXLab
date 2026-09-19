@@ -17,13 +17,14 @@ using widgets::iv;
 
 // Spec 19 §1: ImPlot draws in theme tokens only, never its own defaults.
 class PlotStyle {
-public:
+  public:
     explicit PlotStyle(const UiContext& ctx) {
         ImPlot::PushStyleColor(ImPlotCol_FrameBg, iv(ctx.th()[Token::BgPanel]));
         ImPlot::PushStyleColor(ImPlotCol_PlotBg, iv(ctx.th()[Token::BgPanel]));
         ImPlot::PushStyleColor(ImPlotCol_PlotBorder, iv(ctx.th()[Token::Border]));
         ImPlot::PushStyleColor(ImPlotCol_AxisText, iv(ctx.th()[Token::TextSecondary]));
-        ImPlot::PushStyleColor(ImPlotCol_AxisGrid, iv(Color(glm::vec3(ctx.th()[Token::Border]), 0.5f)));
+        ImPlot::PushStyleColor(ImPlotCol_AxisGrid,
+                               iv(Color(glm::vec3(ctx.th()[Token::Border]), 0.5f)));
         ImPlot::PushStyleColor(ImPlotCol_LegendBg, iv(ctx.th()[Token::BgRaised]));
         ImPlot::PushStyleColor(ImPlotCol_LegendText, iv(ctx.th()[Token::TextPrimary]));
         ImPlot::PushStyleColor(ImPlotCol_InlayText, iv(ctx.th()[Token::TextSecondary]));
@@ -38,7 +39,7 @@ std::vector<data::ChannelDesc> channelsOf(const UiContext& ctx) {
 }
 
 class PlotsPanel final : public BasicPanel {
-public:
+  public:
     PlotsPanel() : BasicPanel(PanelId::Plots, "plots", "panels.plots", "◇", Workspace::Analysis) {}
 
     void draw(UiContext& ctx) override;
@@ -49,12 +50,15 @@ public:
         return j;
     }
     void deserialize(const core::Json& j) override {
-        if (!j.is_object()) return;
-        if (const auto it = j.find("channel"); it != j.end() && it->is_number_integer()) channel_ = it->get<int>();
-        if (const auto it = j.find("show_theory"); it != j.end() && it->is_boolean()) showTheory_ = it->get<bool>();
+        if (!j.is_object())
+            return;
+        if (const auto it = j.find("channel"); it != j.end() && it->is_number_integer())
+            channel_ = it->get<int>();
+        if (const auto it = j.find("show_theory"); it != j.end() && it->is_boolean())
+            showTheory_ = it->get<bool>();
     }
 
-private:
+  private:
     int channel_ = 0;
     bool showTheory_ = true;
 };
@@ -67,7 +71,8 @@ void PlotsPanel::draw(UiContext& ctx) {
     }
     std::vector<std::string_view> names;
     names.reserve(descs.size());
-    for (const data::ChannelDesc& d : descs) names.emplace_back(d.id);
+    for (const data::ChannelDesc& d : descs)
+        names.emplace_back(d.id);
     channel_ = std::clamp(channel_, 0, static_cast<int>(descs.size()) - 1);
     widgets::combo(ctx, "Channel", &channel_, names, "Plot channel");
     ImGui::SameLine();
@@ -77,7 +82,8 @@ void PlotsPanel::draw(UiContext& ctx) {
     widgets::fidelityBadge(ctx, desc.cls);
 
     const auto id = ctx.recorder->find(desc.id);
-    if (!id) return;
+    if (!id)
+        return;
     // Spec 22 §1: min/max envelope decimation keeps the draw cost bounded whatever the length.
     const data::Series series = ctx.recorder->decimated(*id, -1e300, 1e300, 4096);
     if (series.empty()) {
@@ -91,8 +97,10 @@ void PlotsPanel::draw(UiContext& ctx) {
             const Color c = ctx.th().qubitColor(static_cast<std::uint32_t>(k));
             ImPlot::SetNextLineStyle(iv(c));
             // Spec 19 §8: colour never carries meaning alone — every series has its own marker.
-            ImPlot::SetNextMarkerStyle(static_cast<ImPlotMarker>(k % ImPlotMarker_COUNT), 3.0f, iv(c));
-            const std::string label = desc.id + (series.y.size() > 1 ? "[" + std::to_string(k) + "]" : "");
+            ImPlot::SetNextMarkerStyle(static_cast<ImPlotMarker>(k % ImPlotMarker_COUNT), 3.0f,
+                                       iv(c));
+            const std::string label =
+                desc.id + (series.y.size() > 1 ? "[" + std::to_string(k) + "]" : "");
             ImPlot::PlotLine(label.c_str(), series.x.data(), series.y[k].data(),
                              static_cast<int>(series.x.size()));
         }
@@ -108,8 +116,9 @@ void PlotsPanel::draw(UiContext& ctx) {
         // Cursor readout with the measurement delta (spec 19 §3).
         if (ImPlot::IsPlotHovered()) {
             const ImPlotPoint at = ImPlot::GetPlotMousePos();
-            ImPlot::Annotation(at.x, at.y, iv(ctx.th()[Token::Accent]), ImVec2(6.0f, -6.0f), true, "%s, %s",
-                               format::value(at.x, desc.xUnit).c_str(), format::value(at.y, desc.unit).c_str());
+            ImPlot::Annotation(at.x, at.y, iv(ctx.th()[Token::Accent]), ImVec2(6.0f, -6.0f), true,
+                               "%s, %s", format::value(at.x, desc.xUnit).c_str(),
+                               format::value(at.y, desc.unit).c_str());
         }
         ImPlot::EndPlot();
     }
@@ -118,7 +127,7 @@ void PlotsPanel::draw(UiContext& ctx) {
 // ---------------------------------------------------------------- Fits (spec 22 §4, §5)
 
 class FitsPanel final : public BasicPanel {
-public:
+  public:
     FitsPanel() : BasicPanel(PanelId::Fits, "fits", "panels.fits", "△", Workspace::Analysis) {}
 
     void draw(UiContext& ctx) override;
@@ -129,12 +138,15 @@ public:
         return j;
     }
     void deserialize(const core::Json& j) override {
-        if (!j.is_object()) return;
-        if (const auto it = j.find("model"); it != j.end() && it->is_number_integer()) model_ = it->get<int>();
-        if (const auto it = j.find("channel"); it != j.end() && it->is_number_integer()) channel_ = it->get<int>();
+        if (!j.is_object())
+            return;
+        if (const auto it = j.find("model"); it != j.end() && it->is_number_integer())
+            model_ = it->get<int>();
+        if (const auto it = j.find("channel"); it != j.end() && it->is_number_integer())
+            channel_ = it->get<int>();
     }
 
-private:
+  private:
     int model_ = 0, channel_ = 0;
     std::optional<data::fit::FitResult> result_;
     std::string error_;
@@ -145,7 +157,8 @@ void FitsPanel::draw(UiContext& ctx) {
     const std::vector<std::string> ids = data::fit::modelIds();
     std::vector<std::string_view> modelNames;
     modelNames.reserve(ids.size());
-    for (const std::string& id : ids) modelNames.emplace_back(id);
+    for (const std::string& id : ids)
+        modelNames.emplace_back(id);
     model_ = std::clamp(model_, 0, static_cast<int>(ids.size()) - 1);
     widgets::combo(ctx, "Model", &model_, modelNames, "Fit model");
 
@@ -156,11 +169,13 @@ void FitsPanel::draw(UiContext& ctx) {
     }
     std::vector<std::string_view> names;
     names.reserve(descs.size());
-    for (const data::ChannelDesc& d : descs) names.emplace_back(d.id);
+    for (const data::ChannelDesc& d : descs)
+        names.emplace_back(d.id);
     channel_ = std::clamp(channel_, 0, static_cast<int>(descs.size()) - 1);
     widgets::combo(ctx, "Channel", &channel_, names, "Fit channel");
 
-    const std::unique_ptr<data::fit::FitModel> model = data::fit::makeModel(ids[static_cast<std::size_t>(model_)]);
+    const std::unique_ptr<data::fit::FitModel> model =
+        data::fit::makeModel(ids[static_cast<std::size_t>(model_)]);
     if (model != nullptr) {
         equation_.setLatex(model->latex());
         equation_.setDisplayStyle(false);
@@ -172,9 +187,12 @@ void FitsPanel::draw(UiContext& ctx) {
         result_.reset();
         if (const auto id = ctx.recorder->find(descs[static_cast<std::size_t>(channel_)].id)) {
             const data::Series s = ctx.recorder->view(*id);
-            if (s.y.empty() || s.x.size() < 3) error_ = "the channel has too few samples to fit";
-            else if (auto r = data::fit::fitModel(*model, s.x, s.y[0])) result_ = std::move(*r);
-            else error_ = r.error().message;
+            if (s.y.empty() || s.x.size() < 3)
+                error_ = "the channel has too few samples to fit";
+            else if (auto r = data::fit::fitModel(*model, s.x, s.y[0]))
+                result_ = std::move(*r);
+            else
+                error_ = r.error().message;
         }
     }
     if (!error_.empty()) {
@@ -200,7 +218,8 @@ void FitsPanel::draw(UiContext& ctx) {
         ImGui::TableSetupColumn("value ± 1σ", ImGuiTableColumnFlags_WidthStretch, 0.46f);
         ImGui::TableSetupColumn("at bound", ImGuiTableColumnFlags_WidthStretch, 0.20f);
         ImGui::TableHeadersRow();
-        const std::vector<data::fit::ParamInfo> info = model != nullptr ? model->params() : std::vector<data::fit::ParamInfo>{};
+        const std::vector<data::fit::ParamInfo> info =
+            model != nullptr ? model->params() : std::vector<data::fit::ParamInfo>{};
         for (std::size_t i = 0; i < r.beta.size(); ++i) {
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
@@ -209,30 +228,40 @@ void FitsPanel::draw(UiContext& ctx) {
             ImGui::TableNextColumn();
             FontScope f(*ctx.fonts, FontRole::Readout);
             const std::string unit = i < info.size() ? info[i].unit : std::string{};
-            widgets::text(ctx, Token::TextPrimary,
-                          format::withSigma(r.beta[i], i < r.sigma.size() ? r.sigma[i] : 0.0, unit));
+            widgets::text(
+                ctx, Token::TextPrimary,
+                format::withSigma(r.beta[i], i < r.sigma.size() ? r.sigma[i] : 0.0, unit));
             ImGui::TableNextColumn();
-            if (i < r.atBound.size() && r.atBound[i]) widgets::badge(ctx, "bound", ctx.th()[Token::Warn]);
+            if (i < r.atBound.size() && r.atBound[i])
+                widgets::badge(ctx, "bound", ctx.th()[Token::Warn]);
         }
         ImGui::EndTable();
     }
-    for (const auto& [name, value] : r.derived) widgets::labelled(ctx, name, format::number(value));
+    for (const auto& [name, value] : r.derived)
+        widgets::labelled(ctx, name, format::number(value));
 
-    if (r.residuals.empty()) return;
+    if (r.residuals.empty())
+        return;
     PlotStyle style(ctx);
     if (ImPlot::BeginPlot("##residuals", ImVec2(-1.0f, ctx.ui(140.0f)))) {
         ImPlot::SetupAxes("sample", "residual");
         std::vector<double> index(r.residuals.size());
-        for (std::size_t i = 0; i < index.size(); ++i) index[i] = static_cast<double>(i);
+        for (std::size_t i = 0; i < index.size(); ++i)
+            index[i] = static_cast<double>(i);
         ImPlot::SetNextMarkerStyle(ImPlotMarker_Circle, 2.5f, iv(ctx.th()[Token::Accent]));
-        ImPlot::PlotScatter("residual", index.data(), r.residuals.data(), static_cast<int>(index.size()));
+        ImPlot::PlotScatter("residual", index.data(), r.residuals.data(),
+                            static_cast<int>(index.size()));
         ImPlot::EndPlot();
     }
 }
 
 } // namespace
 
-PanelPtr makePlotsPanel() { return std::make_unique<PlotsPanel>(); }
-PanelPtr makeFitsPanel() { return std::make_unique<FitsPanel>(); }
+PanelPtr makePlotsPanel() {
+    return std::make_unique<PlotsPanel>();
+}
+PanelPtr makeFitsPanel() {
+    return std::make_unique<FitsPanel>();
+}
 
 } // namespace qlab::ui

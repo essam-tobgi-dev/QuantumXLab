@@ -12,7 +12,7 @@
 namespace qlab::viz {
 
 class AmplitudeView final : public StateView {
-public:
+  public:
     std::string_view id() const override { return "amplitudes"; }
     std::string_view title() const override { return "Amplitudes"; }
     Observability observability() const override { return Observability::SimulatorOnly; }
@@ -24,7 +24,7 @@ public:
     std::string statusLine() const override;
 
     // ---- options (spec 21 §3.2)
-    void setShowProbability(bool on);          // bar height |a_i|² instead of |a_i|
+    void setShowProbability(bool on); // bar height |a_i|² instead of |a_i|
     bool showProbability() const { return probability_; }
     void setFilter(const math::AmplitudeFilter& f);
     const math::AmplitudeFilter& filter() const { return filter_; }
@@ -33,22 +33,22 @@ public:
 
     // ---- model
     const math::AmplitudeSelection& selection() const { return selection_; }
-    bool marginal() const { return marginal_; }                 // a qubit subset is set: probabilities only
+    bool marginal() const { return marginal_; } // a qubit subset is set: probabilities only
     const std::string& note() const { return note_; }
     std::size_t barCount() const { return selection_.entries.size(); }
     // Plot area in body-local ImGui units, filled by the last draw (hit testing uses it).
     Rect plotRect() const { return plot_; }
 
-protected:
+  protected:
     void rebuild(const ViewInput& in) override;
     void drawBody(DrawContext& ctx) override;
 
-private:
+  private:
     std::string label(std::uint64_t index) const;
     math::AmplitudeFilter filter_;
     math::AmplitudeSelection selection_;
-    std::vector<double> heights_;       // bar heights in display order
-    std::vector<double> positions_;     // x of each bar (0, 1, 2, …)
+    std::vector<double> heights_;   // bar heights in display order
+    std::vector<double> positions_; // x of each bar (0, 1, 2, …)
     std::string note_;
     std::uint32_t nQubits_ = 0;
     bool probability_ = false, decimal_ = false, marginal_ = false, fromRun_ = false;

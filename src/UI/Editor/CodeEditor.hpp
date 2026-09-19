@@ -17,7 +17,7 @@ namespace qlab::ui::editor {
 Token colorTokenFor(lang::TokenKind kind);
 
 class CodeEditor {
-public:
+  public:
     EditorModel& model() { return model_; }
     const EditorModel& model() const { return model_; }
 
@@ -28,22 +28,22 @@ public:
     // ---- caret and navigation
     Position caret() const { return caret_; }
     void setCaret(Position p, bool select = false);
-    void revealLine(std::uint32_t line);            // scrolls it into view on the next frame
-    void gotoSpan(const SourceSpan& span);          // Diagnostics panel → source (spec 19 §3)
+    void revealLine(std::uint32_t line);   // scrolls it into view on the next frame
+    void gotoSpan(const SourceSpan& span); // Diagnostics panel → source (spec 19 §3)
     bool hasSelection() const { return selection_ != caret_; }
     std::string selectedText() const;
 
     // ---- commands the shortcuts table maps onto (spec 19 §5)
     void requestCompletion() { completionOpen_ = true; }
-    bool gotoDefinition();                          // F12; false when the word has no definition
-    bool applyFixIt();                              // Ctrl+. — applies the marker's `fix` at the caret
+    bool gotoDefinition(); // F12; false when the word has no definition
+    bool applyFixIt();     // Ctrl+. — applies the marker's `fix` at the caret
     void undo();
     void redo();
 
     core::Json serialize() const;
     void deserialize(const core::Json& j);
 
-private:
+  private:
     void drawGutter(UiContext& ctx, std::uint32_t line, ImVec2 at, float gutterWidth);
     void drawLine(UiContext& ctx, std::uint32_t line, ImVec2 at, float charWidth);
     void drawCompletionPopup(UiContext& ctx, ImVec2 caretScreen, float lineHeight);

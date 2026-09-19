@@ -1,7 +1,7 @@
 // Spec 19 — the resource bundle the App builds once (see UI.hpp).
 #include "UI/UI.hpp"
-#include "Graphics/TextureLibrary.hpp"
 #include "Core/Paths.hpp"
+#include "Graphics/TextureLibrary.hpp"
 #include <algorithm>
 #include <imgui.h>
 
@@ -10,16 +10,25 @@ namespace qlab::ui {
 Status UiResources::loadAssets(std::string_view palette) {
     Status first{};
     const auto keep = [&](Status s) {
-        if (!s && first) first = std::move(s);
+        if (!s && first)
+            first = std::move(s);
     };
-    if (auto t = Theme::load(palette)) theme = std::move(*t);
-    else keep(std::unexpected(t.error()));           // the §1 fallback table stays in place
-    if (auto s = Strings::load()) Strings::setGlobal(std::move(*s));
-    else keep(std::unexpected(s.error()));           // every key then echoes itself
-    if (auto a = TheoryAssets::load()) assets = std::move(*a);
-    else keep(std::unexpected(a.error()));
-    if (auto d = theory::TheoryIndex::load(theory::TheoryIndex::defaultDir())) theory = std::move(*d);
-    else keep(std::unexpected(d.error()));
+    if (auto t = Theme::load(palette))
+        theme = std::move(*t);
+    else
+        keep(std::unexpected(t.error())); // the §1 fallback table stays in place
+    if (auto s = Strings::load())
+        Strings::setGlobal(std::move(*s));
+    else
+        keep(std::unexpected(s.error())); // every key then echoes itself
+    if (auto a = TheoryAssets::load())
+        assets = std::move(*a);
+    else
+        keep(std::unexpected(a.error()));
+    if (auto d = theory::TheoryIndex::load(theory::TheoryIndex::defaultDir()))
+        theory = std::move(*d);
+    else
+        keep(std::unexpected(d.error()));
     registerLayoutSchema();
     return first;
 }
@@ -35,7 +44,7 @@ Status UiResources::applyScale(ImFontAtlas* atlas, float dpiScale, float fontSca
     // drawn `dpiScale` times too large — every control, not just the text.
     if (ImGui::GetCurrentContext() != nullptr)
         ImGui::GetIO().FontGlobalScale = 1.0f / std::max(0.25f, dpiScale);
-    applyImGuiStyle(theme, fontScale);   // style metrics are logical points, not device pixels
+    applyImGuiStyle(theme, fontScale); // style metrics are logical points, not device pixels
     return {};
 }
 

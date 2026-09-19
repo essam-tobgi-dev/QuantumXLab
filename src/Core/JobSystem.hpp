@@ -13,7 +13,7 @@ namespace qlab::core {
 enum class JobPriority { Interactive, Batch };
 
 class JobSystem {
-public:
+  public:
     explicit JobSystem(unsigned workers = 0); // 0 = hardware_concurrency - 1 (min 1)
     ~JobSystem();
     JobSystem(const JobSystem&) = delete;
@@ -32,8 +32,8 @@ public:
         return fut;
     }
 
-    // Fork-join: run fn(begin,end) over [0,n) in chunks of `grain` on the pool, blocking the caller.
-    // The caller thread participates. Spec 24 §3: grain default 2^14.
+    // Fork-join: run fn(begin,end) over [0,n) in chunks of `grain` on the pool, blocking the
+    // caller. The caller thread participates. Spec 24 §3: grain default 2^14.
     void parallelFor(std::size_t n, std::size_t grain,
                      const std::function<void(std::size_t, std::size_t)>& fn);
 
@@ -43,8 +43,10 @@ public:
 
     static JobSystem& global();
 
-private:
-    struct Job { std::function<void(std::stop_token)> fn; };
+  private:
+    struct Job {
+        std::function<void(std::stop_token)> fn;
+    };
     void enqueue(std::function<void(std::stop_token)> fn, JobPriority prio);
     void workerLoop(std::stop_token st);
     std::vector<std::jthread> threads_;

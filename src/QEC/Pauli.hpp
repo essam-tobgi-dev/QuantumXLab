@@ -17,7 +17,8 @@ struct PauliString {
     // Letter of qubit q: I = (0,0), X = (1,0), Y = (1,1), Z = (0,1).
     std::vector<std::uint8_t> x, z;
     // The operator is i^phase · (tensor product of the Hermitian letters), phase ∈ {0,1,2,3}.
-    // Y is a letter of its own, so "YY" has phase 0 (T09 §1.1 writes the same operator as i²·XZ⊗XZ).
+    // Y is a letter of its own, so "YY" has phase 0 (T09 §1.1 writes the same operator as
+    // i²·XZ⊗XZ).
     std::int8_t phase = 0;
     std::uint32_t n = 0;
 
@@ -28,13 +29,13 @@ struct PauliString {
     static Result<PauliString> parse(std::string_view text);
 
     char letter(std::uint32_t q) const;
-    void setLetter(std::uint32_t q, char c);        // c ∈ {I, X, Y, Z}; anything else is I
-    std::string str(bool withPhase = false) const;  // qubit 0 first
+    void setLetter(std::uint32_t q, char c);       // c ∈ {I, X, Y, Z}; anything else is I
+    std::string str(bool withPhase = false) const; // qubit 0 first
     std::uint32_t weight() const;
     std::vector<std::uint32_t> support() const;
-    bool isIdentity() const;                        // every letter is I (any phase)
-    bool isXType() const;                           // letters in {I, X}
-    bool isZType() const;                           // letters in {I, Z}
+    bool isIdentity() const; // every letter is I (any phase)
+    bool isXType() const;    // letters in {I, X}
+    bool isZType() const;    // letters in {I, Z}
     bool isHermitian() const { return (phase & 1) == 0; }
     bool sameLetters(const PauliString& o) const;
     // Symplectic form T09 (1.2): true when the two strings commute. Lengths must match.
@@ -48,7 +49,8 @@ struct PauliString {
 };
 
 // s_j = 1 iff `error` anticommutes with generators[j] (T09 §2.3).
-std::vector<std::uint8_t> syndromeOf(std::span<const PauliString> generators, const PauliString& error);
+std::vector<std::uint8_t> syndromeOf(std::span<const PauliString> generators,
+                                     const PauliString& error);
 
 // Rank over F2 of the (x|z) rows (spec 16 §1 independence check).
 std::uint32_t symplecticRank(std::span<const PauliString> rows);

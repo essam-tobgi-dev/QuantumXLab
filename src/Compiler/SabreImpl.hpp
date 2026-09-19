@@ -12,12 +12,12 @@ namespace qlab::compiler::detail {
 // One node of a circuit level. Edges follow the wire order and the classical-bit order (any two
 // nodes touching the same bit stay ordered), as in spec 14 §3.
 struct DagNode {
-    std::vector<std::uint32_t> wires;     // program qubits; a barrier/delay without operands lists none
-    bool twoQubit = false;                // a gate on exactly two wires: needs a coupled pair
+    std::vector<std::uint32_t> wires; // program qubits; a barrier/delay without operands lists none
+    bool twoQubit = false;            // a gate on exactly two wires: needs a coupled pair
     std::vector<std::uint32_t> succ, pred;
 };
 struct Dag {
-    std::vector<DagNode> nodes;           // index = position in the circuit's topological order
+    std::vector<DagNode> nodes; // index = position in the circuit's topological order
 };
 Dag buildDag(const ir::Circuit& c);
 
@@ -31,17 +31,18 @@ struct FullLayout {
 };
 
 class Sabre {
-public:
+  public:
     using OnNode = std::function<Status(std::uint32_t dagIndex, const FullLayout&)>;
-    using OnSwap = std::function<Status(std::uint32_t p, std::uint32_t q, std::uint32_t enabledDagIndex)>;
+    using OnSwap =
+        std::function<Status(std::uint32_t p, std::uint32_t q, std::uint32_t enabledDagIndex)>;
 
     Sabre(const CouplingGraph& g, const RouteOptions& o, std::uint64_t seed);
     // Runs over the DAG (its `pred` edges when `reversed`) from `layout`, which it updates.
     // Callbacks may be empty (layout-refinement passes). Returns the number of swaps.
-    Result<std::uint32_t> run(const Dag& dag, bool reversed, FullLayout& layout, const OnNode& onNode,
-                              const OnSwap& onSwap, std::stop_token stop);
+    Result<std::uint32_t> run(const Dag& dag, bool reversed, FullLayout& layout,
+                              const OnNode& onNode, const OnSwap& onSwap, std::stop_token stop);
 
-private:
+  private:
     double dist(std::uint32_t p, std::uint32_t q) const { return dist_[p * n_ + q]; }
 
     const CouplingGraph& g_;

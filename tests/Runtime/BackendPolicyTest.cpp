@@ -1,7 +1,7 @@
 // Spec 15 §2, §10 — the `auto` backend policy table, pinned backends that cannot run, and the
 // QL5xxx runtime diagnostics.
-#include "RuntimeTestUtil.hpp"
 #include "Data/Fidelity.hpp"
+#include "RuntimeTestUtil.hpp"
 #include <numeric>
 
 using namespace rtest;
@@ -14,7 +14,8 @@ ProgramPlan flatPlan(std::uint32_t n, bool clifford) {
     p.qubits.resize(n);
     std::iota(p.qubits.begin(), p.qubits.end(), 0u);
     p.toSim.assign(n, -1);
-    for (std::uint32_t i = 0; i < n; ++i) p.toSim[i] = static_cast<std::int32_t>(i);
+    for (std::uint32_t i = 0; i < n; ++i)
+        p.toSim[i] = static_cast<std::int32_t>(i);
     p.cliffordOnly = clifford;
     p.measuredQubits = p.qubits;
     p.layout.bits = n;
@@ -31,14 +32,17 @@ BackendRequest requestFor(const ProgramPlan& plan, bool noise, std::uint32_t sho
 
 std::string wide(std::uint32_t n) {
     std::string s = std::format("pragma qlab.layout physical\nbit[{}] c;\n", n);
-    for (std::uint32_t q = 0; q < n; ++q) s += std::format("h ${};\n", q);
-    for (std::uint32_t q = 0; q < n; ++q) s += std::format("c[{}] = measure ${};\n", q, q);
+    for (std::uint32_t q = 0; q < n; ++q)
+        s += std::format("h ${};\n", q);
+    for (std::uint32_t q = 0; q < n; ++q)
+        s += std::format("c[{}] = measure ${};\n", q, q);
     return s;
 }
 } // namespace
 
 TEST_CASE("the auto policy follows the spec 15 section 2 table") {
-    const ProgramPlan small = flatPlan(2, false), medium = flatPlan(14, false), big = flatPlan(30, true);
+    const ProgramPlan small = flatPlan(2, false), medium = flatPlan(14, false),
+                      big = flatPlan(30, true);
 
     // Ideal and inside the memory cap: the state vector.
     auto ideal = chooseBackend(requestFor(small, false, 1024));
@@ -91,7 +95,8 @@ TEST_CASE("a pinned backend that cannot run the program is a hard error, never a
     BackendRequest bad = requestFor(wideNonClifford, false, 1024);
     bad.choice = BackendChoice::StateVector;
     auto refused = chooseBackend(bad);
-    REQUIRE_FALSE(refused.has_value());   // the selection error is returned verbatim, no silent switch
+    REQUIRE_FALSE(
+        refused.has_value()); // the selection error is returned verbatim, no silent switch
 
     BackendRequest stab = requestFor(wideNonClifford, false, 1024);
     stab.choice = BackendChoice::Stabilizer;
@@ -207,8 +212,10 @@ TEST_CASE("QL5030: the sweep grid is bounded by 4 axes and 1e5 points") {
     REQUIRE(out.error().diagnosticId == "QL5030");
     // A fifth axis is refused as well.
     grid.axes.resize(2);
-    for (SweepAxis& a : grid.axes) a.values.assign(2, 0.0);
-    for (int a = 0; a < 3; ++a) grid.axes.push_back(SweepAxis{std::format("y{}", a), {}, {0.0, 1.0}});
+    for (SweepAxis& a : grid.axes)
+        a.values.assign(2, 0.0);
+    for (int a = 0; a < 3; ++a)
+        grid.axes.push_back(SweepAxis{std::format("y{}", a), {}, {0.0, 1.0}});
     REQUIRE(grid.axes.size() > SweepGrid::kMaxAxes);
     options.sweep = grid;
     REQUIRE(l.session.runSync(l.request(job, options)).error().diagnosticId == "QL5030");

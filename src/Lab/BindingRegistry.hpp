@@ -2,8 +2,8 @@
 // Spec 17 §5 — provider registry for live values. Lab includes no Runtime or Instruments headers:
 // the App registers one provider per root namespace (`cryo`, `wiring`, `device`, `instr`,
 // `static`, `run`) that reads its latest immutable snapshot.
-#include "Lab/Binding.hpp"
 #include "Data/Fidelity.hpp"
+#include "Lab/Binding.hpp"
 #include "Lab/Catalog.hpp"
 #include <array>
 #include <functional>
@@ -17,7 +17,7 @@ namespace qlab::lab {
 struct Node; // Scene.hpp
 
 class BindingRegistry {
-public:
+  public:
     // Receives the path after "root." (placeholders substituted), e.g. "stage.mxc.T".
     // Returns nullopt when it has no value for the path.
     using Provider = std::function<std::optional<BindingValue>(std::string_view path)>;
@@ -40,7 +40,7 @@ public:
     std::optional<BindingValue> resolve(const InstanceParams& params, const SpecRow& row) const;
     std::optional<BindingValue> resolve(const Node& node, const SpecRow& row) const;
 
-private:
+  private:
     std::array<Provider, kBindingRootCount> providers_;
 };
 
@@ -48,7 +48,7 @@ private:
 // (spec 17 §5). Copies of the provider function share the same table, so values set after
 // registration are visible.
 class StaticProvider {
-public:
+  public:
     StaticProvider() : values_(std::make_shared<Table>()) {}
     void set(std::string key, BindingValue v) { (*values_)[std::move(key)] = std::move(v); }
     void setNumber(std::string key, double v, std::string unit = {},
@@ -57,7 +57,7 @@ public:
     BindingRegistry::Provider asProvider() const;
     std::size_t size() const { return values_->size(); }
 
-private:
+  private:
     using Table = std::map<std::string, BindingValue, std::less<>>;
     std::shared_ptr<Table> values_;
 };

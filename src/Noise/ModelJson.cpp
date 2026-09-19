@@ -1,6 +1,6 @@
-// Spec 08 §5 — writing the `qlab.noise/1` document through core::JsonEnvelope. Values are the stored
-// document-unit records, so parse(serialize()) reproduces the model bit for bit; unknown fields
-// read with the document are written back (spec 23 §1).
+// Spec 08 §5 — writing the `qlab.noise/1` document through core::JsonEnvelope. Values are the
+// stored document-unit records, so parse(serialize()) reproduces the model bit for bit; unknown
+// fields read with the document are written back (spec 23 §1).
 #include "Core/Json.hpp"
 #include "Noise/Model.hpp"
 #include <cmath>
@@ -13,17 +13,22 @@ struct Registrar {
     Registrar() { core::JsonEnvelope::registerKind(kKind, 1); }
 } registrar;
 
-core::Json base(const core::Json& extra) { return extra.is_object() ? extra : core::Json::object(); }
+core::Json base(const core::Json& extra) {
+    return extra.is_object() ? extra : core::Json::object();
+}
 core::Json assignmentJson(const Assignment2& a) {
-    return core::Json::array({core::Json::array({a[0][0], a[0][1]}), core::Json::array({a[1][0], a[1][1]})});
+    return core::Json::array(
+        {core::Json::array({a[0][0], a[0][1]}), core::Json::array({a[1][0], a[1][1]})});
 }
 // JSON has no infinity (spec 23 §1): an absent process is an omitted field.
 void putLifetime(core::Json& j, const char* key, double us) {
-    if (std::isfinite(us)) j[key] = us;
+    if (std::isfinite(us))
+        j[key] = us;
 }
 core::Json replacementsJson(const std::map<std::string, double>& fields) {
     core::Json j = core::Json::object();
-    for (const auto& [k, v] : fields) j[k] = v;
+    for (const auto& [k, v] : fields)
+        j[k] = v;
     return j;
 }
 } // namespace
@@ -66,7 +71,8 @@ core::Json NoiseModel::toJson() const {
             j["duration_ns"] = r.durationNs;
             j["coherent_fraction"] = r.coherentFraction;
             j["leakage"] = r.leakage;
-            if (r.seepage) j["seepage"] = *r.seepage;
+            if (r.seepage)
+                j["seepage"] = *r.seepage;
             g[key] = std::move(j);
         }
         gates[name] = std::move(g);
@@ -84,13 +90,15 @@ core::Json NoiseModel::toJson() const {
     core::Json groups = core::Json::array();
     for (std::size_t i = 0; i < readoutGroups_.size(); ++i) {
         const ReadoutGroup& g = readoutGroups_[i];
-        core::Json j = base(i < readoutGroupExtra_.size() ? readoutGroupExtra_[i] : core::Json::object());
+        core::Json j =
+            base(i < readoutGroupExtra_.size() ? readoutGroupExtra_[i] : core::Json::object());
         j["qubits"] = g.qubits;
         if (g.assignment) {
             core::Json rows = core::Json::array();
             for (std::size_t r = 0; r < g.assignment->rows; ++r) {
                 core::Json row = core::Json::array();
-                for (std::size_t c = 0; c < g.assignment->cols; ++c) row.push_back((*g.assignment)(r, c));
+                for (std::size_t c = 0; c < g.assignment->cols; ++c)
+                    row.push_back((*g.assignment)(r, c));
                 rows.push_back(std::move(row));
             }
             j["assignment"] = std::move(rows);
@@ -110,9 +118,13 @@ core::Json NoiseModel::toJson() const {
     o["scale_readout_error"] = overrides_.scaleReadoutError;
     o["disable"] = overrides_.disable;
     core::Json replaceQubits = core::Json::object(), replaceEdges = core::Json::object();
-    for (const auto& [q, fields] : overrides_.replaceQubit) replaceQubits[std::to_string(q)] = replacementsJson(fields);
-    for (const auto& [key, fields] : overrides_.replaceEdge) replaceEdges[key] = replacementsJson(fields);
-    core::Json replace = o.contains("replace") ? base(o["replace"]) : core::Json::object(); // unknown keys kept by the reader
+    for (const auto& [q, fields] : overrides_.replaceQubit)
+        replaceQubits[std::to_string(q)] = replacementsJson(fields);
+    for (const auto& [key, fields] : overrides_.replaceEdge)
+        replaceEdges[key] = replacementsJson(fields);
+    core::Json replace = o.contains("replace")
+                             ? base(o["replace"])
+                             : core::Json::object(); // unknown keys kept by the reader
     replace["qubits"] = std::move(replaceQubits);
     replace["edges"] = std::move(replaceEdges);
     o["replace"] = std::move(replace);
@@ -120,9 +132,13 @@ core::Json NoiseModel::toJson() const {
     return d;
 }
 
-std::string NoiseModel::serialize() const { return core::JsonEnvelope::serialize(kKind, toJson()); }
+std::string NoiseModel::serialize() const {
+    return core::JsonEnvelope::serialize(kKind, toJson());
+}
 
-Status NoiseModel::save(const std::filesystem::path& file) const { return core::JsonEnvelope::save(file, kKind, toJson()); }
+Status NoiseModel::save(const std::filesystem::path& file) const {
+    return core::JsonEnvelope::save(file, kKind, toJson());
+}
 
 Result<NoiseModel> NoiseModel::parse(const std::string& text) {
     QXL_TRY_ASSIGN(auto envelope, core::JsonEnvelope::parse(text, kKind));

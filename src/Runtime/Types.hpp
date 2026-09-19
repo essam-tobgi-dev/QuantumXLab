@@ -41,15 +41,15 @@ SnapshotCadence resolveCadence(SnapshotCadence c, std::uint32_t n);
 // Error codes owned by this module. Offsets below 128 mirror the QL5xxx catalogue
 // (`lang::Diagnostics::codeFor("QL5011") == Runtime_ + 11`).
 namespace err {
-inline constexpr ErrorCode UnboundInput = ErrorCode::Runtime_ + 1;      // QL5001
-inline constexpr ErrorCode LindbladCap = ErrorCode::Runtime_ + 10;      // QL5010
-inline constexpr ErrorCode NoBackend = ErrorCode::Runtime_ + 11;        // QL5011
-inline constexpr ErrorCode MemoryBudget = ErrorCode::Runtime_ + 12;     // QL5012
-inline constexpr ErrorCode LoopBound = ErrorCode::Runtime_ + 20;        // QL5020 (warning)
-inline constexpr ErrorCode SweepTooLarge = ErrorCode::Runtime_ + 30;    // QL5030
-inline constexpr ErrorCode ShotsOutOfRange = ErrorCode::Runtime_ + 40;  // QL5040
-inline constexpr ErrorCode BadNoiseFile = ErrorCode::Runtime_ + 50;     // QL5050
-inline constexpr ErrorCode Cancelled = ErrorCode::Runtime_ + 60;        // QL5060 (warning)
+inline constexpr ErrorCode UnboundInput = ErrorCode::Runtime_ + 1;     // QL5001
+inline constexpr ErrorCode LindbladCap = ErrorCode::Runtime_ + 10;     // QL5010
+inline constexpr ErrorCode NoBackend = ErrorCode::Runtime_ + 11;       // QL5011
+inline constexpr ErrorCode MemoryBudget = ErrorCode::Runtime_ + 12;    // QL5012
+inline constexpr ErrorCode LoopBound = ErrorCode::Runtime_ + 20;       // QL5020 (warning)
+inline constexpr ErrorCode SweepTooLarge = ErrorCode::Runtime_ + 30;   // QL5030
+inline constexpr ErrorCode ShotsOutOfRange = ErrorCode::Runtime_ + 40; // QL5040
+inline constexpr ErrorCode BadNoiseFile = ErrorCode::Runtime_ + 50;    // QL5050
+inline constexpr ErrorCode Cancelled = ErrorCode::Runtime_ + 60;       // QL5060 (warning)
 // Conditions without a catalogue id.
 inline constexpr ErrorCode NoDevice = ErrorCode::Runtime_ + 100;
 inline constexpr ErrorCode NotCompiled = ErrorCode::Runtime_ + 101;
@@ -59,7 +59,8 @@ inline constexpr ErrorCode Unsupported = ErrorCode::Runtime_ + 103;
 
 // Spec 15 §10 / common rule 8: every runtime diagnostic comes from the catalogue.
 lang::Diagnostic diagnostic(std::string_view id, SourceSpan span = {});
-template <class... Args> lang::Diagnostic diagnostic(std::string_view id, SourceSpan span, Args&&... args) {
+template <class... Args>
+lang::Diagnostic diagnostic(std::string_view id, SourceSpan span, Args&&... args) {
     return lang::Diagnostics::make(id, std::move(span), std::forward<Args>(args)...);
 }
 // The same, as an `Error` carrying the id (for `Result<T>` returns).
@@ -83,24 +84,24 @@ struct ClassicalLayout {
     std::vector<RegisterInfo> registers;
     std::uint32_t bits = 0;
 
-    std::string key(std::span<const std::uint8_t> shotBits) const;       // MSB-first over all bits
+    std::string key(std::span<const std::uint8_t> shotBits) const; // MSB-first over all bits
     std::uint64_t value(std::span<const std::uint8_t> shotBits, const RegisterInfo& r) const;
     const RegisterInfo* find(std::string_view name) const;
 };
 
 // One shot: the classical registers as written by this shot, plus the program's `output` values.
 struct ShotRecord {
-    std::vector<std::uint8_t> bits;   // flat classical bit space, index = bit
-    std::vector<double> outputs;      // parallel to the layout's `output` registers
-    bool truncated = false;           // a runtime loop hit `maxIterations` (QL5020)
+    std::vector<std::uint8_t> bits; // flat classical bit space, index = bit
+    std::vector<double> outputs;    // parallel to the layout's `output` registers
+    bool truncated = false;         // a runtime loop hit `maxIterations` (QL5020)
     bool operator==(const ShotRecord&) const = default;
 };
 
 // Per register, per bit: P(bit = 1) with its binomial error (spec 15 §4).
 struct Marginal {
     std::string register_;
-    std::uint32_t bit = 0;      // index inside the register
-    std::uint32_t qubit = 0;    // physical qubit that was measured into it (kNoQubit if unknown)
+    std::uint32_t bit = 0;   // index inside the register
+    std::uint32_t qubit = 0; // physical qubit that was measured into it (kNoQubit if unknown)
     double p1 = 0.0, stderr_ = 0.0;
     data::Interval interval{0.0, 0.0, 0.0};
     static constexpr std::uint32_t kNoQubit = 0xFFFFFFFFu;
@@ -108,23 +109,23 @@ struct Marginal {
 
 // ⟨P⟩ from counts with σ = √((1 − ⟨P⟩²)/N), or an exact value read from the state (Simulator-only).
 struct Expectation {
-    std::string observable;                 // "Z0", "Z0Z1", "out"
+    std::string observable; // "Z0", "Z0Z1", "out"
     double value = 0.0, stderr_ = 0.0;
     data::FidelityClass cls = data::FidelityClass::Statistical;
-    std::optional<double> exact;            // from the final state where available (Simulator-only)
+    std::optional<double> exact; // from the final state where available (Simulator-only)
 };
 
 // A measurement of the compiled circuit: which simulated qubit landed in which classical bit.
 struct MeasuredBit {
-    std::uint32_t qubit = 0;     // index in `RunResult::qubits` (simulator index)
-    std::uint32_t physical = 0;  // device qubit
+    std::uint32_t qubit = 0;    // index in `RunResult::qubits` (simulator index)
+    std::uint32_t physical = 0; // device qubit
     ir::ClassicalBit bit{};
 };
 
 // Spec 12 §8 / 13 §7: a probe the program declares (`pragma qlab.probe`) or the run dialog binds.
 // `qubits` are DEVICE qubit indices; empty means every qubit the program uses.
 struct ProbeRequest {
-    std::string kind;                  // state | bloch | entanglement | density
+    std::string kind; // state | bloch | entanglement | density
     std::vector<std::uint32_t> qubits;
     bool atBarriers = false;
 };
@@ -140,8 +141,8 @@ struct ProbeValue {
 // Immutable state handed to the views at a gate boundary (spec 15 §3.6). The state is shared, never
 // copied per consumer; the App adapts this into `instr::RunView` / `viz::ViewInput`.
 struct RunSnapshot {
-    double timeS = 0.0;                 // schedule time of the boundary (pulse playhead)
-    std::uint64_t gateIndex = 0;        // index into `topologicalOrder()` of the compiled circuit
+    double timeS = 0.0;          // schedule time of the boundary (pulse playhead)
+    std::uint64_t gateIndex = 0; // index into `topologicalOrder()` of the compiled circuit
     std::uint32_t layerIndex = 0;
     ir::NodeId node = ir::kNoNode;
     std::uint32_t shot = 0;

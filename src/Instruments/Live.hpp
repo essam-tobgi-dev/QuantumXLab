@@ -17,7 +17,7 @@ struct AcquireFailed { // posted instead of TraceReady when a live acquisition f
 };
 
 class LiveRunner {
-public:
+  public:
     LiveRunner(InstrumentRegistry& registry, core::JobSystem& jobs, core::EventBus& bus);
     ~LiveRunner(); // waits for the acquisitions in flight
 
@@ -35,7 +35,7 @@ public:
     void waitIdle();
     std::size_t inFlight() const;
 
-private:
+  private:
     struct Entry {
         IInstrument* instrument = nullptr;
         ChannelId channel{0};

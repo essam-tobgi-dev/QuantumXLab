@@ -1,8 +1,8 @@
 // Spec 23 §9, §12 — Simulator-only state export: the `.npy` header bytes follow the NumPy format
 // spec, the payload re-reads to the amplitudes it was written from, and every file carries a
 // sidecar with the qubit order and the Simulator-only notice.
-#include "ReportTestUtil.hpp"
 #include "Data/Fidelity.hpp"
+#include "ReportTestUtil.hpp"
 
 #include <cstring>
 #include <numbers>
@@ -23,14 +23,15 @@ NpyFile readNpy(const std::filesystem::path& p) {
     NpyFile f;
     f.bytes = rtest::readBytes(p);
     REQUIRE(f.bytes.size() > 10);
-    CHECK(std::memcmp(f.bytes.data(), "\x93NUMPY", 6) == 0);   // magic
-    CHECK(f.bytes[6] == 1);                                    // major version
-    CHECK(f.bytes[7] == 0);                                    // minor version
-    const std::size_t len = static_cast<std::size_t>(f.bytes[8]) | (static_cast<std::size_t>(f.bytes[9]) << 8);
+    CHECK(std::memcmp(f.bytes.data(), "\x93NUMPY", 6) == 0); // magic
+    CHECK(f.bytes[6] == 1);                                  // major version
+    CHECK(f.bytes[7] == 0);                                  // minor version
+    const std::size_t len =
+        static_cast<std::size_t>(f.bytes[8]) | (static_cast<std::size_t>(f.bytes[9]) << 8);
     REQUIRE(f.bytes.size() >= 10 + len);
-    CHECK((10 + len) % 64 == 0);                               // header is 64-byte aligned
+    CHECK((10 + len) % 64 == 0); // header is 64-byte aligned
     f.dict.assign(reinterpret_cast<const char*>(f.bytes.data() + 10), len);
-    CHECK(f.dict.back() == '\n');                              // header ends with a newline
+    CHECK(f.dict.back() == '\n'); // header ends with a newline
     f.dataOffset = 10 + len;
     return f;
 }
@@ -57,7 +58,8 @@ qsim::Snapshot bellStateVector() {
 
 StateContext context() {
     StateContext ctx;
-    ctx.identity = RunIdentity::of(0x1234u, "sc_fixed_5", "2026-09-17T00:00:00Z", "state_vector", 256, 20250916ull);
+    ctx.identity = RunIdentity::of(0x1234u, "sc_fixed_5", "2026-09-17T00:00:00Z", "state_vector",
+                                   256, 20250916ull);
     ctx.qubits = {1, 2};
     ctx.levels = 2;
     return ctx;
@@ -68,18 +70,20 @@ StateContext context() {
 TEST_CASE("npy: the header is exactly what the NumPy 1.0 format specifies") {
     const std::size_t shape1[1] = {4};
     const std::string h = npyHeader("<c16", shape1);
-    CHECK(h.size() == 128u);                           // 10 byte prefix + 118 byte padded dict
+    CHECK(h.size() == 128u); // 10 byte prefix + 118 byte padded dict
     CHECK(h.compare(0, 6, "\x93NUMPY") == 0);
     CHECK(static_cast<std::uint8_t>(h[6]) == 1);
     CHECK(static_cast<std::uint8_t>(h[7]) == 0);
-    const std::size_t len = static_cast<std::uint8_t>(h[8]) | (static_cast<std::size_t>(static_cast<std::uint8_t>(h[9])) << 8);
+    const std::size_t len = static_cast<std::uint8_t>(h[8]) |
+                            (static_cast<std::size_t>(static_cast<std::uint8_t>(h[9])) << 8);
     CHECK(len == 118u);
     CHECK(h.substr(10, 58) == "{'descr': '<c16', 'fortran_order': False, 'shape': (4,), }");
     CHECK(h.back() == '\n');
 
     // 2-D shapes are written without the trailing comma; 0-d as `()`.
     const std::size_t shape2[2] = {4, 4};
-    CHECK(npyHeader("<c16", shape2).substr(10, 60) == "{'descr': '<c16', 'fortran_order': False, 'shape': (4, 4), }");
+    CHECK(npyHeader("<c16", shape2).substr(10, 60) ==
+          "{'descr': '<c16', 'fortran_order': False, 'shape': (4, 4), }");
     CHECK(npyHeader("<f8", {}).find("'shape': (), ") != std::string::npos);
     CHECK(npyHeader("<c16", shape1, true).find("'fortran_order': True") != std::string::npos);
     // Whatever the shape, the header stays 64-byte aligned.
@@ -89,7 +93,8 @@ TEST_CASE("npy: the header is exactly what the NumPy 1.0 format specifies") {
     }
 }
 
-TEST_CASE("state export: the state vector re-reads to the amplitudes it was written from (§9, §12)") {
+TEST_CASE(
+    "state export: the state vector re-reads to the amplitudes it was written from (§9, §12)") {
     rtest::Sandbox box("state_vector");
     const qsim::Snapshot s = bellStateVector();
     REQUIRE(exportStateVector(box / "state", s, context()).has_value());
@@ -119,8 +124,9 @@ TEST_CASE("state export: the state vector re-reads to the amplitudes it was writ
     CHECK(d["dtype"] == "<c16");
     CHECK(d["shape"][0].get<std::size_t>() == 4u);
     CHECK(d["order"] == "C");
-    CHECK(d["qubit_order"]["convention"].get<std::string>().find("little-endian") != std::string::npos);
-    CHECK(d["qubit_order"]["qubits"][0].get<std::uint32_t>() == 1u);   // simulator 0 -> device 1
+    CHECK(d["qubit_order"]["convention"].get<std::string>().find("little-endian") !=
+          std::string::npos);
+    CHECK(d["qubit_order"]["qubits"][0].get<std::uint32_t>() == 1u); // simulator 0 -> device 1
     CHECK(d["gate_index"].get<std::uint64_t>() == 7u);
     CHECK(d["class"] == "Exact");
     CHECK(d["identity"]["device"] == "sc_fixed_5");
@@ -153,7 +159,8 @@ TEST_CASE("state export: a density matrix is written as a (d, d) `<c16` array (s
     CHECK(std::abs(back[15] - num::Complex{0.5, 0.0}) < 1e-15);
     CHECK(std::abs(back[1]) < 1e-15);
     num::Complex trace{0.0, 0.0};
-    for (std::size_t i = 0; i < 4; ++i) trace += back[i * 4 + i];
+    for (std::size_t i = 0; i < 4; ++i)
+        trace += back[i * 4 + i];
     CHECK(std::abs(trace - num::Complex{1.0, 0.0}) < 1e-15);
 
     const core::Json d = core::Json::parse(rtest::readFile(box / "rho.json"))["data"];
@@ -221,7 +228,8 @@ TEST_CASE("state export: the final state of a real run exports and round-trips")
         const NpyFile file = readNpy(box / "final.npy");
         const std::vector<num::Complex> back = readComplex(file);
         REQUIRE(back.size() == s.amplitudes->size());
-        for (std::size_t i = 0; i < back.size(); ++i) CHECK(std::abs(back[i] - (*s.amplitudes)[i]) < 1e-15);
+        for (std::size_t i = 0; i < back.size(); ++i)
+            CHECK(std::abs(back[i] - (*s.amplitudes)[i]) < 1e-15);
     }
     if (s.densityMatrix) {
         REQUIRE(exportDensityMatrix(box / "final_rho", s, ctx).has_value());
@@ -229,9 +237,11 @@ TEST_CASE("state export: the final state of a real run exports and round-trips")
         const std::vector<num::Complex> back = readComplex(file);
         REQUIRE(back.size() == s.densityMatrix->data.size());
         num::Complex trace{0.0, 0.0};
-        for (std::size_t i = 0; i < s.densityMatrix->rows; ++i) trace += back[i * s.densityMatrix->cols + i];
+        for (std::size_t i = 0; i < s.densityMatrix->rows; ++i)
+            trace += back[i * s.densityMatrix->cols + i];
         CHECK(std::abs(trace.real() - 1.0) < 1e-12);
-        for (std::size_t i = 0; i < back.size(); ++i) CHECK(std::abs(back[i] - s.densityMatrix->data[i]) < 1e-15);
+        for (std::size_t i = 0; i < back.size(); ++i)
+            CHECK(std::abs(back[i] - s.densityMatrix->data[i]) < 1e-15);
     }
     CHECK((s.amplitudes || s.densityMatrix || s.tableau));
 }

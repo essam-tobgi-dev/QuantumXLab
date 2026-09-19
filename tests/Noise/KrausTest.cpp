@@ -1,4 +1,5 @@
-// Spec 08 §1, §9 / spec 25 §3.4 — CPTP validation of every catalogue channel across parameter sweeps.
+// Spec 08 §1, §9 / spec 25 §3.4 — CPTP validation of every catalogue channel across parameter
+// sweeps.
 #include "Core/Random.hpp"
 #include "Noise/Noise.hpp"
 #include "Numerics/Checks.hpp"
@@ -19,7 +20,8 @@ namespace {
 double cptpDefect(const Kraus& k) {
     const std::size_t d = k.dim();
     Matrix sum(d, d);
-    for (const auto& K : k.ops) sum += num::matmul(num::adjoint(K), K);
+    for (const auto& K : k.ops)
+        sum += num::matmul(num::adjoint(K), K);
     double worst = 0.0;
     for (std::size_t i = 0; i < d; ++i)
         for (std::size_t j = 0; j < d; ++j)
@@ -32,7 +34,10 @@ void requireCptp(const Result<Kraus>& k, const std::string& what) {
     REQUIRE(k->validate());
     REQUIRE(num::isTracePreserving(k->ops, num::tol::kTraceTol));
     REQUIRE(cptpDefect(*k) < 1e-12); // spec 08 §1 asks for 1e-12
-    for (const auto& K : k->ops) { REQUIRE(K.rows == k->dim()); REQUIRE(K.cols == k->dim()); }
+    for (const auto& K : k->ops) {
+        REQUIRE(K.rows == k->dim());
+        REQUIRE(K.cols == k->dim());
+    }
 }
 } // namespace
 
@@ -44,7 +49,8 @@ TEST_CASE("every catalogue channel is CPTP across 20 seeded parameter sets") {
         const double t2 = rng.uniform(0.05, 2.0) * t1; // up to and including the 2·T1 limit region
         const double t = rng.uniform(0.0, 3.0) * t1;
         const double pth = rng.uniform(0.0, 0.5);
-        INFO("trial " << trial << " p=" << p << " q=" << q << " t1=" << t1 << " t2=" << t2 << " t=" << t);
+        INFO("trial " << trial << " p=" << p << " q=" << q << " t1=" << t1 << " t2=" << t2
+                      << " t=" << t);
         requireCptp(channels::bitFlip(p), "bit_flip");
         requireCptp(channels::phaseFlip(p), "phase_flip");
         requireCptp(channels::bitPhaseFlip(p), "bit_phase_flip");
@@ -127,11 +133,15 @@ TEST_CASE("Pauli structure is detected and carries the catalogue weights") {
     REQUIRE(dep->isPauli);
     REQUIRE(dep->ops.size() == 4);
     REQUIRE(dep->pauliWeights[0] == Approx(1.0 - 0.15).epsilon(1e-14)); // 1 − 3p/4
-    for (int k = 1; k < 4; ++k) REQUIRE(dep->pauliWeights[k] == Approx(0.05).epsilon(1e-14));
+    for (int k = 1; k < 4; ++k)
+        REQUIRE(dep->pauliWeights[k] == Approx(0.05).epsilon(1e-14));
     // Operators are exactly √w · P in the order I, X, Y, Z (spec 08 §2.1).
-    REQUIRE(num::approxEqual(dep->ops[1], num::scale(pauliMatrix(1), Complex(std::sqrt(0.05), 0)), 1e-15));
-    REQUIRE(num::approxEqual(dep->ops[2], num::scale(pauliMatrix(2), Complex(std::sqrt(0.05), 0)), 1e-15));
-    REQUIRE(num::approxEqual(dep->ops[3], num::scale(pauliMatrix(3), Complex(std::sqrt(0.05), 0)), 1e-15));
+    REQUIRE(num::approxEqual(dep->ops[1], num::scale(pauliMatrix(1), Complex(std::sqrt(0.05), 0)),
+                             1e-15));
+    REQUIRE(num::approxEqual(dep->ops[2], num::scale(pauliMatrix(2), Complex(std::sqrt(0.05), 0)),
+                             1e-15));
+    REQUIRE(num::approxEqual(dep->ops[3], num::scale(pauliMatrix(3), Complex(std::sqrt(0.05), 0)),
+                             1e-15));
 
     auto dep2 = channels::depolarizing2q(0.16);
     REQUIRE(dep2);
@@ -141,7 +151,8 @@ TEST_CASE("Pauli structure is detected and carries the catalogue weights") {
 
     // A hand-built set of scaled Paulis is recognised; amplitude damping is not a Pauli channel.
     auto manual = Kraus::make({num::scale(pauliMatrix(0), Complex(std::sqrt(0.7), 0)),
-                               num::scale(pauliMatrix(2), Complex(0, std::sqrt(0.3)))}, 1);
+                               num::scale(pauliMatrix(2), Complex(0, std::sqrt(0.3)))},
+                              1);
     REQUIRE(manual);
     REQUIRE(manual->isPauli);
     REQUIRE(manual->pauliIndices == std::vector<std::uint32_t>{0, 2});

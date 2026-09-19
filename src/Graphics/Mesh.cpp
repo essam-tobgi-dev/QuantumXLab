@@ -6,8 +6,10 @@ namespace qlab::gfx {
 
 Aabb MeshData::bounds() const {
     Aabb b{glm::dvec3(1e300), glm::dvec3(-1e300)};
-    if (vertices.empty()) return Aabb{};
-    for (auto& v : vertices) b.expand(glm::dvec3(v.position));
+    if (vertices.empty())
+        return Aabb{};
+    for (auto& v : vertices)
+        b.expand(glm::dvec3(v.position));
     return b;
 }
 void MeshData::append(const MeshData& o, const glm::mat4& xf) {
@@ -18,7 +20,8 @@ void MeshData::append(const MeshData& o, const glm::mat4& xf) {
         v.normal = glm::normalize(n * v.normal);
         vertices.push_back(v);
     }
-    for (auto i : o.indices) indices.push_back(base + i);
+    for (auto i : o.indices)
+        indices.push_back(base + i);
 }
 void MeshData::transform(const glm::mat4& xf) {
     glm::mat3 n = glm::transpose(glm::inverse(glm::mat3(xf)));
@@ -28,11 +31,15 @@ void MeshData::transform(const glm::mat4& xf) {
     }
 }
 void MeshData::recomputeNormals() {
-    for (auto& v : vertices) v.normal = glm::vec3(0);
+    for (auto& v : vertices)
+        v.normal = glm::vec3(0);
     for (std::size_t i = 0; i + 2 < indices.size(); i += 3) {
-        auto &a = vertices[indices[i]], &b = vertices[indices[i + 1]], &c = vertices[indices[i + 2]];
+        auto &a = vertices[indices[i]], &b = vertices[indices[i + 1]],
+             &c = vertices[indices[i + 2]];
         glm::vec3 n = glm::cross(b.position - a.position, c.position - a.position);
-        a.normal += n; b.normal += n; c.normal += n;
+        a.normal += n;
+        b.normal += n;
+        c.normal += n;
     }
     for (auto& v : vertices) {
         float l = glm::length(v.normal);
@@ -54,7 +61,10 @@ std::size_t MeshData::orientToNormals() {
     return flipped;
 }
 
-void MeshData::setColor(const glm::vec4& c) { for (auto& v : vertices) v.color = c; }
+void MeshData::setColor(const glm::vec4& c) {
+    for (auto& v : vertices)
+        v.color = c;
+}
 
 void Mesh::upload(const MeshData& d) {
     // The element-buffer binding is VAO state: uploading while another mesh's VAO is bound (the
@@ -80,20 +90,25 @@ void Mesh::upload(const MeshData& d) {
     bounds_ = d.bounds();
 }
 void Mesh::draw() const {
-    if (!indexCount_) return;
+    if (!indexCount_)
+        return;
     vao_.bind();
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexCount_), GL_UNSIGNED_INT, nullptr);
 }
 void Mesh::drawInstanced(int count) const {
-    if (!indexCount_ || count <= 0) return;
+    if (!indexCount_ || count <= 0)
+        return;
     vao_.bind();
-    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(indexCount_), GL_UNSIGNED_INT, nullptr, count);
+    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(indexCount_), GL_UNSIGNED_INT,
+                            nullptr, count);
 }
 void Mesh::bindInstanceBuffer(const Buffer& instances) {
-    // Instance layout: mat4 (4 × vec4 at 4..7), uvec2 id/flags (8), vec4 color (9). Stride 96 bytes.
+    // Instance layout: mat4 (4 × vec4 at 4..7), uvec2 id/flags (8), vec4 color (9). Stride 96
+    // bytes.
     const GLsizei stride = 96;
     std::vector<VertexAttrib> a;
-    for (GLuint c = 0; c < 4; ++c) a.push_back({4 + c, 4, GL_FLOAT, false, stride, c * 16, 1});
+    for (GLuint c = 0; c < 4; ++c)
+        a.push_back({4 + c, 4, GL_FLOAT, false, stride, c * 16, 1});
     a.push_back({8, 2, GL_UNSIGNED_INT, false, stride, 64, 1});
     a.push_back({9, 4, GL_FLOAT, false, stride, 80, 1});
     vao_.setAttribs(instances, a);
@@ -165,11 +180,15 @@ MeshData cylinder(float r, float h, int seg, bool caps) {
             m.vertices.push_back({{0, y, 0}, n, {0.5f, 0.5f}});
             for (int i = 0; i <= seg; ++i) {
                 float t = static_cast<float>(i) / seg * glm::two_pi<float>();
-                m.vertices.push_back({{r * std::cos(t), y, r * std::sin(t)}, n, {0.5f + 0.5f * std::cos(t), 0.5f + 0.5f * std::sin(t)}});
+                m.vertices.push_back({{r * std::cos(t), y, r * std::sin(t)},
+                                      n,
+                                      {0.5f + 0.5f * std::cos(t), 0.5f + 0.5f * std::sin(t)}});
             }
             for (int i = 0; i < seg; ++i) {
-                if (side > 0) m.indices.insert(m.indices.end(), {c, c + 2 + i, c + 1 + i});
-                else m.indices.insert(m.indices.end(), {c, c + 1 + i, c + 2 + i});
+                if (side > 0)
+                    m.indices.insert(m.indices.end(), {c, c + 2 + i, c + 1 + i});
+                else
+                    m.indices.insert(m.indices.end(), {c, c + 1 + i, c + 2 + i});
             }
         }
     }
@@ -198,7 +217,8 @@ MeshData cone(float r, float h, int seg) {
         float t = static_cast<float>(i) / seg * glm::two_pi<float>();
         m.vertices.push_back({{r * std::cos(t), -hh, r * std::sin(t)}, {0, -1, 0}, {0, 0}});
     }
-    for (int i = 0; i < seg; ++i) m.indices.insert(m.indices.end(), {c, c + 1 + i, c + 2 + i});
+    for (int i = 0; i < seg; ++i)
+        m.indices.insert(m.indices.end(), {c, c + 1 + i, c + 2 + i});
     m.orientToNormals();
     return m;
 }
@@ -211,7 +231,10 @@ MeshData torus(float R, float r, int majorSeg, int minorSeg) {
         for (int j = 0; j <= minorSeg; ++j) {
             float v = static_cast<float>(j) / minorSeg * glm::two_pi<float>();
             glm::vec3 n{std::cos(u) * std::cos(v), std::sin(v), std::sin(u) * std::cos(v)};
-            m.vertices.push_back({c + n * r, n, {static_cast<float>(i) / majorSeg, static_cast<float>(j) / minorSeg}});
+            m.vertices.push_back(
+                {c + n * r,
+                 n,
+                 {static_cast<float>(i) / majorSeg, static_cast<float>(j) / minorSeg}});
         }
     }
     for (int i = 0; i < majorSeg; ++i)

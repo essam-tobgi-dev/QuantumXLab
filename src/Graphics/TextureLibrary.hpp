@@ -26,7 +26,11 @@ constexpr unsigned kTexUnitAlbedo = 10, kTexUnitNormal = 11, kTexUnitOrm = 12;
 struct ImageRgba8 {
     int width = 0, height = 0;
     std::vector<std::uint8_t> rgba;
-    bool valid() const { return width > 0 && height > 0 && rgba.size() == static_cast<std::size_t>(width) * static_cast<std::size_t>(height) * 4; }
+    bool valid() const {
+        return width > 0 && height > 0 &&
+               rgba.size() ==
+                   static_cast<std::size_t>(width) * static_cast<std::size_t>(height) * 4;
+    }
     static ImageRgba8 solid(std::uint8_t r, std::uint8_t g, std::uint8_t b, int w = 1, int h = 1);
 };
 
@@ -38,12 +42,13 @@ struct TextureSetSource {
 
 struct TextureSet {
     std::string name;
-    Texture2D albedo;   // SRGBA8
-    Texture2D normal;   // RGBA8 linear, OpenGL convention (+Y up), z in blue
-    Texture2D orm;      // RGBA8 linear: R roughness, G metallic, B ao
-    bool hasAlbedo = false, hasNormal = false, hasRoughness = false, hasMetallic = false, hasAo = false;
-    glm::vec3 albedoMean{1.0f};  // linear per-channel mean of the albedo map (1 when absent)
-    float roughnessMean = 1.0f;  // mean of the roughness map (1 when absent)
+    Texture2D albedo; // SRGBA8
+    Texture2D normal; // RGBA8 linear, OpenGL convention (+Y up), z in blue
+    Texture2D orm;    // RGBA8 linear: R roughness, G metallic, B ao
+    bool hasAlbedo = false, hasNormal = false, hasRoughness = false, hasMetallic = false,
+         hasAo = false;
+    glm::vec3 albedoMean{1.0f}; // linear per-channel mean of the albedo map (1 when absent)
+    float roughnessMean = 1.0f; // mean of the roughness map (1 when absent)
     // Binds albedo/normal/orm to the TEXTURED units.
     void bind() const;
     // Builds the GPU textures; `maxAnisotropy` ≤ 1 disables anisotropic filtering.
@@ -51,7 +56,7 @@ struct TextureSet {
 };
 
 class TextureLibrary {
-public:
+  public:
     // `root` empty → Assets/Textures (core::assetDir()); `maxAnisotropy` 0 → from Caps::query().
     explicit TextureLibrary(std::filesystem::path root = {}, float maxAnisotropy = 0.0f);
     // The set named `set`, loaded on first use. An unknown set logs once and returns the
@@ -72,7 +77,7 @@ public:
     // Reads `<root>/<set>/<map>.{jpg,png}` for every map; missing files stay invalid.
     static TextureSetSource loadSource(const std::filesystem::path& setDir);
 
-private:
+  private:
     std::filesystem::path root_;
     float maxAnisotropy_ = 1.0f;
     TextureSet neutral_;

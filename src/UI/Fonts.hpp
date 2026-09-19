@@ -13,15 +13,15 @@
 namespace qlab::ui {
 
 enum class FontRole : std::uint8_t {
-    Body,        // Inter Regular 13
-    Secondary,   // Inter Regular 12 (labels, units)
-    Strong,      // Inter SemiBold 13
-    PanelTitle,  // Inter SemiBold 15
-    Workspace,   // Inter SemiBold 20
-    Code,        // JetBrains Mono 13 (editor)
-    CodeSmall,   // JetBrains Mono 12 (log)
-    Readout,     // JetBrains Mono 16, tabular figures (instrument screens)
-    Math,        // Latin Modern Math 20 — the LaTeX face: equations only (spec 20 §1)
+    Body,       // Inter Regular 13
+    Secondary,  // Inter Regular 12 (labels, units)
+    Strong,     // Inter SemiBold 13
+    PanelTitle, // Inter SemiBold 15
+    Workspace,  // Inter SemiBold 20
+    Code,       // JetBrains Mono 13 (editor)
+    CodeSmall,  // JetBrains Mono 12 (log)
+    Readout,    // JetBrains Mono 16, tabular figures (instrument screens)
+    Math,       // Latin Modern Math 20 — the LaTeX face: equations only (spec 20 §1)
     Count
 };
 inline constexpr std::size_t kFontRoleCount = static_cast<std::size_t>(FontRole::Count);
@@ -29,9 +29,9 @@ std::string_view fontRoleName(FontRole r);
 
 struct FontSet {
     std::array<ImFont*, kFontRoleCount> faces{};
-    std::array<float, kFontRoleCount> sizes{};   // rasterised pixel size
+    std::array<float, kFontRoleCount> sizes{}; // rasterised pixel size
     float dpiScale = 1.0f, fontScale = 1.0f;
-    bool loaded = false;                         // false: the atlas holds no QuantumXLab face
+    bool loaded = false; // false: the atlas holds no QuantumXLab face
 
     ImFont* get(FontRole r) const { return faces[static_cast<std::size_t>(r)]; }
     float size(FontRole r) const { return sizes[static_cast<std::size_t>(r)]; }
@@ -49,17 +49,19 @@ struct FontSet {
 
 // RAII push of a role for the enclosed widgets.
 class FontScope {
-public:
+  public:
     FontScope(const FontSet& set, FontRole role) : pushed_(set.get(role) != nullptr) {
-        if (pushed_) ImGui::PushFont(set.get(role));
+        if (pushed_)
+            ImGui::PushFont(set.get(role));
     }
     ~FontScope() {
-        if (pushed_) ImGui::PopFont();
+        if (pushed_)
+            ImGui::PopFont();
     }
     FontScope(const FontScope&) = delete;
     FontScope& operator=(const FontScope&) = delete;
 
-private:
+  private:
     bool pushed_;
 };
 

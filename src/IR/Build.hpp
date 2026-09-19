@@ -13,8 +13,8 @@ namespace qlab::ir {
 using ParamMap = std::map<std::string, double>;
 
 struct BuildOptions {
-    std::uint32_t loopUnrollBound = 65536;  // CompileContext::loopUnrollBound (spec 14 §1)
-    std::uint32_t maxInlineDepth = 64;      // guard; Sema already rejects recursion (spec 13 §3)
+    std::uint32_t loopUnrollBound = 65536; // CompileContext::loopUnrollBound (spec 14 §1)
+    std::uint32_t maxInlineDepth = 64;     // guard; Sema already rejects recursion (spec 13 §3)
 };
 
 // Lowers an analysed program: loops unrolled, `def`s inlined, user gate bodies expanded, modifiers

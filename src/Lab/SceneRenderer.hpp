@@ -25,19 +25,20 @@ struct DrawItem {
     gfx::Material material;
     glm::vec4 color{1.0f}; // per-instance tint (also the X-ray opacity)
     bool transparent = false;
-    bool clipped = false;  // cutaway variant of a can mesh
+    bool clipped = false; // cutaway variant of a can mesh
     bool instanceable = true;
     bool pickable = true;
 };
 
 class SceneRenderer {
-public:
+  public:
     explicit SceneRenderer(Scene& scene);
     ~SceneRenderer();
     SceneRenderer(SceneRenderer&&) = delete;
 
     // CPU only: culling, LOD selection, material resolution. Safe without a GL context.
-    void prepare(const gfx::Camera& camera, const Interaction& ui, const OverlayVisuals* overlays = nullptr);
+    void prepare(const gfx::Camera& camera, const Interaction& ui,
+                 const OverlayVisuals* overlays = nullptr);
     const std::vector<DrawItem>& items() const { return items_; }
     const RenderStats& stats() const { return stats_; }
 
@@ -62,7 +63,7 @@ public:
     // relative to `eye` (spec 17 §11 `lights`); submit() sets them every frame.
     std::vector<gfx::PointLight> pointLights(const glm::dvec3& eye) const;
 
-private:
+  private:
     const gfx::Mesh* gpuMesh(MeshHandle handle, bool clipped, const glm::dvec4& planeObject);
     Scene* scene_;
     std::vector<DrawItem> items_;

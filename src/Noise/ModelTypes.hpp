@@ -1,6 +1,7 @@
 #pragma once
 // Spec 08 §4 — value types of the noise model: channels attached to an operation, the effective
-// calibrated parameters (after overrides, SI units), user overrides (§4.2) and build options (§4.1).
+// calibrated parameters (after overrides, SI units), user overrides (§4.2) and build options
+// (§4.1).
 #include "Core/StrongType.hpp"
 #include "Noise/Channel.hpp"
 #include "Noise/Readout.hpp"
@@ -45,9 +46,9 @@ struct GateNoise {
     double coherentFraction = 0.0;
     double leakage = 0.0, seepage = 0.0; // p_L, p_S per gate (d = 3 only)
     double pTotal = 0.0;                 // d r/(d − 1), T10 (1.5)
-    double pRelaxation = 0.0;            // depolarizing equivalent of thermal_relaxation over durationS
-    double pCoherent = 0.0;              // depolarizing equivalent of the over-rotation
-    double depolarizing = 0.0;           // max(0, pTotal − pRelaxation − pCoherent)
+    double pRelaxation = 0.0;  // depolarizing equivalent of thermal_relaxation over durationS
+    double pCoherent = 0.0;    // depolarizing equivalent of the over-rotation
+    double depolarizing = 0.0; // max(0, pTotal − pRelaxation − pCoherent)
     double overRotationRad = 0.0;
     bool clamped = false; // the subtraction went negative: warning emitted, depolarizing = 0
 };

@@ -12,8 +12,8 @@
 namespace qlab::viz {
 
 class BlochView final : public StateView {
-public:
-    static constexpr std::size_t kTrailLength = 64;   // spec 21 §3.1 default
+  public:
+    static constexpr std::size_t kTrailLength = 64; // spec 21 §3.1 default
     static constexpr std::uint32_t kPerRow = 8;
     // Without reductions from the run, ρ_k is computed here only for registers this small (the
     // scan is 2^n per qubit; at n = 12 that is ≈ 50 µs for all qubits).
@@ -21,13 +21,13 @@ public:
 
     struct Cell {
         QubitIndex qubit{0};
-        bool valid = false;               // a ρ_k was available
+        bool valid = false; // a ρ_k was available
         math::BlochVector r;
         double purity = 1.0, entropyBits = 0.0, leakage = 0.0;
-        std::deque<glm::dvec3> trail;     // oldest first, quantum frame
-        Rect rect;                        // cell in body-local ImGui units (current page only)
-        glm::vec2 centerPx{0.0f};         // sphere centre, body-local
-        float radiusPx = 0.0f;            // on-screen radius of the unit sphere
+        std::deque<glm::dvec3> trail; // oldest first, quantum frame
+        Rect rect;                    // cell in body-local ImGui units (current page only)
+        glm::vec2 centerPx{0.0f};     // sphere centre, body-local
+        float radiusPx = 0.0f;        // on-screen radius of the unit sphere
         bool onPage = false;
     };
 
@@ -54,19 +54,21 @@ public:
     // toward the viewer (> 0 = front hemisphere).
     glm::vec2 projectPoint(const Cell& cell, const glm::dvec3& p, double* depth = nullptr) const;
     // Headless render of the current page to a PNG (spec 21 §4 export; the brief's render test).
-    Status renderPng(GlBackend& gl, const VizTheme& theme, int widthPx, int heightPx, const std::filesystem::path& png);
+    Status renderPng(GlBackend& gl, const VizTheme& theme, int widthPx, int heightPx,
+                     const std::filesystem::path& png);
 
-protected:
+  protected:
     void rebuild(const ViewInput& in) override;
     void layout() override;
     void drawBody(DrawContext& ctx) override;
     void onSelectionChanged(const SelectionModel& sel) override;
 
-private:
+  private:
     glm::dmat3 rotation() const;
-    GlCanvas::SceneFn scene(const VizTheme& theme, const SelectionModel* selection, float pxScale) const;
-    void drawCell(gfx::Renderer& r, GlBackend& gl, const VizTheme& theme, const Cell& c, bool selected, float pxScale,
-                  const glm::dvec3& centerWorld) const;
+    GlCanvas::SceneFn scene(const VizTheme& theme, const SelectionModel* selection,
+                            float pxScale) const;
+    void drawCell(gfx::Renderer& r, GlBackend& gl, const VizTheme& theme, const Cell& c,
+                  bool selected, float pxScale, const glm::dvec3& centerWorld) const;
     std::vector<Cell> cells_;
     std::size_t page_ = 0, pages_ = 1, perPage_ = kPerRow;
     std::size_t trailLength_ = kTrailLength;

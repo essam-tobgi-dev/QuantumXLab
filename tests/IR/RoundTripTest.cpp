@@ -1,7 +1,8 @@
-// Spec 14 §11 — parse → build → toQasm → parse → build reproduces the dump for every example program
-// the frontend accepts, and for synthetic programs that exercise every node kind and spelling.
-#include "IrTestUtil.hpp"
+// Spec 14 §11 — parse → build → toQasm → parse → build reproduces the dump for every example
+// program the frontend accepts, and for synthetic programs that exercise every node kind and
+// spelling.
 #include "Core/Paths.hpp"
+#include "IrTestUtil.hpp"
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
@@ -25,10 +26,14 @@ std::size_t countSpanless(const ir::Circuit& c, const std::string& file) {
     for (auto id : c.topologicalOrder()) {
         const ir::Node& n = c.node(id);
         const SourceSpan& sp = ir::nodeSpan(n);
-        if (sp.line == 0 || sp.file != file) ++bad;
-        if (const auto* b = std::get_if<ir::Branch>(&n)) bad += countSpanless(*b->thenBody, file) + countSpanless(*b->elseBody, file);
-        if (const auto* l = std::get_if<ir::Loop>(&n)) bad += countSpanless(*l->body, file);
-        if (const auto* x = std::get_if<ir::Box>(&n)) bad += countSpanless(*x->body, file);
+        if (sp.line == 0 || sp.file != file)
+            ++bad;
+        if (const auto* b = std::get_if<ir::Branch>(&n))
+            bad += countSpanless(*b->thenBody, file) + countSpanless(*b->elseBody, file);
+        if (const auto* l = std::get_if<ir::Loop>(&n))
+            bad += countSpanless(*l->body, file);
+        if (const auto* x = std::get_if<ir::Box>(&n))
+            bad += countSpanless(*x->body, file);
     }
     return bad;
 }
@@ -44,13 +49,14 @@ void roundTrip(const ir::Circuit& c, std::string_view label) {
     REQUIRE(again.has_value());
     CHECK(ir::verify(*again).has_value());
     CHECK(ir::dump(*again) == ir::dump(c));
-    CHECK(again->structurallyEqual(c, 0.0));   // parameters survive bit-exactly
+    CHECK(again->structurallyEqual(c, 0.0)); // parameters survive bit-exactly
     auto second = ir::toQasm(*again);
     REQUIRE(second.has_value());
     if (*second != *qasm) {
         // Show the first differing line rather than two walls of text.
         std::size_t i = 0;
-        while (i < second->size() && i < qasm->size() && (*second)[i] == (*qasm)[i]) ++i;
+        while (i < second->size() && i < qasm->size() && (*second)[i] == (*qasm)[i])
+            ++i;
         const auto lineOf = [](const std::string& t, std::size_t pos) {
             const std::size_t b = t.rfind('\n', pos) + 1;
             const std::size_t e = t.find('\n', pos);
@@ -59,7 +65,7 @@ void roundTrip(const ir::Circuit& c, std::string_view label) {
         UNSCOPED_INFO("first emission: " << lineOf(*qasm, i));
         UNSCOPED_INFO("second emission: " << lineOf(*second, i));
     }
-    CHECK(*second == *qasm);                    // emission is a fixpoint
+    CHECK(*second == *qasm); // emission is a fixpoint
 }
 } // namespace
 
@@ -70,9 +76,11 @@ TEST_CASE("every example program the frontend accepts round-trips with an identi
     std::vector<fs::path> files;
     for (const char* sub : {"Examples", "Calibration"}) {
         const fs::path root = core::assetDir() / "Programs" / sub;
-        if (!fs::is_directory(root)) continue;
+        if (!fs::is_directory(root))
+            continue;
         for (const auto& e : fs::recursive_directory_iterator(root))
-            if (e.is_regular_file() && e.path().extension() == ".qasm") files.push_back(e.path());
+            if (e.is_regular_file() && e.path().extension() == ".qasm")
+                files.push_back(e.path());
     }
     std::sort(files.begin(), files.end());
     REQUIRE(files.size() >= 30);
@@ -93,7 +101,8 @@ TEST_CASE("every example program the frontend accepts round-trips with an identi
         ++built;
     }
     std::string names;
-    for (const auto& s : skipped) names += " " + s;
+    for (const auto& s : skipped)
+        names += " " + s;
     WARN("round trip: " << built << " program(s) checked; rejected by the frontend and skipped:"
                         << (skipped.empty() ? std::string(" none") : names));
     CHECK(skipped.empty()); // every shipped program must parse
@@ -121,7 +130,7 @@ CX q[2], q[0];
 u2(0.5, 1e+300) s;
 ctrl @ inv @ siswap s, q[0], q[1];
 )"));
-    CHECK(gateAt(c, 6).name == "sxdg");   // gphase, x, iswap†, 3 × siswap, then inv @ sx
+    CHECK(gateAt(c, 6).name == "sxdg"); // gphase, x, iswap†, 3 × siswap, then inv @ sx
     roundTrip(c, "gates");
 }
 
@@ -140,7 +149,8 @@ u = m + 1;
 if (!(k > 1) && (u == 2)) { reset q[0]; } else { }
 while (flag == 1) { h q[2]; flag = measure q[2]; }
 m[0:1] = -u;
-)")), "classical");
+)")),
+              "classical");
     roundTrip(build(program(R"(def bell(qubit a, qubit b) -> bit { h a; cx a, b; return measure a; }
 qubit[2] q;
 bit c;
@@ -149,7 +159,8 @@ for int i in [0:1] {
   bit t = measure q[i];
   if (t == 1) { x q[i]; }
 }
-)")), "temporaries and block-local storage");
+)")),
+              "temporaries and block-local storage");
 }
 
 TEST_CASE("synthetic programs round-trip: durations, boxes, barriers") {
@@ -161,7 +172,8 @@ box[1.5ms] { x q[0]; delay[20ns]; barrier q[0]; }
 box { y q[1]; }
 barrier;
 barrier q[1], q[0];
-)")), "timing");
+)")),
+              "timing");
 }
 
 TEST_CASE("synthetic programs round-trip: physical qubits, calibrations and defcal-only gates") {
@@ -196,10 +208,11 @@ c[1] = measure $1;
     REQUIRE(c.meta().contains("calibrations"));
     CHECK(c.meta()["calibrations"].size() == 3);
     const std::string defcal = c.meta()["calibrations"][1].get<std::string>();
-    CHECK(defcal.find("(0.25 * a)") != std::string::npos);   // the input is bound, the parameter kept
+    CHECK(defcal.find("(0.25 * a)") != std::string::npos); // the input is bound, the parameter kept
     CHECK(defcal.find("(40.0 * 1ns)") != std::string::npos);
     roundTrip(c, "physical");
-    const auto virt = build(program("defcal xb(angle b) $0 { play(f, drag(0.5, 24ns, 6ns, b)); }\nqubit q;\nxb(0.1) q;\n"));
+    const auto virt = build(program(
+        "defcal xb(angle b) $0 { play(f, drag(0.5, 24ns, 6ns, b)); }\nqubit q;\nxb(0.1) q;\n"));
     CHECK(gateAt(virt, 0).opaque);
     roundTrip(virt, "defcal-only gate on a virtual qubit");
 }

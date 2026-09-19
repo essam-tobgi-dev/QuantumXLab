@@ -7,13 +7,16 @@
 namespace qlab::viz {
 namespace {
 
-glm::vec4 hex(std::string_view s) { return math::colorFromHex(s).value_or(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f)); }
+glm::vec4 hex(std::string_view s) {
+    return math::colorFromHex(s).value_or(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+}
 
 void setQubitPalette(VizTheme& t) {
     // Okabe–Ito, colour-blind safe (spec 19 §1, §8).
     constexpr std::array<std::string_view, 8> kOkabeIto{"#E69F00", "#56B4E9", "#009E73", "#F0E442",
                                                         "#0072B2", "#D55E00", "#CC79A7", "#999999"};
-    for (std::size_t i = 0; i < kOkabeIto.size(); ++i) t.qubits[i] = hex(kOkabeIto[i]);
+    for (std::size_t i = 0; i < kOkabeIto.size(); ++i)
+        t.qubits[i] = hex(kOkabeIto[i]);
 }
 
 struct TokenRef {
@@ -32,8 +35,8 @@ constexpr std::array<TokenRef, 12> kTokens{{{"bg.panel", &VizTheme::bgPanel},
                                             {"warn", &VizTheme::warn},
                                             {"err", &VizTheme::err},
                                             {"sim_only", &VizTheme::simOnly}}};
-constexpr std::array<std::string_view, 5> kClassTokens{"class.exact", "class.numerical", "class.statistical",
-                                                       "class.model", "class.illustrative"};
+constexpr std::array<std::string_view, 5> kClassTokens{
+    "class.exact", "class.numerical", "class.statistical", "class.model", "class.illustrative"};
 
 } // namespace
 
@@ -41,13 +44,16 @@ glm::vec4 VizTheme::qubitColor(std::uint32_t qubit) const {
     glm::vec4 c = qubits[qubit % qubits.size()];
     const float step = 0.12f * static_cast<float>(qubit / qubits.size());
     if (step > 0.0f) {
-        const glm::vec3 toward = dark ? glm::vec3(1.0f) : glm::vec3(0.0f); // stay readable on the panel
+        const glm::vec3 toward =
+            dark ? glm::vec3(1.0f) : glm::vec3(0.0f); // stay readable on the panel
         c = glm::vec4(math::mixColor(glm::vec3(c), toward, std::min(step, 0.6f)), c.a);
     }
     return c;
 }
 
-glm::vec4 VizTheme::neutral() const { return glm::vec4(math::mixColor(glm::vec3(textSecondary), glm::vec3(bgPanel), 0.35f), 1.0f); }
+glm::vec4 VizTheme::neutral() const {
+    return glm::vec4(math::mixColor(glm::vec3(textSecondary), glm::vec3(bgPanel), 0.35f), 1.0f);
+}
 
 VizTheme VizTheme::fallbackDark() {
     VizTheme t;
@@ -91,27 +97,40 @@ VizTheme VizTheme::fallbackLight() {
 
 Result<VizTheme> VizTheme::fromJson(const core::Json& data, std::string_view palette) {
     VizTheme t = palette == "light" ? fallbackLight() : fallbackDark();
-    if (!data.is_object()) return fail(ErrorCode::Parse, "theme: data is not an object");
+    if (!data.is_object())
+        return fail(ErrorCode::Parse, "theme: data is not an object");
     const auto palettes = data.find("palettes");
-    if (palettes == data.end() || !palettes->is_object() || !palettes->contains(std::string(palette)))
-        return fail(ErrorCode::NotFound, "theme: missing field data.palettes." + std::string(palette));
+    if (palettes == data.end() || !palettes->is_object() ||
+        !palettes->contains(std::string(palette)))
+        return fail(ErrorCode::NotFound,
+                    "theme: missing field data.palettes." + std::string(palette));
     const core::Json& tokens = (*palettes)[std::string(palette)];
     auto read = [&](std::string_view name, glm::vec4& into) -> Status {
         const auto it = tokens.find(std::string(name));
-        if (it == tokens.end()) return {}; // unknown or absent tokens keep the fallback (DEVELOPMENT.md)
-        if (!it->is_string()) return fail(ErrorCode::Parse, "theme: token " + std::string(name) + " is not a string");
+        if (it == tokens.end())
+            return {}; // unknown or absent tokens keep the fallback (DEVELOPMENT.md)
+        if (!it->is_string())
+            return fail(ErrorCode::Parse, "theme: token " + std::string(name) + " is not a string");
         const auto c = math::colorFromHex(it->get<std::string>());
-        if (!c) return fail(ErrorCode::Parse, "theme: token " + std::string(name) + " is not #RRGGBB[AA]");
+        if (!c)
+            return fail(ErrorCode::Parse,
+                        "theme: token " + std::string(name) + " is not #RRGGBB[AA]");
         into = *c;
         return {};
     };
-    for (const TokenRef& ref : kTokens) QXL_TRY(read(ref.name, t.*(ref.field)));
-    for (std::size_t k = 0; k < kClassTokens.size(); ++k) QXL_TRY(read(kClassTokens[k], t.fidelity[k]));
+    for (const TokenRef& ref : kTokens)
+        QXL_TRY(read(ref.name, t.*(ref.field)));
+    for (std::size_t k = 0; k < kClassTokens.size(); ++k)
+        QXL_TRY(read(kClassTokens[k], t.fidelity[k]));
     if (const auto q = data.find("qubit_colors"); q != data.end() && q->is_array())
         for (std::size_t i = 0; i < q->size() && i < t.qubits.size(); ++i) {
-            if (!(*q)[i].is_string()) return fail(ErrorCode::Parse, "theme: qubit_colors[" + std::to_string(i) + "] is not a string");
+            if (!(*q)[i].is_string())
+                return fail(ErrorCode::Parse,
+                            "theme: qubit_colors[" + std::to_string(i) + "] is not a string");
             const auto c = math::colorFromHex((*q)[i].get<std::string>());
-            if (!c) return fail(ErrorCode::Parse, "theme: qubit_colors[" + std::to_string(i) + "] is not #RRGGBB");
+            if (!c)
+                return fail(ErrorCode::Parse,
+                            "theme: qubit_colors[" + std::to_string(i) + "] is not #RRGGBB");
             t.qubits[i] = *c;
         }
     if (const auto r = data.find("radius_px"); r != data.end() && r->is_object()) {
@@ -122,7 +141,8 @@ Result<VizTheme> VizTheme::fromJson(const core::Json& data, std::string_view pal
 }
 
 Result<VizTheme> VizTheme::load(std::string_view palette) {
-    QXL_TRY_ASSIGN(auto env, core::JsonEnvelope::load(core::assetDir() / "Lang" / "theme.json", "ui.theme"));
+    QXL_TRY_ASSIGN(auto env,
+                   core::JsonEnvelope::load(core::assetDir() / "Lang" / "theme.json", "ui.theme"));
     return fromJson(env.data, palette);
 }
 

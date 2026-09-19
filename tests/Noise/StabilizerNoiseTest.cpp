@@ -1,7 +1,7 @@
 // Spec 08 §7.3–7.4, §2.5 — Pauli-frame noise on the stabilizer backend (exact for Pauli channels,
 // Model-class twirl for the rest), and the backends that must refuse a channel.
-#include "NoiseTestSupport.hpp"
 #include "Data/Fidelity.hpp"
+#include "NoiseTestSupport.hpp"
 #include <catch2/catch_approx.hpp>
 
 using namespace ntest;
@@ -11,18 +11,23 @@ using Catch::Approx;
 namespace {
 using Circuit = std::vector<std::pair<Matrix, std::vector<QubitIndex>>>;
 
-// Runs Clifford gates interleaved with channels (channel k after gate k) and returns P over (q0, q1).
-Status runClifford(qsim::IBackend& b, const Circuit& gates, const std::vector<AttachedChannel>& noise,
-                   core::Random& rng, const ApplyOptions& options, ApplyReport& report) {
+// Runs Clifford gates interleaved with channels (channel k after gate k) and returns P over (q0,
+// q1).
+Status runClifford(qsim::IBackend& b, const Circuit& gates,
+                   const std::vector<AttachedChannel>& noise, core::Random& rng,
+                   const ApplyOptions& options, ApplyReport& report) {
     for (std::size_t k = 0; k < gates.size(); ++k) {
         QXL_TRY(b.applyGate(gates[k].first, gates[k].second));
-        if (k < noise.size()) QXL_TRY(applyChannel(b, noise[k], rng, options, report));
+        if (k < noise.size())
+            QXL_TRY(applyChannel(b, noise[k], rng, options, report));
     }
     return {};
 }
 
-std::vector<double> stabilizerAverage(const Circuit& gates, const std::vector<AttachedChannel>& noise,
-                                      const ApplyOptions& options, ApplyReport& report, std::vector<double>& se) {
+std::vector<double> stabilizerAverage(const Circuit& gates,
+                                      const std::vector<AttachedChannel>& noise,
+                                      const ApplyOptions& options, ApplyReport& report,
+                                      std::vector<double>& se) {
     qsim::StabilizerBackend pristine;
     NOISE_REQUIRE_OK(pristine.allocate(2));
     const core::Random master(0xC11FF0DDull);
@@ -34,7 +39,10 @@ std::vector<double> stabilizerAverage(const Circuit& gates, const std::vector<At
         NOISE_REQUIRE_OK(runClifford(*st, gates, noise, rng, options, report));
         auto p = st->probabilities(q({0, 1}));
         NOISE_REQUIRE_OK(p);
-        for (std::size_t i = 0; i < 4; ++i) { sum[i] += (*p)[i]; sumSq[i] += (*p)[i] * (*p)[i]; }
+        for (std::size_t i = 0; i < 4; ++i) {
+            sum[i] += (*p)[i];
+            sumSq[i] += (*p)[i] * (*p)[i];
+        }
     }
     se.assign(4, 0.0);
     for (std::size_t i = 0; i < 4; ++i) {
@@ -44,7 +52,8 @@ std::vector<double> stabilizerAverage(const Circuit& gates, const std::vector<At
     return sum;
 }
 
-std::vector<double> densityMatrixExact(const Circuit& gates, const std::vector<AttachedChannel>& noise) {
+std::vector<double> densityMatrixExact(const Circuit& gates,
+                                       const std::vector<AttachedChannel>& noise) {
     qsim::DensityMatrixBackend dm;
     NOISE_REQUIRE_OK(dm.allocate(2));
     core::Random rng(0);
@@ -57,13 +66,15 @@ std::vector<double> densityMatrixExact(const Circuit& gates, const std::vector<A
 } // namespace
 
 TEST_CASE("Pauli channels on the stabilizer backend reproduce the DensityMatrix within 4 sigma") {
-    const Circuit gates{{H(), q({0})}, {CX(), q({0, 1})}, {S(), q({1})}, {H(), q({1})}, {SX(), q({0})}};
+    const Circuit gates{
+        {H(), q({0})}, {CX(), q({0, 1})}, {S(), q({1})}, {H(), q({1})}, {SX(), q({0})}};
     auto shotAveragedDrift = channel(driftChannel(5e3)); // Pauli-Z form: admissible without a twirl
-    const std::vector<AttachedChannel> noise{attach(channel(depolarizingChannel(1, 0.2)), q({0})),
-                                             attach(channel(depolarizingChannel(2, 0.12)), q({1, 0})),
-                                             attach(channel(phaseDampingChannel(15e-6)), q({1}), 8e-6),
-                                             attach(shotAveragedDrift, q({1}), 40e-6),
-                                             attach(channel(pauliChannel(0.05, 0.1, 0.02)), q({0}))};
+    const std::vector<AttachedChannel> noise{
+        attach(channel(depolarizingChannel(1, 0.2)), q({0})),
+        attach(channel(depolarizingChannel(2, 0.12)), q({1, 0})),
+        attach(channel(phaseDampingChannel(15e-6)), q({1}), 8e-6),
+        attach(shotAveragedDrift, q({1}), 40e-6),
+        attach(channel(pauliChannel(0.05, 0.1, 0.02)), q({0}))};
     ApplyReport report;
     std::vector<double> se;
     const auto estimate = stabilizerAverage(gates, noise, {}, report, se);
@@ -71,16 +82,19 @@ TEST_CASE("Pauli channels on the stabilizer backend reproduce the DensityMatrix 
     REQUIRE(report.cls == data::FidelityClass::Statistical);
     REQUIRE(report.twirled.empty());
     for (std::size_t i = 0; i < 4; ++i) {
-        INFO("outcome " << i << ": stabilizer " << estimate[i] << " +- " << se[i] << ", DM " << exact[i]);
+        INFO("outcome " << i << ": stabilizer " << estimate[i] << " +- " << se[i] << ", DM "
+                        << exact[i]);
         REQUIRE(std::abs(estimate[i] - exact[i]) < 4.0 * se[i]);
     }
 }
 
-TEST_CASE("non-Pauli channels need twirl_non_pauli on the stabilizer backend and mark the run Model") {
+TEST_CASE(
+    "non-Pauli channels need twirl_non_pauli on the stabilizer backend and mark the run Model") {
     const Circuit gates{{X(), q({0})}, {H(), q({1})}, {H(), q({1})}};
     const double t1 = 30e-6, t2 = 25e-6, t = 20e-6;
-    const std::vector<AttachedChannel> noise{attach(channel(thermalRelaxationChannel(t1, t2, 0.0)), q({0}), t),
-                                             attach(channel(thermalRelaxationChannel(t1, t2, 0.0)), q({1}), t)};
+    const std::vector<AttachedChannel> noise{
+        attach(channel(thermalRelaxationChannel(t1, t2, 0.0)), q({0}), t),
+        attach(channel(thermalRelaxationChannel(t1, t2, 0.0)), q({1}), t)};
     qsim::StabilizerBackend st;
     NOISE_REQUIRE_OK(st.allocate(2));
     core::Random rng(5);
@@ -101,18 +115,22 @@ TEST_CASE("non-Pauli channels need twirl_non_pauli on the stabilizer backend and
     // Oracle: the DensityMatrix run of the (7.1) Pauli channel that replaces thermal_relaxation.
     const double g1 = 1.0 - std::exp(-t / t1), g2 = 1.0 - std::exp(-t / t2);
     auto twirled = channel(pauliChannel(g1 / 4, g1 / 4, g2 / 2 - g1 / 4));
-    const auto exact = densityMatrixExact(gates, {attach(twirled, q({0})), attach(twirled, q({1}))});
+    const auto exact =
+        densityMatrixExact(gates, {attach(twirled, q({0})), attach(twirled, q({1}))});
     for (std::size_t i = 0; i < 4; ++i) {
-        INFO("outcome " << i << ": stabilizer " << estimate[i] << " +- " << se[i] << ", twirled DM " << exact[i]);
+        INFO("outcome " << i << ": stabilizer " << estimate[i] << " +- " << se[i] << ", twirled DM "
+                        << exact[i]);
         REQUIRE(std::abs(estimate[i] - exact[i]) < 4.0 * se[i]);
     }
     // Leakage has no Pauli twirl at all (T04 §9.3).
-    auto leak = applyChannel(st, attach(channel(leakageChannel(0.01, 0.01)), q({0})), rng, twirl, report);
+    auto leak =
+        applyChannel(st, attach(channel(leakageChannel(0.01, 0.01)), q({0})), rng, twirl, report);
     REQUIRE_FALSE(leak);
     REQUIRE(leak.error().code == err::UnsupportedBackend);
 }
 
-TEST_CASE("leakage acts on d = 3 density matrices only, and the Lindblad backends refuse gate-level channels") {
+TEST_CASE("leakage acts on d = 3 density matrices only, and the Lindblad backends refuse "
+          "gate-level channels") {
     core::Random rng(6);
     auto leak = channel(leakageChannel(0.02, 0.3));
     qsim::DensityMatrixBackend qutrit;
@@ -142,15 +160,18 @@ TEST_CASE("leakage acts on d = 3 density matrices only, and the Lindblad backend
 
     qsim::LindbladBackend lindblad;
     NOISE_REQUIRE_OK(lindblad.allocate(1));
-    auto refused = applyChannel(lindblad, attach(channel(depolarizingChannel(1, 0.1)), q({0})), rng, {}, report);
+    auto refused = applyChannel(lindblad, attach(channel(depolarizingChannel(1, 0.1)), q({0})), rng,
+                                {}, report);
     REQUIRE_FALSE(refused);
     REQUIRE(refused.error().code == err::UnsupportedBackend);
     REQUIRE(refused.error().message.find("lindbladOperators") != std::string::npos);
     // Target validation happens before any backend work.
-    auto outOfRange = applyChannel(sv, attach(channel(bitFlipChannel(0.1)), q({3})), rng, {}, report);
+    auto outOfRange =
+        applyChannel(sv, attach(channel(bitFlipChannel(0.1)), q({3})), rng, {}, report);
     REQUIRE_FALSE(outOfRange);
     REQUIRE(outOfRange.error().code == err::UnknownTarget);
-    auto wrongArity = applyChannel(sv, attach(channel(bitFlipChannel(0.1)), q({0, 1})), rng, {}, report);
+    auto wrongArity =
+        applyChannel(sv, attach(channel(bitFlipChannel(0.1)), q({0, 1})), rng, {}, report);
     REQUIRE_FALSE(wrongArity);
     REQUIRE(wrongArity.error().code == err::BadDimensions);
     // Per-shot drift needs a detuning for the targeted qubit (spec 08 §2.6).
@@ -159,8 +180,10 @@ TEST_CASE("leakage acts on d = 3 density matrices only, and the Lindblad backend
     ApplyOptions shortShot;
     const double single[] = {1e3};
     shortShot.shotDetuningHz = single;
-    auto missing = applyChannel(pair, attach(channel(driftChannel(1e3)), q({1}), 1e-6), rng, shortShot, report);
+    auto missing = applyChannel(pair, attach(channel(driftChannel(1e3)), q({1}), 1e-6), rng,
+                                shortShot, report);
     REQUIRE_FALSE(missing);
     REQUIRE(missing.error().code == err::UnknownTarget);
-    apply(pair, attach(channel(driftChannel(1e3)), q({0}), 1e-6), rng, shortShot); // qubit 0 is covered
+    apply(pair, attach(channel(driftChannel(1e3)), q({0}), 1e-6), rng,
+          shortShot); // qubit 0 is covered
 }

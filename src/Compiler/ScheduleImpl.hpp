@@ -8,7 +8,8 @@
 namespace qlab::compiler::detail {
 
 struct Durations {
-    Durations(const hw::Device& device, const hw::Calibration& calibration, const PulseSource* pulses);
+    Durations(const hw::Device& device, const hw::Calibration& calibration,
+              const PulseSource* pulses);
 
     Result<Picoseconds> gate(const ir::Gate& g);
     Result<Picoseconds> measure(std::uint32_t qubit, const SourceSpan& span);
@@ -24,9 +25,10 @@ struct Durations {
     Picoseconds dt, granule, latency;
     int granularity;
 
-private:
-    Error missing(std::string_view what, std::initializer_list<std::uint32_t> qubits, const SourceSpan& span) const;   // QL4080
-    std::map<std::string, Picoseconds> blockCache_;   // unparametrised pulse blocks by "gate|q0,q1"
+  private:
+    Error missing(std::string_view what, std::initializer_list<std::uint32_t> qubits,
+                  const SourceSpan& span) const;    // QL4080
+    std::map<std::string, Picoseconds> blockCache_; // unparametrised pulse blocks by "gate|q0,q1"
 };
 
 } // namespace qlab::compiler::detail

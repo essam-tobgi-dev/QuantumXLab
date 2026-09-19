@@ -17,13 +17,13 @@ int runHeadless(const Options& options, std::ostream& out, std::ostream& err);
 // One checked example of `--selftest`.
 struct ExampleCheck {
     std::string name;
-    std::string device;       // the device the example ran on; empty when it was skipped
+    std::string device; // the device the example ran on; empty when it was skipped
     bool ran = false;
     bool passed = false;
     // The expectation declares a statistical oracle (a fit or a tomographic reconstruction) rather
     // than a fixed distribution, so there is nothing for this checker to compare.
     bool skipped = false;
-    std::string detail;       // the failing expectation, or the worst deviation when it passed
+    std::string detail; // the failing expectation, or the worst deviation when it passed
 };
 
 // Spec 25 §2 — runs `Assets/Programs/Examples/<category>/<name>.qasm` and compares its counts with
@@ -40,7 +40,7 @@ ExampleCheck checkExample(const std::filesystem::path& qasm, const Options& opti
 struct SelfTestReport {
     std::vector<std::filesystem::path> screenshots;
     std::vector<ExampleCheck> examples;
-    std::vector<std::string> notes;     // why a step was skipped (no GL context, missing asset)
+    std::vector<std::string> notes; // why a step was skipped (no GL context, missing asset)
     bool renderedScenes = false;
     bool ok() const;
 };

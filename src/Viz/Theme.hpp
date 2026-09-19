@@ -18,16 +18,18 @@ struct VizTheme {
     glm::vec4 textPrimary, textSecondary, textDisabled;
     glm::vec4 accent, accentSoft;
     glm::vec4 ok, warn, err;
-    glm::vec4 simOnly;                         // Simulator-only badge (spec 19 §5.5)
-    std::array<glm::vec4, 5> fidelity{};       // class.exact … class.illustrative (spec 00 §5)
-    std::array<glm::vec4, 8> qubits{};         // Okabe–Ito palette (spec 19 §1)
-    float radiusSm = 3.0f, radiusMd = 5.0f;    // px at 1× (multiplied by the DPI scale when drawn)
-    float space = 8.0f;                        // space.2
+    glm::vec4 simOnly;                      // Simulator-only badge (spec 19 §5.5)
+    std::array<glm::vec4, 5> fidelity{};    // class.exact … class.illustrative (spec 00 §5)
+    std::array<glm::vec4, 8> qubits{};      // Okabe–Ito palette (spec 19 §1)
+    float radiusSm = 3.0f, radiusMd = 5.0f; // px at 1× (multiplied by the DPI scale when drawn)
+    float space = 8.0f;                     // space.2
     float fontPx = 13.0f, fontSmallPx = 12.0f;
     bool dark = true;
 
     // Badge colour of a fidelity class.
-    const glm::vec4& fidelityColor(data::FidelityClass c) const { return fidelity[static_cast<std::size_t>(c)]; }
+    const glm::vec4& fidelityColor(data::FidelityClass c) const {
+        return fidelity[static_cast<std::size_t>(c)];
+    }
     // Spec 19 §1: qubit i uses qubits[i % 8]; each wrap darkens (dark theme: lightens) by 12 %.
     glm::vec4 qubitColor(std::uint32_t qubit) const;
     // Theory overlays are dashed in the secondary text colour (spec 22 §3); fits use the accent.

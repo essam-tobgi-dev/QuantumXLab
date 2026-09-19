@@ -5,15 +5,15 @@
 // colour; the negativity ∫|W| d²α − 1 is printed and the photon-number distribution P(n) = ρ_nn is
 // plotted beside it. The grid is the run's work: the view asks through `wants()` and computes it
 // inline only when the product N² · n_x · n_y is small enough for the UI thread (spec 21 §2.3).
-#include "Viz/Math/Wigner.hpp"
 #include "Data/Fidelity.hpp"
+#include "Viz/Math/Wigner.hpp"
 #include "Viz/StateView.hpp"
 #include <memory>
 
 namespace qlab::viz {
 
 class WignerView final : public StateView {
-public:
+  public:
     // Inline budget: ρ elements × grid points. 60² × 101² ≈ 3.7 × 10⁷ is far too much for a frame;
     // this bound keeps the inline path near a millisecond.
     static constexpr std::size_t kInlineWork = 400000;
@@ -40,17 +40,17 @@ public:
     const std::string& note() const { return note_; }
     Rect plotRect() const { return plot_; }
 
-protected:
+  protected:
     void rebuild(const ViewInput& in) override;
     void drawBody(DrawContext& ctx) override;
 
-private:
+  private:
     std::shared_ptr<const num::Matrix> mode_;
     std::string modeLabel_;
     math::WignerOptions options_;
     std::optional<math::WignerGrid> grid_;
     std::vector<double> photons_;
-    std::vector<double> heat_;   // row-major with iy = 0 at the TOP, as ImPlot::PlotHeatmap wants
+    std::vector<double> heat_; // row-major with iy = 0 at the TOP, as ImPlot::PlotHeatmap wants
     std::string note_;
     Rect plot_;
 };

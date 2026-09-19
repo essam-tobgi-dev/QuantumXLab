@@ -11,14 +11,17 @@
 namespace qlab::ir {
 
 class Circuit {
-public:
+  public:
     Circuit() = default;
 
     // ---- shape
     std::uint32_t qubitCount() const { return qubits_; }
     std::uint32_t clbitCount() const { return clbits_; }
     void setQubitCount(std::uint32_t n);
-    void setClbitCount(std::uint32_t n) { clbits_ = n; invalidate(); }
+    void setClbitCount(std::uint32_t n) {
+        clbits_ = n;
+        invalidate();
+    }
     bool isPhysical() const { return physical_; }
     void setPhysical(bool p) { physical_ = p; }
 
@@ -34,18 +37,19 @@ public:
     std::string bitName(ClassicalBit b) const;
 
     // ---- nodes
-    NodeId add(Node n);                       // append; returns a stable id
+    NodeId add(Node n); // append; returns a stable id
     NodeId insertBefore(NodeId at, Node n);
     NodeId insertAfter(NodeId at, Node n);
-    void erase(NodeId id);                    // id is never reused
+    void erase(NodeId id); // id is never reused
     bool alive(NodeId id) const;
     std::size_t nodeCount() const;
     const Node& node(NodeId id) const;
-    Node& node(NodeId id);                    // invalidates caches
+    Node& node(NodeId id); // invalidates caches
     // Live nodes in a deterministic topological order: insertion order, which Build and every
     // mutation keep consistent with each wire's order (spec 14 §3 stable order).
     std::span<const NodeId> topologicalOrder() const;
-    // Nodes touching a wire (a Barrier or Delay with no wires touches every wire), in topological order.
+    // Nodes touching a wire (a Barrier or Delay with no wires touches every wire), in topological
+    // order.
     std::span<const NodeId> onWire(Wire w) const;
     std::span<const NodeId> onClassicalBit(ClassicalBit b) const;
 
@@ -57,16 +61,16 @@ public:
     // node with quantum content). Barriers, delays and global-phase gates neither count nor
     // constrain; classical nodes forward bit dependencies without adding a moment.
     std::size_t depth() const;
-    std::size_t size() const;                           // quantum operations (gates+measure+reset)
-    std::size_t twoQubitCount() const;                  // gates on exactly two wires (controls included)
+    std::size_t size() const;          // quantum operations (gates+measure+reset)
+    std::size_t twoQubitCount() const; // gates on exactly two wires (controls included)
     std::size_t tCount() const;
-    std::map<std::string, std::size_t> gateCounts() const;   // gates by name, other nodes by kind
+    std::map<std::string, std::size_t> gateCounts() const; // gates by name, other nodes by kind
     bool hasMeasurement() const;
-    bool hasClassicalControl() const;                   // Branch, Loop or ClassicalOp present
-    bool isPureUnitary() const;                         // no measure/reset/branch/loop/classical op
+    bool hasClassicalControl() const; // Branch, Loop or ClassicalOp present
+    bool isPureUnitary() const;       // no measure/reset/branch/loop/classical op
 
     // ---- transforms
-    Result<Circuit> inverse() const;                    // reversed, every gate inverted
+    Result<Circuit> inverse() const; // reversed, every gate inverted
     // Same shape and the same node sequence with equal payloads (parameters and matrices within
     // `tol`). Register names and source spans are not compared.
     bool structurallyEqual(const Circuit& o, double tol = 1e-12) const;
@@ -77,7 +81,7 @@ public:
     void setLayout(std::vector<std::uint32_t> virtualToPhysical);
     std::vector<std::uint32_t> layout() const;
 
-private:
+  private:
     void invalidate() const;
     void rebuild() const;
 

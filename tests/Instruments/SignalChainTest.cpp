@@ -61,7 +61,8 @@ double snrDb(const AwgStreams& st) {
 
 TEST_CASE("AWG: N-bit quantisation of a full-scale tone has SNR = 6.02 N + 1.76 dB") {
     Bench bench(instrtest::toneSchedule(100e-6, 0.999));
-    REQUIRE(bench.awg.set("if_frequency", 87.31e6)); // incommensurate with f_s: the error decorrelates
+    REQUIRE(
+        bench.awg.set("if_frequency", 87.31e6)); // incommensurate with f_s: the error decorrelates
     auto st = bench.awg.render(0);
     REQUIRE(st);
     REQUIRE(st->output.size() == 100000);
@@ -87,7 +88,8 @@ TEST_CASE("AWG: N-bit quantisation of a full-scale tone has SNR = 6.02 N + 1.76 
     REQUIRE(t->marker("LSB")->value == Approx(2.0 * 0.5 / 65536.0).epsilon(1e-12));
     REQUIRE(t->y[1234] == st16->output[1234].real());
     REQUIRE(t->y_im[1234] == st16->output[1234].imag());
-    // The envelope handed to the Lindblad backend under `apply_quantization`: within Δ/2 per quadrature.
+    // The envelope handed to the Lindblad backend under `apply_quantization`: within Δ/2 per
+    // quadrature.
     auto q = bench.awg.quantisedEnvelope(0);
     REQUIRE(q);
     REQUIRE(std::abs((*q)[500] - Complex{0.999, 0.0}) <= 1.0 / 65536.0);
@@ -109,28 +111,34 @@ TEST_CASE("generator: synthesised phase noise follows the 1/f^2 + floor mask") {
     const std::vector<double> phi = mask.synthesize(seg * segments, fs, rng);
     const num::RealVector w = num::window(num::Window::Hann, seg);
     double w2 = 0.0;
-    for (double x : w) w2 += x * x;
+    for (double x : w)
+        w2 += x * x;
     std::vector<double> psd(seg / 2, 0.0); // one-sided S_φ in rad²/Hz
     for (std::size_t s = 0; s < segments; ++s) {
         num::Vector buf(seg);
         double meanPhi = 0.0;
-        for (std::size_t k = 0; k < seg; ++k) meanPhi += phi[s * seg + k] / static_cast<double>(seg);
-        for (std::size_t k = 0; k < seg; ++k) buf[k] = w[k] * (phi[s * seg + k] - meanPhi);
+        for (std::size_t k = 0; k < seg; ++k)
+            meanPhi += phi[s * seg + k] / static_cast<double>(seg);
+        for (std::size_t k = 0; k < seg; ++k)
+            buf[k] = w[k] * (phi[s * seg + k] - meanPhi);
         num::fftInPlace(buf);
-        for (std::size_t k = 0; k < seg / 2; ++k) psd[k] += 2.0 * std::norm(buf[k]) / (fs * w2) / static_cast<double>(segments);
+        for (std::size_t k = 0; k < seg / 2; ++k)
+            psd[k] += 2.0 * std::norm(buf[k]) / (fs * w2) / static_cast<double>(segments);
     }
     auto bandDbc = [&](double f0, double f1) { // mean L over a band, against the mean of the mask
         double got = 0.0, want = 0.0;
         std::size_t count = 0;
         for (std::size_t k = 1; k < seg / 2; ++k) {
             const double f = static_cast<double>(k) * fs / static_cast<double>(seg);
-            if (f < f0 || f > f1) continue;
+            if (f < f0 || f > f1)
+                continue;
             got += psd[k] / 2.0;
             want += std::pow(10.0, mask.dbcPerHz(f) / 10.0);
             ++count;
         }
         REQUIRE(count >= 8);
-        return std::pair{10.0 * std::log10(got / static_cast<double>(count)), 10.0 * std::log10(want / static_cast<double>(count))};
+        return std::pair{10.0 * std::log10(got / static_cast<double>(count)),
+                         10.0 * std::log10(want / static_cast<double>(count))};
     };
     for (auto [f0, f1] : {std::pair{8e3, 12e3}, std::pair{40e3, 60e3}, std::pair{1.0e6, 1.8e6}}) {
         auto [got, want] = bandDbc(f0, f1);
@@ -145,7 +153,8 @@ TEST_CASE("generator: synthesised phase noise follows the 1/f^2 + floor mask") {
     REQUIRE(t->marker("L(10 kHz)")->value == Approx(mask.dbcPerHz(1e4)));
 }
 
-TEST_CASE("spectrum analyzer: AWG tone at f_LO + f_IF in the right bin, power to 0.1 dB, spurs at the set dBc") {
+TEST_CASE("spectrum analyzer: AWG tone at f_LO + f_IF in the right bin, power to 0.1 dB, spurs at "
+          "the set dBc") {
     Bench bench(instrtest::toneSchedule(20e-6, 1.0));
     REQUIRE(bench.sa.set("center", 5.0e9));
     REQUIRE(bench.sa.set("span", 400e6));
@@ -174,20 +183,25 @@ TEST_CASE("spectrum analyzer: AWG tone at f_LO + f_IF in the right bin, power to
     REQUIRE(t->marker("image")->x == Approx(4.9e9).margin(bucket / 2.0));
     REQUIRE(t->marker("image_dbc")->value == Approx(-35.0).margin(0.1));
     // Noise floor: DANL −150 dBm/Hz + kT in a 100 kHz RBW; the rms detector reads it.
-    const double floorDbm = 10.0 * std::log10((1e-18 + 1.380649e-23 * 290.0) * t->marker("rbw_effective")->value / 1e-3);
+    const double floorDbm = 10.0 * std::log10((1e-18 + 1.380649e-23 * 290.0) *
+                                              t->marker("rbw_effective")->value / 1e-3);
     REQUIRE(t->marker("noise_floor")->value == Approx(floorDbm).margin(0.01));
     REQUIRE(bench.sa.set("detector", std::string("rms")));
     REQUIRE(bench.sa.set("averages", std::int64_t{16}));
     auto rms = acquire(bench.sa, "trace");
     REQUIRE(rms);
-    // 5.04 … 5.08 GHz holds no tone: the analyzer floor plus the LO's phase-noise floor riding on the
-    // carrier, P_c · L_floor · RBW with L_floor = −150 dBc/Hz (T07 §7) — here −102 dBm under a −100 dBm floor.
+    // 5.04 … 5.08 GHz holds no tone: the analyzer floor plus the LO's phase-noise floor riding on
+    // the carrier, P_c · L_floor · RBW with L_floor = −150 dBc/Hz (T07 §7) — here −102 dBm under a
+    // −100 dBm floor.
     std::vector<double> quiet(rms->y.begin() + 600, rms->y.begin() + 700);
-    const double skirtDbm = expectedDbm - 150.0 + 10.0 * std::log10(t->marker("rbw_effective")->value);
-    const double quietDbm = 10.0 * std::log10(std::pow(10.0, floorDbm / 10.0) + std::pow(10.0, skirtDbm / 10.0));
+    const double skirtDbm =
+        expectedDbm - 150.0 + 10.0 * std::log10(t->marker("rbw_effective")->value);
+    const double quietDbm =
+        10.0 * std::log10(std::pow(10.0, floorDbm / 10.0) + std::pow(10.0, skirtDbm / 10.0));
     REQUIRE(quietDbm == Approx(-97.87).margin(0.05));
     REQUIRE(instrtest::mean(quiet) == Approx(quietDbm).margin(0.5));
-    std::vector<double> far(rms->y.begin() + 20, rms->y.begin() + 120); // 4.81 … 4.85 GHz: same physics
+    std::vector<double> far(rms->y.begin() + 20,
+                            rms->y.begin() + 120); // 4.81 … 4.85 GHz: same physics
     REQUIRE(instrtest::mean(far) == Approx(quietDbm).margin(0.5));
 
     // The peak table lists the three lines, strongest first; other settings move the spurs.
@@ -208,13 +222,16 @@ TEST_CASE("spectrum analyzer: AWG tone at f_LO + f_IF in the right bin, power to
     REQUIRE(*bench.sa.markerPowerDbm(5.1e9) == Approx(expectedDbm).margin(0.02));
 }
 
-TEST_CASE("spectrum analyzer: a DRAG pulse shows a main lobe of width ~1/T and the DRAG asymmetry") {
+TEST_CASE(
+    "spectrum analyzer: a DRAG pulse shows a main lobe of width ~1/T and the DRAG asymmetry") {
     // β = −1/α (angular) puts the spectral zero at f + α: below the carrier the spectrum is
     // suppressed, above it enhanced, by ((1 + 2πβν)/(1 − 2πβν))² at offset ±ν.
     const double T = 32e-9, sigma = 8e-9, alphaHz = -320e6;
     const double beta = -1.0 / (2.0 * kPi * alphaHz);
     auto sched = std::make_shared<pulse::Schedule>(Picoseconds{222});
-    sched->insert(pulse::Play{pulse::ChannelId::drive(0), pulse::Waveform::drag(T, sigma, beta, 0.9), Picoseconds{0}}, Picoseconds{0});
+    sched->insert(pulse::Play{pulse::ChannelId::drive(0),
+                              pulse::Waveform::drag(T, sigma, beta, 0.9), Picoseconds{0}},
+                  Picoseconds{0});
     Bench bench(sched, 4.5e9);
     REQUIRE(bench.sa.set("center", 5.1e9));
     REQUIRE(bench.sa.set("span", 300e6));
@@ -224,30 +241,44 @@ TEST_CASE("spectrum analyzer: a DRAG pulse shows a main lobe of width ~1/T and t
     auto t = acquire(bench.sa, "trace");
     REQUIRE(t);
     const double bucket = 300e6 / 600.0;
-    auto at = [&](double f) { return t->y[static_cast<std::size_t>(std::llround((f - t->x.front()) / bucket))]; };
+    auto at = [&](double f) {
+        return t->y[static_cast<std::size_t>(std::llround((f - t->x.front()) / bucket))];
+    };
     const double top = t->marker("peak")->value;
     // −3 dB width of the main lobe: ≈ 1/T (spec 12 §15). The lifted Gaussian of σ = T/4 has
     // 1.33/T = 41.5 MHz; the oracle is the DTFT of the envelope samples themselves.
     double lo = 5.1e9, hi = 5.1e9;
-    while (at(lo) > top - 3.0) lo -= bucket;
-    while (at(hi) > top - 3.0) hi += bucket;
+    while (at(lo) > top - 3.0)
+        lo -= bucket;
+    while (at(hi) > top - 3.0)
+        hi += bucket;
     const std::vector<Complex> env = pulse::Waveform::drag(T, sigma, beta, 0.9).sampled(222);
-    auto envelopePower = [&](double nu) { // |Σ conj(e_k) e^{−i2πν t_k}|²: the AWG plays conj(e) (spec 10 §3)
-        Complex acc{};
-        for (std::size_t k = 0; k < env.size(); ++k) acc += std::conj(env[k]) * std::polar(1.0, -2.0 * kPi * nu * static_cast<double>(k) * 222e-12);
-        return std::norm(acc);
-    };
+    auto envelopePower =
+        [&](double nu) { // |Σ conj(e_k) e^{−i2πν t_k}|²: the AWG plays conj(e) (spec 10 §3)
+            Complex acc{};
+            for (std::size_t k = 0; k < env.size(); ++k)
+                acc += std::conj(env[k]) *
+                       std::polar(1.0, -2.0 * kPi * nu * static_cast<double>(k) * 222e-12);
+            return std::norm(acc);
+        };
     double pMax = 0.0, fLow = 0.0, fHigh = 0.0;
-    for (double nu = -100e6; nu <= 100e6; nu += 0.25e6) pMax = std::max(pMax, envelopePower(nu));
     for (double nu = -100e6; nu <= 100e6; nu += 0.25e6)
-        if (envelopePower(nu) >= pMax / 2.0) { if (fLow == 0.0) fLow = nu; fHigh = nu; }
+        pMax = std::max(pMax, envelopePower(nu));
+    for (double nu = -100e6; nu <= 100e6; nu += 0.25e6)
+        if (envelopePower(nu) >= pMax / 2.0) {
+            if (fLow == 0.0)
+                fLow = nu;
+            fHigh = nu;
+        }
     REQUIRE(fHigh - fLow == Approx(1.33 / T).epsilon(0.03));
-    REQUIRE(hi - lo == Approx(fHigh - fLow).epsilon(0.06)); // + RBW broadening and one display bucket
+    REQUIRE(hi - lo ==
+            Approx(fHigh - fLow).epsilon(0.06)); // + RBW broadening and one display bucket
     REQUIRE(hi - lo == Approx(1.0 / T).epsilon(0.4));
     for (double nu : {20e6, 40e6}) {
         const double x = 2.0 * kPi * beta * nu;
         const double wantDb = 20.0 * std::log10((1.0 + x) / (1.0 - x));
-        INFO("offset " << nu << " Hz: upper/lower = " << at(5.1e9 + nu) - at(5.1e9 - nu) << " dB, expected " << wantDb);
+        INFO("offset " << nu << " Hz: upper/lower = " << at(5.1e9 + nu) - at(5.1e9 - nu)
+                       << " dB, expected " << wantDb);
         REQUIRE(at(5.1e9 + nu) - at(5.1e9 - nu) == Approx(wantDb).margin(0.3));
     }
 }
@@ -268,7 +299,8 @@ TEST_CASE("mixer calibration tool nulls LO leakage and image and writes the AWG 
     REQUIRE(rep->cls == FidelityClass::Model);
     REQUIRE(rep->loHz == 5.0e9);
     REQUIRE(rep->ifHz == 100e6);
-    // Before: the set levels, referred to the 0.8 full-scale carrier (−40 dBc is relative to full scale).
+    // Before: the set levels, referred to the 0.8 full-scale carrier (−40 dBc is relative to full
+    // scale).
     REQUIRE(rep->loBeforeDbc == Approx(-40.0 - 20.0 * std::log10(0.8)).margin(0.1));
     REQUIRE(rep->imageBeforeDbc == Approx(-35.0).margin(0.1));
     REQUIRE(rep->loAfterDbc < -70.0);
@@ -289,11 +321,16 @@ TEST_CASE("mixer calibration tool nulls LO leakage and image and writes the AWG 
     REQUIRE(t->marker("lo_dbc")->value < -65.0);
     REQUIRE(t->marker("image_dbc")->value < -65.0);
     // The carrier is the 0.8 full-scale tone through 6 dB of conversion loss, times the small gain
-    // change |α + ε_img conj(β)| of the predistortion itself (α, β = (1 ± a e^{iφ})/2, ≈ +0.1 dB here).
+    // change |α + ε_img conj(β)| of the predistortion itself (α, β = (1 ± a e^{iφ})/2, ≈ +0.1 dB
+    // here).
     const Complex gc = std::polar(c.gainRatio, c.phaseSkewRad);
-    const double predistortionDb = 20.0 * std::log10(std::abs((1.0 + gc) / 2.0 + bench.mixer.imageCoefficient() * std::conj((1.0 - gc) / 2.0)));
+    const double predistortionDb =
+        20.0 * std::log10(std::abs((1.0 + gc) / 2.0 +
+                                   bench.mixer.imageCoefficient() * std::conj((1.0 - gc) / 2.0)));
     REQUIRE(predistortionDb == Approx(0.11).margin(0.02));
-    REQUIRE(t->marker("carrier")->value == Approx(10.0 * std::log10(0.4 * 0.4 / 100.0 / 1e-3) - 6.0 + predistortionDb).margin(0.05));
+    REQUIRE(
+        t->marker("carrier")->value ==
+        Approx(10.0 * std::log10(0.4 * 0.4 / 100.0 / 1e-3) - 6.0 + predistortionDb).margin(0.05));
 
     // Without a tone there is nothing to calibrate against.
     Bench silent(instrtest::toneSchedule(20e-6, 0.0));
@@ -366,8 +403,8 @@ TEST_CASE("routing: a disconnected cable leaves the downstream instrument withou
     REQUIRE(restored->inputOf("iq_mixer[0].if")->connected);
     // An edge written with an explicit empty id means the default "from->to" that addEdge
     // substitutes, so a disconnected one must still restore rather than fail as an unknown cable.
-    auto blank = SignalGraph::fromJson(core::Json::parse(
-        R"({"edges":[{"from":"a.out","to":"b.in","id":"","connected":false}]})"));
+    auto blank = SignalGraph::fromJson(
+        core::Json::parse(R"({"edges":[{"from":"a.out","to":"b.in","id":"","connected":false}]})"));
     REQUIRE(blank);
     REQUIRE(blank->edges().size() == 1);
     REQUIRE(blank->edges()[0].id == "a.out->b.in");

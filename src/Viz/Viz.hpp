@@ -2,12 +2,14 @@
 // Umbrella header for qlab::viz (spec 21) — the state, circuit, pulse and device visualizations.
 //
 //   ViewInput           what every view consumes: a qsim::Snapshot with the reductions computed for
-//                       it, shot counts with the ideal distribution, the ir::Circuit at each compile
-//                       stage, the pulse::Schedule with its playhead, hw::Device + hw::Calibration,
-//                       Lindblad / trajectory series and the QEC views. The App fills it from the
-//                       session (deviation from spec 21 §1: Viz does not depend on Runtime).
+//                       it, shot counts with the ideal distribution, the ir::Circuit at each
+//                       compile stage, the pulse::Schedule with its playhead, hw::Device +
+//                       hw::Calibration, Lindblad / trajectory series and the QEC views. The App
+//                       fills it from the session (deviation from spec 21 §1: Viz does not depend
+//                       on Runtime).
 //   computeReductions   the off-thread reducer behind `IStateView::wants()`: reduced density
-//                       matrices, entropies, pair mutual information, concurrence, Schmidt spectrum.
+//                       matrices, entropies, pair mutual information, concurrence, Schmidt
+//                       spectrum.
 //   math::              pure presentation maths — Bloch vectors, phase → hue on the cyclic twilight
 //                       LUT, Q-sphere placement, city / Hinton geometry, Wilson intervals, Wigner.
 //   layout::            pure layout — circuit moments and the timed variant, device graphs, pulse

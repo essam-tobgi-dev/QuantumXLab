@@ -15,14 +15,17 @@ constexpr std::string_view kLayoutKey = "ui_layout";
 
 std::string journalId() {
     // Deterministic per process, unique per run: the recovery journal only has to not collide.
-    static const std::string id = std::format("untitled-{:016x}", core::JsonEnvelope::currentSchema("project") +
-                                                                      std::hash<std::string>{}(core::isoNow()));
+    static const std::string id =
+        std::format("untitled-{:016x}", core::JsonEnvelope::currentSchema("project") +
+                                            std::hash<std::string>{}(core::isoNow()));
     return id;
 }
 
 } // namespace
 
-ProjectHost::ProjectHost(LabModel& model) : model_(&model) { newProject(); }
+ProjectHost::ProjectHost(LabModel& model) : model_(&model) {
+    newProject();
+}
 
 void ProjectHost::newProject() {
     project_ = report::Project{};
@@ -51,23 +54,27 @@ Status ProjectHost::open(const std::filesystem::path& file, report::RecoveryChoi
 }
 
 Status ProjectHost::acceptRecovery() {
-    if (!recovery_) return {};
+    if (!recovery_)
+        return {};
     const std::filesystem::path file = path_;
     recovery_.reset();
-    QXL_TRY_ASSIGN(report::OpenedProject opened, report::openProject(file, report::RecoveryChoice::UseAutosave));
+    QXL_TRY_ASSIGN(report::OpenedProject opened,
+                   report::openProject(file, report::RecoveryChoice::UseAutosave));
     project_ = opened.project;
-    dirty_ = true;   // the recovered state has never been saved to the project file
+    dirty_ = true; // the recovered state has never been saved to the project file
     return apply();
 }
 
 void ProjectHost::declineRecovery() {
-    if (!recovery_) return;
+    if (!recovery_)
+        return;
     recovery_.reset();
     (void)report::clearAutosave(path_);
 }
 
 Status ProjectHost::save() {
-    if (path_.empty()) return fail(ErrorCode::NotFound, "the project has no file yet: use Save As");
+    if (path_.empty())
+        return fail(ErrorCode::NotFound, "the project has no file yet: use Save As");
     capture();
     QXL_TRY(report::saveProject(path_, project_));
     dirty_ = false;
@@ -77,7 +84,8 @@ Status ProjectHost::save() {
 
 Status ProjectHost::saveAs(const std::filesystem::path& file) {
     path_ = file;
-    if (project_.name == "Untitled project") project_.name = file.stem().string();
+    if (project_.name == "Untitled project")
+        project_.name = file.stem().string();
     return save();
 }
 
@@ -92,10 +100,13 @@ Status ProjectHost::autosaveNow() {
 
 void ProjectHost::tick(double dtSeconds) {
     sinceAutosave_ += dtSeconds;
-    if (sinceAutosave_ < static_cast<double>(report::kAutosaveInterval.count())) return;
+    if (sinceAutosave_ < static_cast<double>(report::kAutosaveInterval.count()))
+        return;
     sinceAutosave_ = 0.0;
-    if (!dirty_) return;
-    if (auto st = autosaveNow(); !st) QXL_LOG_WARN(App, "autosave failed: {}", st.error().message);
+    if (!dirty_)
+        return;
+    if (auto st = autosaveNow(); !st)
+        QXL_LOG_WARN(App, "autosave failed: {}", st.error().message);
 }
 
 void ProjectHost::discardAutosave() {
@@ -110,15 +121,17 @@ void ProjectHost::discardAutosave() {
 void ProjectHost::setMainProgram(std::string source, std::filesystem::path origin) {
     report::ProgramRef* main = nullptr;
     for (report::ProgramRef& p : project_.programs)
-        if (p.isMain) main = &p;
+        if (p.isMain)
+            main = &p;
     if (main == nullptr) {
         project_.programs.push_back(report::ProgramRef{});
         main = &project_.programs.back();
         main->isMain = true;
     }
     main->inlineSource = std::move(source);
-    main->path = origin.empty() || path_.empty() ? std::string{}
-                                                 : report::relativePathString(origin, path_.parent_path());
+    main->path = origin.empty() || path_.empty()
+                     ? std::string{}
+                     : report::relativePathString(origin, path_.parent_path());
     dirty_ = true;
 }
 
@@ -148,7 +161,8 @@ Status ProjectHost::recordRun(const runtime::RunResult& run, std::string_view so
     project_.addRun(std::move(summary));
     dirty_ = true;
     // Spec 23 §2: an autosave follows every successful run.
-    if (auto st = autosaveNow(); !st) QXL_LOG_WARN(App, "autosave after run failed: {}", st.error().message);
+    if (auto st = autosaveNow(); !st)
+        QXL_LOG_WARN(App, "autosave after run failed: {}", st.error().message);
     return {};
 }
 
@@ -156,7 +170,8 @@ void ProjectHost::storeLayout(const ui::LayoutState& layout) {
     project_.workspace.preset = std::string(ui::workspaceName(layout.active));
     project_.workspace.imguiLayout = layout.of(layout.active).ini;
     core::Json open = core::Json::array();
-    for (const std::string& key : layout.of(layout.active).open) open.push_back(key);
+    for (const std::string& key : layout.of(layout.active).open)
+        open.push_back(key);
     project_.workspace.openPanels = std::move(open);
     project_.workspace.extra[std::string(kLayoutKey)] = layout.toJson();
     dirty_ = true;
@@ -164,9 +179,11 @@ void ProjectHost::storeLayout(const ui::LayoutState& layout) {
 
 std::optional<ui::LayoutState> ProjectHost::layout() const {
     const auto it = project_.workspace.extra.find(kLayoutKey);
-    if (it == project_.workspace.extra.end()) return std::nullopt;
+    if (it == project_.workspace.extra.end())
+        return std::nullopt;
     auto parsed = ui::LayoutState::fromJson(*it);
-    if (!parsed) return std::nullopt;
+    if (!parsed)
+        return std::nullopt;
     return std::move(*parsed);
 }
 
@@ -183,7 +200,8 @@ Status ProjectHost::apply() {
 }
 
 void ProjectHost::capture() {
-    if (const hw::Device* d = model_->session().device(); d != nullptr) project_.device.id = d->id;
+    if (const hw::Device* d = model_->session().device(); d != nullptr)
+        project_.device.id = d->id;
     project_.backend.kind = std::string(report::backendName(model_->session().backendChoice()));
     if (const runtime::RunResult* r = model_->result(); r != nullptr) {
         project_.backend.shots = r->options.shots;

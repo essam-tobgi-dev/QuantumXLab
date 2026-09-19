@@ -15,8 +15,8 @@
 #include "App/Application.hpp"
 #include "App/Headless.hpp"
 #include "App/RunProgram.hpp"
-#include "Core/Json.hpp"
 #include "Core/JobSystem.hpp"
+#include "Core/Json.hpp"
 #include "Core/Log.hpp"
 #include "Core/Paths.hpp"
 #include "Data/Histogram.hpp"
@@ -33,7 +33,7 @@
 namespace qlab::app {
 namespace {
 
-constexpr double kSigmas = 5.0;   // spec 25 §1: a statistical assertion is a 5σ band
+constexpr double kSigmas = 5.0; // spec 25 §1: a statistical assertion is a 5σ band
 
 std::filesystem::path expectedFor(const std::filesystem::path& qasm) {
     std::filesystem::path p = qasm;
@@ -44,7 +44,8 @@ std::filesystem::path expectedFor(const std::filesystem::path& qasm) {
 std::string safeName(std::string_view text) {
     std::string out;
     out.reserve(text.size());
-    for (char c : text) out.push_back(c == ' ' || c == '/' || c == '\\' ? '_' : static_cast<char>(std::tolower(c)));
+    for (char c : text)
+        out.push_back(c == ' ' || c == '/' || c == '\\' ? '_' : static_cast<char>(std::tolower(c)));
     return out;
 }
 
@@ -61,7 +62,8 @@ const std::vector<ShippedDevice>& shippedDevices() {
         std::vector<ShippedDevice> all;
         for (const std::string& id : hw::shippedDeviceIds()) {
             const auto device = hw::loadDeviceJson(hw::deviceRoot() / id / "device.json");
-            if (device) all.push_back({id, static_cast<std::uint32_t>(device->dataQubitCount())});
+            if (device)
+                all.push_back({id, static_cast<std::uint32_t>(device->dataQubitCount())});
         }
         std::sort(all.begin(), all.end(), [](const ShippedDevice& a, const ShippedDevice& b) {
             return std::tie(a.dataQubits, a.id) < std::tie(b.dataQubits, b.id);
@@ -77,10 +79,12 @@ const std::vector<ShippedDevice>& shippedDevices() {
 // the 127-qubit one. A program larger than everything that ships runs on the largest, so that the
 // failure names the real ceiling rather than the default device's.
 std::string deviceFor(const lang::Program& program) {
-    if (program.pragmas.device) return *program.pragmas.device;
+    if (program.pragmas.device)
+        return *program.pragmas.device;
     const std::vector<ShippedDevice>& devices = shippedDevices();
     for (const ShippedDevice& d : devices)
-        if (d.dataQubits >= program.qubitCount) return d.id;
+        if (d.dataQubits >= program.qubitCount)
+            return d.id;
     return devices.empty() ? std::string("sc_fixed_5") : devices.back().id;
 }
 
@@ -99,7 +103,8 @@ struct BitWindow {
 double windowProbability(const std::vector<double>& exact, BitWindow window, std::uint64_t value) {
     double p = 0.0;
     for (std::uint64_t x = 0; x < exact.size(); ++x)
-        if (window.valueOf(x) == value) p += exact[x];
+        if (window.valueOf(x) == value)
+            p += exact[x];
     return p;
 }
 
@@ -107,7 +112,8 @@ double windowProbability(const std::vector<double>& exact, BitWindow window, std
 std::uint64_t windowCount(const data::Histogram& counts, BitWindow window, std::uint64_t value) {
     std::uint64_t k = 0;
     for (const auto& [label, n] : counts.raw())
-        if (window.valueOf(data::Histogram::indexFromLabel(label)) == value) k += n;
+        if (window.valueOf(data::Histogram::indexFromLabel(label)) == value)
+            k += n;
     return k;
 }
 
@@ -124,13 +130,14 @@ bool SelfTestReport::ok() const {
     // A skipped example (a statistical oracle with no fixed distribution) is not a failure; an
     // example that ran and disagreed with its expectation is.
     for (const ExampleCheck& e : examples)
-        if (!e.skipped && !e.passed) return false;
+        if (!e.skipped && !e.passed)
+            return false;
     return !examples.empty();
 }
 
 ExampleCheck checkExample(const std::filesystem::path& qasm, const Options& options) {
     ExampleCheck check;
-    check.name = qasm.stem().string();     // `device` stays empty until the program picks one
+    check.name = qasm.stem().string(); // `device` stays empty until the program picks one
     const auto text = core::readTextFile(expectedFor(qasm));
     if (!text) {
         check.detail = std::format("no expectation file: {}", expectedFor(qasm).string());
@@ -143,13 +150,15 @@ ExampleCheck checkExample(const std::filesystem::path& qasm, const Options& opti
         check.detail = std::format("expectation file is not JSON: {}", e.what());
         return check;
     }
-    const bool partial = expected.is_object() && expected["partial"].is_boolean() && expected["partial"].get<bool>();
+    const bool partial =
+        expected.is_object() && expected["partial"].is_boolean() && expected["partial"].get<bool>();
     // `"tolerance": "statistical"` marks an example whose oracle is a fit or a reconstruction, not
     // a fixed distribution; `nlohmann::value()` would throw on the string, and an exception here
     // aborted the whole self-test after the fourth example (DEVELOPMENT.md: nothing throws across
     // a module boundary).
-    const double tolerance =
-        expected.is_object() && expected["tolerance"].is_number() ? expected["tolerance"].get<double>() : 1e-6;
+    const double tolerance = expected.is_object() && expected["tolerance"].is_number()
+                                 ? expected["tolerance"].get<double>()
+                                 : 1e-6;
     if (!expected.is_object() || !expected["counts"].is_object() || expected["counts"].empty()) {
         check.skipped = true;
         check.detail = expected.is_object() && expected["note"].is_string()
@@ -175,9 +184,10 @@ ExampleCheck checkExample(const std::filesystem::path& qasm, const Options& opti
 
     Options run = options;
     run.device = check.device;
-    run.ideal = true;                      // the oracle is the ideal distribution (spec 25 §2)
+    run.ideal = true; // the oracle is the ideal distribution (spec 25 §2)
     run.shotsGiven = true;
-    run.shots = expected["shots"].is_number_unsigned() ? expected["shots"].get<std::uint32_t>() : 1024u;
+    run.shots =
+        expected["shots"].is_number_unsigned() ? expected["shots"].get<std::uint32_t>() : 1024u;
     run.seedGiven = true;
     run.seed = expected["seed"].is_number_unsigned() ? expected["seed"].get<std::uint64_t>() : 1ull;
 
@@ -203,13 +213,15 @@ ExampleCheck checkExample(const std::filesystem::path& qasm, const Options& opti
     // The window the expectation's labels live in: one register when it names one, else the whole
     // classical memory.
     const bool named = expected["register"].is_string();
-    const std::string oracle = named ? expected["register"].get<std::string>() : registerList(r.layout);
+    const std::string oracle =
+        named ? expected["register"].get<std::string>() : registerList(r.layout);
     BitWindow window{0, r.counts.nbits()};
     if (named) {
         const runtime::RegisterInfo* reg = r.layout.find(oracle);
         if (reg == nullptr) {
-            check.detail = std::format("the expectation reads register '{}'; the program declares {}",
-                                       oracle, registerList(r.layout));
+            check.detail =
+                std::format("the expectation reads register '{}'; the program declares {}", oracle,
+                            registerList(r.layout));
             return check;
         }
         window = BitWindow{reg->first, reg->size};
@@ -221,10 +233,11 @@ ExampleCheck checkExample(const std::filesystem::path& qasm, const Options& opti
     for (const auto& [label, probability] : counts.items()) {
         // A label of the wrong width can never match a key, and would silently read as P = 0.
         if (label.size() != window.width) {
-            check.detail = std::format("the label '{}' does not span the oracle: {} bits against {} "
-                                       "({}); name the register the expectation reads with "
-                                       "\"register\", or write the whole key",
-                                       label, label.size(), window.width, oracle);
+            check.detail =
+                std::format("the label '{}' does not span the oracle: {} bits against {} "
+                            "({}); name the register the expectation reads with "
+                            "\"register\", or write the whole key",
+                            label, label.size(), window.width, oracle);
             return check;
         }
         const double want = probability.get<double>();
@@ -240,7 +253,8 @@ ExampleCheck checkExample(const std::filesystem::path& qasm, const Options& opti
         const double band = r.exact ? tolerance : std::max(tolerance, sigma5);
         if (const double delta = std::abs(got - want); delta > worstDelta) {
             worstDelta = delta;
-            worst = std::format("{}: want {:.6f}, got {:.6f} (tolerance {:.3g})", label, want, got, band);
+            worst = std::format("{}: want {:.6f}, got {:.6f} (tolerance {:.3g})", label, want, got,
+                                band);
         }
         if (std::abs(got - want) > band) {
             check.detail = worst;
@@ -250,12 +264,14 @@ ExampleCheck checkExample(const std::filesystem::path& qasm, const Options& opti
         const double sigma = std::sqrt(std::max(want * (1.0 - want), 1e-12) /
                                        std::max<double>(1, static_cast<double>(r.counts.total())));
         if (std::abs(sampled - want) > kSigmas * sigma + tolerance) {
-            check.detail = std::format("{}: sampled {:.4f} is more than 5σ from {:.4f}", label, sampled, want);
+            check.detail =
+                std::format("{}: sampled {:.4f} is more than 5σ from {:.4f}", label, sampled, want);
             return check;
         }
     }
     if (!partial && std::abs(listed - 1.0) > 1e-6) {
-        check.detail = std::format("the expectation lists {:.6f} of the distribution but is not marked partial", listed);
+        check.detail = std::format(
+            "the expectation lists {:.6f} of the distribution but is not marked partial", listed);
         return check;
     }
     check.passed = true;
@@ -270,7 +286,9 @@ Result<SelfTestReport> runSelfTest(const Options& options, std::ostream& out) {
     SelfTestReport report;
     std::error_code ec;
     std::filesystem::create_directories(options.outDir, ec);
-    if (ec) return fail(ErrorCode::Io, std::format("--selftest: cannot create {}", options.outDir.string()));
+    if (ec)
+        return fail(ErrorCode::Io,
+                    std::format("--selftest: cannot create {}", options.outDir.string()));
 
     // ---- examples (no GL needed)
     // Every example that ships an expectation is checked, not a chosen few: a wrong expectation is
@@ -279,10 +297,12 @@ Result<SelfTestReport> runSelfTest(const Options& options, std::ostream& out) {
     std::vector<std::filesystem::path> withExpectation;
     if (std::filesystem::is_directory(examples, ec)) {
         for (const auto& e : std::filesystem::recursive_directory_iterator(examples)) {
-            if (!e.is_regular_file() || e.path().extension() != ".qasm") continue;
+            if (!e.is_regular_file() || e.path().extension() != ".qasm")
+                continue;
             std::filesystem::path expected = e.path();
             expected.replace_extension(".expected.json");
-            if (std::filesystem::exists(expected, ec)) withExpectation.push_back(e.path());
+            if (std::filesystem::exists(expected, ec))
+                withExpectation.push_back(e.path());
         }
     }
     std::sort(withExpectation.begin(), withExpectation.end());
@@ -309,8 +329,10 @@ Result<SelfTestReport> runSelfTest(const Options& options, std::ostream& out) {
     if (auto text = core::readTextFile(examples / "Basics" / "bell.qasm")) {
         a.setProgramSource(std::move(*text));
         a.requestRun();
-        for (int i = 0; i < 600 && a.model().result() == nullptr; ++i) a.frame(1.0 / 60.0);
-        if (a.model().result() == nullptr) report.notes.emplace_back("the in-application Bell run did not finish");
+        for (int i = 0; i < 600 && a.model().result() == nullptr; ++i)
+            a.frame(1.0 / 60.0);
+        if (a.model().result() == nullptr)
+            report.notes.emplace_back("the in-application Bell run did not finish");
         // The reductions the state views asked for are computed on the job system; give them a few
         // frames to arrive so the tiles are not captured with their "stale" badge.
         for (int i = 0; i < 12; ++i) {
@@ -330,8 +352,10 @@ Result<SelfTestReport> runSelfTest(const Options& options, std::ostream& out) {
         a.showWorkspace(workspace, 4);
         const std::filesystem::path file =
             options.outDir / std::format("workspace_{}.png", ui::workspaceName(workspace));
-        if (auto st = a.captureWindow(file); st) shot(file);
-        else report.notes.push_back(st.error().format());
+        if (auto st = a.captureWindow(file); st)
+            shot(file);
+        else
+            report.notes.push_back(st.error().format());
     }
 
     // Spec 17 §7.10: the guided tour's narration card over the laboratory, at the mixing-chamber
@@ -340,10 +364,13 @@ Result<SelfTestReport> runSelfTest(const Options& options, std::ostream& out) {
     if (lab::Tour* tour = a.model().tour(); tour != nullptr && tour->size() > 10) {
         tour->play();
         tour->seek(10);
-        for (int i = 0; i < 80; ++i) a.frame(1.0 / 60.0);   // the 0.9 s flight and a moment of dwell
+        for (int i = 0; i < 80; ++i)
+            a.frame(1.0 / 60.0); // the 0.9 s flight and a moment of dwell
         const std::filesystem::path file = options.outDir / "workspace_tour.png";
-        if (auto st = a.captureWindow(file); st) shot(file);
-        else report.notes.push_back(st.error().format());
+        if (auto st = a.captureWindow(file); st)
+            shot(file);
+        else
+            report.notes.push_back(st.error().format());
         tour->stop();
     }
 
@@ -352,25 +379,32 @@ Result<SelfTestReport> runSelfTest(const Options& options, std::ostream& out) {
     if (lab::Interaction* ui = a.model().interaction(); ui != nullptr) {
         const core::Json view = ui->saveViewState();
         const std::vector<lab::LayoutBookmark> marks = ui->bookmarks();
-        const std::size_t layoutMarks = a.model().scene() != nullptr ? a.model().scene()->layout().bookmarks.size() : 0;
-        const lab::LayoutSpec* layout = a.model().scene() != nullptr ? &a.model().scene()->layout() : nullptr;
-        for (std::size_t k = 0; k < marks.size() && k < std::max<std::size_t>(layoutMarks, 1); ++k) {
-            ui->loadViewState(view);               // a chip bookmark hides layers; undo that first
-            if (!ui->applyBookmark(marks[k].name, a.camera(), 0.0)) continue;
+        const std::size_t layoutMarks =
+            a.model().scene() != nullptr ? a.model().scene()->layout().bookmarks.size() : 0;
+        const lab::LayoutSpec* layout =
+            a.model().scene() != nullptr ? &a.model().scene()->layout() : nullptr;
+        for (std::size_t k = 0; k < marks.size() && k < std::max<std::size_t>(layoutMarks, 1);
+             ++k) {
+            ui->loadViewState(view); // a chip bookmark hides layers; undo that first
+            if (!ui->applyBookmark(marks[k].name, a.camera(), 0.0))
+                continue;
             // Spec 17 §7.5/§7.6: a bookmark whose camera sits inside the fridge frame is an
             // interior view — the vacuum can would fill it, so the cans go and X-ray fades the
             // shields to 12 %.
             if (layout != nullptr && layout->hasFridge()) {
                 const glm::dvec3 d = marks[k].view.position - layout->fridgePosition_m;
-                const bool interior =
-                    std::abs(d.x) < 0.5 * layout->frameWidth_m && std::abs(d.z) < 0.5 * layout->frameDepth_m;
+                const bool interior = std::abs(d.x) < 0.5 * layout->frameWidth_m &&
+                                      std::abs(d.z) < 0.5 * layout->frameDepth_m;
                 ui->setCansVisible(!interior);
                 ui->setXray(interior);
             }
             a.frame(1.0 / 60.0);
-            const std::filesystem::path file = options.outDir / std::format("bookmark_{}.png", safeName(marks[k].name));
-            if (auto st = a.captureViewport(file, 1280, 800); st) shot(file);
-            else report.notes.push_back(st.error().format());
+            const std::filesystem::path file =
+                options.outDir / std::format("bookmark_{}.png", safeName(marks[k].name));
+            if (auto st = a.captureViewport(file, 1280, 800); st)
+                shot(file);
+            else
+                report.notes.push_back(st.error().format());
         }
         ui->loadViewState(view);
     }

@@ -35,12 +35,14 @@ struct Command {
     Kind kind = Kind::Set;
     std::string key;    // Set
     SettingValue value; // Set
-    static Command set(std::string key, SettingValue v) { return {Kind::Set, std::move(key), std::move(v)}; }
+    static Command set(std::string key, SettingValue v) {
+        return {Kind::Set, std::move(key), std::move(v)};
+    }
     static Command of(Kind k) { return {k, {}, {}}; }
 };
 
 class IInstrument {
-public:
+  public:
     // ---- spec 12 §1
     virtual InstrumentId id() const = 0;
     virtual std::span<const ChannelDesc> channels() const = 0;
@@ -50,17 +52,18 @@ public:
     // value of the wrong type. A settings conflict puts the instrument in Fault; the call succeeds.
     virtual Result<void> set(std::string_view key, SettingValue value) = 0;
     virtual SettingValue get(std::string_view key) const = 0; // monostate for an unknown key
-    virtual Result<Trace> acquire(ChannelId channel) = 0;     // single-shot, synchronous, any thread
+    virtual Result<Trace> acquire(ChannelId channel) = 0; // single-shot, synchronous, any thread
     virtual void bind(const Bindings& bindings) = 0;
     virtual State state() const = 0;
     virtual ~IInstrument() = default;
 
     // ---- required by the §1 prose
-    virtual std::string faultMessage() const = 0;             // empty unless state() == Fault
-    virtual std::vector<SettingReport> reports() const = 0;   // most recent clamps, oldest first
-    virtual Result<void> execute(const Command& command) = 0; // power, arm, clear fault, preset, set
+    virtual std::string faultMessage() const = 0;           // empty unless state() == Fault
+    virtual std::vector<SettingReport> reports() const = 0; // most recent clamps, oldest first
+    virtual Result<void>
+    execute(const Command& command) = 0; // power, arm, clear fault, preset, set
     virtual const Bindings& bindings() const = 0;
-    virtual bool simulatorOnly() const = 0;                   // spec 12 §12 probes
+    virtual bool simulatorOnly() const = 0; // spec 12 §12 probes
     // Scalar readings for `instr.*` binding paths, relative to this instrument: "f", "on",
     // "ch[2].I", "lo_leak". nullopt when the path is not one of its readings.
     virtual std::optional<double> query(std::string_view path) const = 0;
@@ -74,9 +77,19 @@ std::optional<ChannelId> findChannel(const IInstrument& instrument, std::string_
 Result<Trace> acquire(IInstrument& instrument, std::string_view channelName);
 
 // ---- events posted on the bound bus (core::EventBus::post, drained on the main thread)
-struct SettingClamped { SettingReport report; };
-struct InstrumentFault { InstrumentId instrument; std::string message; };
-struct StateChanged { InstrumentId instrument; State from, to; };
-struct TraceReady { std::shared_ptr<const Trace> trace; }; // live mode (spec 12 §1)
+struct SettingClamped {
+    SettingReport report;
+};
+struct InstrumentFault {
+    InstrumentId instrument;
+    std::string message;
+};
+struct StateChanged {
+    InstrumentId instrument;
+    State from, to;
+};
+struct TraceReady {
+    std::shared_ptr<const Trace> trace;
+}; // live mode (spec 12 §1)
 
 } // namespace qlab::instr

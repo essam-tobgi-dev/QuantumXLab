@@ -24,16 +24,19 @@ Result<CrParams> PulseLibrary::crParams(std::uint32_t c, std::uint32_t t) const 
     // `ecr` ships without the tomography amplitudes; they live on the `cx` defcal of the edge.
     const Defcal* amps = find("cx", edge);
     const Defcal* any = amps ? amps : find("ecr", edge);
-    if (!any) return fail(kErrNoDefcal, std::format("no cross-resonance defcal on edge {}-{}", c, t));
+    if (!any)
+        return fail(kErrNoDefcal, std::format("no cross-resonance defcal on edge {}-{}", c, t));
 
     CrParams p;
     p.control = c;
     p.target = t;
-    const std::string from = any->paramsFrom.empty() ? std::format("cal.edges.{}-{}", c, t) : any->paramsFrom;
+    const std::string from =
+        any->paramsFrom.empty() ? std::format("cal.edges.{}-{}", c, t) : any->paramsFrom;
     QXL_TRY_ASSIGN(const double durNs, path(from + ".duration_ns"));
     p.calibratedDurationS = durNs * 1e-9;
 
-    const core::Json& tpl = templates_.contains("cr_echo") ? templates_["cr_echo"] : core::Json::object();
+    const core::Json& tpl =
+        templates_.contains("cr_echo") ? templates_["cr_echo"] : core::Json::object();
     p.sigmaS = jsonNumber(tpl, "sigma_ns", 16.0) * 1e-9;
     p.riseS = jsonNumber(tpl, "rise_ns", 32.0) * 1e-9;
     if (amps) {
@@ -48,11 +51,14 @@ Result<CrParams> PulseLibrary::crParams(std::uint32_t c, std::uint32_t t) const 
     // gate length, to within the granule the grid of §1 imposes on each half.
     p.crDuration = quantise(p.calibratedDurationS / 2.0 - secondsOf(p.echoDuration), true);
     p.totalDuration = Picoseconds{2 * p.crDuration.value + 2 * p.echoDuration.value};
-    if (p.calibratedDurationS / 2.0 - secondsOf(p.echoDuration) < dt_.value * 1e-12 * minPulseSamples_)
-        return fail(Error(kErrMin, std::format("edge {}-{}: the calibrated {:.1f} ns leaves no room for two "
-                                               "{}-sample CR halves beside the {:.3f} ns echo pulses",
-                                               c, t, durNs, minPulseSamples_, secondsOf(p.echoDuration) * 1e9))
-                        .withId("E_PULSE_MIN"));
+    if (p.calibratedDurationS / 2.0 - secondsOf(p.echoDuration) <
+        dt_.value * 1e-12 * minPulseSamples_)
+        return fail(
+            Error(kErrMin,
+                  std::format("edge {}-{}: the calibrated {:.1f} ns leaves no room for two "
+                              "{}-sample CR halves beside the {:.3f} ns echo pulses",
+                              c, t, durNs, minPulseSamples_, secondsOf(p.echoDuration) * 1e9))
+                .withId("E_PULSE_MIN"));
     return p;
 }
 
@@ -67,7 +73,9 @@ Result<Schedule> PulseLibrary::buildCrEcho(const Defcal& d, bool bare) const {
     const ChannelId cr = ChannelId::control(c, t);
     const ChannelId driveT = ChannelId::drive(t);
     const ChannelId driveC = ChannelId::drive(c);
-    auto crPulse = [&](double sign) { return Waveform::gaussianSquare(tcr, p.sigmaS, p.riseS, sign * p.ampCr); };
+    auto crPulse = [&](double sign) {
+        return Waveform::gaussianSquare(tcr, p.sigmaS, p.riseS, sign * p.ampCr);
+    };
     auto cancelPulse = [&](double sign) {
         return Waveform::gaussianSquare(tcr, p.sigmaS, p.riseS, sign * p.ampCancel, p.phaseCancel);
     };
@@ -88,7 +96,8 @@ Result<Schedule> PulseLibrary::buildCrEcho(const Defcal& d, bool bare) const {
     s.insert(Play{driveT, cancelPulse(-1.0), {}}, half + tx);
     // 4. second echo.
     s.insert(Play{driveC, echo, {}}, secondEcho);
-    if (bare) return s; // `ecr`: steps 1–4 only (spec 10 §6.3).
+    if (bare)
+        return s; // `ecr`: steps 1–4 only (spec 10 §6.3).
 
     // 5. CNOT = e^{iπ/4} Rz_c(−π/2) · [Rz_t(π) sx_t Rz_t(π)] · ZX(π/2)  (T05 (8.3), T02 §2.3).
     // A virtual Rz(θ) on q is shift_phase(−θ) on d[q] and on every CR frame targeting q (spec 10
@@ -122,10 +131,12 @@ Result<Schedule> PulseLibrary::buildFluxGate(const Defcal& d, std::string_view t
 
     const std::string chName = d.extra.value("flux_channel", std::string{});
     if (chName.empty())
-        return fail(Error(kErrNoChannel, std::format("defcal {} has no 'flux_channel'", d.key.toString()))
-                        .withId("E_NO_CHANNEL"));
+        return fail(
+            Error(kErrNoChannel, std::format("defcal {} has no 'flux_channel'", d.key.toString()))
+                .withId("E_NO_CHANNEL"));
     QXL_TRY_ASSIGN(const ChannelId ch, parseChannel(chName));
-    QXL_TRY_ASSIGN(const WaveformKind kind, waveformKindFromName(tpl.value("wf", std::string{"slepian"})));
+    QXL_TRY_ASSIGN(const WaveformKind kind,
+                   waveformKindFromName(tpl.value("wf", std::string{"slepian"})));
 
     double durationS = jsonNumber(tpl, "T_ns", 40.0) * 1e-9;
     if (!d.paramsFrom.empty()) {
@@ -141,7 +152,8 @@ Result<Schedule> PulseLibrary::buildFluxGate(const Defcal& d, std::string_view t
     wf.lambda1 = jsonNumber(tpl, "lambda1", 0.0);
     wf.rise = jsonNumber(tpl, "edge_ns", jsonNumber(tpl, "rise_ns", 0.0)) * 1e-9;
     wf.sigma = jsonNumber(tpl, "sigma_ns", 0.0) * 1e-9;
-    if (kind == WaveformKind::GaussianSquare && wf.sigma <= 0.0) wf.sigma = wf.rise / 2.0;
+    if (kind == WaveformKind::GaussianSquare && wf.sigma <= 0.0)
+        wf.sigma = wf.rise / 2.0;
     QXL_TRY(wf.validate());
 
     Schedule s = emptySchedule();

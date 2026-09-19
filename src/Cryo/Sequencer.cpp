@@ -4,12 +4,18 @@ namespace qlab::cryo {
 
 std::string_view fridgeStateName(FridgeState s) {
     switch (s) {
-    case FridgeState::Warm: return "warm";
-    case FridgeState::Pumping: return "pumping";
-    case FridgeState::Precooling: return "precooling";
-    case FridgeState::Condensing: return "condensing";
-    case FridgeState::Base: return "base";
-    case FridgeState::Warming: return "warming";
+    case FridgeState::Warm:
+        return "warm";
+    case FridgeState::Pumping:
+        return "pumping";
+    case FridgeState::Precooling:
+        return "precooling";
+    case FridgeState::Condensing:
+        return "condensing";
+    case FridgeState::Base:
+        return "base";
+    case FridgeState::Warming:
+        return "warming";
     }
     return "?";
 }
@@ -39,9 +45,13 @@ Result<ThermalSnapshot> CooldownSequencer::step(double dt) {
     elapsed_ += dt;
     const auto& T = net_.temperatures();
     switch (state_) {
-    case FridgeState::Warm: break;
+    case FridgeState::Warm:
+        break;
     case FridgeState::Pumping:
-        if (ghs_.ovcAtVacuum()) { net_.cooling.pulseTubeOn = true; state_ = FridgeState::Precooling; }
+        if (ghs_.ovcAtVacuum()) {
+            net_.cooling.pulseTubeOn = true;
+            state_ = FridgeState::Precooling;
+        }
         break;
     case FridgeState::Precooling:
         if (T[stageIndex(Stage::PT2)] < 4.5 && T[stageIndex(Stage::STILL)] < 5.0) {
@@ -61,15 +71,23 @@ Result<ThermalSnapshot> CooldownSequencer::step(double dt) {
             state_ = FridgeState::Base;
         }
         break;
-    case FridgeState::Base: break;
+    case FridgeState::Base:
+        break;
     case FridgeState::Warming:
-        if (T[stageIndex(Stage::PT2)] > 280.0) { state_ = FridgeState::Warm; ghs_.setPump("turbo_ovc", false); ghs_.setPump("scroll_backing", false); }
+        if (T[stageIndex(Stage::PT2)] > 280.0) {
+            state_ = FridgeState::Warm;
+            ghs_.setPump("turbo_ovc", false);
+            ghs_.setPump("scroll_backing", false);
+        }
         break;
     }
     ghs_.step(dt, net_.cooling.stillHeater_W, T[stageIndex(Stage::STILL)]);
-    if (state_ == FridgeState::Base || state_ == FridgeState::Condensing) net_.cooling.n3_mol_s = std::max(ghs_.snapshot().n3_mol_s, state_ == FridgeState::Base ? 2e-4 : 0.0);
+    if (state_ == FridgeState::Base || state_ == FridgeState::Condensing)
+        net_.cooling.n3_mol_s =
+            std::max(ghs_.snapshot().n3_mol_s, state_ == FridgeState::Base ? 2e-4 : 0.0);
     auto s = net_.step(dt);
-    if (s) last_ = *s;
+    if (s)
+        last_ = *s;
     return s;
 }
 

@@ -67,7 +67,7 @@ TEST_CASE("project: save -> load -> save is byte-identical apart from the envelo
     CHECK(loaded->device.id == "sc_heavyhex_27");
     CHECK(loaded->device.calibrationOverrides["qubit[3].T1_us"].get<double>() == 42.0);
     CHECK(loaded->backend.shots == 4000);
-    CHECK(loaded->backend.seed == 20250916ull);           // §2: the seed reproduces the run
+    CHECK(loaded->backend.seed == 20250916ull); // §2: the seed reproduces the run
     CHECK(loaded->backend.lindblad["levels"].get<int>() == 3);
     CHECK(loaded->compiler.optimizationLevel == 2);
     CHECK(loaded->workspace.imguiLayout == p.workspace.imguiLayout);
@@ -129,7 +129,8 @@ TEST_CASE("project: a schema newer than this application is refused by name (spe
     rtest::Sandbox box("project_version");
     const std::filesystem::path file = box / "newer.qxlab";
     core::Json doc;
-    doc["qxl"] = {{"kind", "project"}, {"schema", 99}, {"app", "9.9.9"}, {"created", "2030-01-01T00:00:00Z"}};
+    doc["qxl"] = {
+        {"kind", "project"}, {"schema", 99}, {"app", "9.9.9"}, {"created", "2030-01-01T00:00:00Z"}};
     doc["data"] = {{"name", "from the future"}};
     REQUIRE(core::writeTextFileAtomic(file, doc.dump(2)).has_value());
 
@@ -138,8 +139,8 @@ TEST_CASE("project: a schema newer than this application is refused by name (spe
     CHECK(loaded.error().code == ErrorCode::Unsupported);
     const std::string message = loaded.error().format();
     INFO(message);
-    CHECK(message.find("99") != std::string::npos);        // the version it refuses
-    CHECK(message.find("9.9.9") != std::string::npos);     // the application that wrote it
+    CHECK(message.find("99") != std::string::npos);    // the version it refuses
+    CHECK(message.find("9.9.9") != std::string::npos); // the application that wrote it
     CHECK(message.find("project") != std::string::npos);
 
     // A file of the wrong kind is refused too, naming both kinds.
@@ -170,7 +171,7 @@ TEST_CASE("project: autosave is offered on open and used only when the caller ac
 
     auto asked = openProject(file, RecoveryChoice::Ask);
     REQUIRE(asked.has_value());
-    CHECK(asked->autosavePending);                 // the caller prompts
+    CHECK(asked->autosavePending); // the caller prompts
     CHECK_FALSE(asked->recovered);
     CHECK(asked->project.name == "Grover 4-qubit on heavy-hex");
     CHECK_FALSE(asked->autosaveTime.empty());
@@ -192,7 +193,7 @@ TEST_CASE("project: autosave is offered on open and used only when the caller ac
     REQUIRE(writeAutosave(file, p).has_value());
     REQUIRE(saveProject(file, p).has_value());
     CHECK_FALSE(std::filesystem::exists(autosavePath(file)));
-    CHECK(clearAutosave(file).has_value());        // idempotent
+    CHECK(clearAutosave(file).has_value()); // idempotent
 }
 
 TEST_CASE("project: an untitled project journals under the user data directory (spec 23 §2)") {
@@ -239,7 +240,7 @@ TEST_CASE("project: paths inside a file are relative to it, with forward slashes
     CHECK(relativePathString(base / "a" / "b" / "c.qasm", base) == "a/b/c.qasm");
     CHECK(relativePathString("/lab/shared/lib.inc", base) == "../shared/lib.inc");
     CHECK(relativePathString(base, base) == ".");
-    CHECK(kAutosaveInterval == std::chrono::seconds{60});   // spec 23 §2 autosave cadence
+    CHECK(kAutosaveInterval == std::chrono::seconds{60}); // spec 23 §2 autosave cadence
 }
 
 TEST_CASE("project: run ids continue the existing numbering") {
@@ -267,14 +268,15 @@ TEST_CASE("project: run ids continue the existing numbering") {
 
 TEST_CASE("project: a malformed field falls back to its default instead of wrapping") {
     core::Json doc;
-    doc["qxl"] = {{"kind", "project"}, {"schema", 1}, {"app", "0.1.0"}, {"created", "2026-09-18T00:00:00Z"}};
-    doc["data"] = {{"name", 42},                                  // wrong type
-                   {"backend", {{"shots", -1}, {"seed", "many"}}},  // negative / wrong type
+    doc["qxl"] = {
+        {"kind", "project"}, {"schema", 1}, {"app", "0.1.0"}, {"created", "2026-09-18T00:00:00Z"}};
+    doc["data"] = {{"name", 42},                                   // wrong type
+                   {"backend", {{"shots", -1}, {"seed", "many"}}}, // negative / wrong type
                    {"programs", core::Json::array({"not an object"})}};
     auto p = parseProject(doc.dump());
     REQUIRE(p.has_value());
     CHECK(p->name.empty());
-    CHECK(p->backend.shots == 1024u);      // the default, not 2^32 - 1
+    CHECK(p->backend.shots == 1024u); // the default, not 2^32 - 1
     CHECK(p->backend.seed == 0u);
     CHECK(p->programs.empty());
 

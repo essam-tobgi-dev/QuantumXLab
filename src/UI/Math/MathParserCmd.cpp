@@ -25,16 +25,26 @@ NodePtr MathParser::parseCommand(const MathToken& t) {
         n->src.end = peek().src.begin;
         return n;
     }
-    if (c == "left") return parseLeftRight(t);
+    if (c == "left")
+        return parseLeftRight(t);
     if (c == "begin") {
         return parseEnvironment(t);
     }
-    if (c == "end") { warn("stray \\end"); rawGroupText(); return nullptr; }
+    if (c == "end") {
+        warn("stray \\end");
+        rawGroupText();
+        return nullptr;
+    }
     if (c == "tag" || c == "label" || c == "nonumber" || c == "notag" || c == "displaystyle" ||
-        c == "textstyle" || c == "scriptstyle" || c == "limits" || c == "nolimits" || c == "phantom" ||
-        c == "vphantom" || c == "hphantom" || c == "smash" || c == "mathstrut" || c == "allowbreak") {
-        if (c == "tag" || c == "label" || c == "phantom" || c == "vphantom" || c == "hphantom" || c == "smash") {
-            if (at(TokKind::LBrace)) { rawGroupText(); } else if (!at(TokKind::End)) next();
+        c == "textstyle" || c == "scriptstyle" || c == "limits" || c == "nolimits" ||
+        c == "phantom" || c == "vphantom" || c == "hphantom" || c == "smash" || c == "mathstrut" ||
+        c == "allowbreak") {
+        if (c == "tag" || c == "label" || c == "phantom" || c == "vphantom" || c == "hphantom" ||
+            c == "smash") {
+            if (at(TokKind::LBrace)) {
+                rawGroupText();
+            } else if (!at(TokKind::End))
+                next();
         }
         return nullptr;
     }
@@ -42,15 +52,23 @@ NodePtr MathParser::parseCommand(const MathToken& t) {
         auto n = MathNode::make(NodeKind::Delim);
         n->src = t.src;
         auto content = MathNode::make(NodeKind::Row);
-        if (c == "ket") { n->text = "|"; n->text2 = "⟩"; content->children.push_back(parseArgument()); }
-        else if (c == "bra") { n->text = "⟨"; n->text2 = "|"; content->children.push_back(parseArgument()); }
-        else if (c == "braket") {
-            n->text = "⟨"; n->text2 = "⟩";
+        if (c == "ket") {
+            n->text = "|";
+            n->text2 = "⟩";
+            content->children.push_back(parseArgument());
+        } else if (c == "bra") {
+            n->text = "⟨";
+            n->text2 = "|";
+            content->children.push_back(parseArgument());
+        } else if (c == "braket") {
+            n->text = "⟨";
+            n->text2 = "⟩";
             content->children.push_back(parseArgument());
             content->children.push_back(MathNode::symbol("|", AtomClass::Ord, {}));
             content->children.push_back(parseArgument());
         } else {
-            n->text = "|"; n->text2 = "|";
+            n->text = "|";
+            n->text2 = "|";
             content->children.push_back(parseArgument());
             content->children.push_back(MathNode::symbol("⟩⟨", AtomClass::Ord, {}));
             content->children.push_back(parseArgument());
@@ -60,7 +78,8 @@ NodePtr MathParser::parseCommand(const MathToken& t) {
         return n;
     }
     if (isStyleCommand(c)) {
-        if (c == "text" || c == "textrm" || c == "operatorname" || c == "mathrm" || c == "textbf" || c == "textit" || c == "mathsf" || c == "mathtt") {
+        if (c == "text" || c == "textrm" || c == "operatorname" || c == "mathrm" || c == "textbf" ||
+            c == "textit" || c == "mathsf" || c == "mathtt") {
             auto n = MathNode::make(NodeKind::Text);
             n->src = t.src;
             n->text = rawGroupText();
@@ -91,8 +110,13 @@ NodePtr MathParser::parseCommand(const MathToken& t) {
         n->src = t.src;
         n->text = std::string(big->glyph);
         n->flag = !big->integral; // limits above/below in display style unless integral
-        if (atCommand("limits")) { next(); n->flag = true; }
-        else if (atCommand("nolimits")) { next(); n->flag = false; }
+        if (atCommand("limits")) {
+            next();
+            n->flag = true;
+        } else if (atCommand("nolimits")) {
+            next();
+            n->flag = false;
+        }
         n->children.resize(2);
         return n;
     }
@@ -103,7 +127,8 @@ NodePtr MathParser::parseCommand(const MathToken& t) {
         n->styleName = "operatorname";
         n->cls = AtomClass::Op;
         // \lim, \max, \min take limits below in display style
-        if (c == "lim" || c == "max" || c == "min" || c == "sup" || c == "inf" || c == "argmax" || c == "argmin") {
+        if (c == "lim" || c == "max" || c == "min" || c == "sup" || c == "inf" || c == "argmax" ||
+            c == "argmin") {
             auto big = MathNode::make(NodeKind::BigOp);
             big->src = t.src;
             big->text = c;
@@ -118,7 +143,10 @@ NodePtr MathParser::parseCommand(const MathToken& t) {
         auto n = MathNode::make(NodeKind::Space);
         n->em = *sp;
         n->src = t.src;
-        if (c == "hspace" || c == "mkern") { if (at(TokKind::LBrace)) rawGroupText(); }
+        if (c == "hspace" || c == "mkern") {
+            if (at(TokKind::LBrace))
+                rawGroupText();
+        }
         return n;
     }
     if (auto sym = lookupSymbol(c)) {
@@ -126,7 +154,8 @@ NodePtr MathParser::parseCommand(const MathToken& t) {
     }
     if (c == "not") { // \not= → ≠ approximation: mark next relation
         NodePtr n = parseAtom();
-        if (n && n->kind == NodeKind::Symbol) n->text = "≠";
+        if (n && n->kind == NodeKind::Symbol)
+            n->text = "≠";
         return n;
     }
     // Old-style font switches: \rm, \bf, \it, \sf, \tt, \cal apply to the rest of the
@@ -134,11 +163,11 @@ NodePtr MathParser::parseCommand(const MathToken& t) {
     if (c == "rm" || c == "bf" || c == "it" || c == "sf" || c == "tt" || c == "cal" || c == "bb") {
         auto n = MathNode::make(NodeKind::Style);
         n->src = t.src;
-        n->styleName = c == "rm"   ? "mathrm"
-                       : c == "bf" ? "mathbf"
-                       : c == "it" ? "mathit"
-                       : c == "sf" ? "mathsf"
-                       : c == "tt" ? "mathtt"
+        n->styleName = c == "rm"    ? "mathrm"
+                       : c == "bf"  ? "mathbf"
+                       : c == "it"  ? "mathit"
+                       : c == "sf"  ? "mathsf"
+                       : c == "tt"  ? "mathtt"
                        : c == "cal" ? "mathcal"
                                     : "mathbb";
         n->children.push_back(parseRow(true));
@@ -148,16 +177,22 @@ NodePtr MathParser::parseCommand(const MathToken& t) {
     // Manual delimiter sizes: \big( \Big) \bigl[ \Bigr] \bigg \Bigg …
     if (c.size() >= 3 && (c.compare(0, 3, "big") == 0 || c.compare(0, 3, "Big") == 0)) {
         std::string rest = c.substr(3);
-        if (rest.empty() || rest == "l" || rest == "r" || rest == "m" || rest == "g" || rest == "gl" ||
-            rest == "gr" || rest == "gm") {
+        if (rest.empty() || rest == "l" || rest == "r" || rest == "m" || rest == "g" ||
+            rest == "gl" || rest == "gr" || rest == "gm") {
             double scale = 1.2;
-            if (c[0] == 'B') scale = 1.8;
-            if (rest.starts_with("g")) scale *= 1.45; // \bigg / \Bigg
+            if (c[0] == 'B')
+                scale = 1.8;
+            if (rest.starts_with("g"))
+                scale *= 1.45; // \bigg / \Bigg
             std::string d = parseDelimiterToken();
-            if (d.empty()) { warn("\\" + c + " without a delimiter"); return nullptr; }
-            auto n = MathNode::symbol(d, rest == "l" || rest == "gl" ? AtomClass::Open
-                                        : rest == "r" || rest == "gr" ? AtomClass::Close
-                                                                      : AtomClass::Ord,
+            if (d.empty()) {
+                warn("\\" + c + " without a delimiter");
+                return nullptr;
+            }
+            auto n = MathNode::symbol(d,
+                                      rest == "l" || rest == "gl"   ? AtomClass::Open
+                                      : rest == "r" || rest == "gr" ? AtomClass::Close
+                                                                    : AtomClass::Ord,
                                       t.src);
             n->em = scale; // layoutSymbol scales the glyph by this factor
             n->src.end = peek().src.begin;
@@ -206,7 +241,9 @@ NodePtr MathParser::parseCommand(const MathToken& t) {
         auto label = parseArgument();
         auto scripts = MathNode::make(NodeKind::Scripts);
         scripts->src = t.src;
-        auto arrow = MathNode::symbol(c == "xleftarrow" ? "⟵" : c == "xrightarrow" ? "⟶" : "⇌",
+        auto arrow = MathNode::symbol(c == "xleftarrow"    ? "⟵"
+                                      : c == "xrightarrow" ? "⟶"
+                                                           : "⇌",
                                       AtomClass::Rel, t.src);
         scripts->children.push_back(std::move(arrow));
         scripts->children.push_back(nullptr);
@@ -215,11 +252,30 @@ NodePtr MathParser::parseCommand(const MathToken& t) {
         scripts->src.end = peek().src.begin;
         return scripts;
     }
-    if (c == "over") { warn("\\over is not supported; use \\frac"); return nullptr; }
-    if (c == "mathop") { auto n = parseArgument(); n->cls = AtomClass::Op; return n; }
-    if (c == "mathbin") { auto n = parseArgument(); n->cls = AtomClass::Bin; return n; }
-    if (c == "mathrel") { auto n = parseArgument(); n->cls = AtomClass::Rel; return n; }
-    if (c == "color" || c == "textcolor") { if (at(TokKind::LBrace)) rawGroupText(); return c == "textcolor" ? parseArgument() : nullptr; }
+    if (c == "over") {
+        warn("\\over is not supported; use \\frac");
+        return nullptr;
+    }
+    if (c == "mathop") {
+        auto n = parseArgument();
+        n->cls = AtomClass::Op;
+        return n;
+    }
+    if (c == "mathbin") {
+        auto n = parseArgument();
+        n->cls = AtomClass::Bin;
+        return n;
+    }
+    if (c == "mathrel") {
+        auto n = parseArgument();
+        n->cls = AtomClass::Rel;
+        return n;
+    }
+    if (c == "color" || c == "textcolor") {
+        if (at(TokKind::LBrace))
+            rawGroupText();
+        return c == "textcolor" ? parseArgument() : nullptr;
+    }
     // Unknown: render verbatim
     warn("unknown command \\" + c);
     auto n = MathNode::make(NodeKind::Unknown);
@@ -249,21 +305,30 @@ NodePtr MathParser::parseEnvironment(const MathToken& beginTok) {
     auto n = MathNode::make(NodeKind::Matrix);
     n->src = beginTok.src;
     n->text = env;
-    bool known = env == "pmatrix" || env == "bmatrix" || env == "vmatrix" || env == "Vmatrix" || env == "Bmatrix" ||
-                 env == "matrix" || env == "cases" || env == "aligned" || env == "align" || env == "align*" ||
-                 env == "array" || env == "gathered" || env == "gather" || env == "smallmatrix" || env == "split" ||
-                 env == "equation" || env == "equation*" || env == "alignat";
-    if (!known) warn("unknown environment '" + env + "'");
-    if (env == "array" || env == "alignat") { if (at(TokKind::LBrace)) rawGroupText(); } // column spec ignored
+    bool known = env == "pmatrix" || env == "bmatrix" || env == "vmatrix" || env == "Vmatrix" ||
+                 env == "Bmatrix" || env == "matrix" || env == "cases" || env == "aligned" ||
+                 env == "align" || env == "align*" || env == "array" || env == "gathered" ||
+                 env == "gather" || env == "smallmatrix" || env == "split" || env == "equation" ||
+                 env == "equation*" || env == "alignat";
+    if (!known)
+        warn("unknown environment '" + env + "'");
+    if (env == "array" || env == "alignat") {
+        if (at(TokKind::LBrace))
+            rawGroupText();
+    } // column spec ignored
     std::vector<std::vector<NodePtr>> grid(1);
     for (;;) {
         grid.back().push_back(parseRow(false, true, env));
-        if (at(TokKind::Amp)) { next(); continue; }
+        if (at(TokKind::Amp)) {
+            next();
+            continue;
+        }
         if (at(TokKind::NewRow)) {
             next();
             bool present = false;
             (void)parseOptionalArg(present); // optional [dim] after \\ ignored
-            if (atCommand("end") || at(TokKind::End)) break; // trailing \\ before \end
+            if (atCommand("end") || at(TokKind::End))
+                break; // trailing \\ before \end
             grid.emplace_back();
             continue;
         }
@@ -272,13 +337,18 @@ NodePtr MathParser::parseEnvironment(const MathToken& beginTok) {
     if (atCommand("end")) {
         next();
         std::string e = rawGroupText();
-        if (e != env) warn("\\end{" + e + "} does not match \\begin{" + env + "}");
-    } else warn("missing \\end{" + env + "}");
+        if (e != env)
+            warn("\\end{" + e + "} does not match \\begin{" + env + "}");
+    } else
+        warn("missing \\end{" + env + "}");
     std::size_t cols = 1;
-    for (auto& r : grid) cols = std::max(cols, r.size());
+    for (auto& r : grid)
+        cols = std::max(cols, r.size());
     for (auto& r : grid) {
-        while (r.size() < cols) r.push_back(MathNode::make(NodeKind::Row));
-        for (auto& c : r) n->children.push_back(std::move(c));
+        while (r.size() < cols)
+            r.push_back(MathNode::make(NodeKind::Row));
+        for (auto& c : r)
+            n->children.push_back(std::move(c));
     }
     n->rows = static_cast<int>(grid.size());
     n->cols = static_cast<int>(cols);

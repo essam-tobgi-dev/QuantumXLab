@@ -25,21 +25,29 @@ using data::FidelityClass;
 // Error codes owned by this module (ErrorCode::Instr_ block, spec 04 §2).
 namespace err {
 inline constexpr ErrorCode UnknownSetting = ErrorCode::Instr_ + 1;
-inline constexpr ErrorCode BadSettingType = ErrorCode::Instr_ + 2;  // wrong type, NaN, unknown enum value
+inline constexpr ErrorCode BadSettingType =
+    ErrorCode::Instr_ + 2; // wrong type, NaN, unknown enum value
 inline constexpr ErrorCode UnknownChannel = ErrorCode::Instr_ + 3;
-inline constexpr ErrorCode PoweredOff = ErrorCode::Instr_ + 4;      // acquire() while Off
-inline constexpr ErrorCode Faulted = ErrorCode::Instr_ + 5;         // acquire() while in Fault; message = the fault
-inline constexpr ErrorCode Busy = ErrorCode::Instr_ + 6;            // acquire() re-entered while Acquiring
-inline constexpr ErrorCode NotBound = ErrorCode::Instr_ + 7;        // no RunView / Environment / schedule / route
-inline constexpr ErrorCode NoSignal = ErrorCode::Instr_ + 8;        // the routed node delivers nothing
-inline constexpr ErrorCode BadSchema = ErrorCode::Instr_ + 9;       // settings-schema JSON problem (names the field)
+inline constexpr ErrorCode PoweredOff = ErrorCode::Instr_ + 4; // acquire() while Off
+inline constexpr ErrorCode Faulted =
+    ErrorCode::Instr_ + 5; // acquire() while in Fault; message = the fault
+inline constexpr ErrorCode Busy = ErrorCode::Instr_ + 6; // acquire() re-entered while Acquiring
+inline constexpr ErrorCode NotBound =
+    ErrorCode::Instr_ + 7; // no RunView / Environment / schedule / route
+inline constexpr ErrorCode NoSignal = ErrorCode::Instr_ + 8; // the routed node delivers nothing
+inline constexpr ErrorCode BadSchema =
+    ErrorCode::Instr_ + 9; // settings-schema JSON problem (names the field)
 inline constexpr ErrorCode UnknownInstrument = ErrorCode::Instr_ + 10;
 inline constexpr ErrorCode FitFailed = ErrorCode::Instr_ + 11;
 inline constexpr ErrorCode BadRouting = ErrorCode::Instr_ + 12;
-inline constexpr ErrorCode MemoryOverflow = ErrorCode::Instr_ + 13; // AWG / digitizer record exceeds memory
-inline constexpr ErrorCode BadState = ErrorCode::Instr_ + 14;       // state-machine violation (arm while Off, …)
-inline constexpr ErrorCode BadInput = ErrorCode::Instr_ + 15;       // inconsistent RunView / Environment content
-inline constexpr ErrorCode Descriptor = ErrorCode::Instr_ + 16;     // component.json instrument block problem
+inline constexpr ErrorCode MemoryOverflow =
+    ErrorCode::Instr_ + 13; // AWG / digitizer record exceeds memory
+inline constexpr ErrorCode BadState =
+    ErrorCode::Instr_ + 14; // state-machine violation (arm while Off, …)
+inline constexpr ErrorCode BadInput =
+    ErrorCode::Instr_ + 15; // inconsistent RunView / Environment content
+inline constexpr ErrorCode Descriptor =
+    ErrorCode::Instr_ + 16; // component.json instrument block problem
 } // namespace err
 
 // Registry key plus the instance number among instruments of that kind ("sg_mw[2]").
@@ -55,7 +63,7 @@ using ChannelId = core::Strong<std::uint32_t, struct InstrChannelTag>;
 
 struct ChannelDesc {
     ChannelId id{0};
-    std::string name;  // descriptor spelling with the index substituted: "ch[0].waveform", "s21"
+    std::string name; // descriptor spelling with the index substituted: "ch[0].waveform", "s21"
     std::string xUnit, yUnit;
     FidelityClass cls = FidelityClass::Model;
     bool complexValued = false; // the trace carries y_im
@@ -79,7 +87,7 @@ struct Marker {
     double x = 0.0, y = 0.0;
     std::string label;
     double value = std::numeric_limits<double>::quiet_NaN(); // the quantity the marker reports
-    double sigma = 0.0;                                     // its 1σ, 0 when exact
+    double sigma = 0.0;                                      // its 1σ, 0 when exact
     std::string unit;
 };
 
@@ -89,7 +97,8 @@ struct Uncertainty {
 };
 
 // When a trace was taken. No wall clock (DEVELOPMENT.md determinism): `labTimeS` is the lab clock
-// of the Environment, `runTimeS` the schedule playhead, `sequence` the instrument's acquisition count.
+// of the Environment, `runTimeS` the schedule playhead, `sequence` the instrument's acquisition
+// count.
 struct Timestamp {
     double labTimeS = 0.0;
     double runTimeS = 0.0;

@@ -16,28 +16,37 @@ namespace {
 
 Token levelToken(core::LogLevel lvl) {
     switch (lvl) {
-    case core::LogLevel::Error: return Token::Err;
-    case core::LogLevel::Warn: return Token::Warn;
-    case core::LogLevel::Info: return Token::TextPrimary;
+    case core::LogLevel::Error:
+        return Token::Err;
+    case core::LogLevel::Warn:
+        return Token::Warn;
+    case core::LogLevel::Info:
+        return Token::TextPrimary;
     case core::LogLevel::Debug:
-    case core::LogLevel::Trace: break;
+    case core::LogLevel::Trace:
+        break;
     }
     return Token::TextSecondary;
 }
 
 std::string_view levelName(core::LogLevel lvl) {
     switch (lvl) {
-    case core::LogLevel::Trace: return "trace";
-    case core::LogLevel::Debug: return "debug";
-    case core::LogLevel::Info: return "info";
-    case core::LogLevel::Warn: return "warn";
-    case core::LogLevel::Error: return "error";
+    case core::LogLevel::Trace:
+        return "trace";
+    case core::LogLevel::Debug:
+        return "debug";
+    case core::LogLevel::Info:
+        return "info";
+    case core::LogLevel::Warn:
+        return "warn";
+    case core::LogLevel::Error:
+        return "error";
     }
     return "?";
 }
 
 class LogPanel final : public BasicPanel {
-public:
+  public:
     LogPanel() : BasicPanel(PanelId::Log, "log", "panels.log", "·", Workspace::Lab) {}
 
     void draw(UiContext& ctx) override;
@@ -48,12 +57,15 @@ public:
         return j;
     }
     void deserialize(const core::Json& j) override {
-        if (!j.is_object()) return;
-        if (const auto it = j.find("min_level"); it != j.end() && it->is_number_integer()) minLevel_ = it->get<int>();
-        if (const auto it = j.find("autoscroll"); it != j.end() && it->is_boolean()) autoScroll_ = it->get<bool>();
+        if (!j.is_object())
+            return;
+        if (const auto it = j.find("min_level"); it != j.end() && it->is_number_integer())
+            minLevel_ = it->get<int>();
+        if (const auto it = j.find("autoscroll"); it != j.end() && it->is_boolean())
+            autoScroll_ = it->get<bool>();
     }
 
-private:
+  private:
     void drawLog(UiContext& ctx);
     void drawPerf(UiContext& ctx);
     void drawJobs(UiContext& ctx);
@@ -65,7 +77,8 @@ private:
 };
 
 void LogPanel::drawLog(UiContext& ctx) {
-    static constexpr std::array<std::string_view, 5> kLevels{"trace", "debug", "info", "warn", "error"};
+    static constexpr std::array<std::string_view, 5> kLevels{"trace", "debug", "info", "warn",
+                                                             "error"};
     widgets::combo(ctx, "Level", &minLevel_, kLevels, "Log level");
     ImGui::SameLine();
     widgets::checkbox(ctx, "Auto-scroll", &autoScroll_, "Auto-scroll");
@@ -76,7 +89,8 @@ void LogPanel::drawLog(UiContext& ctx) {
         FontScope f(*ctx.fonts, FontRole::CodeSmall);
         const std::vector<core::LogEntry> entries = core::recentLog(500);
         for (const core::LogEntry& e : entries) {
-            if (static_cast<int>(e.lvl) < minLevel_) continue;
+            if (static_cast<int>(e.lvl) < minLevel_)
+                continue;
             widgets::text(ctx, Token::TextDisabled, format::number(e.timeS, 6));
             ImGui::SameLine();
             widgets::text(ctx, Token::TextSecondary, core::catName(e.cat));
@@ -85,7 +99,8 @@ void LogPanel::drawLog(UiContext& ctx) {
             ImGui::SameLine();
             widgets::text(ctx, levelToken(e.lvl), e.text);
         }
-        if (autoScroll_ && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()) ImGui::SetScrollHereY(1.0f);
+        if (autoScroll_ && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+            ImGui::SetScrollHereY(1.0f);
     }
     ImGui::EndChild();
 }
@@ -105,7 +120,8 @@ void LogPanel::drawPerf(UiContext& ctx) {
                      ImVec2(-1.0f, ctx.ui(60.0f)));
     if (ctx.renderer != nullptr) {
         const gfx::FrameStats& s = ctx.renderer->stats();
-        widgets::labelled(ctx, "Draw calls", format::integer(static_cast<std::uint64_t>(s.drawCalls)));
+        widgets::labelled(ctx, "Draw calls",
+                          format::integer(static_cast<std::uint64_t>(s.drawCalls)));
         ImGui::SameLine();
         widgets::labelled(ctx, "Triangles", format::integer(s.triangles));
         widgets::labelled(ctx, "Shadow", format::value(s.shadowMs * 1e-3, "s"));
@@ -123,7 +139,8 @@ void LogPanel::drawPerf(UiContext& ctx) {
         widgets::labelled(ctx, "Instanced batches", format::integer(s.instancedBatches));
     }
     if (ctx.math != nullptr && ctx.math->ready())
-        widgets::labelled(ctx, "Math layout cache", format::integer(ctx.math->renderer().cacheSize()));
+        widgets::labelled(ctx, "Math layout cache",
+                          format::integer(ctx.math->renderer().cacheSize()));
 }
 
 void LogPanel::drawJobs(UiContext& ctx) {
@@ -132,20 +149,24 @@ void LogPanel::drawJobs(UiContext& ctx) {
         ImGui::SameLine();
         widgets::labelled(ctx, "Pending", format::integer(ctx.jobs->pending()));
     }
-    if (ctx.bus != nullptr) widgets::labelled(ctx, "Queued events", format::integer(ctx.bus->pending()));
+    if (ctx.bus != nullptr)
+        widgets::labelled(ctx, "Queued events", format::integer(ctx.bus->pending()));
     if (ctx.liveRunner != nullptr) {
         widgets::labelled(ctx, "Live channels", format::integer(ctx.liveRunner->liveChannels()));
         ImGui::SameLine();
-        widgets::labelled(ctx, "Acquisitions in flight", format::integer(ctx.liveRunner->inFlight()));
+        widgets::labelled(ctx, "Acquisitions in flight",
+                          format::integer(ctx.liveRunner->inFlight()));
     }
-    if (ctx.session == nullptr) return;
+    if (ctx.session == nullptr)
+        return;
     widgets::sectionHeader(ctx, "Run history");
     const std::vector<runtime::RunRecord> history = ctx.session->history();
     if (history.empty()) {
         widgets::text(ctx, Token::TextSecondary, "No runs yet.");
         return;
     }
-    if (!ImGui::BeginTable("##runs", 5, widgets::tableFlags(false))) return;
+    if (!ImGui::BeginTable("##runs", 5, widgets::tableFlags(false)))
+        return;
     ImGui::TableSetupColumn("run");
     ImGui::TableSetupColumn("device");
     ImGui::TableSetupColumn("backend");
@@ -170,7 +191,8 @@ void LogPanel::drawJobs(UiContext& ctx) {
 }
 
 void LogPanel::draw(UiContext& ctx) {
-    if (!ImGui::BeginTabBar("##logtabs")) return;
+    if (!ImGui::BeginTabBar("##logtabs"))
+        return;
     if (ImGui::BeginTabItem("Log")) {
         drawLog(ctx);
         ImGui::EndTabItem();
@@ -188,6 +210,8 @@ void LogPanel::draw(UiContext& ctx) {
 
 } // namespace
 
-PanelPtr makeLogPanel() { return std::make_unique<LogPanel>(); }
+PanelPtr makeLogPanel() {
+    return std::make_unique<LogPanel>();
+}
 
 } // namespace qlab::ui

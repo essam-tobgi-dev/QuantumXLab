@@ -3,8 +3,8 @@
 // mixture with means μ_s and one shared covariance (two states: data::fit::fitGmm2; three states,
 // `states: 3`, an EM of the same form); the classifier is the linear boundary equidistant in the
 // Mahalanobis metric (the perpendicular bisector after whitening). The assignment-matrix estimate
-// is M_ij = #{prepared i, assigned j} / #{prepared i}, row-stochastic like noise::ReadoutModel, with
-// the Wilson interval as σ. Class Statistical.
+// is M_ij = #{prepared i, assigned j} / #{prepared i}, row-stochastic like noise::ReadoutModel,
+// with the Wilson interval as σ. Class Statistical.
 #include "Instruments/Types.hpp"
 #include <array>
 #include <span>
@@ -22,7 +22,7 @@ struct Discriminator {
     int states = 2;
     std::vector<std::array<double, 2>> means; // μ_s
     double sxx = 1.0, sxy = 0.0, syy = 1.0;   // shared covariance Σ
-    double snr = 0.0;                         // |μ_1 − μ_0|/σ: Mahalanobis distance of states 0 and 1
+    double snr = 0.0; // |μ_1 − μ_0|/σ: Mahalanobis distance of states 0 and 1
     int iterations = 0;
     bool converged = false;
 

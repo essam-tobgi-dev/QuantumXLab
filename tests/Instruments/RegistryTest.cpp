@@ -11,17 +11,29 @@ using Catch::Approx;
 TEST_CASE("the registry is keyed by the instrument ids of spec 12 and builds the standard rack") {
     InstrumentRegistry registry;
     // Spec 12 §1: the physical instrument kinds, in panel order.
-    const std::vector<std::string> physical = {"sg_mw",       "awg",           "iq_mixer",          "digitizer",
-                                               "vna",         "spectrum_analyzer", "oscilloscope",  "thermometer_ruo2",
-                                               "thermometer_cernox", "pressure_gauge", "flow_meter", "power_meter",
-                                               "dc_source",   "controller"};
-    for (auto const& kind : physical) REQUIRE(registry.hasKind(kind));
+    const std::vector<std::string> physical = {"sg_mw",
+                                               "awg",
+                                               "iq_mixer",
+                                               "digitizer",
+                                               "vna",
+                                               "spectrum_analyzer",
+                                               "oscilloscope",
+                                               "thermometer_ruo2",
+                                               "thermometer_cernox",
+                                               "pressure_gauge",
+                                               "flow_meter",
+                                               "power_meter",
+                                               "dc_source",
+                                               "controller"};
+    for (auto const& kind : physical)
+        REQUIRE(registry.hasKind(kind));
     REQUIRE(registry.kinds(true).size() == physical.size());
     REQUIRE_FALSE(registry.hasKind("spectrometer"));
     REQUIRE(registry.create("spectrometer").error().code == err::UnknownInstrument);
 
     REQUIRE(registry.createStandardSet());
-    for (auto const& kind : physical) REQUIRE(registry.find(kind) != nullptr);
+    for (auto const& kind : physical)
+        REQUIRE(registry.find(kind) != nullptr);
     // Instances of one kind are numbered from 0 and print as "sg_mw[2]".
     REQUIRE(registry.ofKind("sg_mw").size() == 4);
     REQUIRE(registry.find("sg_mw", 2)->id().toString() == "sg_mw[2]");
@@ -29,9 +41,11 @@ TEST_CASE("the registry is keyed by the instrument ids of spec 12 and builds the
     REQUIRE(registry.ofKind("thermometer_ruo2").size() == 2); // MXC and CP (spec 12 §8)
     REQUIRE(registry.ofKind("thermometer_cernox").size() == 3);
     REQUIRE(registry.ofKind("pressure_gauge").size() == 4);
-    for (IInstrument* i : registry.all()) REQUIRE(i->state() != State::Off); // powerOn by default
+    for (IInstrument* i : registry.all())
+        REQUIRE(i->state() != State::Off); // powerOn by default
     registry.powerAll(false);
-    for (IInstrument* i : registry.all()) REQUIRE(i->state() == State::Off);
+    for (IInstrument* i : registry.all())
+        REQUIRE(i->state() == State::Off);
     registry.powerAll(true);
 
     // Every kind's schema carries the id its descriptor names, and refresh_hz (spec 12 §1).
@@ -52,7 +66,8 @@ TEST_CASE("bindings: component, fridge lines and schedule channels; routing carr
 
     // Spec 12 §11: the rack unit in the 3D scene, the lines it touches, the channels it sources.
     const ComponentId unit{41};
-    REQUIRE(registry.bindComponent({"awg", 0}, unit, {"drive_q0"}, {pulse::ChannelId::drive(0), pulse::ChannelId::drive(1)}));
+    REQUIRE(registry.bindComponent({"awg", 0}, unit, {"drive_q0"},
+                                   {pulse::ChannelId::drive(0), pulse::ChannelId::drive(1)}));
     IInstrument* awg = registry.find("awg", 0);
     REQUIRE(awg->bindings().component == unit);
     REQUIRE(awg->bindings().lines == std::vector<std::string>{"drive_q0"});
@@ -96,8 +111,10 @@ TEST_CASE("bindings: component, fridge lines and schedule channels; routing carr
     auto cut = graph.signalAt("line.drive_q0.MXC", request);
     REQUIRE(cut);
     REQUIRE_FALSE(cut->connected);
-    for (auto s : cut->samples) REQUIRE(std::abs(s) == 0.0);
-    REQUIRE(registry.routing().setConnected("no such cable", false).error().code == err::BadRouting);
+    for (auto s : cut->samples)
+        REQUIRE(std::abs(s) == 0.0);
+    REQUIRE(registry.routing().setConnected("no such cable", false).error().code ==
+            err::BadRouting);
 }
 
 TEST_CASE("query serves the instr.*, run.* and cryo.* binding paths the App adapts") {
@@ -120,7 +137,8 @@ TEST_CASE("query serves the instr.*, run.* and cryo.* binding paths the App adap
     REQUIRE(*registry.query("instr.gen[1].on") == 0.0);
     REQUIRE(registry.find("sg_mw", 1)->set("rf_on", true));
     REQUIRE(*registry.query("instr.gen[1].on") == 1.0);
-    REQUIRE(*registry.query("instr.sg_mw[1].frequency") == 6.25e9); // the generic "<kind>[i].<setting>"
+    REQUIRE(*registry.query("instr.sg_mw[1].frequency") ==
+            6.25e9); // the generic "<kind>[i].<setting>"
     REQUIRE(*registry.query("instr.ref.locked") == 1.0);
     REQUIRE(*registry.query("instr.trig.rate") == Approx(1.0 / 250e-6).epsilon(1e-12));
     REQUIRE(*registry.query("instr.dc.ch[0].I") == 0.0);
@@ -139,27 +157,31 @@ TEST_CASE("query serves the instr.*, run.* and cryo.* binding paths the App adap
     // cryo.thermo[i] walks the thermometers in creation order; a reading appears once acquired.
     REQUIRE_FALSE(registry.query("cryo.thermo[0].T").has_value());
     REQUIRE(acquire(*registry.find("thermometer_ruo2", 0), "T"));
-    REQUIRE(*registry.query("cryo.thermo[0].T") == Approx(0.011).epsilon(0.05)); // reading noise + self-heating
+    REQUIRE(*registry.query("cryo.thermo[0].T") ==
+            Approx(0.011).epsilon(0.05)); // reading noise + self-heating
 }
 
 TEST_CASE("every shipped instrument descriptor passes the spec 12 §14 lint") {
     auto descriptors = loadInstrumentDescriptors();
     REQUIRE(descriptors);
-    REQUIRE(descriptors->size() == 16); // Assets/Lab/Components/*/component.json with an `instrument` block
+    REQUIRE(descriptors->size() ==
+            16); // Assets/Lab/Components/*/component.json with an `instrument` block
     InstrumentRegistry registry;
     std::vector<std::string> problems;
     for (auto const& d : *descriptors) {
         REQUIRE(registry.hasKind(d.kind));
         REQUIRE_FALSE(d.settingsSchema.empty());
-        for (auto const& line : lintDescriptor(d, registry)) problems.push_back(line);
+        for (auto const& line : lintDescriptor(d, registry))
+            problems.push_back(line);
     }
     INFO("lint: " << (problems.empty() ? std::string{"none"} : problems.front()));
     REQUIRE(problems.empty());
 
     // Spec 12 §15: every physical kind of the registry has a component descriptor.
     for (auto const& kind : registry.kinds(true)) {
-        const bool covered = std::any_of(descriptors->begin(), descriptors->end(),
-                                         [&](const InstrumentDescriptor& d) { return d.kind == kind; });
+        const bool covered =
+            std::any_of(descriptors->begin(), descriptors->end(),
+                        [&](const InstrumentDescriptor& d) { return d.kind == kind; });
         INFO("uncovered kind: " << kind);
         REQUIRE(covered);
     }
@@ -217,8 +239,9 @@ TEST_CASE("live mode acquires at refresh_hz on the job system and posts traces o
     for (auto const& t : traces) {
         REQUIRE((t->channel == "rate" || t->channel == "T"));
         (t->channel == "rate" ? rates : temperatures) += 1;
-        // `rate` is a scalar reading (one point per acquisition); the thermometer's `T` is the strip
-        // chart of every reading taken so far (spec 12 §8), so it is one point longer each time.
+        // `rate` is a scalar reading (one point per acquisition); the thermometer's `T` is the
+        // strip chart of every reading taken so far (spec 12 §8), so it is one point longer each
+        // time.
         REQUIRE(t->size() == (t->channel == "rate" ? std::size_t{1} : temperatures));
         REQUIRE(t->instrument == (t->channel == "rate" ? "controller[0]" : "thermometer_ruo2[0]"));
     }
@@ -251,7 +274,9 @@ TEST_CASE("registry state round-trips through the project file") {
     REQUIRE(b.find("digitizer", 0)->state() == State::Off);
     REQUIRE(b.find("sg_mw", 0)->state() != State::Off);
     const auto edges = b.routing().edges();
-    const auto cut = std::find_if(edges.begin(), edges.end(), [](const RouteEdge& e) { return e.id == "awg[0].ch[0]->iq_mixer[0].if"; });
+    const auto cut = std::find_if(edges.begin(), edges.end(), [](const RouteEdge& e) {
+        return e.id == "awg[0].ch[0]->iq_mixer[0].if";
+    });
     REQUIRE(cut != edges.end());
     REQUIRE_FALSE(cut->connected);
     REQUIRE(b.loadState(core::Json::object()).error().code == err::BadSchema);

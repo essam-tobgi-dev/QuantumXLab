@@ -37,7 +37,7 @@ TEST_CASE("Widgets: every numeric shows its unit with an auto-selected SI prefix
     // Value ± 1σ share one prefixed unit.
     CHECK(format::withSigma(4.812e9, 3.0e6, "Hz") == "4.812 ± 0.003 GHz");
     CHECK(format::withSigma(0.5, 0.01, "") == "0.5 ± 0.01");
-    CHECK(format::withSigma(1.0, 0.0, "Hz") == "1 Hz");   // no σ: the plain value
+    CHECK(format::withSigma(1.0, 0.0, "Hz") == "1 Hz"); // no σ: the plain value
 
     CHECK(format::integer(1'048'576) == "1 048 576");
     CHECK(format::integer(512) == "512");
@@ -75,8 +75,8 @@ TEST_CASE("Widgets: typing accepts any registered unit of the same dimension (sp
 
 TEST_CASE("Widgets: drag modifiers are fine, plain and coarse (spec 19 §5.2)") {
     CHECK(format::dragScale({false, false}) == Approx(1.0));
-    CHECK(format::dragScale({true, false}) == Approx(0.1));   // Shift = fine
-    CHECK(format::dragScale({false, true}) == Approx(10.0));  // Alt = coarser
+    CHECK(format::dragScale({true, false}) == Approx(0.1));  // Shift = fine
+    CHECK(format::dragScale({false, true}) == Approx(10.0)); // Alt = coarser
     CHECK(format::dragScale({true, true}) == Approx(1.0));
 
     constexpr double kStep = 0.5;
@@ -87,7 +87,8 @@ TEST_CASE("Widgets: drag modifiers are fine, plain and coarse (spec 19 §5.2)") 
     CHECK(format::applyDrag(10.0, 1000.0, kStep, {}, 0.0, 12.0) == Approx(12.0));
     CHECK(format::applyDrag(10.0, -1000.0, kStep, {}, 12.0, 0.0) == Approx(0.0));
     // A non-finite step leaves the value alone rather than poisoning it.
-    CHECK(format::applyDrag(10.0, 1.0, std::numeric_limits<double>::infinity(), {}, -1e9, 1e9) == Approx(10.0));
+    CHECK(format::applyDrag(10.0, 1.0, std::numeric_limits<double>::infinity(), {}, -1e9, 1e9) ==
+          Approx(10.0));
 }
 
 TEST_CASE("Widgets: the undo stack keeps 200 entries and groups a gesture (spec 19 §5.3)") {
@@ -111,14 +112,15 @@ TEST_CASE("Widgets: the undo stack keeps 200 entries and groups a gesture (spec 
     stack.beginGroup("Drag frequency");
     for (int i = 0; i < 10; ++i) {
         const double from = value, to = value + 1.0;
-        stack.push(Command{"step", [&value, from] { value = from; }, [&value, to] { value = to; }, {}});
+        stack.push(
+            Command{"step", [&value, from] { value = from; }, [&value, to] { value = to; }, {}});
         value = to;
     }
     stack.endGroup();
     CHECK(stack.size() == 1);
     CHECK(value == Approx(10.0));
     REQUIRE(stack.undo());
-    CHECK(value == Approx(0.0));      // the whole gesture, in reverse
+    CHECK(value == Approx(0.0)); // the whole gesture, in reverse
     REQUIRE(stack.redo());
     CHECK(value == Approx(10.0));
 
@@ -127,7 +129,8 @@ TEST_CASE("Widgets: the undo stack keeps 200 entries and groups a gesture (spec 
     double v = 0.0;
     for (int i = 0; i < 5; ++i) {
         const double from = v, to = v + 1.0;
-        stack.push(Command{"Frequency", [&v, from] { v = from; }, [&v, to] { v = to; }, "frequency"});
+        stack.push(
+            Command{"Frequency", [&v, from] { v = from; }, [&v, to] { v = to; }, "frequency"});
         v = to;
     }
     CHECK(stack.size() == 1);
@@ -175,7 +178,8 @@ TEST_CASE("Widgets: the keyboard table matches spec 19 §5 and round-trips throu
     CHECK(keys.text(Action::Redo) == "Ctrl+Shift+Z");
 
     // Every chord is bound to exactly one action.
-    for (const auto& [action, chord] : keys.all()) CHECK(keys.lookup(chord) == action);
+    for (const auto& [action, chord] : keys.all())
+        CHECK(keys.lookup(chord) == action);
     CHECK(keys.lookup(Chord::parse("F9")) == Action::None);
 
     // Chord parsing and printing are inverse; a malformed chord is rejected.
@@ -184,7 +188,7 @@ TEST_CASE("Widgets: the keyboard table matches spec 19 §5 and round-trips throu
         CHECK(c.valid());
         CHECK(c.text() == text);
     }
-    CHECK(Chord::parse("Cmd+S").ctrl);      // the macOS spelling maps onto the same modifier
+    CHECK(Chord::parse("Cmd+S").ctrl); // the macOS spelling maps onto the same modifier
     CHECK_FALSE(Chord::parse("Meta+S").valid());
     CHECK_FALSE(Chord::parse("").valid());
 
@@ -201,8 +205,8 @@ TEST_CASE("Widgets: the keyboard table matches spec 19 §5 and round-trips throu
     const auto custom = Shortcuts::fromJson(remap);
     REQUIRE(custom.has_value());
     CHECK(custom->text(Action::Run) == "Ctrl+Enter");
-    CHECK(custom->text(Action::Stop).empty());          // an empty string unbinds
-    CHECK(custom->text(Action::Compile) == "F6");        // everything else keeps its default
+    CHECK(custom->text(Action::Stop).empty());    // an empty string unbinds
+    CHECK(custom->text(Action::Compile) == "F6"); // everything else keeps its default
 
     core::Json bad = core::Json::object();
     bad["not_an_action"] = "F7";

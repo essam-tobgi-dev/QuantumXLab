@@ -10,7 +10,8 @@ std::optional<std::uint32_t> classicalRowOf(const ir::Circuit& top, std::uint32_
 
 // Kind, label, parameters and rows of one node — no position yet. `top` owns the registers (nested
 // bodies carry none). Returns nullopt for a node that touches nothing drawable (gphase).
-std::optional<Glyph> describeNode(const ir::Circuit& top, const ir::Node& node, std::uint32_t qubitRows);
+std::optional<Glyph> describeNode(const ir::Circuit& top, const ir::Node& node,
+                                  std::uint32_t qubitRows);
 
 // Width of a glyph in layout units, from its kind and text.
 double glyphWidth(const Glyph& g);

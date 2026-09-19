@@ -1,7 +1,7 @@
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/catch_approx.hpp>
 #include "Core/Paths.hpp"
 #include "Data/Data.hpp"
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <cmath>
 #include <filesystem>
 using namespace qlab;
@@ -18,15 +18,29 @@ TEST_CASE("CSV golden output with unit headers") {
     std::vector<double> t{0, 1e-6, 2e-6}, p{1.0, 0.5, 0.25};
     std::vector<CsvColumn> cols{{"t", "s", t}, {"p1", "", p}};
     REQUIRE(toCsv(cols) == "t (s),p1 ()\n0,1\n1e-06,0.5\n2e-06,0.25\n");
-    Trace2D tr; tr.name = "s21"; tr.xUnit = "Hz"; tr.yUnit = ""; tr.x = {1, 2}; tr.y = {0.5, 0.6}; tr.yIm = std::vector<double>{0.1, 0.2};
+    Trace2D tr;
+    tr.name = "s21";
+    tr.xUnit = "Hz";
+    tr.yUnit = "";
+    tr.x = {1, 2};
+    tr.y = {0.5, 0.6};
+    tr.yIm = std::vector<double>{0.1, 0.2};
     REQUIRE(traceToCsv(tr) == "x (Hz),y_re (),y_im ()\n1,0.5,0.1\n2,0.6,0.2\n");
-    auto j = traceToJson(tr); auto back = traceFromJson(j); REQUIRE(back); REQUIRE(back->yIm->at(1) == 0.2);
+    auto j = traceToJson(tr);
+    auto back = traceFromJson(j);
+    REQUIRE(back);
+    REQUIRE(back->yIm->at(1) == 0.2);
 }
 TEST_CASE("histogram JSON round trip") {
-    Histogram h(2); h.add("01", 3); h.add("10", 5);
+    Histogram h(2);
+    h.add("01", 3);
+    h.add("10", 5);
     auto j = histogramToJson(h);
-    auto back = histogramFromJson(j); REQUIRE(back);
-    REQUIRE(back->count("10") == 5); REQUIRE(back->total() == 8); REQUIRE(back->nbits() == 2);
+    auto back = histogramFromJson(j);
+    REQUIRE(back);
+    REQUIRE(back->count("10") == 5);
+    REQUIRE(back->total() == 8);
+    REQUIRE(back->nbits() == 2);
 }
 TEST_CASE("recipe round trip in the shipped schema (spec 22 §6)") {
     Recipe r;
@@ -87,7 +101,8 @@ TEST_CASE("every shipped analysis recipe loads through data::Recipe") {
     // `extract`, none of which the shipped assets or spec 22 §6 use, so no recipe could load.
     const auto dir = core::assetDir() / "Analysis";
     auto all = loadRecipeDirectory(dir);
-    if (!all) UNSCOPED_INFO(all.error().format());
+    if (!all)
+        UNSCOPED_INFO(all.error().format());
     REQUIRE(all);
     REQUIRE(all->size() >= 18);
     int withProgram = 0, withGenerator = 0;
@@ -97,10 +112,13 @@ TEST_CASE("every shipped analysis recipe loads through data::Recipe") {
         REQUIRE_FALSE(r.title.empty());
         REQUIRE(validateRecipe(r));
         REQUIRE_FALSE(r.extract.channel.empty());
-        if (!r.program.empty()) ++withProgram;
-        if (r.generator) ++withGenerator;
+        if (!r.program.empty())
+            ++withProgram;
+        if (r.generator)
+            ++withGenerator;
         // A recipe that fits must name a model this build knows how to run.
-        if (!r.fitModel.empty()) REQUIRE(validateRecipe(r));
+        if (!r.fitModel.empty())
+            REQUIRE(validateRecipe(r));
         // Round trip preserves what was read, unknown keys included.
         const core::Json j = recipeToJson(r);
         auto again = recipeFromJson(j);
@@ -110,7 +128,8 @@ TEST_CASE("every shipped analysis recipe loads through data::Recipe") {
         REQUIRE(again->report == r.report);
         REQUIRE(again->results.size() == r.results.size());
         REQUIRE(again->sweep.has_value() == r.sweep.has_value());
-        if (r.sweep) REQUIRE(again->sweep->values.size() == r.sweep->values.size());
+        if (r.sweep)
+            REQUIRE(again->sweep->values.size() == r.sweep->values.size());
     }
     REQUIRE(withProgram >= 15);
     REQUIRE(withGenerator == 2); // interleaved RB and XEB are runtime-generated families

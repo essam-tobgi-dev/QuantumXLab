@@ -11,7 +11,7 @@
 namespace qlab::viz {
 
 class CityView final : public StateView {
-public:
+  public:
     std::string_view id() const override { return "city"; }
     std::string_view title() const override { return "Density matrix"; }
     Observability observability() const override { return Observability::SimulatorOnly; }
@@ -30,16 +30,18 @@ public:
 
     const math::CityModel& model() const { return model_; }
     const DensitySource& source() const { return source_; }
-    // Body-local position of a matrix element's bar top (ImGui units); nullopt when behind the camera.
+    // Body-local position of a matrix element's bar top (ImGui units); nullopt when behind the
+    // camera.
     std::optional<glm::vec2> projectBar(std::uint32_t row, std::uint32_t col) const;
-    Status renderPng(GlBackend& gl, const VizTheme& theme, int widthPx, int heightPx, const std::filesystem::path& png);
+    Status renderPng(GlBackend& gl, const VizTheme& theme, int widthPx, int heightPx,
+                     const std::filesystem::path& png);
 
-protected:
+  protected:
     void rebuild(const ViewInput& in) override;
     void layout() override;
     void drawBody(DrawContext& ctx) override;
 
-private:
+  private:
     GlCanvas::SceneFn scene(const VizTheme& theme, float pxScale) const;
     void aimCamera(glm::vec2 body);
     // Grid coordinates of element (i, j) in the renderer's world frame (y is up, bars grow in +y).

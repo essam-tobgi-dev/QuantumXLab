@@ -12,11 +12,16 @@ std::deque<LogEntry> g_ring;
 auto g_t0 = std::chrono::steady_clock::now();
 spdlog::level::level_enum toSpd(LogLevel l) {
     switch (l) {
-    case LogLevel::Trace: return spdlog::level::trace;
-    case LogLevel::Debug: return spdlog::level::debug;
-    case LogLevel::Info: return spdlog::level::info;
-    case LogLevel::Warn: return spdlog::level::warn;
-    case LogLevel::Error: return spdlog::level::err;
+    case LogLevel::Trace:
+        return spdlog::level::trace;
+    case LogLevel::Debug:
+        return spdlog::level::debug;
+    case LogLevel::Info:
+        return spdlog::level::info;
+    case LogLevel::Warn:
+        return spdlog::level::warn;
+    case LogLevel::Error:
+        return spdlog::level::err;
     }
     return spdlog::level::info;
 }
@@ -24,16 +29,26 @@ spdlog::level::level_enum toSpd(LogLevel l) {
 
 std::string_view catName(LogCat c) {
     switch (c) {
-    case LogCat::Core: return "core";
-    case LogCat::Sim: return "sim";
-    case LogCat::Compiler: return "compiler";
-    case LogCat::Hardware: return "hw";
-    case LogCat::Cryo: return "cryo";
-    case LogCat::Instr: return "instr";
-    case LogCat::Gfx: return "gfx";
-    case LogCat::Ui: return "ui";
-    case LogCat::App: return "app";
-    case LogCat::Test: return "test";
+    case LogCat::Core:
+        return "core";
+    case LogCat::Sim:
+        return "sim";
+    case LogCat::Compiler:
+        return "compiler";
+    case LogCat::Hardware:
+        return "hw";
+    case LogCat::Cryo:
+        return "cryo";
+    case LogCat::Instr:
+        return "instr";
+    case LogCat::Gfx:
+        return "gfx";
+    case LogCat::Ui:
+        return "ui";
+    case LogCat::App:
+        return "app";
+    case LogCat::Test:
+        return "test";
     }
     return "?";
 }
@@ -63,7 +78,8 @@ void logRaw(LogCat cat, LogLevel lvl, std::string_view msg) {
     std::lock_guard lk(g_mu);
     double t = std::chrono::duration<double>(std::chrono::steady_clock::now() - g_t0).count();
     g_ring.push_back({cat, lvl, std::string(msg), t});
-    if (g_ring.size() > 2000) g_ring.pop_front();
+    if (g_ring.size() > 2000)
+        g_ring.pop_front();
 }
 
 std::vector<LogEntry> recentLog(std::size_t max) {

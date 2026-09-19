@@ -18,7 +18,7 @@ struct Material {
     float ao = 1.0f;
     glm::vec3 emissive{0};
     float emissiveStrength = 0.0f;
-    float colormapMix = 0.0f;   // 0 = base colour, 1 = colormap(value)
+    float colormapMix = 0.0f; // 0 = base colour, 1 = colormap(value)
     float colormapValue = 0.0f;
     bool unlit = false;
     // Texture set (empty = constants only). `uvScale` tiles the mesh uv (uv path) or is the
@@ -34,7 +34,8 @@ struct Material {
     bool textured() const { return !textureSet.empty(); }
     bool transparent() const { return baseColor.a < 0.999f; }
     // `albedoGain`/`roughnessGain` are the normalisation factors of the bound set (1 = none).
-    MaterialUbo toUbo(const glm::vec3& albedoGain = glm::vec3(1.0f), float roughnessGain = 1.0f) const;
+    MaterialUbo toUbo(const glm::vec3& albedoGain = glm::vec3(1.0f),
+                      float roughnessGain = 1.0f) const;
 
     // Named presets (lab materials): copper, gold, aluminium, stainless, niobium, silicon,
     // sapphire, pcb, black_anodized, glass, mu_metal, plastic_white, led.

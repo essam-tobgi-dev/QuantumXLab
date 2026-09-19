@@ -30,10 +30,13 @@ gfx::MeshData makeDisc(int segments) {
     m.vertices.push_back({{0, 0, 0}, {0, 1, 0}, {0.5f, 0.5f}});
     for (int i = 0; i <= segments; ++i) {
         const float t = static_cast<float>(i) / static_cast<float>(segments) * 6.2831853f;
-        m.vertices.push_back({{std::cos(t), 0, std::sin(t)}, {0, 1, 0}, {0.5f + 0.5f * std::cos(t), 0.5f + 0.5f * std::sin(t)}});
+        m.vertices.push_back({{std::cos(t), 0, std::sin(t)},
+                              {0, 1, 0},
+                              {0.5f + 0.5f * std::cos(t), 0.5f + 0.5f * std::sin(t)}});
     }
     for (int i = 0; i < segments; ++i)
-        m.indices.insert(m.indices.end(), {0u, static_cast<std::uint32_t>(2 + i), static_cast<std::uint32_t>(1 + i)});
+        m.indices.insert(m.indices.end(), {0u, static_cast<std::uint32_t>(2 + i),
+                                           static_cast<std::uint32_t>(1 + i)});
     m.orientToNormals();
     return m;
 }
@@ -47,14 +50,15 @@ Result<std::unique_ptr<GlBackend>> GlBackend::create(const GlBackendDesc& desc) 
     backend->desc_ = desc;
     gfx::RendererDesc rd;
     rd.samples = std::max(1, desc.samples);
-    rd.shadowSize = 16;   // nothing in a view casts or receives shadows; the map only has to exist
+    rd.shadowSize = 16; // nothing in a view casts or receives shadows; the map only has to exist
     rd.exposure = 1.0f;
     // The state views are diagrams with a baked key light and exact display colours (spec 21
     // §1.2): no environment reflections, no ambient occlusion, no bloom — those belong to the lab.
     rd.ibl = false;
     rd.ssao = false;
     rd.bloom = false;
-    rd.clearColor = math::displayToScene(desc.background); // so the canvas matches the panel exactly
+    rd.clearColor =
+        math::displayToScene(desc.background); // so the canvas matches the panel exactly
     QXL_TRY_ASSIGN(backend->renderer_, gfx::Renderer::create(rd));
     // Soft, frontal lighting for the few lit meshes (arrows): shape cues without deep shadows.
     backend->renderer_->setSun(-kBakedLight, glm::vec3(1.0f), 2.2f);
@@ -75,11 +79,16 @@ Result<std::unique_ptr<GlBackend>> GlBackend::create(const GlBackendDesc& desc) 
     return backend;
 }
 
-glm::vec4 GlBackend::exact(const glm::vec4& srgb) { return math::displayToScene(srgb); }
-glm::vec4 GlBackend::exact(const glm::vec3& srgb, float alpha) { return glm::vec4(math::displayToScene(srgb), alpha); }
+glm::vec4 GlBackend::exact(const glm::vec4& srgb) {
+    return math::displayToScene(srgb);
+}
+glm::vec4 GlBackend::exact(const glm::vec3& srgb, float alpha) {
+    return glm::vec4(math::displayToScene(srgb), alpha);
+}
 
 Status GlCanvas::ensureTarget(int w, int h) {
-    if (w == width_ && h == height_ && fbo_) return {};
+    if (w == width_ && h == height_ && fbo_)
+        return {};
     gfx::TexDesc desc;
     desc.width = w;
     desc.height = h;
@@ -97,15 +106,18 @@ Status GlCanvas::ensureTarget(int w, int h) {
     return {};
 }
 
-Result<bool> GlCanvas::render(GlBackend& gl, int widthPx, int heightPx, const SceneFn& scene, double timeS) {
+Result<bool> GlCanvas::render(GlBackend& gl, int widthPx, int heightPx, const SceneFn& scene,
+                              double timeS) {
     const int w = std::clamp(widthPx, 1, 8192), h = std::clamp(heightPx, 1, 8192);
     QXL_TRY(ensureTarget(w, h));
-    if (!dirty_) return false;
+    if (!dirty_)
+        return false;
     gfx::Renderer& r = gl.renderer();
     camera_.setAspect(static_cast<double>(w) / static_cast<double>(h));
     r.beginFrame(w, h, camera_, timeS);
     r.setSelection(ComponentId{0}, ComponentId{0}); // hit testing is done on the CPU; no id outline
-    if (scene) scene(r, gl);
+    if (scene)
+        scene(r, gl);
     r.endFrame();
     // The renderer's output is shared by every canvas: keep a copy of this view's image.
     fbo_->bind();
@@ -125,7 +137,8 @@ Status GlCanvas::renderToPng(GlBackend& gl, int widthPx, int heightPx, const Sce
 glm::mat4 alignY(const glm::dvec3& a, const glm::dvec3& b, double radius) {
     const glm::dvec3 d = b - a;
     const double len = glm::length(d);
-    if (len < 1e-12) return glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(a)), glm::vec3(0.0f));
+    if (len < 1e-12)
+        return glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(a)), glm::vec3(0.0f));
     const glm::dvec3 y = d / len;
     const glm::dvec3 ref = std::abs(y.y) < 0.99 ? glm::dvec3(0, 1, 0) : glm::dvec3(1, 0, 0);
     const glm::dvec3 x = glm::normalize(glm::cross(ref, y));

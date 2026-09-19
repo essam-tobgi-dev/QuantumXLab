@@ -12,23 +12,32 @@ using namespace detail;
 
 namespace {
 
-constexpr float kWheelGain = 0.16f;   // zoom steps per wheel notch
+constexpr float kWheelGain = 0.16f; // zoom steps per wheel notch
 constexpr float kMinimapWidthPx = 190.0f;
 
 // Spec 21 §3.13: above 200 columns the diagram gets a minimap — the whole extent with the part the
 // canvas currently shows drawn inside it.
-void minimapOverlay(const DrawContext& ctx, ImVec2 origin, glm::vec2 body, const Rect& content, const Rect& visible) {
-    if (content.width() <= 0.0 || content.height() <= 0.0) return;
+void minimapOverlay(const DrawContext& ctx, ImVec2 origin, glm::vec2 body, const Rect& content,
+                    const Rect& visible) {
+    if (content.width() <= 0.0 || content.height() <= 0.0)
+        return;
     const float w = std::min(kMinimapWidthPx, 0.42f * body.x);
     const float h = std::max(10.0f, w * static_cast<float>(content.height() / content.width()));
     const ImVec2 a(origin.x + body.x - w - 10.0f, origin.y + 10.0f);
     ImDrawList* dl = ImGui::GetWindowDrawList();
-    dl->AddRectFilled(a, ImVec2(a.x + w, a.y + h), toU32(ctx.theme->bgPanel, 0.82f), ctx.theme->radiusSm);
+    dl->AddRectFilled(a, ImVec2(a.x + w, a.y + h), toU32(ctx.theme->bgPanel, 0.82f),
+                      ctx.theme->radiusSm);
     dl->AddRect(a, ImVec2(a.x + w, a.y + h), toU32(ctx.theme->border), ctx.theme->radiusSm);
-    const auto mapX = [&](double x) { return a.x + static_cast<float>((x - content.x0) / content.width()) * w; };
-    const auto mapY = [&](double y) { return a.y + static_cast<float>((y - content.y0) / content.height()) * h; };
-    const ImVec2 v0(std::clamp(mapX(visible.x0), a.x, a.x + w), std::clamp(mapY(visible.y0), a.y, a.y + h));
-    const ImVec2 v1(std::clamp(mapX(visible.x1), a.x, a.x + w), std::clamp(mapY(visible.y1), a.y, a.y + h));
+    const auto mapX = [&](double x) {
+        return a.x + static_cast<float>((x - content.x0) / content.width()) * w;
+    };
+    const auto mapY = [&](double y) {
+        return a.y + static_cast<float>((y - content.y0) / content.height()) * h;
+    };
+    const ImVec2 v0(std::clamp(mapX(visible.x0), a.x, a.x + w),
+                    std::clamp(mapY(visible.y0), a.y, a.y + h));
+    const ImVec2 v1(std::clamp(mapX(visible.x1), a.x, a.x + w),
+                    std::clamp(mapY(visible.y1), a.y, a.y + h));
     dl->AddRectFilled(v0, v1, toU32(ctx.theme->accent, 0.18f));
     dl->AddRect(v0, v1, toU32(ctx.theme->accent));
 }
@@ -51,17 +60,22 @@ void CircuitView::aimCamera(glm::vec2 body) {
 
 void CircuitView::drawBody(DrawContext& ctx) {
     if (layout_.rows.empty())
-        return widgets::placeholder(ctx, note_.empty() ? "Compile a program to see its circuit" : note_);
-    if (!ctx.gl) return widgets::placeholder(ctx, "The circuit diagram needs the GL canvas (no GL context)");
+        return widgets::placeholder(ctx,
+                                    note_.empty() ? "Compile a program to see its circuit" : note_);
+    if (!ctx.gl)
+        return widgets::placeholder(ctx, "The circuit diagram needs the GL canvas (no GL context)");
     const glm::vec2 body = bodySize();
     aimCamera(body);
     const float scale = std::max(1.0f, ctx.dpiScale);
-    auto rendered = canvas_.render(*ctx.gl, static_cast<int>(body.x * scale), static_cast<int>(body.y * scale),
-                                   scene(*ctx.theme, scale), ctx.timeS);
-    if (!rendered || !canvas_.hasImage()) return widgets::placeholder(ctx, "GL canvas unavailable");
+    auto rendered =
+        canvas_.render(*ctx.gl, static_cast<int>(body.x * scale), static_cast<int>(body.y * scale),
+                       scene(*ctx.theme, scale), ctx.timeS);
+    if (!rendered || !canvas_.hasImage())
+        return widgets::placeholder(ctx, "GL canvas unavailable");
 
     const ImVec2 origin = ImGui::GetCursorScreenPos();
-    ImGui::Image(static_cast<ImTextureID>(canvas_.textureId()), ImVec2(body.x, body.y), ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::Image(static_cast<ImTextureID>(canvas_.textureId()), ImVec2(body.x, body.y),
+                 ImVec2(0, 1), ImVec2(1, 0));
     const ImGuiIO& io = ImGui::GetIO();
     if (ImGui::IsItemHovered()) {
         if (io.MouseWheel != 0.0f) { // zoom about the cursor: the layout point under it stays put

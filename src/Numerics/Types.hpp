@@ -71,7 +71,10 @@ struct Matrix {
 
     Complex& operator()(std::size_t i, std::size_t j) { return data[i * cols + j]; }
     const Complex& operator()(std::size_t i, std::size_t j) const { return data[i * cols + j]; }
-    Complex& at(std::size_t i, std::size_t j) { assert(i < rows && j < cols); return data[i * cols + j]; }
+    Complex& at(std::size_t i, std::size_t j) {
+        assert(i < rows && j < cols);
+        return data[i * cols + j];
+    }
     bool square() const { return rows == cols; }
     std::size_t size() const { return data.size(); }
     bool empty() const { return data.empty(); }
@@ -83,17 +86,25 @@ struct Matrix {
     Matrix& operator*=(double s) { return (*this) *= Complex(s, 0.0); }
 };
 
-inline ConstMatrixView::ConstMatrixView(const Matrix& m) : ptr(m.data.data()), rows(m.rows), cols(m.cols), rowStride(m.cols) {}
-inline MatrixView::MatrixView(Matrix& m) : ptr(m.data.data()), rows(m.rows), cols(m.cols), rowStride(m.cols) {}
+inline ConstMatrixView::ConstMatrixView(const Matrix& m)
+    : ptr(m.data.data()), rows(m.rows), cols(m.cols), rowStride(m.cols) {}
+inline MatrixView::MatrixView(Matrix& m)
+    : ptr(m.data.data()), rows(m.rows), cols(m.cols), rowStride(m.cols) {}
 
 struct RealMatrix {
     std::size_t rows = 0, cols = 0;
     RealVector data;
     RealMatrix() = default;
-    RealMatrix(std::size_t r, std::size_t c, double fill = 0.0) : rows(r), cols(c), data(r * c, fill) {}
+    RealMatrix(std::size_t r, std::size_t c, double fill = 0.0)
+        : rows(r), cols(c), data(r * c, fill) {}
     double& operator()(std::size_t i, std::size_t j) { return data[i * cols + j]; }
     double operator()(std::size_t i, std::size_t j) const { return data[i * cols + j]; }
-    static RealMatrix identity(std::size_t n) { RealMatrix m(n, n); for (std::size_t i = 0; i < n; ++i) m(i, i) = 1.0; return m; }
+    static RealMatrix identity(std::size_t n) {
+        RealMatrix m(n, n);
+        for (std::size_t i = 0; i < n; ++i)
+            m(i, i) = 1.0;
+        return m;
+    }
 };
 
 // Small fixed-size matrices for gate kernels (spec 06 §1). Row-major std::array storage.
@@ -102,16 +113,32 @@ template <std::size_t N> struct MatN {
     constexpr MatN() = default;
     constexpr MatN(std::initializer_list<Complex> init) {
         std::size_t k = 0;
-        for (auto v : init) { if (k < N * N) a[k++] = v; }
+        for (auto v : init) {
+            if (k < N * N)
+                a[k++] = v;
+        }
     }
     constexpr Complex& operator()(std::size_t i, std::size_t j) { return a[i * N + j]; }
     constexpr const Complex& operator()(std::size_t i, std::size_t j) const { return a[i * N + j]; }
-    static constexpr MatN identity() { MatN m; for (std::size_t i = 0; i < N; ++i) m(i, i) = Complex(1, 0); return m; }
+    static constexpr MatN identity() {
+        MatN m;
+        for (std::size_t i = 0; i < N; ++i)
+            m(i, i) = Complex(1, 0);
+        return m;
+    }
     static constexpr std::size_t dim() { return N; }
-    Matrix toMatrix() const { Matrix m(N, N); for (std::size_t i = 0; i < N * N; ++i) m.data[i] = a[i]; return m; }
+    Matrix toMatrix() const {
+        Matrix m(N, N);
+        for (std::size_t i = 0; i < N * N; ++i)
+            m.data[i] = a[i];
+        return m;
+    }
     static MatN fromMatrix(ConstMatrixView m) {
-        MatN r; assert(m.rows == N && m.cols == N);
-        for (std::size_t i = 0; i < N; ++i) for (std::size_t j = 0; j < N; ++j) r(i, j) = m(i, j);
+        MatN r;
+        assert(m.rows == N && m.cols == N);
+        for (std::size_t i = 0; i < N; ++i)
+            for (std::size_t j = 0; j < N; ++j)
+                r(i, j) = m(i, j);
         return r;
     }
     constexpr MatN operator*(const MatN& o) const {
@@ -119,19 +146,24 @@ template <std::size_t N> struct MatN {
         for (std::size_t i = 0; i < N; ++i)
             for (std::size_t j = 0; j < N; ++j) {
                 Complex s{};
-                for (std::size_t k = 0; k < N; ++k) s += (*this)(i, k) * o(k, j);
+                for (std::size_t k = 0; k < N; ++k)
+                    s += (*this)(i, k) * o(k, j);
                 r(i, j) = s;
             }
         return r;
     }
     constexpr MatN adjoint() const {
         MatN r;
-        for (std::size_t i = 0; i < N; ++i) for (std::size_t j = 0; j < N; ++j) r(j, i) = std::conj((*this)(i, j));
+        for (std::size_t i = 0; i < N; ++i)
+            for (std::size_t j = 0; j < N; ++j)
+                r(j, i) = std::conj((*this)(i, j));
         return r;
     }
     constexpr bool isDiagonal(double eps = 1e-15) const {
-        for (std::size_t i = 0; i < N; ++i) for (std::size_t j = 0; j < N; ++j)
-            if (i != j && std::abs((*this)(i, j)) > eps) return false;
+        for (std::size_t i = 0; i < N; ++i)
+            for (std::size_t j = 0; j < N; ++j)
+                if (i != j && std::abs((*this)(i, j)) > eps)
+                    return false;
         return true;
     }
 };
@@ -141,7 +173,7 @@ using Mat8 = MatN<8>;
 
 // Kahan/pairwise-safe accumulation helpers (spec 06 §10).
 double kahanSum(std::span<const double> x);
-double norm2Squared(std::span<const Complex> v); // Σ|v_i|² (pairwise)
+double norm2Squared(std::span<const Complex> v);                     // Σ|v_i|² (pairwise)
 Complex dot(std::span<const Complex> a, std::span<const Complex> b); // ⟨a|b⟩ = Σ conj(a_i) b_i
 
 } // namespace qlab::num

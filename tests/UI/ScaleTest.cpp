@@ -7,15 +7,15 @@
 // Two independent guards:
 //   * a behavioural one — the same frame at 1x and at 2x must lay out to the same logical geometry;
 //   * a source one — `dpiScale` may only be named where a logical->device conversion belongs.
-#include "UiHarness.hpp"
 #include "Core/Paths.hpp"
 #include "UI/Widgets/Widgets.hpp"
+#include "UiHarness.hpp"
+#include <algorithm>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
-#include <imgui_internal.h>   // FindWindowByName: the test reads back the laid-out windows
-#include <algorithm>
 #include <filesystem>
 #include <fstream>
+#include <imgui_internal.h> // FindWindowByName: the test reads back the laid-out windows
 #include <map>
 #include <set>
 #include <sstream>
@@ -31,12 +31,12 @@ namespace fs = std::filesystem;
 
 // Everything about a frame that must not depend on the display scale, in logical points.
 struct Layout {
-    float fontSize = 0.0f;                     // ImGui::GetFontSize() — the DISPLAY size of the body face
+    float fontSize = 0.0f; // ImGui::GetFontSize() — the DISPLAY size of the body face
     ImVec2 framePadding{}, itemSpacing{}, windowPadding{};
     float frameRounding = 0.0f, scrollbar = 0.0f, indent = 0.0f;
     float buttonWidth = 0.0f, buttonHeight = 0.0f;
-    float bodyPx = 0.0f, gutterPx = 0.0f;      // ctx.metrics_px(): the theme as the panels read it
-    std::map<std::string, ImVec2> content;     // per window: laid-out content size
+    float bodyPx = 0.0f, gutterPx = 0.0f;  // ctx.metrics_px(): the theme as the panels read it
+    std::map<std::string, ImVec2> content; // per window: laid-out content size
 };
 
 Layout measure(test::UiHarness& ui, Shell& shell, float dpiScale, float fontScale = 1.0f) {
@@ -44,7 +44,7 @@ Layout measure(test::UiHarness& ui, Shell& shell, float dpiScale, float fontScal
     REQUIRE(ui.resources().applyScale(io.Fonts, dpiScale, fontScale));
     unsigned char* pixels = nullptr;
     int w = 0, h = 0;
-    io.Fonts->GetTexDataAsRGBA32(&pixels, &w, &h);   // rebuild the atlas; nothing uploads it
+    io.Fonts->GetTexDataAsRGBA32(&pixels, &w, &h); // rebuild the atlas; nothing uploads it
     ui.resources().bind(ui.context(), dpiScale, fontScale);
 
     Layout out;
@@ -72,7 +72,8 @@ Layout measure(test::UiHarness& ui, Shell& shell, float dpiScale, float fontScal
     out.bodyPx = m.bodyPx;
     out.gutterPx = m.spacing(4);
     for (const PanelPtr& p : shell.panels())
-        if (const ImGuiWindow* win = ImGui::FindWindowByName(p->windowTitle().c_str()); win != nullptr && win->WasActive)
+        if (const ImGuiWindow* win = ImGui::FindWindowByName(p->windowTitle().c_str());
+            win != nullptr && win->WasActive)
             out.content[std::string(p->key())] = win->ContentSize;
     return out;
 }
@@ -84,9 +85,11 @@ std::vector<int> codeHits(const fs::path& file, std::string_view needle) {
     std::string line;
     for (int number = 1; std::getline(in, line); ++number) {
         const std::size_t at = line.find(needle);
-        if (at == std::string::npos) continue;
+        if (at == std::string::npos)
+            continue;
         const std::size_t comment = line.find("//");
-        if (comment == std::string::npos || at < comment) hits.push_back(number);
+        if (comment == std::string::npos || at < comment)
+            hits.push_back(number);
     }
     return hits;
 }
@@ -95,7 +98,8 @@ std::vector<int> codeHits(const fs::path& file, std::string_view needle) {
 
 TEST_CASE("Scale: the same frame lays out identically at 1x and 2x (spec 19 §7)", "[ui][scale]") {
     test::UiHarness ui;
-    if (!ui.ready()) SKIP("the pinned fonts are not available");
+    if (!ui.ready())
+        SKIP("the pinned fonts are not available");
     Shell shell;
     shell.setWorkspace(Workspace::Program);
 
@@ -140,9 +144,11 @@ TEST_CASE("Scale: the same frame lays out identically at 1x and 2x (spec 19 §7)
     }
 }
 
-TEST_CASE("Scale: the user text scale is the one knob that magnifies the interface (spec 19 §7)", "[ui][scale]") {
+TEST_CASE("Scale: the user text scale is the one knob that magnifies the interface (spec 19 §7)",
+          "[ui][scale]") {
     test::UiHarness ui;
-    if (!ui.ready()) SKIP("the pinned fonts are not available");
+    if (!ui.ready())
+        SKIP("the pinned fonts are not available");
     Shell shell;
     shell.setWorkspace(Workspace::Program);
 
@@ -165,36 +171,48 @@ TEST_CASE("Scale: the user text scale is the one knob that magnifies the interfa
     CHECK(shell.fontScale() == 1.15f);
 }
 
-TEST_CASE("Scale: `dpiScale` is named only where a logical->device conversion belongs", "[ui][scale]") {
+TEST_CASE("Scale: `dpiScale` is named only where a logical->device conversion belongs",
+          "[ui][scale]") {
     // The scale reaches exactly two kinds of code: the places that own it (the context, the font
     // atlas, the theme) and the places that hand a PIXEL count to something outside ImGui — the 3D
     // viewport's framebuffer and pick ray, and the state views' GL canvases. A widget size is in
     // logical points and must never be multiplied by it.
     const std::set<std::string> owners{
-        "UI/Context.cpp", "UI/Context.hpp", "UI/UI.cpp", "UI/UI.hpp", "UI/Fonts.cpp", "UI/Fonts.hpp",
-        "UI/Theme.cpp", "UI/Theme.hpp", "UI/ThemeStyle.cpp",
+        "UI/Context.cpp", "UI/Context.hpp", "UI/UI.cpp",    "UI/UI.hpp",         "UI/Fonts.cpp",
+        "UI/Fonts.hpp",   "UI/Theme.cpp",   "UI/Theme.hpp", "UI/ThemeStyle.cpp",
     };
     const std::set<std::string> converters{
-        "UI/Panels/ViewportPanel.cpp",                        // framebuffer size and pick coordinates
-        "Viz/IStateView.hpp",                                 // the field itself
-        "Viz/Views/BlochViewDraw.cpp", "Viz/Views/CityView.cpp", "Viz/Views/CircuitViewPanel.cpp",
-        "Viz/Views/GraphView.cpp", "Viz/Views/QSphereView.cpp", // GL canvas resolution
+        "UI/Panels/ViewportPanel.cpp", // framebuffer size and pick coordinates
+        "Viz/IStateView.hpp",          // the field itself
+        "Viz/Views/BlochViewDraw.cpp",
+        "Viz/Views/CityView.cpp",
+        "Viz/Views/CircuitViewPanel.cpp",
+        "Viz/Views/GraphView.cpp",
+        "Viz/Views/QSphereView.cpp", // GL canvas resolution
     };
     const fs::path root = fs::path(QXL_SOURCE_DIR) / "src";
     std::vector<std::string> offenders;
     std::error_code ec;
     for (const auto& entry : fs::recursive_directory_iterator(root, ec)) {
-        if (!entry.is_regular_file()) continue;
+        if (!entry.is_regular_file())
+            continue;
         const std::string ext = entry.path().extension().string();
-        if (ext != ".cpp" && ext != ".hpp") continue;
+        if (ext != ".cpp" && ext != ".hpp")
+            continue;
         const std::string rel = fs::relative(entry.path(), root).generic_string();
-        if (owners.contains(rel) || converters.contains(rel)) continue;
+        if (owners.contains(rel) || converters.contains(rel))
+            continue;
         for (int line : codeHits(entry.path(), "dpiScale"))
             offenders.push_back(rel + ":" + std::to_string(line));
     }
     // App holds the scale and passes it on; that is ownership, not layout.
     std::erase_if(offenders, [](const std::string& s) { return s.starts_with("App/"); });
-    INFO("a size in logical points must not be multiplied by the display scale; use ctx.ui(x):\n  " <<
-         [&] { std::ostringstream o; for (const std::string& s : offenders) o << s << "\n  "; return o.str(); }());
+    INFO("a size in logical points must not be multiplied by the display scale; use ctx.ui(x):\n  "
+         << [&] {
+                std::ostringstream o;
+                for (const std::string& s : offenders)
+                    o << s << "\n  ";
+                return o.str();
+            }());
     CHECK(offenders.empty());
 }

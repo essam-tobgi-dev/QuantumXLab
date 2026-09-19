@@ -10,9 +10,11 @@ using num::Complex;
 using num::Matrix;
 
 Result<Kraus> overRotation(std::string_view axis, double epsilonRad) {
-    if (!std::isfinite(epsilonRad)) return fail(err::InvalidParameter, "over_rotation angle must be finite");
+    if (!std::isfinite(epsilonRad))
+        return fail(err::InvalidParameter, "over_rotation angle must be finite");
     QXL_TRY_ASSIGN(const std::uint32_t index, pauliStringIndex(axis));
-    if (index == 0) return fail(err::InvalidParameter, "over_rotation axis must contain a non-identity Pauli");
+    if (index == 0)
+        return fail(err::InvalidParameter, "over_rotation axis must contain a non-identity Pauli");
     const auto arity = static_cast<std::uint32_t>(axis.size());
     const Matrix P = pauliStringMatrix(index, arity);
     // exp(−i ε P/2) = cos(ε/2) I − i sin(ε/2) P for P² = I.
@@ -23,7 +25,8 @@ Result<Kraus> overRotation(std::string_view axis, double epsilonRad) {
 
 Result<Kraus> detuningPhase(double detuningHz, double tS) {
     if (!std::isfinite(detuningHz) || !std::isfinite(tS) || tS < 0.0)
-        return fail(err::InvalidParameter, "detuning_phase needs a finite detuning and a duration >= 0");
+        return fail(err::InvalidParameter,
+                    "detuning_phase needs a finite detuning and a duration >= 0");
     const double theta = 2.0 * std::numbers::pi * detuningHz * tS;
     Matrix u(2, 2);
     u(0, 0) = std::polar(1.0, -0.5 * theta);
@@ -44,7 +47,8 @@ Result<Kraus> zzCrosstalk(double zetaHz, double tS) {
 }
 
 double overRotationAngleForInfidelity(double rCoherent, std::uint32_t nQubits) {
-    if (!(rCoherent > 0.0)) return 0.0;
+    if (!(rCoherent > 0.0))
+        return 0.0;
     const double d = std::ldexp(1.0, static_cast<int>(nQubits));
     const double s2 = std::min(1.0, rCoherent * (d + 1.0) / d); // sin²(ε/2)
     return 2.0 * std::asin(std::sqrt(s2));
@@ -52,7 +56,8 @@ double overRotationAngleForInfidelity(double rCoherent, std::uint32_t nQubits) {
 
 Result<Kraus> leakage(double pLeak, double pSeep) {
     if (!(pLeak >= 0.0 && pLeak <= 1.0) || !(pSeep >= 0.0 && pSeep <= 1.0))
-        return fail(err::InvalidParameter, std::format("leakage probabilities ({}, {}) must lie in [0, 1]", pLeak, pSeep));
+        return fail(err::InvalidParameter,
+                    std::format("leakage probabilities ({}, {}) must lie in [0, 1]", pLeak, pSeep));
     Matrix k0(3, 3), k1(3, 3), k2(3, 3);
     k0(0, 0) = 1.0;
     k0(1, 1) = std::sqrt(1.0 - pLeak);

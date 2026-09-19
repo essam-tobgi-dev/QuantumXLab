@@ -17,9 +17,10 @@ namespace qlab::instr {
 
 // Immutable copy of an instrument's settings for one acquisition.
 class SettingValues {
-public:
+  public:
     SettingValues() = default;
-    explicit SettingValues(std::map<std::string, SettingValue, std::less<>> v) : values_(std::move(v)) {}
+    explicit SettingValues(std::map<std::string, SettingValue, std::less<>> v)
+        : values_(std::move(v)) {}
     double real(std::string_view key) const;          // Real or Int as double; 0 when absent
     std::int64_t integer(std::string_view key) const; // Int (or rounded Real); 0 when absent
     bool flag(std::string_view key) const;            // Bool; false when absent
@@ -27,21 +28,21 @@ public:
     bool has(std::string_view key) const { return values_.find(key) != values_.end(); }
     const std::map<std::string, SettingValue, std::less<>>& all() const { return values_; }
 
-private:
+  private:
     std::map<std::string, SettingValue, std::less<>> values_;
 };
 
 // What a model gets for one acquisition.
 struct AcquireContext {
     SettingValues settings;
-    std::shared_ptr<const RunView> run;         // may be null: no run bound
-    std::shared_ptr<const Environment> env;     // may be null: nothing bound
+    std::shared_ptr<const RunView> run;     // may be null: no run bound
+    std::shared_ptr<const Environment> env; // may be null: nothing bound
     Timestamp stamp;
-    core::Random rng;                           // seeded from (run/env seed, instrument id, sequence)
+    core::Random rng; // seeded from (run/env seed, instrument id, sequence)
 };
 
 class InstrumentBase : public IInstrument {
-public:
+  public:
     InstrumentId id() const final { return id_; }
     std::span<const ChannelDesc> channels() const final { return channels_; }
     const SettingSchema& settings() const final { return schema_; }
@@ -63,7 +64,7 @@ public:
 
     static constexpr std::size_t kMaxReports = 32;
 
-protected:
+  protected:
     InstrumentBase(InstrumentId id, SettingSchema schema);
 
     // Replaces the channel list, numbering the channels in order (constructors and bind()).
@@ -95,21 +96,21 @@ protected:
     // Stores a value bypassing the read-only rule (tools writing corrections). Still validated.
     Result<void> storeInternal(std::string_view key, SettingValue value);
 
-private:
+  private:
     void moveTo(State to) const;
-    void revalidate();                  // conflict() → Fault / back to Idle
+    void revalidate(); // conflict() → Fault / back to Idle
     Result<void> store(std::string_view key, SettingValue value, bool internal);
 
     InstrumentId id_;
     SettingSchema schema_;
     std::vector<ChannelDesc> channels_;
     Bindings bindings_;
-    mutable std::mutex mu_;             // values_, reports_, fault_, sequence counters
+    mutable std::mutex mu_; // values_, reports_, fault_, sequence counters
     std::map<std::string, SettingValue, std::less<>> values_;
     std::deque<SettingReport> reports_;
     // The fault and the state machine are runtime state, not logical constness: a const reader can
     // latch a Fault (see raiseFault).
-    mutable std::string fault_;         // settings conflict or runtime fault
+    mutable std::string fault_; // settings conflict or runtime fault
     mutable bool runtimeFault_ = false;
     std::uint64_t reportSeq_ = 0;
     mutable std::uint64_t acquireSeq_ = 0;

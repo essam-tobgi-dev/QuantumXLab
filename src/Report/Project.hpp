@@ -18,7 +18,7 @@ namespace qlab::report {
 // Spec 23 §2: programs are stored inline by default; `path` is set when the user linked an
 // external file, which is then watched and reloaded on change.
 struct ProgramRef {
-    std::string path;      // relative to the project directory, forward slashes; empty when inline
+    std::string path; // relative to the project directory, forward slashes; empty when inline
     std::string inlineSource;
     bool isMain = false;
     core::Json extra = core::Json::object();
@@ -26,18 +26,18 @@ struct ProgramRef {
 
 struct DeviceRef {
     std::string id;
-    core::Json calibrationOverrides = core::Json::object();  // {"qubit[3].T1_us": 42.0}
-    core::Json wiringOverrides = core::Json::object();       // overrides on the base lab layout (§4)
+    core::Json calibrationOverrides = core::Json::object(); // {"qubit[3].T1_us": 42.0}
+    core::Json wiringOverrides = core::Json::object();      // overrides on the base lab layout (§4)
     core::Json extra = core::Json::object();
 };
 
 struct BackendSettings {
-    std::string kind = "auto";      // auto | state_vector | density_matrix | stabilizer | lindblad
+    std::string kind = "auto"; // auto | state_vector | density_matrix | stabilizer | lindblad
     std::uint32_t shots = 1024;
-    std::uint64_t seed = 0;         // stored so a reopened project reproduces every Statistical result
+    std::uint64_t seed = 0; // stored so a reopened project reproduces every Statistical result
     bool noise = true;
     bool snapshotEveryGate = false;
-    core::Json lindblad = core::Json::object();   // {"levels": 3, "dt_ps": 50}
+    core::Json lindblad = core::Json::object(); // {"levels": 3, "dt_ps": 50}
     core::Json extra = core::Json::object();
 };
 
@@ -61,14 +61,14 @@ struct WorkspaceState {
 
 // Spec 23 §2: results live in `<name>.qxlab.d/runs/`, never inline; the project keeps summaries.
 struct RunSummary {
-    std::string id;                 // "run-000017"
-    std::string time;               // ISO 8601 UTC
+    std::string id;   // "run-000017"
+    std::string time; // ISO 8601 UTC
     std::string backend;
     std::string device;
     std::string programHash;
     std::uint32_t shots = 0;
     std::uint64_t seed = 0;
-    std::string resultPath;         // "runs/run-000017.json", relative to the project directory
+    std::string resultPath; // "runs/run-000017.json", relative to the project directory
     core::Json estimate = core::Json::object();
     core::Json extra = core::Json::object();
 };
@@ -89,7 +89,7 @@ struct Project {
     WorkspaceState workspace;
     std::vector<RunSummary> runs;
     std::vector<RecipeRef> recipes;
-    core::Json extra = core::Json::object();   // unknown top-level fields of `data`
+    core::Json extra = core::Json::object(); // unknown top-level fields of `data`
 
     const ProgramRef* mainProgram() const;
     const RunSummary* run(std::string_view id) const;
@@ -101,8 +101,8 @@ struct Project {
 };
 
 // ---------------------------------------------------------------- files (spec 23 §2)
-// The satellite paths of a project file: `<stem>.qxlab.d/` for run results and `<stem>.qxlab.autosave`
-// for the crash-recovery copy.
+// The satellite paths of a project file: `<stem>.qxlab.d/` for run results and
+// `<stem>.qxlab.autosave` for the crash-recovery copy.
 std::filesystem::path projectDataDir(const std::filesystem::path& file);
 std::filesystem::path projectRunsDir(const std::filesystem::path& file);
 std::filesystem::path autosavePath(const std::filesystem::path& file);
@@ -110,9 +110,10 @@ std::filesystem::path autosavePath(const std::filesystem::path& file);
 std::filesystem::path recoveryDir();
 std::filesystem::path recoveryPath(std::string_view id);
 
-std::string serializeProject(const Project& p);                       // envelope kind "project"
-Result<Project> parseProject(const std::string& text);                // refuses schema > current
-Status saveProject(const std::filesystem::path& file, const Project& p);  // atomic; drops the autosave
+std::string serializeProject(const Project& p);        // envelope kind "project"
+Result<Project> parseProject(const std::string& text); // refuses schema > current
+Status saveProject(const std::filesystem::path& file,
+                   const Project& p); // atomic; drops the autosave
 Result<Project> loadProject(const std::filesystem::path& file);
 
 // Autosave (§2): every 60 s and after every successful run; deleted on clean exit.
@@ -123,20 +124,21 @@ Status clearAutosave(const std::filesystem::path& file);
 Status writeRecoveryJournal(std::string_view id, const Project& p);
 
 enum class RecoveryChoice : std::uint8_t {
-    Ask,              // load the project file; report a newer autosave for the caller to prompt about
-    UseAutosave,      // load the autosave (the user accepted recovery)
-    DiscardAutosave,  // load the project file and delete the autosave
+    Ask,         // load the project file; report a newer autosave for the caller to prompt about
+    UseAutosave, // load the autosave (the user accepted recovery)
+    DiscardAutosave, // load the project file and delete the autosave
 };
 
 struct OpenedProject {
     Project project;
-    bool recovered = false;          // the autosave was the source
-    bool autosavePending = false;    // an autosave newer than the file exists and was not used
+    bool recovered = false;       // the autosave was the source
+    bool autosavePending = false; // an autosave newer than the file exists and was not used
     std::filesystem::path autosave;
-    std::string autosaveTime, fileTime;   // ISO 8601 UTC, for the recovery prompt
+    std::string autosaveTime, fileTime; // ISO 8601 UTC, for the recovery prompt
 };
 
 // Spec 23 §2: on open, an autosave newer than the project prompts for recovery.
-Result<OpenedProject> openProject(const std::filesystem::path& file, RecoveryChoice choice = RecoveryChoice::Ask);
+Result<OpenedProject> openProject(const std::filesystem::path& file,
+                                  RecoveryChoice choice = RecoveryChoice::Ask);
 
 } // namespace qlab::report

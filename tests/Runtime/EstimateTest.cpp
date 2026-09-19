@@ -1,7 +1,8 @@
 // Spec 15 §6–§9, T12 §1–§4, §7, §9 — the hardware estimators: the worked wall-time examples of
-// §6, the product fidelity of §7 (i), the resource and classical-cost rows of §8, and the §9 record.
-#include "RuntimeTestUtil.hpp"
+// §6, the product fidelity of §7 (i), the resource and classical-cost rows of §8, and the §9
+// record.
 #include "Data/Fidelity.hpp"
+#include "RuntimeTestUtil.hpp"
 #include <cmath>
 
 using namespace rtest;
@@ -10,8 +11,8 @@ using Catch::Approx;
 namespace {
 // The shipped calibration files are generated with per-qubit spreads around the nominals of spec
 // 09 §4; the worked examples of §6/§7 quote the nominals themselves. This is that calibration.
-hw::Calibration nominal(const hw::Calibration& base, double t1S, double t2S, double e1, double e2, double eRo,
-                        double d1S, double roS) {
+hw::Calibration nominal(const hw::Calibration& base, double t1S, double t2S, double e1, double e2,
+                        double eRo, double d1S, double roS) {
     hw::Calibration c = base;
     for (hw::QubitCal& q : c.qubits) {
         q.t1.value = units::Time{t1S};
@@ -57,10 +58,14 @@ Bell bellOn(const std::string& deviceId, bool useNominal) {
     REQUIRE(b.program != nullptr);
     const hw::Calibration& shipped = *b.lab->session.calibration();
     // Spec 09 §4 nominals: transmon 32 ns / 380 ns gates, 640 ns readout, T1 150 µs, T2 95 µs,
-    // ε1 3.5e-4, ε2 7.5e-3, F_ro 0.98; ion 10 µs / 200 µs, 300 µs readout, ε1 1e-4, ε2 4e-3, F_ro 0.997.
-    if (!useNominal) b.cal = shipped;
-    else if (deviceId == "ion_chain_11") b.cal = nominal(shipped, 1e9, 1.0, 1e-4, 4e-3, 0.003, 10e-6, 300e-6);
-    else b.cal = nominal(shipped, 150e-6, 95e-6, 3.5e-4, 7.5e-3, 0.02, 32e-9, 640e-9);
+    // ε1 3.5e-4, ε2 7.5e-3, F_ro 0.98; ion 10 µs / 200 µs, 300 µs readout, ε1 1e-4, ε2 4e-3, F_ro
+    // 0.997.
+    if (!useNominal)
+        b.cal = shipped;
+    else if (deviceId == "ion_chain_11")
+        b.cal = nominal(shipped, 1e9, 1.0, 1e-4, 4e-3, 0.003, 10e-6, 300e-6);
+    else
+        b.cal = nominal(shipped, 150e-6, 95e-6, 3.5e-4, 7.5e-3, 0.02, 32e-9, 640e-9);
     return b;
 }
 } // namespace
@@ -72,22 +77,22 @@ TEST_CASE("spec 15 section 6: Bell x1024 on sc_heavyhex_27 with active and with 
     REQUIRE(active);
     // T_circ = sx 32 ns + cx 380 ns (quantised to the 3.552 ns granule of the device).
     REQUIRE(active->circuitS == Approx(412e-9).margin(0.1e-9));
-    REQUIRE(active->readoutS == Approx(800e-9).margin(1e-12));   // 640 ns + 160 ns ring-down
-    REQUIRE(active->resetS == Approx(872e-9).margin(1e-12));     // 640 + 200 + 32 ns (T12 §1.3)
+    REQUIRE(active->readoutS == Approx(800e-9).margin(1e-12)); // 640 ns + 160 ns ring-down
+    REQUIRE(active->resetS == Approx(872e-9).margin(1e-12));   // 640 + 200 + 32 ns (T12 §1.3)
     REQUIRE(active->gapS == Approx(1.0e-6).margin(1e-12));
     REQUIRE(active->loadS == Approx(50e-3).margin(1e-12));
     REQUIRE(active->perShotS == Approx(3.084e-6).margin(1e-9));
     REQUIRE(active->shotsS == Approx(3.158e-3).margin(2e-6));
-    REQUIRE(active->feedbackTotalS == 0.0);                      // no Branch in the Bell program
-    REQUIRE(active->valueS == Approx(0.0532).margin(5e-5));       // spec 15 §6: 53.2 ms
+    REQUIRE(active->feedbackTotalS == 0.0);                 // no Branch in the Bell program
+    REQUIRE(active->valueS == Approx(0.0532).margin(5e-5)); // spec 15 §6: 53.2 ms
 
     in.resetPolicy = hw::ResetPolicy::Passive;
     auto passive = estimateWallTime(in);
     REQUIRE(passive);
-    REQUIRE(passive->resetS == Approx(750e-6).margin(1e-12));     // max(5 × 150 µs, 250 µs)
+    REQUIRE(passive->resetS == Approx(750e-6).margin(1e-12));    // max(5 × 150 µs, 250 µs)
     REQUIRE(passive->perShotS == Approx(752.2e-6).margin(5e-8)); // spec 15 §6 quotes 752.2 µs
     REQUIRE(passive->shotsS == Approx(0.770).margin(5e-4));
-    REQUIRE(passive->valueS == Approx(0.820).margin(5e-4));       // spec 15 §6: 0.820 s
+    REQUIRE(passive->valueS == Approx(0.820).margin(5e-4)); // spec 15 §6: 0.820 s
 }
 
 TEST_CASE("spec 15 section 6: Bell x1024 on ion_chain_11") {
@@ -98,8 +103,9 @@ TEST_CASE("spec 15 section 6: Bell x1024 on ion_chain_11") {
     REQUIRE(w->readoutS == Approx(300e-6).margin(1e-12)); // fluorescence, no ring-down
     REQUIRE(w->gapS == Approx(100e-6).margin(1e-12));
     REQUIRE(w->loadS == Approx(100e-3).margin(1e-12));
-    // Compiled: rx(pi) on one ion, ms(pi/2), then the two dressing gates on DIFFERENT ions, which the
-    // ASAP schedule runs in parallel: 10 + 200 + 10 = 220 µs, not the 230 µs of a serial dressing pair.
+    // Compiled: rx(pi) on one ion, ms(pi/2), then the two dressing gates on DIFFERENT ions, which
+    // the ASAP schedule runs in parallel: 10 + 200 + 10 = 220 µs, not the 230 µs of a serial
+    // dressing pair.
     REQUIRE(w->circuitS == Approx(220e-6).margin(0.5e-6));
     REQUIRE(w->perShotS == Approx(2120e-6).margin(0.5e-6));
     REQUIRE(w->valueS == Approx(2.27).margin(5e-3));
@@ -112,7 +118,7 @@ TEST_CASE("spec 15 section 7 (i): the product fidelity of the Bell example") {
     REQUIRE(f->gateProduct == Approx(0.99965 * 0.9925).margin(1e-6)); // one sx, one cx; rz is free
     REQUIRE(f->readoutProduct == Approx(0.98 * 0.98).margin(1e-9));
     REQUIRE(f->idleProduct <= 1.0);
-    REQUIRE(f->fast == Approx(0.953).margin(5e-4));                   // spec 15 §7
+    REQUIRE(f->fast == Approx(0.953).margin(5e-4)); // spec 15 §7
     REQUIRE(f->cls == data::FidelityClass::Model);
     REQUIRE(f->caveats.size() == 4);
     REQUIRE(f->low <= f->fast);
@@ -121,9 +127,9 @@ TEST_CASE("spec 15 section 7 (i): the product fidelity of the Bell example") {
     const Bell ion = bellOn("ion_chain_11", true);
     auto g = estimateFidelityFast(ion.input());
     REQUIRE(g);
-    REQUIRE(g->gateProduct == Approx(0.9997 * 0.996).margin(1e-5));   // three 1q pulses, one ms
+    REQUIRE(g->gateProduct == Approx(0.9997 * 0.996).margin(1e-5)); // three 1q pulses, one ms
     REQUIRE(g->readoutProduct == Approx(0.997 * 0.997).margin(1e-9));
-    REQUIRE(g->fast == Approx(0.990).margin(5e-4));                   // spec 15 §7
+    REQUIRE(g->fast == Approx(0.990).margin(5e-4)); // spec 15 §7
 }
 
 TEST_CASE("the fidelity estimate widens with the calibration sigmas and shrinks with more gates") {
@@ -134,11 +140,13 @@ TEST_CASE("the fidelity estimate widens with the calibration sigmas and shrinks 
     REQUIRE(f->low < f->fast);
     REQUIRE(f->high > f->fast);
     REQUIRE(f->sigmaLog > 0.0);
-    // Twenty entangling gates cost roughly twenty times the error of one. The `t` between them keeps
-    // the optimizer from cancelling the CX pairs (it is a virtual Z, so it costs no time and no error).
+    // Twenty entangling gates cost roughly twenty times the error of one. The `t` between them
+    // keeps the optimizer from cancelling the CX pairs (it is a virtual Z, so it costs no time and
+    // no error).
     Lab& l = lab("sc_heavyhex_27");
-    auto job = l.compile(source("qubit[2] q;\nbit[2] c;\nh q[0];\n"
-                                "for int i in [0:19] { cx q[0], q[1]; t q[1]; }\nc = measure q;\n"));
+    auto job =
+        l.compile(source("qubit[2] q;\nbit[2] c;\nh q[0];\n"
+                         "for int i in [0:19] { cx q[0], q[1]; t q[1]; }\nc = measure q;\n"));
     EstimateInput deep = shipped.input();
     deep.program = l.session.compiled(job.handle);
     deep.calibration = l.session.calibration();
@@ -164,8 +172,9 @@ TEST_CASE("resources and classical cost follow the metrics and this host") {
     // Spec 15 §8: the T count is read off the PRE-decomposition circuit, so `t` survives the
     // rewrite into rz, and an arbitrary rz angle is a non-Clifford rotation instead.
     Lab& l = lab("sc_heavyhex_27");
-    auto job = l.compile(source("qubit[2] q;\nbit[2] c;\nh q[0];\nt q[0];\ntdg q[1];\nrz(0.37) q[1];\n"
-                                "cx q[0], q[1];\nc = measure q;\n"));
+    auto job =
+        l.compile(source("qubit[2] q;\nbit[2] c;\nh q[0];\nt q[0];\ntdg q[1];\nrz(0.37) q[1];\n"
+                         "cx q[0], q[1];\nc = measure q;\n"));
     EstimateInput in = b.input();
     in.program = l.session.compiled(job.handle);
     in.usedQubits = usedQubits(in.program->circuit);
@@ -188,13 +197,14 @@ TEST_CASE("the estimate record matches the spec 15 section 9 schema and carries 
     REQUIRE(e);
     REQUIRE(e->cls == data::FidelityClass::Model);
     const core::Json j = e->toJson();
-    for (const char* key : {"device", "calibration_timestamp", "class", "wall_time", "fidelity", "resources",
-                            "classical_cost", "qec", "assumptions", "comparison"})
+    for (const char* key : {"device", "calibration_timestamp", "class", "wall_time", "fidelity",
+                            "resources", "classical_cost", "qec", "assumptions", "comparison"})
         REQUIRE(j.contains(key));
     REQUIRE(j["device"] == "sc_heavyhex_27");
     REQUIRE(j["class"] == "Model");
     REQUIRE(j["wall_time"]["value_s"].get<double>() == Approx(0.0532).margin(5e-5));
-    for (const char* key : {"load", "per_shot_s", "shots", "reset", "circuit", "readout", "gap", "feedback_total"})
+    for (const char* key :
+         {"load", "per_shot_s", "shots", "reset", "circuit", "readout", "gap", "feedback_total"})
         REQUIRE(j["wall_time"]["terms"].contains(key));
     REQUIRE(j["wall_time"]["terms"]["shots"].get<std::uint64_t>() == 1024);
     REQUIRE(j["fidelity"]["fast"].get<double>() == Approx(0.953).margin(5e-4));
@@ -207,7 +217,8 @@ TEST_CASE("the estimate record matches the spec 15 section 9 schema and carries 
     for (const char* wanted : {"queue_time_excluded", "reset_policy:active", "independent_errors",
                                "average_gate_fidelities", "no_crosstalk", "calibration_static"})
         REQUIRE(std::find(keys.begin(), keys.end(), wanted) != keys.end());
-    for (const std::string& k : keys) REQUIRE(!assumptionText(k).empty());
+    for (const std::string& k : keys)
+        REQUIRE(!assumptionText(k).empty());
     REQUIRE(assumptionKeys().size() >= 8);
     REQUIRE(assumptionText("nonsense").empty());
     // The envelope is the one the report exports.
@@ -229,7 +240,7 @@ TEST_CASE("the section 9 comparison holds one row per device that can accept the
     REQUIRE(rows.size() >= 3);
     for (const DeviceComparison& c : rows) {
         INFO(c.device << ": " << c.wallTimeS << " s, F = " << c.fidelityFast);
-        REQUIRE(c.device != "sc_fixed_5");       // the run's own device is not repeated
+        REQUIRE(c.device != "sc_fixed_5"); // the run's own device is not repeated
         REQUIRE(c.wallTimeS > 0.0);
         REQUIRE(c.fidelityFast > 0.0);
         REQUIRE(c.fidelityFast <= 1.0);
@@ -253,8 +264,9 @@ TEST_CASE("the section 9 comparison holds one row per device that can accept the
 
 TEST_CASE("the QEC row appears once the uncorrected fidelity falls below the threshold") {
     Lab& l = lab("sc_heavyhex_27");
-    auto job = l.compile(source("qubit[2] q;\nbit[2] c;\nh q[0];\nt q[0];\n"
-                                "for int i in [0:149] { cx q[0], q[1]; t q[1]; }\nc = measure q;\n"));
+    auto job =
+        l.compile(source("qubit[2] q;\nbit[2] c;\nh q[0];\nt q[0];\n"
+                         "for int i in [0:149] { cx q[0], q[1]; t q[1]; }\nc = measure q;\n"));
     EstimateInput in;
     in.device = l.session.device();
     in.calibration = l.session.calibration();

@@ -6,12 +6,14 @@ namespace {
 // Stride of `site` in the flat index (little-endian: site 0 is the least significant factor).
 std::size_t strideOf(std::span<const std::uint32_t> dims, std::uint32_t site) {
     std::size_t s = 1;
-    for (std::uint32_t k = 0; k < site; ++k) s *= dims[k];
+    for (std::uint32_t k = 0; k < site; ++k)
+        s *= dims[k];
     return s;
 }
 std::size_t totalDim(std::span<const std::uint32_t> dims) {
     std::size_t d = 1;
-    for (auto x : dims) d *= x;
+    for (auto x : dims)
+        d *= x;
     return d;
 }
 } // namespace
@@ -19,12 +21,14 @@ std::size_t totalDim(std::span<const std::uint32_t> dims) {
 Matrix ladderAnnihilate(std::span<const std::uint32_t> dims, std::uint32_t site) {
     const std::size_t D = totalDim(dims);
     Matrix a(D, D);
-    if (site >= dims.size()) return a;
+    if (site >= dims.size())
+        return a;
     const std::size_t stride = strideOf(dims, site);
     const std::uint32_t d = dims[site];
     for (std::size_t idx = 0; idx < D; ++idx) {
         std::uint32_t level = static_cast<std::uint32_t>((idx / stride) % d);
-        if (level == 0) continue;
+        if (level == 0)
+            continue;
         // a |n> = √n |n-1>: column idx (level n) maps to row idx - stride (level n-1).
         a(idx - stride, idx) = std::sqrt(static_cast<double>(level));
     }
@@ -34,7 +38,8 @@ Matrix ladderAnnihilate(std::span<const std::uint32_t> dims, std::uint32_t site)
 Matrix numberOperator(std::span<const std::uint32_t> dims, std::uint32_t site) {
     const std::size_t D = totalDim(dims);
     Matrix n(D, D);
-    if (site >= dims.size()) return n;
+    if (site >= dims.size())
+        return n;
     const std::size_t stride = strideOf(dims, site);
     const std::uint32_t d = dims[site];
     for (std::size_t idx = 0; idx < D; ++idx)
@@ -42,14 +47,17 @@ Matrix numberOperator(std::span<const std::uint32_t> dims, std::uint32_t site) {
     return n;
 }
 
-Matrix levelProjector(std::span<const std::uint32_t> dims, std::uint32_t site, std::uint32_t level) {
+Matrix levelProjector(std::span<const std::uint32_t> dims, std::uint32_t site,
+                      std::uint32_t level) {
     const std::size_t D = totalDim(dims);
     Matrix p(D, D);
-    if (site >= dims.size()) return p;
+    if (site >= dims.size())
+        return p;
     const std::size_t stride = strideOf(dims, site);
     const std::uint32_t d = dims[site];
     for (std::size_t idx = 0; idx < D; ++idx)
-        if (static_cast<std::uint32_t>((idx / stride) % d) == level) p(idx, idx) = 1.0;
+        if (static_cast<std::uint32_t>((idx / stride) % d) == level)
+            p(idx, idx) = 1.0;
     return p;
 }
 
@@ -60,8 +68,9 @@ std::pair<Matrix, Matrix> driveFromLadder(std::span<const std::uint32_t> dims, s
     for (std::size_t i = 0; i < D; ++i)
         for (std::size_t j = 0; j < D; ++j) {
             Complex adag = std::conj(a(j, i));
-            A(i, j) = a(i, j) + adag;                           // a + a† (σx on the qubit levels)
-            B(i, j) = Complex(0, 1) * (adag - a(i, j));         // i(a† − a) (σy), the Ω_y operator of T05 (7.1)
+            A(i, j) = a(i, j) + adag; // a + a† (σx on the qubit levels)
+            B(i, j) =
+                Complex(0, 1) * (adag - a(i, j)); // i(a† − a) (σy), the Ω_y operator of T05 (7.1)
         }
     return {std::move(A), std::move(B)};
 }

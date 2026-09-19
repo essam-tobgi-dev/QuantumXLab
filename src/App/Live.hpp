@@ -48,20 +48,20 @@ struct LiveState {
     // ---- the run the user is looking at
     std::shared_ptr<const runtime::RunResult> result;
     std::shared_ptr<const compiler::CompiledProgram> compiled;
-    std::shared_ptr<const qsim::Snapshot> snapshot;        // state at the playhead (Simulator-only)
-    std::shared_ptr<const viz::Reductions> reductions;     // computed off the UI thread
+    std::shared_ptr<const qsim::Snapshot> snapshot;    // state at the playhead (Simulator-only)
+    std::shared_ptr<const viz::Reductions> reductions; // computed off the UI thread
     std::shared_ptr<const pulse::Schedule> schedule;
     bool running = false, compiling = false;
     std::uint64_t shotsDone = 0, shotsTotal = 0, seed = 0;
     std::uint64_t playheadGate = 0;
-    double playheadS = 0.0;        // position inside `schedule`
-    double runWallTimeS = 0.0;     // hardware wall-time estimate consumed so far (spec 15 §6)
-    double lastRunMs = 0.0;        // simulation wall time of the last finished run
+    double playheadS = 0.0;    // position inside `schedule`
+    double runWallTimeS = 0.0; // hardware wall-time estimate consumed so far (spec 15 §6)
+    double lastRunMs = 0.0;    // simulation wall time of the last finished run
 
     // ---- instruments (owned by the model)
     const instr::InstrumentRegistry* registry = nullptr;
     std::shared_ptr<const instr::Environment> environment;
-    bool readoutActive = false;    // a readout tone is on the feedline at the playhead
+    bool readoutActive = false; // a readout tone is on the feedline at the playhead
 
     // ---- helpers shared by the providers
     cryo::StageArray stageTemperatures() const;
@@ -75,7 +75,8 @@ struct LiveState {
 
 // Registers `cryo.*`, `wiring.*`, `device.*`, `instr.*`, `run.*` and `static.*` on `registry`.
 // `statics` serves `static.<key>` for constants that are not on the node itself (spec 17 §5).
-void registerBindingProviders(lab::BindingRegistry& registry, std::shared_ptr<const LiveState> state,
+void registerBindingProviders(lab::BindingRegistry& registry,
+                              std::shared_ptr<const LiveState> state,
                               const lab::StaticProvider& statics);
 
 // The individual providers, exposed so the test can exercise one at a time.
@@ -90,8 +91,8 @@ namespace detail {
 // leaves `index` unset. The same splitter the instrument registry uses for `instr.*` paths.
 struct PathHead {
     std::string_view name;
-    std::optional<std::uint32_t> index;  // set when the bracket holds a number
-    std::string_view key;                // the raw bracket text ("mxc" in "clamp[mxc].T")
+    std::optional<std::uint32_t> index; // set when the bracket holds a number
+    std::string_view key;               // the raw bracket text ("mxc" in "clamp[mxc].T")
     std::string_view rest;
 };
 PathHead splitPath(std::string_view path);

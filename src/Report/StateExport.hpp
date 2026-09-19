@@ -18,18 +18,19 @@ namespace qlab::report {
 // What the sidecar records about the state it accompanies.
 struct StateContext {
     RunIdentity identity;
-    std::vector<std::uint32_t> qubits;   // simulator index → device qubit (spec 15 §4)
-    std::uint32_t levels = 2;            // 2, or 3 for a pulse-level / leakage state
-    std::string levelOrder;              // "" = "level index = Σ l_k d^k, little-endian"
+    std::vector<std::uint32_t> qubits; // simulator index → device qubit (spec 15 §4)
+    std::uint32_t levels = 2;          // 2, or 3 for a pulse-level / leakage state
+    std::string levelOrder;            // "" = "level index = Σ l_k d^k, little-endian"
     std::string note;
 };
 
 // The exact header bytes of a `.npy` v1.0 file: `\x93NUMPY`, version 1.0, the little-endian uint16
 // header length, then the padded dict, so that the total is a multiple of 64 and ends with '\n'.
-std::string npyHeader(std::string_view descr, std::span<const std::size_t> shape, bool fortranOrder = false);
+std::string npyHeader(std::string_view descr, std::span<const std::size_t> shape,
+                      bool fortranOrder = false);
 // Writes `npyHeader` followed by `data` (little-endian hosts only, as `descr` claims).
-Status writeNpy(const std::filesystem::path& path, std::string_view descr, std::span<const std::size_t> shape,
-                std::span<const std::byte> data);
+Status writeNpy(const std::filesystem::path& path, std::string_view descr,
+                std::span<const std::size_t> shape, std::span<const std::byte> data);
 Status writeNpyComplex(const std::filesystem::path& path, std::span<const num::Complex> values,
                        std::span<const std::size_t> shape);
 
@@ -39,10 +40,13 @@ core::Json stateSidecar(const qsim::Snapshot& s, const StateContext& ctx, std::s
 
 // `<base>.npy` + `<base>.json`. Fails when the snapshot carries no amplitudes / density matrix /
 // tableau — a state the backend cannot produce is never faked (spec 00 §5).
-Status exportStateVector(const std::filesystem::path& base, const qsim::Snapshot& s, const StateContext& ctx);
-Status exportDensityMatrix(const std::filesystem::path& base, const qsim::Snapshot& s, const StateContext& ctx);
+Status exportStateVector(const std::filesystem::path& base, const qsim::Snapshot& s,
+                         const StateContext& ctx);
+Status exportDensityMatrix(const std::filesystem::path& base, const qsim::Snapshot& s,
+                           const StateContext& ctx);
 // `<base>.txt` + `<base>.json`: one stabilizer generator per line, signed Pauli strings.
-Status exportTableau(const std::filesystem::path& base, const qsim::Snapshot& s, const StateContext& ctx);
+Status exportTableau(const std::filesystem::path& base, const qsim::Snapshot& s,
+                     const StateContext& ctx);
 
 // The tableau text of §9 (also used by the report).
 std::string tableauText(const qsim::TableauExport& t);

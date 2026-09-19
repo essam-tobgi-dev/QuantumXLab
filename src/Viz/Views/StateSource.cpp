@@ -17,7 +17,8 @@ DensitySource densityFor(const ViewInput& in, std::span<const QubitIndex> subset
     const std::uint32_t n = snap.nQubits;
     const bool whole = subset.empty() || subset.size() == n;
     if (whole) {
-        for (std::uint32_t q = 0; q < n; ++q) out.qubits.emplace_back(q);
+        for (std::uint32_t q = 0; q < n; ++q)
+            out.qubits.emplace_back(q);
     } else {
         out.qubits.assign(subset.begin(), subset.end());
         out.reduced = true;
@@ -30,12 +31,14 @@ DensitySource densityFor(const ViewInput& in, std::span<const QubitIndex> subset
     if (whole) {
         // Up to 8 qubits the full matrix is at most 256 × 256: an outer product on the UI thread.
         if (snap.densityMatrix && !snap.densityMatrix->empty()) {
-            if (auto block = math::computationalBlock(*snap.densityMatrix, n, std::max<std::uint32_t>(2, snap.levels)))
+            if (auto block = math::computationalBlock(*snap.densityMatrix, n,
+                                                      std::max<std::uint32_t>(2, snap.levels)))
                 out.rho = std::move(*block);
         } else if (snap.amplitudes && snap.amplitudes->size() == (std::size_t{1} << n)) {
             out.rho = num::projector(*snap.amplitudes);
         }
-        if (!out.rho) out.note = "The snapshot carries no amplitudes or density matrix";
+        if (!out.rho)
+            out.note = "The snapshot carries no amplitudes or density matrix";
         return out;
     }
     // A subset is a partial trace: the run's job (spec 21 §2.3).
@@ -61,18 +64,25 @@ AmplitudeSource amplitudesFor(const ViewInput& in, const math::AmplitudeFilter& 
         return out;
     }
     const qsim::Snapshot& snap = *in.snapshot;
-    if (snap.amplitudes && !snap.amplitudes->empty() && snap.nQubits <= math::kFullAmplitudeQubits) {
+    if (snap.amplitudes && !snap.amplitudes->empty() &&
+        snap.nQubits <= math::kFullAmplitudeQubits) {
         out.selection = math::selectAmplitudes(*snap.amplitudes, filter);
         return out;
     }
-    if (in.reductions && in.reductions->topAmplitudes) { // above 20 qubits: the run's top-k with its mass
+    if (in.reductions &&
+        in.reductions->topAmplitudes) { // above 20 qubits: the run's top-k with its mass
         math::AmplitudeSelection sel = *in.reductions->topAmplitudes;
-        std::erase_if(sel.entries, [&](const math::BasisEntry& e) { return filter.threshold > 0.0 && e.probability <= filter.threshold; });
-        if (filter.maxEntries > 0 && sel.entries.size() > filter.maxEntries) sel.entries.resize(filter.maxEntries);
+        std::erase_if(sel.entries, [&](const math::BasisEntry& e) {
+            return filter.threshold > 0.0 && e.probability <= filter.threshold;
+        });
+        if (filter.maxEntries > 0 && sel.entries.size() > filter.maxEntries)
+            sel.entries.resize(filter.maxEntries);
         if (filter.order == math::AmplitudeOrder::ByIndex)
-            std::sort(sel.entries.begin(), sel.entries.end(), [](const auto& a, const auto& b) { return a.index < b.index; });
+            std::sort(sel.entries.begin(), sel.entries.end(),
+                      [](const auto& a, const auto& b) { return a.index < b.index; });
         sel.shownProbability = 0.0;
-        for (const auto& e : sel.entries) sel.shownProbability += e.probability;
+        for (const auto& e : sel.entries)
+            sel.shownProbability += e.probability;
         out.selection = std::move(sel);
         out.fromRun = true;
         return out;
@@ -82,29 +92,38 @@ AmplitudeSource amplitudesFor(const ViewInput& in, const math::AmplitudeFilter& 
     return out;
 }
 
-std::optional<SingleReduction> singleReductionFor(const ViewInput& in, QubitIndex q, std::uint32_t inlineLimit) {
+std::optional<SingleReduction> singleReductionFor(const ViewInput& in, QubitIndex q,
+                                                  std::uint32_t inlineLimit) {
     if (in.reductions)
-        if (const SingleReduction* s = in.reductions->single(q)) return *s;
-    if (!in.snapshot) return std::nullopt;
+        if (const SingleReduction* s = in.reductions->single(q))
+            return *s;
+    if (!in.snapshot)
+        return std::nullopt;
     const qsim::Snapshot& snap = *in.snapshot;
     std::optional<num::Matrix> rho;
     for (const auto& r : snap.reduced)
-        if (r.qubits.size() == 1 && r.qubits.front() == q) rho = r.rho;
+        if (r.qubits.size() == 1 && r.qubits.front() == q)
+            rho = r.rho;
     if (!rho && snap.nQubits <= inlineLimit) {
         const QubitIndex keep[1] = {q};
         if (snap.amplitudes) {
-            if (auto r = math::reducedSingle(*snap.amplitudes, snap.nQubits, q.get())) rho = std::move(*r);
+            if (auto r = math::reducedSingle(*snap.amplitudes, snap.nQubits, q.get()))
+                rho = std::move(*r);
         } else if (snap.densityMatrix && snap.nQubits <= 6) {
             // A dense partial trace is 4^n work: only the smallest registers on the UI thread.
-            if (auto r = math::reducedFromDensity(*snap.densityMatrix, snap.nQubits, std::max<std::uint32_t>(2, snap.levels), keep))
+            if (auto r = math::reducedFromDensity(*snap.densityMatrix, snap.nQubits,
+                                                  std::max<std::uint32_t>(2, snap.levels), keep))
                 rho = std::move(*r);
         }
     }
-    if (!rho) return std::nullopt;
+    if (!rho)
+        return std::nullopt;
     auto block = math::computationalBlock(*rho, 1, static_cast<std::uint32_t>(rho->rows));
-    if (!block) return std::nullopt;
+    if (!block)
+        return std::nullopt;
     auto bloch = math::blochVector(*block);
-    if (!bloch) return std::nullopt;
+    if (!bloch)
+        return std::nullopt;
     SingleReduction s;
     s.qubit = q;
     s.bloch = *bloch;
@@ -117,9 +136,11 @@ std::optional<SingleReduction> singleReductionFor(const ViewInput& in, QubitInde
 
 std::string subsetCaption(std::span<const QubitIndex> qubits) {
     std::string s;
-    for (std::size_t k = qubits.size(); k-- > 0;) { // most significant first, as the kets are written
+    for (std::size_t k = qubits.size();
+         k-- > 0;) { // most significant first, as the kets are written
         s += "q" + std::to_string(qubits[k].get());
-        if (k) s += " ";
+        if (k)
+            s += " ";
     }
     return s;
 }

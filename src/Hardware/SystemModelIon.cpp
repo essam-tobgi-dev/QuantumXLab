@@ -55,8 +55,10 @@ Result<SystemModelSpec> buildIonModel(const Device& dev, const Calibration& cal,
 
     std::vector<std::string> bad;
     for (auto q : opt.qubits)
-        if (!dev.hasQubit(q)) bad.push_back(std::format("ion {} is not on device '{}'", q, dev.id));
-        else if (!cal.qubit(q)) bad.push_back(std::format("no calibration for ion {}", q));
+        if (!dev.hasQubit(q))
+            bad.push_back(std::format("ion {} is not on device '{}'", q, dev.id));
+        else if (!cal.qubit(q))
+            bad.push_back(std::format("no calibration for ion {}", q));
     if (!bad.empty()) {
         Error e(ErrorCode::Hardware_ + 23, "cannot build the ion system model");
         e.notes = std::move(bad);
@@ -67,8 +69,10 @@ Result<SystemModelSpec> buildIonModel(const Device& dev, const Calibration& cal,
     // 11-ion chain, radial COM on the 32-ion chain); fall back to the axial COM frequency.
     double modeHz = dev.motionalModes ? dev.motionalModes->omegaZ.v : 0.3e6;
     if (cal.motional) {
-        if (auto f = cal.motional->gateModeFrequency()) modeHz = f->v;
-        else if (!cal.motional->axialModes.empty()) modeHz = cal.motional->axialModes[0].v;
+        if (auto f = cal.motional->gateModeFrequency())
+            modeHz = f->v;
+        else if (!cal.motional->axialModes.empty())
+            modeHz = cal.motional->axialModes[0].v;
     }
 
     const std::size_t D = m.dimension();
@@ -109,18 +113,22 @@ Result<SystemModelSpec> buildIonModel(const Device& dev, const Calibration& cal,
         for (std::size_t j = i + 1; j < nIons; ++j) {
             const auto* qi = cal.qubit(opt.qubits[i]);
             const auto* qj = cal.qubit(opt.qubits[j]);
-            // `lamb_dicke` is the calibrated effective Lamb–Dicke parameter of ion n in the gate mode
-            // (participation included); Pulse's MsParams reads the same field, so the amplitude it
-            // plays and the operator it drives agree by construction.
-            const double etaI = qi && qi->lambDicke ? qi->lambDicke->value : dev.ion ? dev.ion->lambDickeNominal : 0.08;
+            // `lamb_dicke` is the calibrated effective Lamb–Dicke parameter of ion n in the gate
+            // mode (participation included); Pulse's MsParams reads the same field, so the
+            // amplitude it plays and the operator it drives agree by construction.
+            const double etaI = qi && qi->lambDicke ? qi->lambDicke->value
+                                : dev.ion           ? dev.ion->lambDickeNominal
+                                                    : 0.08;
             const double etaJ = qj && qj->lambDicke ? qj->lambDicke->value : etaI;
             // Spin-dependent force per unit envelope F(t) = 2Ω cos(μt), mode in its lab frame:
             //   H = Σ_n (η_n/2) (Re F σ_x⁽ⁿ⁾ + Im F σ_y⁽ⁿ⁾)(a + a†)      (T06 (6.1), g = ηΩ/2)
             // Each ion carries its own η_n, so the entangling angle scales as η_i η_j exactly.
             auto sx = num::add(siteOperator(m.siteDims, static_cast<std::uint32_t>(i), pauliX()),
-                               siteOperator(m.siteDims, static_cast<std::uint32_t>(j), pauliX()), etaI, etaJ);
+                               siteOperator(m.siteDims, static_cast<std::uint32_t>(j), pauliX()),
+                               etaI, etaJ);
             auto sy = num::add(siteOperator(m.siteDims, static_cast<std::uint32_t>(i), pauliY()),
-                               siteOperator(m.siteDims, static_cast<std::uint32_t>(j), pauliY()), etaI, etaJ);
+                               siteOperator(m.siteDims, static_cast<std::uint32_t>(j), pauliY()),
+                               etaI, etaJ);
             DriveSpec d;
             d.channel = std::format("ms[{},{}]", opt.qubits[i], opt.qubits[j]);
             d.site = static_cast<std::uint32_t>(i);
@@ -135,22 +143,25 @@ Result<SystemModelSpec> buildIonModel(const Device& dev, const Calibration& cal,
     if (opt.includeDecoherence) {
         for (std::size_t s = 0; s < nIons; ++s) {
             const auto idle = cal.idleParams(opt.qubits[s]);
-            if (!idle) return std::unexpected(idle.error());
+            if (!idle)
+                return std::unexpected(idle.error());
             const double gamma1 = idle->t1.v > 0.0 ? 1.0 / idle->t1.v : 0.0;
             if (gamma1 > 1e-12) {
                 auto sm = siteOperator(m.siteDims, static_cast<std::uint32_t>(s), pauliMinus());
-                m.collapse.push_back({std::format("T1 q{}", opt.qubits[s]), sm.scale(std::sqrt(gamma1))});
+                m.collapse.push_back(
+                    {std::format("T1 q{}", opt.qubits[s]), sm.scale(std::sqrt(gamma1))});
             }
             const double gphi = idle->tphi.v > 0.0 ? 1.0 / idle->tphi.v : 0.0;
             if (gphi > 1e-12) {
                 auto z = siteOperator(m.siteDims, static_cast<std::uint32_t>(s), pauliZ());
-                m.collapse.push_back({std::format("Tphi q{}", opt.qubits[s]),
-                                      z.scale(std::sqrt(0.5 * gphi))});
+                m.collapse.push_back(
+                    {std::format("Tphi q{}", opt.qubits[s]), z.scale(std::sqrt(0.5 * gphi))});
             }
         }
         // Motional heating: L = √(ṅ) a† (T06 §8).
         double heating = dev.motionalModes ? dev.motionalModes->heatingQuantaPerS : 0.0;
-        if (cal.motional && cal.motional->heatingQuantaPerS) heating = *cal.motional->heatingQuantaPerS; // calibrated value wins
+        if (cal.motional && cal.motional->heatingQuantaPerS)
+            heating = *cal.motional->heatingQuantaPerS; // calibrated value wins
         if (heating > 0.0) {
             auto up = ad;
             m.collapse.push_back({"heating", up.scale(std::sqrt(heating))});
@@ -165,7 +176,8 @@ Result<SystemModelSpec> buildSystemModel(const Device& dev, const Calibration& c
         // Cap: N qubits ⊗ Fock cutoff (spec 07 §5 keeps the Lindblad space small).
         if (opt.qubits.size() > 6)
             return fail(ErrorCode::Hardware_ + 24,
-                        std::format("pulse-level ion models are limited to 6 ions, got {}", opt.qubits.size()));
+                        std::format("pulse-level ion models are limited to 6 ions, got {}",
+                                    opt.qubits.size()));
         return buildIonModel(dev, cal, opt);
     }
     if (opt.qubits.size() > 5)

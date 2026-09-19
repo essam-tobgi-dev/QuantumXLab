@@ -8,12 +8,12 @@ namespace qlab::runtime::detail {
 
 struct RunContext {
     const compiler::CompiledProgram* program = nullptr;
-    const lang::Program* source = nullptr;      // for the program's pragmas and for sweeps
+    const lang::Program* source = nullptr; // for the program's pragmas and for sweeps
     const hw::Device* device = nullptr;
     const hw::Calibration* calibration = nullptr;
-    const noise::NoiseModel* noise = nullptr;   // null = ideal run
+    const noise::NoiseModel* noise = nullptr; // null = ideal run
     BackendChoice choice = BackendChoice::Auto;
-    compiler::CompileOptions compileOptions;    // used to recompile each sweep point (spec 15 §5)
+    compiler::CompileOptions compileOptions; // used to recompile each sweep point (spec 15 §5)
     RunOptions options;
     std::stop_token stop;
     RunId id{0};

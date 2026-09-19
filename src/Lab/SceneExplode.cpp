@@ -31,9 +31,11 @@ void Scene::setExplode(Assembly a, double s) {
         break;
     case Assembly::RackUnits:
         for (auto& n : nodes_)
-            if (n.assembly == Assembly::RackUnits) n.explodeOffset = {0.0, 0.0, kRackSlide_m * s};
+            if (n.assembly == Assembly::RackUnits)
+                n.explodeOffset = {0.0, 0.0, kRackSlide_m * s};
         break;
-    case Assembly::None: break;
+    case Assembly::None:
+        break;
     }
     updateTransforms();
 }
@@ -41,13 +43,16 @@ void Scene::setExplode(Assembly a, double s) {
 void Scene::regenerateSplines() {
     const double s = explode_[static_cast<std::size_t>(Assembly::FridgeStages)];
     std::array<double, cryo::kStageCount> dy{};
-    for (std::size_t k = 0; k < dy.size(); ++k) dy[k] = -kStageSeparation_m * static_cast<double>(k) * s;
+    for (std::size_t k = 0; k < dy.size(); ++k)
+        dy[k] = -kStageSeparation_m * static_cast<double>(k) * s;
     std::map<std::uint32_t, int> stageOf;
     for (std::size_t k = 0; k < stageNodes_.size(); ++k)
-        if (stageNodes_[k].value != 0) stageOf[stageNodes_[k].value] = static_cast<int>(k);
+        if (stageNodes_[k].value != 0)
+            stageOf[stageNodes_[k].value] = static_cast<int>(k);
 
     for (auto& n : nodes_) {
-        if (!n.spline) continue;
+        if (!n.spline)
+            continue;
         int frame = -1;
         for (const Node* p = node(n.parent); p; p = node(p->parent))
             if (auto it = stageOf.find(p->id.value); it != stageOf.end()) {
@@ -57,14 +62,17 @@ void Scene::regenerateSplines() {
         double base = frame >= 0 ? dy[static_cast<std::size_t>(frame)] : 0.0;
         core::Json pts = core::Json::array();
         for (const auto& anchor : n.spline->points) {
-            double off = (anchor.stage >= 0 ? dy[static_cast<std::size_t>(anchor.stage)] : 0.0) - base;
+            double off =
+                (anchor.stage >= 0 ? dy[static_cast<std::size_t>(anchor.stage)] : 0.0) - base;
             pts.push_back({anchor.restLocal.x, anchor.restLocal.y + off, anchor.restLocal.z});
         }
         GenParams params(n.spline->geometry);
         params.set("points_m", std::move(pts));
         for (auto& lod : n.lods) {
-            if (!lod.mesh.valid()) continue;
-            if (auto m = generateMesh(n.spline->generator, params, GenContext{lod.detail, 1.0})) meshes_.replace(lod.mesh, std::move(*m));
+            if (!lod.mesh.valid())
+                continue;
+            if (auto m = generateMesh(n.spline->generator, params, GenContext{lod.detail, 1.0}))
+                meshes_.replace(lod.mesh, std::move(*m));
         }
         n.localBounds = meshes_.bounds(n.finestMesh());
     }

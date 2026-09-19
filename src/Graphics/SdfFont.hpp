@@ -12,35 +12,37 @@
 namespace qlab::gfx {
 
 struct Glyph {
-    glm::vec2 uv0, uv1;      // atlas texcoords
-    glm::vec2 size;          // quad size in font units (pixels at nominal size)
-    glm::vec2 bearing;       // offset from pen to quad top-left
+    glm::vec2 uv0, uv1; // atlas texcoords
+    glm::vec2 size;     // quad size in font units (pixels at nominal size)
+    glm::vec2 bearing;  // offset from pen to quad top-left
     float advance = 0;
 };
 
 struct SdfAtlasData {
     int width = 0, height = 0;
-    int nominalPx = 48;      // glyph size the SDF was rasterised at
-    float spread = 8;        // SDF spread in pixels
+    int nominalPx = 48; // glyph size the SDF was rasterised at
+    float spread = 8;   // SDF spread in pixels
     float ascent = 0, descent = 0, lineHeight = 0;
     std::vector<std::uint8_t> pixels; // R8
     std::map<unsigned, Glyph> glyphs; // codepoint -> glyph
 };
 
 // CPU-only builder (no GL): rasterises ASCII 32..126 + Greek + common math symbols.
-Result<SdfAtlasData> buildSdfAtlas(const std::filesystem::path& ttf, int nominalPx = 48, float spread = 8);
+Result<SdfAtlasData> buildSdfAtlas(const std::filesystem::path& ttf, int nominalPx = 48,
+                                   float spread = 8);
 Result<SdfAtlasData> loadAtlasCache(const std::filesystem::path& cache);
 Status saveAtlasCache(const SdfAtlasData& a, const std::filesystem::path& cache);
 
 class SdfFont {
-public:
+  public:
     // Builds or loads from cache under core::userDataDir()/fontcache. Needs a GL context.
-    static Result<std::unique_ptr<SdfFont>> load(const std::filesystem::path& ttf, int nominalPx = 48);
+    static Result<std::unique_ptr<SdfFont>> load(const std::filesystem::path& ttf,
+                                                 int nominalPx = 48);
     const SdfAtlasData& atlas() const { return data_; }
     const Texture2D& texture() const { return tex_; }
     const Glyph* glyph(unsigned cp) const;
     glm::vec2 measure(std::string_view utf8, float sizePx) const; // width, height
-private:
+  private:
     SdfAtlasData data_;
     Texture2D tex_;
 };

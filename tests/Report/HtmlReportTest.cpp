@@ -1,6 +1,6 @@
 // Spec 23 §10 — the self-contained HTML run report and the pieces it is built from.
-#include "ReportTestUtil.hpp"
 #include "Data/Fidelity.hpp"
+#include "ReportTestUtil.hpp"
 
 using namespace qlab;
 using namespace qlab::report;
@@ -23,7 +23,8 @@ RunReportInput fullInput(const rtest::Fixture& f) {
     in.compiled = f.compiled;
     in.source = f.source;
     in.circuit.mime = "image/svg+xml";
-    in.circuit.svg = "<svg class=\"fig\" viewBox=\"0 0 10 10\"><line x1=\"0\" y1=\"5\" x2=\"10\" y2=\"5\"/></svg>";
+    in.circuit.svg = "<svg class=\"fig\" viewBox=\"0 0 10 10\"><line x1=\"0\" y1=\"5\" x2=\"10\" "
+                     "y2=\"5\"/></svg>";
     in.circuit.caption = "compiled circuit";
 
     ReportImage plot;
@@ -68,10 +69,12 @@ RunReportInput fullInput(const rtest::Fixture& f) {
 } // namespace
 
 TEST_CASE("html: escaping, base64 and data URIs") {
-    CHECK(htmlEscape("<a href=\"x\">'&'</a>") == "&lt;a href=&quot;x&quot;&gt;&#39;&amp;&#39;&lt;/a&gt;");
+    CHECK(htmlEscape("<a href=\"x\">'&'</a>") ==
+          "&lt;a href=&quot;x&quot;&gt;&#39;&amp;&#39;&lt;/a&gt;");
     // RFC 4648 test vectors.
     auto b64 = [](std::string_view s) {
-        return base64(std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(s.data()), s.size()));
+        return base64(std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(s.data()),
+                                                    s.size()));
     };
     CHECK(b64("") == "");
     CHECK(b64("f") == "Zg==");
@@ -135,9 +138,12 @@ TEST_CASE("report: every section of spec 23 §10 is present, in order") {
     // §10 fixes the order: provenance, program, circuit, resources, estimate, results, states,
     // recipes, theory.
     static constexpr std::string_view kSections[] = {
-        "<h2>Provenance</h2>", "<h2>Program</h2>",   "<h2>Compiled circuit</h2>", "<h2>Resources</h2>",
-        "<h2>Hardware estimate</h2>", "<h2>Equations</h2>", "<h2>Results</h2>",    "<h2>Plots</h2>",
-        "<h2>State views</h2>", "<h2>Recipes</h2>",  "<h2>Diagnostics</h2>",      "<h2>Theory references</h2>"};
+        "<h2>Provenance</h2>",        "<h2>Program</h2>",
+        "<h2>Compiled circuit</h2>",  "<h2>Resources</h2>",
+        "<h2>Hardware estimate</h2>", "<h2>Equations</h2>",
+        "<h2>Results</h2>",           "<h2>Plots</h2>",
+        "<h2>State views</h2>",       "<h2>Recipes</h2>",
+        "<h2>Diagnostics</h2>",       "<h2>Theory references</h2>"};
     std::size_t previous = 0;
     for (std::string_view section : kSections) {
         const std::size_t at = html->find(section);
@@ -146,7 +152,7 @@ TEST_CASE("report: every section of spec 23 §10 is present, in order") {
         CHECK(at > previous);
         previous = at;
     }
-    CHECK(html->find("<h2>Notes</h2>") > previous);   // caller sections come last
+    CHECK(html->find("<h2>Notes</h2>") > previous); // caller sections come last
 
     // Provenance: project, device, calibration, seed, hashes, application version.
     CHECK(html->find("report tests") != std::string::npos);
@@ -164,10 +170,11 @@ TEST_CASE("report: every section of spec 23 §10 is present, in order") {
     CHECK(html->find("Bell pair &lt;sc_fixed_5&gt; &amp; friends") != std::string::npos);
 
     // Resources count the qubits the program uses, not the width of the physical circuit.
-    CHECK(html->find("<tr><td>Qubits</td><td>" + std::to_string(f.result.qubits.size()) + "</td></tr>") !=
-          std::string::npos);
-    CHECK(html->find("<tr><td>Two-qubit gates</td><td>" + std::to_string(f.result.metrics.twoQubitCount) +
+    CHECK(html->find("<tr><td>Qubits</td><td>" + std::to_string(f.result.qubits.size()) +
                      "</td></tr>") != std::string::npos);
+    CHECK(html->find("<tr><td>Two-qubit gates</td><td>" +
+                     std::to_string(f.result.metrics.twoQubitCount) + "</td></tr>") !=
+          std::string::npos);
 
     // Results: the histogram, the table and the fidelity badges of spec 00 §5.
     CHECK(html->find("<rect class=\"bar\"") != std::string::npos);
@@ -214,7 +221,8 @@ TEST_CASE("report: the file is self-contained (spec 23 §10)") {
     CHECK(html.find("<script") == std::string::npos);
     CHECK(html.find("@import") == std::string::npos);
     // The images that are in it are embedded, not linked.
-    CHECK(html.find("<img alt=\"readout IQ\" src=\"data:image/png;base64,iVBORw0KGgo") != std::string::npos);
+    CHECK(html.find("<img alt=\"readout IQ\" src=\"data:image/png;base64,iVBORw0KGgo") !=
+          std::string::npos);
     CHECK(html.find("<style>") != std::string::npos);
     CHECK(html.starts_with("<!DOCTYPE html>"));
     CHECK(html.find("</html>") != std::string::npos);

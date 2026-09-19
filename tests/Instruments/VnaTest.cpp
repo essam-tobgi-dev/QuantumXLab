@@ -37,7 +37,8 @@ void setSnr(Vna& vna, double snrDb) {
 }
 } // namespace
 
-TEST_CASE("VNA: notch fit of a synthesised S21 recovers f_r to 1e-7 and Q_i, Q_c to 2 % at 40 dB SNR") {
+TEST_CASE(
+    "VNA: notch fit of a synthesised S21 recovers f_r to 1e-7 and Q_i, Q_c to 2 % at 40 dB SNR") {
     auto vna = bench(instrtest::makeHub(Environment{}));
     NotchResonator r;
     r.frHz = 7.0123e9;
@@ -55,18 +56,22 @@ TEST_CASE("VNA: notch fit of a synthesised S21 recovers f_r to 1e-7 and Q_i, Q_c
     REQUIRE(t->marker("snr_db")->value == Approx(40.0).margin(0.05));
     REQUIRE(t->size() == 20001);
     const double ql = 1.0 / (1.0 / r.qInternal + std::cos(r.phi) / r.qCoupling);
-    // The dip sits next to f_r. In the complex plane the notch is a circle of diameter d = Q_l/|Q_c|
-    // through the off-resonant point 1, centred at 1 − (d/2) e^{iφ}: its closest approach to the
-    // origin, |centre| − d/2, is the depth (−26 dB here; the 40 dB noise moves it by a dB or two).
-    const std::size_t dip = static_cast<std::size_t>(std::min_element(t->y.begin(), t->y.end()) - t->y.begin());
+    // The dip sits next to f_r. In the complex plane the notch is a circle of diameter d =
+    // Q_l/|Q_c| through the off-resonant point 1, centred at 1 − (d/2) e^{iφ}: its closest approach
+    // to the origin, |centre| − d/2, is the depth (−26 dB here; the 40 dB noise moves it by a dB or
+    // two).
+    const std::size_t dip =
+        static_cast<std::size_t>(std::min_element(t->y.begin(), t->y.end()) - t->y.begin());
     REQUIRE(t->x[dip] == Approx(r.frHz).epsilon(2e-5));
     const double d = ql / r.qCoupling;
-    const double depthDb = 20.0 * std::log10(std::abs(1.0 - 0.5 * d * std::exp(Complex{0.0, r.phi})) - 0.5 * d);
+    const double depthDb =
+        20.0 * std::log10(std::abs(1.0 - 0.5 * d * std::exp(Complex{0.0, r.phi})) - 0.5 * d);
     REQUIRE(depthDb == Approx(-26.4).margin(0.1));
     REQUIRE(t->y[dip] - t->y[5] == Approx(depthDb).margin(3.0));
 
     const ResonatorFit fit = *vna->lastFit();
-    INFO("f_r " << fit.frHz << " ± " << fit.sigmaFrHz << ", Q_i " << fit.qi << " ± " << fit.sigmaQi << ", Q_c " << fit.qc << " ± " << fit.sigmaQc);
+    INFO("f_r " << fit.frHz << " ± " << fit.sigmaFrHz << ", Q_i " << fit.qi << " ± " << fit.sigmaQi
+                << ", Q_c " << fit.qc << " ± " << fit.sigmaQc);
     REQUIRE(fit.converged);
     REQUIRE(fit.cls == FidelityClass::Statistical);
     REQUIRE(std::abs(fit.frHz - r.frHz) / r.frHz < 1e-7);
@@ -92,8 +97,10 @@ TEST_CASE("VNA: notch fit of a synthesised S21 recovers f_r to 1e-7 and Q_i, Q_c
     // `auto_span` on (the default) the range comes from the resonators, not from f_start/f_stop.
     REQUIRE(std::get<bool>(vna->get("auto_span")));
     REQUIRE(*vna->query("span") == Approx(t->x.back() - t->x.front()).epsilon(1e-12));
-    REQUIRE(*vna->query("span") != Approx(std::get<double>(vna->get("f_stop")) - std::get<double>(vna->get("f_start"))));
-    REQUIRE(*vna->query("trace") == Approx(*std::min_element(t->y.begin(), t->y.end())).epsilon(1e-12)); // notch depth, dB
+    REQUIRE(*vna->query("span") !=
+            Approx(std::get<double>(vna->get("f_stop")) - std::get<double>(vna->get("f_start"))));
+    REQUIRE(*vna->query("trace") ==
+            Approx(*std::min_element(t->y.begin(), t->y.end())).epsilon(1e-12)); // notch depth, dB
     REQUIRE(*vna->query("trace") < -20.0);
     REQUIRE(*vna->query("Q_i") == fit.qi); // the Q stays on its own path
     auto circle = acquire(*vna, "circle");
@@ -107,14 +114,16 @@ TEST_CASE("VNA: notch fit of a synthesised S21 recovers f_r to 1e-7 and Q_i, Q_c
     // Spec 12 §6's harder case, Q_i = 10⁶ behind Q_c = 10⁴ at 30 dB: Q_i is the small difference
     // 1/Q_l − cos φ/Q_c, so its relative error is that of Q_l amplified by Q_i/Q_l ≈ 100 — about
     // 9 % (1σ) for one 20001-point sweep, which no estimator can beat. The fit stays unbiased, says
-    // how uncertain it is, and is well inside 2 % once power and averaging bring the trace to 60 dB.
+    // how uncertain it is, and is well inside 2 % once power and averaging bring the trace to 60
+    // dB.
     r.qInternal = 1.0e6;
     r.phi = 0.0;
     vna->setResonators(std::vector<NotchResonator>{r});
     setSnr(*vna, 30.0);
     REQUIRE(acquire(*vna, "s21"));
     const ResonatorFit hard = *vna->lastFit();
-    INFO("hard case: Q_i " << hard.qi << " ± " << hard.sigmaQi << ", Q_c " << hard.qc << " ± " << hard.sigmaQc);
+    INFO("hard case: Q_i " << hard.qi << " ± " << hard.sigmaQi << ", Q_c " << hard.qc << " ± "
+                           << hard.sigmaQc);
     REQUIRE(hard.qc == Approx(1.0e4).epsilon(0.02));
     REQUIRE(std::abs(hard.frHz - r.frHz) < 4.0 * hard.sigmaFrHz);
     REQUIRE(std::abs(hard.qi - 1.0e6) < 4.0 * hard.sigmaQi);
@@ -155,10 +164,12 @@ TEST_CASE("VNA: ground and excited sweeps of sc_fixed_5 give the dispersive shif
     // T05 (6.2): ω_r − χ in |0⟩, ω_r + χ in |1⟩; χ < 0 pushes the ground-state resonator up.
     REQUIRE(f0.frHz > f1.frHz);
     REQUIRE(f1.frHz - f0.frHz == Approx(2.0 * chi).epsilon(0.02));
-    // The midpoint is the bare f_r, up to the pull of the neighbouring notch 47 MHz away, whose tail
-    // tilts the background of this single-notch fit: a fraction of a percent of the 3.4 MHz linewidth.
+    // The midpoint is the bare f_r, up to the pull of the neighbouring notch 47 MHz away, whose
+    // tail tilts the background of this single-notch fit: a fraction of a percent of the 3.4 MHz
+    // linewidth.
     REQUIRE(0.5 * (f0.frHz + f1.frHz) == Approx(6.99862e9).margin(0.01 * 3.420986e6));
-    REQUIRE(f0.kappaHz == Approx(3.420986e6).epsilon(0.02)); // κ/2π = f_r/Q_l recovers readout_kappa_mhz
+    REQUIRE(f0.kappaHz ==
+            Approx(3.420986e6).epsilon(0.02)); // κ/2π = f_r/Q_l recovers readout_kappa_mhz
 
     // Live mode: the population-weighted mixture p0 S21(0) + p1 S21(1) of the run snapshot.
     REQUIRE(vna->set("power", 0.0));
@@ -185,7 +196,8 @@ TEST_CASE("VNA: ground and excited sweeps of sc_fixed_5 give the dispersive shif
     const double a = std::hypot(pure0->y[0], pure0->y_im[0]);
     for (std::size_t i = 0; i < live->size(); i += 37) {
         REQUIRE(live->y[i] == Approx(0.7 * pure0->y[i] + 0.3 * pure1->y[i]).margin(1e-4 * a));
-        REQUIRE(live->y_im[i] == Approx(0.7 * pure0->y_im[i] + 0.3 * pure1->y_im[i]).margin(1e-4 * a));
+        REQUIRE(live->y_im[i] ==
+                Approx(0.7 * pure0->y_im[i] + 0.3 * pure1->y_im[i]).margin(1e-4 * a));
     }
 }
 
@@ -209,22 +221,27 @@ TEST_CASE("VNA: trace noise follows k_B T_sys IFBW / averages; TLS option; sweep
     const OutputChain chain = env.outputChain(0, base->x[base->size() / 2]);
     const double att = env.inputAttenuationDb(0, base->x[base->size() / 2]);
     const double a2 = std::pow(10.0, (chain.gainDb - att) / 10.0);
-    const double chainTerm = a2 * units::consts::k_B.v * chain.tSysK / (1e-3 * std::pow(10.0, (-30.0 - att) / 10.0));
+    const double chainTerm =
+        a2 * units::consts::k_B.v * chain.tSysK / (1e-3 * std::pow(10.0, (-30.0 - att) / 10.0));
     const double receiverTerm = 1e-3 * std::pow(10.0, -13.0) / (1e-3 * std::pow(10.0, -3.0));
     const double want = std::sqrt((chainTerm + receiverTerm) * 1e3 / (2.0 * 10.0));
     REQUIRE(sigma == Approx(want).epsilon(1e-9));
-    REQUIRE(receiverTerm < chainTerm); // the fridge chain, not the analyzer, limits this measurement
+    REQUIRE(receiverTerm <
+            chainTerm); // the fridge chain, not the analyzer, limits this measurement
     // Scatter of the off-resonant points: point-to-point differences of |S21| (insensitive to the
     // cable-delay rotation and to the slow notch tail) have standard deviation √2 σ.
     std::vector<double> steps;
     for (std::size_t i = 0; i + 1 < 300; ++i)
-        steps.push_back(std::hypot(base->y[i + 1], base->y_im[i + 1]) - std::hypot(base->y[i], base->y_im[i]));
+        steps.push_back(std::hypot(base->y[i + 1], base->y_im[i + 1]) -
+                        std::hypot(base->y[i], base->y_im[i]));
     REQUIRE(instrtest::stddev(steps) == Approx(std::numbers::sqrt2 * sigma).epsilon(0.15));
     REQUIRE(vna->set("if_bandwidth", 1e5));
     REQUIRE(vna->set("averages", std::int64_t{40}));
-    REQUIRE(acquire(*vna, "s21_complex")->sigma->y[0] == Approx(sigma * std::sqrt(100.0 / 4.0)).epsilon(1e-9));
+    REQUIRE(acquire(*vna, "s21_complex")->sigma->y[0] ==
+            Approx(sigma * std::sqrt(100.0 / 4.0)).epsilon(1e-9));
 
-    // TLS saturation (Model): Q_i(n̄) = Q_i0 F / (1 + (F − 1)/√(1 + n̄/n_c)) rises from Q_i0 toward F Q_i0.
+    // TLS saturation (Model): Q_i(n̄) = Q_i0 F / (1 + (F − 1)/√(1 + n̄/n_c)) rises from Q_i0 toward F
+    // Q_i0.
     REQUIRE(vna->set("if_bandwidth", 10.0));
     REQUIRE(vna->set("averages", std::int64_t{100}));
     REQUIRE(vna->set("tls_model", true));

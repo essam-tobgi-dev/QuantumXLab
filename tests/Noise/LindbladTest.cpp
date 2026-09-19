@@ -15,7 +15,8 @@ NoiseModel twoQubitModel() {
     NOISE_REQUIRE_OK(m);
     return std::move(*m);
 }
-qsim::LindbladBackend backendFor(std::vector<std::uint32_t> dims, std::vector<qsim::CollapseOp> ops) {
+qsim::LindbladBackend backendFor(std::vector<std::uint32_t> dims,
+                                 std::vector<qsim::CollapseOp> ops) {
     qsim::SystemModel sys;
     sys.siteDims = dims;
     sys.h0 = Matrix(sys.dimension(), sys.dimension());
@@ -48,16 +49,19 @@ TEST_CASE("Lindblad collapse operators reproduce T1 decay via qsim::LindbladBack
     auto excited = backendFor({2}, *ops);
     NOISE_REQUIRE_OK(excited.setPure(std::vector<Complex>{0, 1}));
     auto plus = backendFor({2}, *ops);
-    NOISE_REQUIRE_OK(plus.setPure(std::vector<Complex>{1.0 / std::numbers::sqrt2, 1.0 / std::numbers::sqrt2}));
+    NOISE_REQUIRE_OK(
+        plus.setPure(std::vector<Complex>{1.0 / std::numbers::sqrt2, 1.0 / std::numbers::sqrt2}));
     for (int step = 1; step <= 12; ++step) {
         NOISE_REQUIRE_OK(excited.evolve(5e-6));
         NOISE_REQUIRE_OK(plus.evolve(5e-6));
         const double t = 5e-6 * step;
         INFO("t = " << t);
-        REQUIRE(excited.population(0, 1) == Approx(pth + (1.0 - pth) * std::exp(-t / t1)).margin(1e-6)); // spec 25 §3.5
+        REQUIRE(excited.population(0, 1) ==
+                Approx(pth + (1.0 - pth) * std::exp(-t / t1)).margin(1e-6)); // spec 25 §3.5
         REQUIRE(std::abs(plus.rho()(0, 1)) == Approx(0.5 * std::exp(-t / t2)).margin(1e-6));
     }
-    // Same state as the Kraus form of thermal_relaxation over the whole 60 µs (spec 08 §2.3 vs §7.4).
+    // Same state as the Kraus form of thermal_relaxation over the whole 60 µs (spec 08 §2.3 vs
+    // §7.4).
     core::Random rng(1);
     qsim::DensityMatrixBackend dm;
     NOISE_REQUIRE_OK(dm.allocate(1));
@@ -76,17 +80,21 @@ TEST_CASE("collapse operators embed per site, including three-level transmon sit
     auto ops = m.lindbladOperators(q({0, 1}), dims);
     NOISE_REQUIRE_OK(ops);
     REQUIRE(ops->size() == 5); // qubit 1 has no thermal population: no up-rate term
-    for (const auto& op : *ops) { REQUIRE(op.op.rows == 6); REQUIRE(op.op.cols == 6); }
+    for (const auto& op : *ops) {
+        REQUIRE(op.op.rows == 6);
+        REQUIRE(op.op.cols == 6);
+    }
     auto lb = backendFor(dims, *ops);
     std::vector<Complex> psi(6, 0.0);
     psi[0 + 2 * 1] = 1.0; // site 0 in |0⟩, site 1 in |1⟩ (index = i0 + 2 i1)
     NOISE_REQUIRE_OK(lb.setPure(psi));
     NOISE_REQUIRE_OK(lb.evolve(40e-6));
-    REQUIRE(lb.population(1, 1) == Approx(std::exp(-40e-6 / 80e-6)).margin(1e-6)); // √(1/T1)·a on the qutrit
-    REQUIRE(lb.population(1, 2) == Approx(0.0).margin(1e-12));                      // no up-rate, no leakage
+    REQUIRE(lb.population(1, 1) ==
+            Approx(std::exp(-40e-6 / 80e-6)).margin(1e-6));    // √(1/T1)·a on the qutrit
+    REQUIRE(lb.population(1, 2) == Approx(0.0).margin(1e-12)); // no up-rate, no leakage
     REQUIRE(lb.population(0, 1) == Approx(0.02 * (1.0 - std::exp(-40e-6 / 50e-6))).margin(1e-6));
-    // Coherence of the qutrit's qubit subspace still decays with its T2 (a†a dephasing, spec 08 (7.2)).
-    // The sites evolve independently, so ρ(|00⟩,|10⟩) = ⟨0|ρ_site0|0⟩ · ρ_site1(0, 1).
+    // Coherence of the qutrit's qubit subspace still decays with its T2 (a†a dephasing, spec 08
+    // (7.2)). The sites evolve independently, so ρ(|00⟩,|10⟩) = ⟨0|ρ_site0|0⟩ · ρ_site1(0, 1).
     std::vector<Complex> sup(6, 0.0);
     sup[0] = sup[2] = 1.0 / std::numbers::sqrt2;
     NOISE_REQUIRE_OK(lb.setPure(sup));
@@ -94,7 +102,8 @@ TEST_CASE("collapse operators embed per site, including three-level transmon sit
     NOISE_REQUIRE_OK(lb.evolve(20e-6));
     REQUIRE(lb.timeS() - t0 == Approx(20e-6).epsilon(1e-9));
     const double site0Ground = 1.0 - 0.02 * (1.0 - std::exp(-20e-6 / 50e-6));
-    REQUIRE(std::abs(lb.rho()(0, 2)) == Approx(site0Ground * 0.5 * std::exp(-20e-6 / 30e-6)).margin(1e-6));
+    REQUIRE(std::abs(lb.rho()(0, 2)) ==
+            Approx(site0Ground * 0.5 * std::exp(-20e-6 / 30e-6)).margin(1e-6));
 
     // Misuse is reported, and disabling thermal relaxation removes the operators.
     REQUIRE_FALSE(m.lindbladOperators(q({0, 1}), std::vector<std::uint32_t>{2}));

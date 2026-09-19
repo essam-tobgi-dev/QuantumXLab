@@ -12,16 +12,19 @@ namespace qlab::noise {
 
 // Error codes owned by this module (ErrorCode::Noise_ block, spec 04 §2).
 namespace err {
-inline constexpr ErrorCode InvalidParameter = ErrorCode::Noise_ + 1;   // probability/time out of range
+inline constexpr ErrorCode InvalidParameter =
+    ErrorCode::Noise_ + 1; // probability/time out of range
 inline constexpr ErrorCode NotTracePreserving = ErrorCode::Noise_ + 2; // Σ K†K ≠ I (spec 08 §1)
 inline constexpr ErrorCode BadDimensions = ErrorCode::Noise_ + 3;
-inline constexpr ErrorCode Unphysical = ErrorCode::Noise_ + 4;         // T2 > 2 T1 (T04 (4.4))
-inline constexpr ErrorCode NotPauli = ErrorCode::Noise_ + 5;           // stabilizer admissibility (§7.3)
+inline constexpr ErrorCode Unphysical = ErrorCode::Noise_ + 4; // T2 > 2 T1 (T04 (4.4))
+inline constexpr ErrorCode NotPauli = ErrorCode::Noise_ + 5;   // stabilizer admissibility (§7.3)
 inline constexpr ErrorCode UnsupportedBackend = ErrorCode::Noise_ + 6;
-inline constexpr ErrorCode BadJson = ErrorCode::Noise_ + 7;            // message names the field path
-inline constexpr ErrorCode UnknownTarget = ErrorCode::Noise_ + 8;      // qubit/edge/gate not in the model
-inline constexpr ErrorCode BadReadout = ErrorCode::Noise_ + 9;         // assignment matrix not row-stochastic
-inline constexpr ErrorCode LevelsMismatch = ErrorCode::Noise_ + 10;    // d = 3 channel on a d = 2 site
+inline constexpr ErrorCode BadJson = ErrorCode::Noise_ + 7; // message names the field path
+inline constexpr ErrorCode UnknownTarget =
+    ErrorCode::Noise_ + 8; // qubit/edge/gate not in the model
+inline constexpr ErrorCode BadReadout =
+    ErrorCode::Noise_ + 9; // assignment matrix not row-stochastic
+inline constexpr ErrorCode LevelsMismatch = ErrorCode::Noise_ + 10; // d = 3 channel on a d = 2 site
 } // namespace err
 
 // Where an attached channel acts relative to its IR operation (spec 08 §4). `During` channels act
@@ -36,8 +39,8 @@ struct Context {
     double durationS = 0.0;  // gate, idle or readout window
     double detuningHz = 0.0; // per-shot quasi-static detuning of the target qubit (spec 08 §2.6)
     // Set by the unravelling backends (StateVector, Trajectories, Stabilizer), which draw one
-    // `detuningHz` per shot: `detuning_drift` then acts as the coherent R_Z of that shot, so an echo
-    // refocuses it. Clear for DensityMatrix/Lindblad, where the shot average is taken exactly.
+    // `detuningHz` per shot: `detuning_drift` then acts as the coherent R_Z of that shot, so an
+    // echo refocuses it. Clear for DensityMatrix/Lindblad, where the shot average is taken exactly.
     bool perShotDrift = false;
 };
 

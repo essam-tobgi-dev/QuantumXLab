@@ -5,7 +5,8 @@
 //
 // Convention: "depolarizing with p" means total error probability p — each of X, Y, Z with p/3,
 // each of the 15 two-qubit Paulis with p/15 (spec 16 §4 code-capacity row, T09 §5.4). The Kraus
-// parameter of spec 08 §3 (`depolarizing_1q`, weights p₀₈/4) is p₀₈ = 4p/3, and 16p/15 for two qubits.
+// parameter of spec 08 §3 (`depolarizing_1q`, weights p₀₈/4) is p₀₈ = 4p/3, and 16p/15 for two
+// qubits.
 #include "Core/Random.hpp"
 #include "QEC/Extraction.hpp"
 #include <cstdint>
@@ -15,13 +16,15 @@ namespace qlab::qec {
 
 struct NoiseParams {
     NoiseSetting setting = NoiseSetting::CircuitLevel;
-    double p = 0.0;   // physical error rate
+    double p = 0.0; // physical error rate
     // Phenomenological syndrome-bit flip probability; negative = p (spec 16 §4 default q = p).
     double q = -1.0;
-    // Data error of the code-capacity and phenomenological settings (circuit level is depolarizing).
+    // Data error of the code-capacity and phenomenological settings (circuit level is
+    // depolarizing).
     DataErrorKind dataError = DataErrorKind::Depolarizing;
     // Circuit level only: depolarizing probability of a qubit that idles through a moment (the span
-    // between two schedule markers), T09 §5.4. 0 keeps the spec 16 §4 table, which has no idle term.
+    // between two schedule markers), T09 §5.4. 0 keeps the spec 16 §4 table, which has no idle
+    // term.
     double pIdle = 0.0;
 
     double measurementFlip() const { return q < 0.0 ? p : q; }
@@ -36,14 +39,14 @@ enum class SiteKind : std::uint8_t { Pauli1, Depolarize2, RecordFlip };
 struct NoiseSite {
     std::uint32_t afterOp = 0;
     SiteKind kind = SiteKind::Pauli1;
-    std::uint32_t a = 0, b = 0;         // qubits; RecordFlip: a = classical bit
+    std::uint32_t a = 0, b = 0;          // qubits; RecordFlip: a = classical bit
     double px = 0.0, py = 0.0, pz = 0.0; // Pauli1: X, Y, Z. Depolarize2 / RecordFlip: px = total p
     double total() const { return kind == SiteKind::Pauli1 ? px + py + pz : px; }
 };
 
 struct NoisePlan {
     NoiseParams params;
-    std::vector<NoiseSite> sites;   // ordered by `afterOp`
+    std::vector<NoiseSite> sites; // ordered by `afterOp`
 };
 
 // One elementary fault: a Pauli on one or two qubits after an operation, or a flipped record bit.
@@ -52,8 +55,8 @@ struct FaultEvent {
     std::uint32_t qubitA = kNoIndex, qubitB = kNoIndex;
     char pauliA = 'I', pauliB = 'I';
     std::uint32_t flipBit = kNoIndex;
-    double probability = 0.0;       // filled by `enumerateFaults`
-    std::uint32_t site = 0;         // index into NoisePlan::sites; faults of one site exclude each other
+    double probability = 0.0; // filled by `enumerateFaults`
+    std::uint32_t site = 0;   // index into NoisePlan::sites; faults of one site exclude each other
 };
 
 // Noise sites of a planned experiment (spec 16 §4):

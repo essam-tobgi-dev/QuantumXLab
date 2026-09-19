@@ -10,12 +10,15 @@ using Catch::Approx;
 using Clock = std::chrono::steady_clock;
 
 namespace {
-double msSince(Clock::time_point t) { return std::chrono::duration<double, std::milli>(Clock::now() - t).count(); }
+double msSince(Clock::time_point t) {
+    return std::chrono::duration<double, std::milli>(Clock::now() - t).count();
+}
 
 // Spin until `ready()` or `budgetMs` elapse; returns the elapsed milliseconds.
 template <class F> double waitUntil(F ready, double budgetMs) {
     const auto start = Clock::now();
-    while (!ready() && msSince(start) < budgetMs) std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    while (!ready() && msSince(start) < budgetMs)
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     return msSince(start);
 }
 } // namespace
@@ -25,8 +28,10 @@ TEST_CASE("the session holds one device and one backend choice and reports both"
     Session session(&bus);
     std::vector<std::string> devices;
     std::vector<BackendChoice> backends;
-    auto d = bus.subscribe<DeviceSelected>([&](const DeviceSelected& e) { devices.push_back(e.device); });
-    auto b = bus.subscribe<BackendSelected>([&](const BackendSelected& e) { backends.push_back(e.choice); });
+    auto d = bus.subscribe<DeviceSelected>(
+        [&](const DeviceSelected& e) { devices.push_back(e.device); });
+    auto b = bus.subscribe<BackendSelected>(
+        [&](const BackendSelected& e) { backends.push_back(e.choice); });
 
     REQUIRE(session.device() == nullptr);
     REQUIRE(session.selectDevice("sc_fixed_5").has_value());
@@ -57,11 +62,18 @@ TEST_CASE("compiling and running are asynchronous, post their events and fill th
     RunFinished lastFinish{};
     RunStarted lastStart{};
     auto s1 = bus.subscribe<CompileFinished>([&](const CompileFinished& e) { REQUIRE(e.ok); });
-    auto s2 = bus.subscribe<RunStarted>([&](const RunStarted& e) { ++started; lastStart = e; });
+    auto s2 = bus.subscribe<RunStarted>([&](const RunStarted& e) {
+        ++started;
+        lastStart = e;
+    });
     auto s3 = bus.subscribe<RunProgress>([&](const RunProgress&) { ++progress; });
-    auto s4 = bus.subscribe<RunFinished>([&](const RunFinished& e) { ++finished; lastFinish = e; });
+    auto s4 = bus.subscribe<RunFinished>([&](const RunFinished& e) {
+        ++finished;
+        lastFinish = e;
+    });
 
-    auto id = session.loadProgram(readAsset("Programs/Examples/Protocols/teleportation.qasm"), "tele.qasm");
+    auto id = session.loadProgram(readAsset("Programs/Examples/Protocols/teleportation.qasm"),
+                                  "tele.qasm");
     REQUIRE(id);
     REQUIRE(session.program(*id) != nullptr);
     REQUIRE(session.source(*id).size() > 0);
@@ -121,14 +133,16 @@ TEST_CASE("cancelling a long run stops it within 100 ms and keeps the partial re
     core::EventBus bus;
     Session session(&bus, &jobs);
     REQUIRE(session.selectDevice("sc_fixed_5").has_value());
-    auto id = session.loadProgram(readAsset("Programs/Examples/Protocols/teleportation.qasm"), "tele.qasm");
+    auto id = session.loadProgram(readAsset("Programs/Examples/Protocols/teleportation.qasm"),
+                                  "tele.qasm");
     REQUIRE(id);
     auto handle = session.compile(*id);
     REQUIRE(handle);
     REQUIRE(session.waitCompile(*handle).has_value());
 
     RunOptions options;
-    options.noise = NoiseSource::Calibrated;   // per-shot execution on the density matrix: slow on purpose
+    options.noise =
+        NoiseSource::Calibrated; // per-shot execution on the density matrix: slow on purpose
     options.shots = 1'000'000;
     options.seed = 5;
     options.computeEstimate = false;
@@ -153,7 +167,8 @@ TEST_CASE("cancelling a long run stops it within 100 ms and keeps the partial re
     REQUIRE(r->memory.size() == r->shotsCompleted);
     REQUIRE(r->counts.total() == r->shotsCompleted);
     bool warned = false;
-    for (const lang::Diagnostic& d : r->diagnostics) warned = warned || d.id() == "QL5060";
+    for (const lang::Diagnostic& d : r->diagnostics)
+        warned = warned || d.id() == "QL5060";
     REQUIRE(warned);
     bus.drain();
 }
@@ -163,7 +178,8 @@ TEST_CASE("a cancelled compile reports Cancelled and never publishes a program")
     Session session(nullptr, &jobs);
     REQUIRE(session.selectDevice("sc_heavyhex_127").has_value());
     std::string text = "pragma qlab.layout physical\nqubit[40] q;\nbit[40] c;\nh q[0];\n";
-    for (int i = 0; i < 39; ++i) text += std::format("cx q[{}], q[{}];\n", i, i + 1);
+    for (int i = 0; i < 39; ++i)
+        text += std::format("cx q[{}], q[{}];\n", i, i + 1);
     text += "c = measure q;\n";
     auto id = session.loadProgram(source(text), "big.qasm");
     REQUIRE(id);
@@ -188,14 +204,15 @@ TEST_CASE("program pragmas override the run options for that program only") {
     RunOptions explicitShots;
     explicitShots.shots = 256;
     explicitShots.seed = 2;
-    REQUIRE(l.run(readAsset("Programs/Examples/Basics/bell.qasm"), explicitShots).counts.total() == 256);
+    REQUIRE(l.run(readAsset("Programs/Examples/Basics/bell.qasm"), explicitShots).counts.total() ==
+            256);
     // `pragma qlab.seed` and `pragma qlab.backend` likewise.
     const RunResult seeded = l.run(source("pragma qlab.seed 4242\npragma qlab.backend statevector\n"
                                           "pragma qlab.shots 128\nqubit[2] q;\nbit[2] c;\nh q[0];\n"
                                           "cx q[0], q[1];\nc = measure q;\n"),
                                    RunOptions{});
     REQUIRE(seeded.seed == 4242);
-    REQUIRE(seeded.backend == qsim::Kind::StateVector);   // pinned by the program, not the §2 table
+    REQUIRE(seeded.backend == qsim::Kind::StateVector); // pinned by the program, not the §2 table
     REQUIRE(seeded.counts.total() == 128);
     // A program that names another device is refused rather than compiled for the wrong one.
     auto id = l.session.loadProgram(source("pragma qlab.device ion_chain_11\nqubit[1] q;\nbit c;\n"
@@ -212,11 +229,12 @@ TEST_CASE("an unseeded run records the seed it used and repeats it") {
     RunOptions options;
     options.noise = NoiseSource::Ideal;
     options.shots = 64;
-    const std::string text = source("qubit[2] q;\nbit[2] c;\nh q[0];\ncx q[0], q[1];\nc = measure q;\n");
+    const std::string text =
+        source("qubit[2] q;\nbit[2] c;\nh q[0];\ncx q[0], q[1];\nc = measure q;\n");
     const RunResult a = l.run(text, options);
     const RunResult b = l.run(text, options);
     REQUIRE(a.seed != 0);
-    REQUIRE(a.seed == b.seed);           // derived from the program hash, never from the wall clock
+    REQUIRE(a.seed == b.seed); // derived from the program hash, never from the wall clock
     REQUIRE(a.options.shots == 64);
     REQUIRE(a.memory == b.memory);
 }

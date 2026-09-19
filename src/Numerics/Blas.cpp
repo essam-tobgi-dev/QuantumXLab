@@ -22,11 +22,16 @@ bool Blas::zheevAvailable() {
 }
 void Blas::zgemm(ConstMatrixView A, ConstMatrixView B, MatrixView C, Complex alpha, Complex beta) {
 #ifdef QXL_HAVE_ACCELERATE
-    cblas_zgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, static_cast<int>(A.rows), static_cast<int>(B.cols),
-                static_cast<int>(A.cols), &alpha, A.ptr, static_cast<int>(A.rowStride), B.ptr,
-                static_cast<int>(B.rowStride), &beta, C.ptr, static_cast<int>(C.rowStride));
+    cblas_zgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, static_cast<int>(A.rows),
+                static_cast<int>(B.cols), static_cast<int>(A.cols), &alpha, A.ptr,
+                static_cast<int>(A.rowStride), B.ptr, static_cast<int>(B.rowStride), &beta, C.ptr,
+                static_cast<int>(C.rowStride));
 #else
-    (void)A; (void)B; (void)C; (void)alpha; (void)beta;
+    (void)A;
+    (void)B;
+    (void)C;
+    (void)alpha;
+    (void)beta;
 #endif
 }
 Status Blas::zheev(MatrixView H, std::span<double> w) {
@@ -35,7 +40,8 @@ Status Blas::zheev(MatrixView H, std::span<double> w) {
     __LAPACK_int n = static_cast<__LAPACK_int>(H.rows);
     std::vector<Complex> a(static_cast<std::size_t>(n) * n);
     for (std::size_t i = 0; i < H.rows; ++i)
-        for (std::size_t j = 0; j < H.cols; ++j) a[j * H.rows + i] = H(i, j);
+        for (std::size_t j = 0; j < H.cols; ++j)
+            a[j * H.rows + i] = H(i, j);
     __LAPACK_int lwork = -1, info = 0;
     Complex wkopt;
     std::vector<double> rwork(static_cast<std::size_t>(std::max<__LAPACK_int>(1, 3 * n - 2)));
@@ -46,13 +52,17 @@ Status Blas::zheev(MatrixView H, std::span<double> w) {
     std::vector<Complex> work(static_cast<std::size_t>(lwork));
     zheev_(&jobz, &uplo, &n, reinterpret_cast<__LAPACK_double_complex*>(a.data()), &n, w.data(),
            reinterpret_cast<__LAPACK_double_complex*>(work.data()), &lwork, rwork.data(), &info);
-    if (info != 0) return fail(ErrorCode::Internal, "zheev failed");
-    // Column k of `a` (column-major) is eigenvector k: write it as column k of the row-major output.
+    if (info != 0)
+        return fail(ErrorCode::Internal, "zheev failed");
+    // Column k of `a` (column-major) is eigenvector k: write it as column k of the row-major
+    // output.
     for (std::size_t k = 0; k < H.rows; ++k)
-        for (std::size_t i = 0; i < H.rows; ++i) H(i, k) = a[k * H.rows + i];
+        for (std::size_t i = 0; i < H.rows; ++i)
+            H(i, k) = a[k * H.rows + i];
     return {};
 #else
-    (void)H; (void)w;
+    (void)H;
+    (void)w;
     return fail(ErrorCode::Unsupported, "LAPACK not available");
 #endif
 }

@@ -20,15 +20,18 @@ const glm::vec4 kPad{0.85f, 0.85f, 0.88f, 1.0f};
 std::vector<glm::vec3> toFloat(const std::vector<glm::dvec3>& pts, double scale) {
     std::vector<glm::vec3> out;
     out.reserve(pts.size());
-    for (const auto& q : pts) out.emplace_back(q * scale);
+    for (const auto& q : pts)
+        out.emplace_back(q * scale);
     return mesh::dedupe(out, 0.0f);
 }
 
 // "straight_0.1m" → 0.1
 double presetLength(const std::string& path) {
-    if (path.rfind("straight_", 0) != 0) return 0.1;
+    if (path.rfind("straight_", 0) != 0)
+        return 0.1;
     std::string num = path.substr(9);
-    if (!num.empty() && num.back() == 'm') num.pop_back();
+    if (!num.empty() && num.back() == 'm')
+        num.pop_back();
     double v = 0.1;
     std::from_chars(num.data(), num.data() + num.size(), v);
     return v > 0.0 ? v : 0.1;
@@ -45,15 +48,18 @@ Result<MeshData> tube(const GenParams& p, const GenContext& c) {
         pts = {glm::dvec3(0, 0.5 * L, 0), glm::dvec3(0, -0.5 * L, 0)};
     }
     std::vector<glm::vec3> f = toFloat(pts, c.unitScale);
-    if (f.size() < 2) return fail(kErrGeometry, "Tube: path collapses to a point");
+    if (f.size() < 2)
+        return fail(kErrGeometry, "Tube: path collapses to a point");
     bool full = c.detail == Detail::Full;
     // `bundle`: n parallel runs side by side (a loom ribbon, a copper braid, a cable bundle),
     // offset across the path in the horizontal-perpendicular direction at `bundle_pitch`. The
     // simple level keeps the ribbon's width with three coarse runs.
     const int authored = std::max(1, p.integer("bundle", 1));
-    if (authored == 1) return gfx::shapes::tube(f, r, full ? 12 : 5, full && f.size() >= 3);
+    if (authored == 1)
+        return gfx::shapes::tube(f, r, full ? 12 : 5, full && f.size() >= 3);
     const int bundle = full ? authored : std::min(authored, 3);
-    const float width = c.F(p.length("bundle_pitch", 2.2 * r / c.unitScale)) * static_cast<float>(authored - 1);
+    const float width =
+        c.F(p.length("bundle_pitch", 2.2 * r / c.unitScale)) * static_cast<float>(authored - 1);
     const float pitch = bundle > 1 ? width / static_cast<float>(bundle - 1) : 0.0f;
     MeshData m;
     for (int k = 0; k < bundle; ++k) {
@@ -63,7 +69,8 @@ Result<MeshData> tube(const GenParams& p, const GenContext& c) {
         for (std::size_t i = 0; i < f.size(); ++i) {
             glm::vec3 tangent = f[std::min(i + 1, f.size() - 1)] - f[i > 0 ? i - 1 : 0];
             glm::vec3 side = glm::cross(tangent, glm::vec3(0, 1, 0));
-            if (glm::length(side) < 1e-9f) side = glm::cross(tangent, glm::vec3(1, 0, 0));
+            if (glm::length(side) < 1e-9f)
+                side = glm::cross(tangent, glm::vec3(1, 0, 0));
             shifted.push_back(f[i] + glm::normalize(side) * off);
         }
         mesh::append(m, gfx::shapes::tube(shifted, r, full ? 8 : 5, full && f.size() >= 3));
@@ -86,7 +93,8 @@ Result<MeshData> spiral(const GenParams& p, const GenContext& c) {
     MeshData m = gfx::shapes::tube(pts, c.F(tr), c.detail == Detail::Full ? 8 : 4, false);
     // `core_r`: the central support / return tube the coil is wound on (continuous heat exchanger).
     if (auto core = p.length("core_r"); core && *core > 0.0)
-        mesh::append(m, gfx::shapes::cylinder(c.F(*core), static_cast<float>(height * c.unitScale), 24, true));
+        mesh::append(m, gfx::shapes::cylinder(c.F(*core), static_cast<float>(height * c.unitScale),
+                                              24, true));
     return m;
 }
 
@@ -94,13 +102,17 @@ Result<MeshData> spiral(const GenParams& p, const GenContext& c) {
 // a threaded barrel at each end; axis +Y, total length = `length`.
 Result<MeshData> cylinderSma(const GenParams& p, const GenContext& c) {
     float L = c.F(p.length("length", 0.025)), D = c.F(p.length("diameter", 0.009));
-    if (c.detail == Detail::Simple) return gfx::shapes::cylinder(0.5f * D, L, 10, true);
+    if (c.detail == Detail::Simple)
+        return gfx::shapes::cylinder(0.5f * D, L, 10, true);
     MeshData m;
     mesh::append(m, gfx::shapes::cylinder(0.5f * D, 0.6f * L, 32, true));
-    mesh::appendColored(m, gfx::shapes::cylinder(0.502f * D, 0.08f * L, 32, false), kBand, mesh::translate({0, 0.1f * L, 0}));
+    mesh::appendColored(m, gfx::shapes::cylinder(0.502f * D, 0.08f * L, 32, false), kBand,
+                        mesh::translate({0, 0.1f * L, 0}));
     for (float s : {-1.0f, 1.0f}) {
-        mesh::appendColored(m, mesh::ngonPrism(6, 0.42f * D, -0.04f * L, 0.04f * L), kNut, mesh::translate({0, s * 0.34f * L, 0}));
-        mesh::appendColored(m, gfx::shapes::cylinder(0.27f * D, 0.12f * L, 16, true), kBarrel, mesh::translate({0, s * 0.44f * L, 0}));
+        mesh::appendColored(m, mesh::ngonPrism(6, 0.42f * D, -0.04f * L, 0.04f * L), kNut,
+                            mesh::translate({0, s * 0.34f * L, 0}));
+        mesh::appendColored(m, gfx::shapes::cylinder(0.27f * D, 0.12f * L, 16, true), kBarrel,
+                            mesh::translate({0, s * 0.44f * L, 0}));
     }
     return m;
 }
@@ -109,12 +121,15 @@ Result<MeshData> cylinderSma(const GenParams& p, const GenContext& c) {
 // PTFE insulator face at the top; 20 mm long, axis +Y centred.
 Result<MeshData> smaConnector(const GenParams& p, const GenContext& c) {
     float L = c.F(kSmaLength_m), Rc = c.F(0.5 * kSmaHexAcrossCorners_m);
-    if (c.detail == Detail::Simple) return mesh::ngonPrism(6, Rc, -0.5f * L, 0.5f * L);
+    if (c.detail == Detail::Simple)
+        return mesh::ngonPrism(6, Rc, -0.5f * L, 0.5f * L);
     MeshData m;
-    mesh::appendColored(m, gfx::shapes::cylinder(c.F(0.003175), 0.96f * L, 24, true), kBarrel, mesh::translate({0, -0.02f * L, 0}));
+    mesh::appendColored(m, gfx::shapes::cylinder(c.F(0.003175), 0.96f * L, 24, true), kBarrel,
+                        mesh::translate({0, -0.02f * L, 0}));
     mesh::appendColored(m, mesh::ngonPrism(6, Rc, -0.1f * L, 0.1f * L), kNut);
     mesh::appendColored(m, mesh::ngonPrism(6, 0.9f * Rc, 0.25f * L, 0.35f * L), kNut);
-    mesh::appendColored(m, gfx::shapes::cylinder(c.F(0.002), 0.08f * L, 16, true), kPtfe, mesh::translate({0, 0.46f * L, 0}));
+    mesh::appendColored(m, gfx::shapes::cylinder(c.F(0.002), 0.08f * L, 16, true), kPtfe,
+                        mesh::translate({0, 0.46f * L, 0}));
     return m;
 }
 
@@ -124,10 +139,14 @@ Result<MeshData> smaConnector(const GenParams& p, const GenContext& c) {
 Result<MeshData> wirebondArc(const GenParams& p, const GenContext& c) {
     glm::dvec3 p0 = p.point3("p0").value_or(glm::dvec3(0.0));
     glm::dvec3 p1 = p.point3("p1").value_or(glm::dvec3(500e-6, 0.0, 0.0));
-    double h = p.length("h", 300e-6), pad = p.length("pad", 90e-6), wr = p.length("wire_r", 12.5e-6);
+    double h = p.length("h", 300e-6), pad = p.length("pad", 90e-6),
+           wr = p.length("wire_r", 12.5e-6);
     MeshData m;
     glm::vec3 a = glm::vec3(p0 * c.unitScale);
-    mesh::appendColored(m, mesh::box(a + glm::vec3(0, c.F(0.5 * kFilmMetalTop_m), 0), {c.F(pad), c.F(kFilmMetalTop_m), c.F(pad)}), kPad);
+    mesh::appendColored(m,
+                        mesh::box(a + glm::vec3(0, c.F(0.5 * kFilmMetalTop_m), 0),
+                                  {c.F(pad), c.F(kFilmMetalTop_m), c.F(pad)}),
+                        kPad);
     int n = c.detail == Detail::Simple ? 2 : 16;
     std::vector<glm::vec3> pts;
     glm::dvec3 lift(0.0, kFilmMetalTop_m, 0.0);

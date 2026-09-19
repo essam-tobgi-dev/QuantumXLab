@@ -1,9 +1,9 @@
 // Spec 18 §4 (textures) — the laboratory material table: every textured material names a set
 // that ships under Assets/Textures with at least an albedo map, every set is recorded as CC0 in
 // SOURCES.md, and the renderer-side tints keep the texture assignment. Headless (no GL).
+#include "Lab/Materials.hpp"
 #include "Core/Paths.hpp"
 #include "Graphics/TextureLibrary.hpp"
-#include "Lab/Materials.hpp"
 #include <catch2/catch_test_macros.hpp>
 #include <filesystem>
 #include <fstream>
@@ -24,9 +24,11 @@ TEST_CASE("every material's texture set exists on disk with an albedo map and sa
         const gfx::Material m = labMaterial(name);
         if (!m.textured()) {
             // Only the chip films, the transparent finishes, the emitters and the instrument
-            // faceplates/screens (engraved features that a normal map would hatch over) stay constant.
-            CHECK((name == "niobium_film" || name == "silicon" || name == "sapphire" || name == "glass" || name == "glow" ||
-                   name == "light_panel" || name == "panel_flat" || name == "screen_glass"));
+            // faceplates/screens (engraved features that a normal map would hatch over) stay
+            // constant.
+            CHECK((name == "niobium_film" || name == "silicon" || name == "sapphire" ||
+                   name == "glass" || name == "glow" || name == "light_panel" ||
+                   name == "panel_flat" || name == "screen_glass"));
             continue;
         }
         ++textured;
@@ -39,11 +41,11 @@ TEST_CASE("every material's texture set exists on disk with an albedo map and sa
         REQUIRE(img.has_value());
         CHECK(img->width >= 512);
         CHECK(img->width == img->height);
-        CHECK(m.triplanar);                  // generated meshes: world-space projection
+        CHECK(m.triplanar); // generated meshes: world-space projection
         CHECK(m.uvScale > 0.0f);
-        CHECK(m.normalStrength >= 0.2f);     // `vertex` (rack cabinets, props) is the subtlest
-        CHECK(m.normalStrength <= 0.8f);     // a clean laboratory, not a rusty yard
-        CHECK(m.normalizeMaps);              // the table's colour stays the surface's mean
+        CHECK(m.normalStrength >= 0.2f); // `vertex` (rack cabinets, props) is the subtlest
+        CHECK(m.normalStrength <= 0.8f); // a clean laboratory, not a rusty yard
+        CHECK(m.normalizeMaps);          // the table's colour stays the surface's mean
     }
     CHECK(textured >= 18);
     CHECK(used.size() <= 12);
@@ -69,27 +71,32 @@ TEST_CASE("SOURCES.md records every shipped set with a CC0 licence line") {
     const std::string text = ss.str();
     std::set<std::string> onDisk;
     for (const auto& e : std::filesystem::directory_iterator(root))
-        if (e.is_directory() && std::filesystem::exists(e.path() / "albedo.jpg")) onDisk.insert(e.path().filename().string());
+        if (e.is_directory() && std::filesystem::exists(e.path() / "albedo.jpg"))
+            onDisk.insert(e.path().filename().string());
     CHECK(onDisk.size() >= 10);
     for (const std::string& set : onDisk) {
         INFO(set);
         bool found = false;
         std::istringstream lines(text);
         for (std::string line; std::getline(lines, line);)
-            if (line.find("`" + set + "`") != std::string::npos && line.find("CC0") != std::string::npos) found = true;
+            if (line.find("`" + set + "`") != std::string::npos &&
+                line.find("CC0") != std::string::npos)
+                found = true;
         CHECK(found);
     }
     // every set a material references is on disk
     for (std::string_view name : labMaterialNames()) {
         const gfx::Material m = labMaterial(name);
-        if (m.textured()) CHECK(onDisk.count(m.textureSet) == 1);
+        if (m.textured())
+            CHECK(onDisk.count(m.textureSet) == 1);
     }
 }
 
 TEST_CASE("renderer tints keep the texture assignment") {
     gfx::Material m = labMaterial("gold_plated_cu");
-    m.baseColor = glm::mix(m.baseColor, glm::vec4(0.2f, 0.1f, 0.6f, 1.0f), 0.65f);   // stage temperature tint
-    m.baseColor.a = 0.12f;                                                          // X-ray fade
+    m.baseColor =
+        glm::mix(m.baseColor, glm::vec4(0.2f, 0.1f, 0.6f, 1.0f), 0.65f); // stage temperature tint
+    m.baseColor.a = 0.12f;                                               // X-ray fade
     CHECK(m.textured());
     CHECK(m.transparent());
     CHECK(m.toUbo().tex.w == 1.0f);

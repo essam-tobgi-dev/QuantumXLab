@@ -1,6 +1,7 @@
 // Spec 21 §3 — the view catalog: all seventeen views of §3.1–§3.17 exist, carry the observability
 // and drawing backend the spec assigns them, merge their reduction requests, and draw headless with
-// no data and with a full `ViewInput` (no GL context: the GL views must fall back to a placeholder).
+// no data and with a full `ViewInput` (no GL context: the GL views must fall back to a
+// placeholder).
 #include "Hardware/Hardware.hpp"
 #include "ImGuiHarness.hpp"
 #include "Viz/Viz.hpp"
@@ -18,7 +19,8 @@ const double kInvSqrt2 = 1.0 / std::sqrt(2.0);
 
 void gate(ir::Circuit& c, const char* name, std::vector<std::uint32_t> wires) {
     std::vector<ir::Wire> ws;
-    for (auto w : wires) ws.emplace_back(w);
+    for (auto w : wires)
+        ws.emplace_back(w);
     auto g = ir::makeGate(name, std::move(ws), {});
     REQUIRE(g.has_value());
     c.add(*g);
@@ -38,7 +40,8 @@ ViewInput fullInput() {
     counts->add(std::string("00"), 508);
     counts->add(std::string("11"), 492);
     in.counts = counts;
-    in.idealProbabilities = std::make_shared<std::vector<double>>(std::vector<double>{0.5, 0.0, 0.0, 0.5});
+    in.idealProbabilities =
+        std::make_shared<std::vector<double>>(std::vector<double>{0.5, 0.0, 0.0, 0.5});
 
     auto source = std::make_shared<ir::Circuit>();
     source->setQubitCount(2);
@@ -68,12 +71,15 @@ TEST_CASE("the catalog holds every view of spec 21 §3.1–§3.17 with its backe
     // Spec 21 §1.2 (backend) and §3 (observability). Anything not listed as Physical shows the
     // Simulator-only badge and is hidden by the "Physical lab" preset (spec 19 §3).
     const std::map<std::string_view, Backend> kBackend{
-        {"bloch", Backend::GlCanvas},      {"amplitudes", Backend::ImPlot},   {"phasedisk", Backend::DrawList},
-        {"qsphere", Backend::GlCanvas},    {"city", Backend::GlCanvas},       {"hinton", Backend::DrawList},
-        {"histogram", Backend::ImPlot},    {"entanglement", Backend::GlCanvas}, {"schmidt", Backend::ImPlot},
-        {"reduced", Backend::DrawList},    {"pauli", Backend::Table},         {"coupling", Backend::GlCanvas},
-        {"circuit", Backend::GlCanvas},    {"pulses", Backend::ImPlot},       {"populations", Backend::ImPlot},
-        {"trajectories", Backend::ImPlot}, {"wigner", Backend::ImPlot}};
+        {"bloch", Backend::GlCanvas},     {"amplitudes", Backend::ImPlot},
+        {"phasedisk", Backend::DrawList}, {"qsphere", Backend::GlCanvas},
+        {"city", Backend::GlCanvas},      {"hinton", Backend::DrawList},
+        {"histogram", Backend::ImPlot},   {"entanglement", Backend::GlCanvas},
+        {"schmidt", Backend::ImPlot},     {"reduced", Backend::DrawList},
+        {"pauli", Backend::Table},        {"coupling", Backend::GlCanvas},
+        {"circuit", Backend::GlCanvas},   {"pulses", Backend::ImPlot},
+        {"populations", Backend::ImPlot}, {"trajectories", Backend::ImPlot},
+        {"wigner", Backend::ImPlot}};
     const std::set<std::string_view> kPhysical{"histogram", "coupling", "circuit", "pulses"};
 
     std::set<std::string_view> seen;
@@ -81,13 +87,13 @@ TEST_CASE("the catalog holds every view of spec 21 §3.1–§3.17 with its backe
         const IStateView& v = *views[k];
         INFO("view " << v.id());
         CHECK(v.id() == viewIds()[k]);
-        CHECK(seen.insert(v.id()).second);              // ids are unique
+        CHECK(seen.insert(v.id()).second); // ids are unique
         REQUIRE(kBackend.contains(v.id()));
         CHECK(v.backend() == kBackend.at(v.id()));
         CHECK(v.observability() == (kPhysical.contains(v.id()) ? Observability::Physical
                                                                : Observability::SimulatorOnly));
         CHECK_FALSE(v.title().empty());
-        CHECK(v.theoryAnchor().starts_with("T"));       // the "?" link of the header (spec 21 §4)
+        CHECK(v.theoryAnchor().starts_with("T")); // the "?" link of the header (spec 21 §4)
     }
     CHECK(makeView("qsphere") != nullptr);
     CHECK(makeView("qsphere")->id() == "qsphere");
@@ -128,10 +134,11 @@ TEST_CASE("every view draws headless with no data and with a full input, and mer
 
     // The App merges what every open view asks of the run and serves it once (spec 21 §1).
     ReductionRequest merged;
-    for (auto& v : views) merged.merge(v->wants(in));
+    for (auto& v : views)
+        merged.merge(v->wants(in));
     CHECK(merged.singles);
-    CHECK(merged.pairs);                    // the entanglement graph asked for the pair reductions
-    CHECK(merged.qubits.empty());           // "all qubits" absorbs the per-view restrictions
+    CHECK(merged.pairs);          // the entanglement graph asked for the pair reductions
+    CHECK(merged.qubits.empty()); // "all qubits" absorbs the per-view restrictions
     // Two qubits: the Pauli sums and the Schmidt SVD stay on the UI thread (spec 21 §2.3).
     CHECK_FALSE(merged.singleQubitPaulis);
     CHECK_FALSE(merged.schmidtPartition.has_value());
@@ -144,10 +151,11 @@ TEST_CASE("every view draws headless with no data and with a full input, and mer
         INFO("view " << v->id());
         v->update(in);
         ui.frame(*v, ctx);
-        CHECK_FALSE(v->stale());            // the reductions belong to this snapshot
+        CHECK_FALSE(v->stale()); // the reductions belong to this snapshot
         CHECK(v->bodySize().x > 100.0f);
-        if (const auto csv = v->exportCsv()) CHECK(csv->find('\n') != std::string::npos);
-        v->frameContent();                  // `F` and `R` are no-ops on the non-GL views
+        if (const auto csv = v->exportCsv())
+            CHECK(csv->find('\n') != std::string::npos);
+        v->frameContent(); // `F` and `R` are no-ops on the non-GL views
         v->resetCamera();
     }
 

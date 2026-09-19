@@ -14,13 +14,13 @@ namespace qlab::cryo {
 struct ThermalSnapshot {
     double time_s = 0;
     StageArray T_K{};
-    StageArray load_W{};       // total load arriving at each stage
-    StageArray cooling_W{};    // cooling power available at the current temperature
-    StageArray margin_W{};     // cooling − load (negative: stage warming)
+    StageArray load_W{};    // total load arriving at each stage
+    StageArray cooling_W{}; // cooling power available at the current temperature
+    StageArray margin_W{};  // cooling − load (negative: stage warming)
     std::array<StageLoad, kStageCount> loads{};
     double n3_mol_s = 0;
     double stillPower_W = 0;
-    double mxcBase_K = 0;      // no-load base temperature of the mixing chamber
+    double mxcBase_K = 0; // no-load base temperature of the mixing chamber
     bool steady = false;
     std::vector<std::string> warnings; // "PT2 cannot reach 4 K: load 2.1 W exceeds 1.5 W" etc.
 };
@@ -38,7 +38,7 @@ struct StageMasses {
 };
 
 class ThermalNetwork {
-public:
+  public:
     ThermalNetwork(const Wiring& wiring, const HeatLoadModel& loads, const MaterialCatalog& mats);
 
     CoolingParams cooling;
@@ -62,7 +62,7 @@ public:
 
     const Wiring& wiring() const { return wiring_; }
 
-private:
+  private:
     Result<ThermalSnapshot> evaluate(const StageArray& T, bool steady) const;
     const Wiring& wiring_;
     const HeatLoadModel& loads_;

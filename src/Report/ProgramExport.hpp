@@ -15,16 +15,18 @@
 namespace qlab::report {
 
 struct ProgramExportOptions {
-    bool explicitDelays = true;                    // idle gaps become `delay[…] $q;`
-    bool header = true;                            // the `// compiled by quantumxlab …` block
-    const runtime::Estimate* estimate = nullptr;   // adds `pragma qlab.estimate wall_s=… fidelity=…`
+    bool explicitDelays = true;                  // idle gaps become `delay[…] $q;`
+    bool header = true;                          // the `// compiled by quantumxlab …` block
+    const runtime::Estimate* estimate = nullptr; // adds `pragma qlab.estimate wall_s=… fidelity=…`
 };
 
 // The `pragma qlab.estimate` line of spec 23 §5 (no trailing newline).
 std::string estimatePragma(const runtime::Estimate& e);
 
-Result<std::string> compiledQasm(const compiler::CompiledProgram& program, const ProgramExportOptions& options = {});
-Status writeCompiledQasm(const std::filesystem::path& path, const compiler::CompiledProgram& program,
+Result<std::string> compiledQasm(const compiler::CompiledProgram& program,
+                                 const ProgramExportOptions& options = {});
+Status writeCompiledQasm(const std::filesystem::path& path,
+                         const compiler::CompiledProgram& program,
                          const ProgramExportOptions& options = {});
 // Spec 23 §5 source export: the editor text, unchanged.
 Status writeProgramSource(const std::filesystem::path& path, std::string_view source);

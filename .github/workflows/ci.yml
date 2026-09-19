@@ -112,7 +112,9 @@ jobs:
       - name: clang-format check
         if: runner.os == 'macOS' && matrix.preset == 'debug'
         run: |
+          brew install clang-format
           files=$(git ls-files 'src/*.cpp' 'src/*.hpp' 'tests/*.cpp' 'tests/*.hpp')
+          clang-format --version
           clang-format --dry-run --Werror $files
 
       - name: Include lint (layering rules G1/P1 of spec 02 §1)

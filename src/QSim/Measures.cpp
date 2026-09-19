@@ -7,7 +7,9 @@
 
 namespace qlab::qsim::measures {
 namespace {
-const num::Mat2& pauliY() { return num::pauli::Y; }
+const num::Mat2& pauliY() {
+    return num::pauli::Y;
+}
 } // namespace
 
 Result<std::array<double, 3>> blochVector(const Matrix& rho) {
@@ -19,9 +21,13 @@ Result<std::array<double, 3>> blochVector(const Matrix& rho) {
                                  (rho(0, 0) - rho(1, 1)).real()};
 }
 
-double entropyBits(const Matrix& rho) { return num::vonNeumannEntropy(rho); }
+double entropyBits(const Matrix& rho) {
+    return num::vonNeumannEntropy(rho);
+}
 
-double purity(const Matrix& rho) { return num::purity(rho); }
+double purity(const Matrix& rho) {
+    return num::purity(rho);
+}
 
 Result<double> concurrence(const Matrix& rho) {
     if (rho.rows != 4 || rho.cols != 4)
@@ -30,12 +36,14 @@ Result<double> concurrence(const Matrix& rho) {
     Matrix yy = num::kron(Y.toMatrix(), Y.toMatrix()); // (Y⊗Y), real antisymmetric times i
     Matrix rhoConj(4, 4);
     for (std::size_t i = 0; i < 4; ++i)
-        for (std::size_t j = 0; j < 4; ++j) rhoConj(i, j) = std::conj(rho(i, j));
+        for (std::size_t j = 0; j < 4; ++j)
+            rhoConj(i, j) = std::conj(rho(i, j));
     Matrix rhoTilde = num::matmul(yy, num::matmul(rhoConj, yy));
     // ρρ̃ is not Hermitian (its singular values are not its eigenvalues), but it has the spectrum of
     // the Hermitian √ρ ρ̃ √ρ (Wootters), which is what is diagonalised.
     auto sq = num::sqrtm(rho);
-    if (!sq) return std::unexpected(sq.error());
+    if (!sq)
+        return std::unexpected(sq.error());
     Matrix m = num::matmul(*sq, num::matmul(rhoTilde, *sq));
     // Symmetrize against round-off before the Hermitian solve.
     for (std::size_t i = 0; i < 4; ++i)
@@ -45,9 +53,11 @@ Result<double> concurrence(const Matrix& rho) {
             m(j, i) = std::conj(avg);
         }
     auto e = num::eigh(m);
-    if (!e) return std::unexpected(e.error());
+    if (!e)
+        return std::unexpected(e.error());
     std::vector<double> lam;
-    for (std::size_t i = 0; i < 4; ++i) lam.push_back(std::sqrt(std::max(0.0, e->values[i])));
+    for (std::size_t i = 0; i < 4; ++i)
+        lam.push_back(std::sqrt(std::max(0.0, e->values[i])));
     std::sort(lam.begin(), lam.end(), std::greater<double>());
     return std::max(0.0, lam[0] - lam[1] - lam[2] - lam[3]);
 }
@@ -60,7 +70,8 @@ Result<num::RealVector> schmidtCoefficients(std::span<const Complex> psi, std::u
         return fail(err::BadTargets, "the bipartition must be a proper non-empty subset");
     std::vector<std::uint32_t> a;
     for (auto q : keep) {
-        if (q.get() >= n) return fail(err::BadTargets, "qubit index out of range");
+        if (q.get() >= n)
+            return fail(err::BadTargets, "qubit index out of range");
         a.push_back(q.get());
     }
     std::sort(a.begin(), a.end());
@@ -68,19 +79,23 @@ Result<num::RealVector> schmidtCoefficients(std::span<const Complex> psi, std::u
         return fail(err::BadTargets, "duplicate qubit in bipartition");
     std::vector<std::uint32_t> b;
     for (std::uint32_t q = 0; q < n; ++q)
-        if (!std::binary_search(a.begin(), a.end(), q)) b.push_back(q);
+        if (!std::binary_search(a.begin(), a.end(), q))
+            b.push_back(q);
     const std::size_t dimA = std::size_t{1} << a.size();
     const std::size_t dimB = std::size_t{1} << b.size();
     // Reshape psi into M[iA][iB] by scattering the bits of each basis index.
     Matrix m(dimA, dimB);
     for (std::size_t idx = 0; idx < psi.size(); ++idx) {
         std::size_t ia = 0, ib = 0;
-        for (std::size_t k = 0; k < a.size(); ++k) ia |= ((idx >> a[k]) & 1) << k;
-        for (std::size_t k = 0; k < b.size(); ++k) ib |= ((idx >> b[k]) & 1) << k;
+        for (std::size_t k = 0; k < a.size(); ++k)
+            ia |= ((idx >> a[k]) & 1) << k;
+        for (std::size_t k = 0; k < b.size(); ++k)
+            ib |= ((idx >> b[k]) & 1) << k;
         m(ia, ib) = psi[idx];
     }
     auto s = num::svd(m);
-    if (!s) return std::unexpected(s.error());
+    if (!s)
+        return std::unexpected(s.error());
     return s->singular;
 }
 
@@ -91,6 +106,8 @@ double mutualInformation(const Matrix& rhoA, const Matrix& rhoB, const Matrix& r
 double fidelityTo(const Matrix& rho, std::span<const Complex> target) {
     return num::fidelity(target, rho);
 }
-double fidelityTo(const Matrix& rho, const Matrix& sigma) { return num::fidelity(rho, sigma); }
+double fidelityTo(const Matrix& rho, const Matrix& sigma) {
+    return num::fidelity(rho, sigma);
+}
 
 } // namespace qlab::qsim::measures

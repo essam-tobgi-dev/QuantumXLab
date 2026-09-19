@@ -17,9 +17,9 @@ EulerAngles eulerAngles(num::ConstMatrixView m);
 
 // Single-qubit target bases of spec 14 §4.1.
 enum class Basis1q : std::uint8_t {
-    U,     // no device: one U(θ,φ,λ)
-    ZSX,   // transmons: rz · sx · rz · sx · rz, `x` when the gate is a π flip
-    ZYZ,   // ions: rz · ry · rz, `rx` when the gate is an X rotation
+    U,   // no device: one U(θ,φ,λ)
+    ZSX, // transmons: rz · sx · rz · sx · rz, `x` when the gate is a π flip
+    ZYZ, // ions: rz · ry · rz, `rx` when the gate is an X rotation
 };
 
 // Gates in TIME order (first element acts first) with M = e^{i·phase} · g_k ⋯ g_1.

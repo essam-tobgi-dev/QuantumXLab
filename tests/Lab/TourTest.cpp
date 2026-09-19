@@ -1,9 +1,9 @@
 // Spec 17 §7.10 — the guided tour, headless: the scripts load and resolve every stop and theory
 // anchor, a 60 Hz play-through visits every stop with the focus framed, stop() restores the view
 // exactly, camera input pauses, Physical-lab skipping, and refusal of a broken script.
+#include "Lab/Tour.hpp"
 #include "Core/Paths.hpp"
 #include "Lab/Lab.hpp"
-#include "Lab/Tour.hpp"
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <fstream>
@@ -15,22 +15,29 @@ using namespace qlab::lab;
 namespace {
 Scene build(const char* layout) {
     auto s = buildScene(layout);
-    if (!s) FAIL(s.error().format());
+    if (!s)
+        FAIL(s.error().format());
     return std::move(*s);
 }
-std::filesystem::path tourFile(const std::string& id) { return core::assetDir() / "Lab" / "Tours" / (id + ".json"); }
-std::filesystem::path theoryDir() { return std::filesystem::path(QXL_SOURCE_DIR) / "docs" / "theory"; }
+std::filesystem::path tourFile(const std::string& id) {
+    return core::assetDir() / "Lab" / "Tours" / (id + ".json");
+}
+std::filesystem::path theoryDir() {
+    return std::filesystem::path(QXL_SOURCE_DIR) / "docs" / "theory";
+}
 
 Tour loadTour(const char* id, const Scene& scene, Interaction& ui) {
     auto t = Tour::load(tourFile(id), scene, ui, nullptr, theoryDir());
-    if (!t) FAIL(t.error().format());
+    if (!t)
+        FAIL(t.error().format());
     return std::move(*t);
 }
 
 // The AABB the step frames (spec 18 §6): the focus node's subtree, or its own geometry.
 std::optional<gfx::Aabb> focusBox(const Scene& scene, const Tour& tour) {
     const Node* n = scene.node(tour.focusId());
-    if (n == nullptr) return std::nullopt;
+    if (n == nullptr)
+        return std::nullopt;
     const gfx::Aabb box = n->subtreeBounds.valid() ? n->subtreeBounds : n->worldBounds;
     return box.valid() ? std::optional<gfx::Aabb>{box} : std::nullopt;
 }
@@ -62,22 +69,26 @@ TEST_CASE("tour: the superconducting script loads, resolves every stop and every
             REQUIRE(id.value != 0);
             const Node* n = scene.node(id);
             REQUIRE(n != nullptr);
-            if (!s.focusInstance.empty()) CHECK(n->instanceName == s.focusInstance);
+            if (!s.focusInstance.empty())
+                CHECK(n->instanceName == s.focusInstance);
         }
-        if (s.bookmark) CHECK(ui.bookmark(*s.bookmark) != nullptr);
+        if (s.bookmark)
+            CHECK(ui.bookmark(*s.bookmark) != nullptr);
         const std::size_t hash = s.theory.find('#');
         REQUIRE(hash == 3);
         const auto doc = anchors.find(s.theory.substr(0, hash));
         REQUIRE(doc != anchors.end());
         CHECK(doc->second.contains(s.theory.substr(hash + 1)));
-        for (const std::string& h : s.highlight) CHECK(scene.findByInstance(h).value != 0);
+        for (const std::string& h : s.highlight)
+            CHECK(scene.findByInstance(h).value != 0);
         CHECK(s.dwell_s > 0.0);
         CHECK(s.marginFactor > 0.0);
     }
     // Signal order: room → racks → fridge → stages → chip → qubit → readout → digitizer → closing.
     const auto index = [&](std::string_view id) {
         for (std::size_t k = 0; k < tour.size(); ++k)
-            if (tour.steps()[k].id == id) return k;
+            if (tour.steps()[k].id == id)
+                return k;
         FAIL("missing step " << id);
         return std::size_t{0};
     };
@@ -117,7 +128,8 @@ TEST_CASE("tour: a 60 Hz play-through visits every stop, frames each focus and r
     CHECK(tour.step() == 0);
 
     double expected = 0.0;
-    for (const TourStep& s : tour.steps()) expected += Tour::kFlight_s + s.dwell_s;
+    for (const TourStep& s : tour.steps())
+        expected += Tour::kFlight_s + s.dwell_s;
     std::set<std::size_t> visited;
     std::size_t framedChecks = 0;
     int frames = 0;
@@ -142,10 +154,12 @@ TEST_CASE("tour: a 60 Hz play-through visits every stop, frames each focus and r
                 CHECK(px.y <= kH);
                 ++framedChecks;
                 // A focus step (no bookmark) lands with the target on the AABB centre.
-                if (!tour.current().bookmark) CHECK(glm::length(cam.target() - box->center()) < 1e-6 * (1.0 + box->radius()));
+                if (!tour.current().bookmark)
+                    CHECK(glm::length(cam.target() - box->center()) < 1e-6 * (1.0 + box->radius()));
             }
             // The Inspector follows: the focus is selected when it is pickable.
-            if (const Node* n = scene.node(tour.focusId()); n != nullptr && n->pickable) CHECK(ui.selected() == tour.focusId());
+            if (const Node* n = scene.node(tour.focusId()); n != nullptr && n->pickable)
+                CHECK(ui.selected() == tour.focusId());
         }
     }
     CHECK_FALSE(tour.playing());
@@ -187,7 +201,8 @@ TEST_CASE("tour: any camera input pauses, play resumes, transport seeks and stop
     tour.seek(3); // a focus step with a view change: seeking from idle starts the tour there
     REQUIRE(tour.playing());
     CHECK(tour.step() == 3);
-    for (int i = 0; i < 20; ++i) tour.update(kDt, cam);
+    for (int i = 0; i < 20; ++i)
+        tour.update(kDt, cam);
     CHECK(tour.phase() == Tour::Phase::Flying);
     CHECK(ui.saveViewState() != before); // the step's view was applied
 
@@ -208,7 +223,8 @@ TEST_CASE("tour: any camera input pauses, play resumes, transport seeks and stop
     tour.play();
     CHECK(tour.playing());
     CHECK(tour.step() == 3);
-    for (int i = 0; i < 60; ++i) tour.update(kDt, cam);
+    for (int i = 0; i < 60; ++i)
+        tour.update(kDt, cam);
     CHECK(tour.phase() == Tour::Phase::Dwelling);
     const auto box = focusBox(scene, tour);
     REQUIRE(box.has_value());
@@ -249,7 +265,8 @@ TEST_CASE("tour: any camera input pauses, play resumes, transport seeks and stop
         const ComponentDescriptor* d = n != nullptr ? scene.descriptor(*n) : nullptr;
         INFO("step " << k << " '" << tour.steps()[k].id << "'");
         CHECK(tour.stepSkipped(k) == (d != nullptr && d->simulatorOnly));
-        if (tour.stepSkipped(k)) ++skipped;
+        if (tour.stepSkipped(k))
+            ++skipped;
     }
     CHECK(skipped >= 1); // the transmon stop: its Bloch row is Simulator-only (spec 00 §6)
     CHECK(skipped < tour.size() / 2);
@@ -257,16 +274,19 @@ TEST_CASE("tour: any camera input pauses, play resumes, transport seeks and stop
     std::set<std::size_t> dwelt;
     for (int i = 0; i < 60 * 3600 && tour.playing(); ++i) {
         tour.update(kDt, cam);
-        if (tour.phase() == Tour::Phase::Dwelling) dwelt.insert(tour.step());
+        if (tour.phase() == Tour::Phase::Dwelling)
+            dwelt.insert(tour.step());
     }
     CHECK(tour.finished());
     CHECK(dwelt.size() == tour.size() - skipped);
-    for (std::size_t k : dwelt) CHECK_FALSE(tour.stepSkipped(k));
+    for (std::size_t k : dwelt)
+        CHECK_FALSE(tour.stepSkipped(k));
     tour.setPhysicalLab(false);
     CHECK(ui.saveViewState() == before);
 }
 
-TEST_CASE("tour: the live rows come from the focus descriptor's spec sheet and the hover is untouched") {
+TEST_CASE(
+    "tour: the live rows come from the focus descriptor's spec sheet and the hover is untouched") {
     Scene scene = build("sc_lab_standard");
     Interaction ui(scene);
     Tour tour = loadTour("sc_lab_standard", scene, ui);
@@ -287,13 +307,15 @@ TEST_CASE("tour: the live rows come from the focus descriptor's spec sheet and t
         std::size_t bound = 0;
         if (d != nullptr)
             for (const SpecRow& r : d->specSheet)
-                if (r.binding) ++bound;
+                if (r.binding)
+                    ++bound;
         CHECK(rows.size() == std::min<std::size_t>(bound, 3));
         for (const Tooltip::LiveRow& r : rows) {
             CHECK(r.text.find(':') != std::string::npos);
             CHECK(r.text.find("—") != std::string::npos); // no registry: every value reads "—"
         }
-        if (!rows.empty()) ++stepsWithRows;
+        if (!rows.empty())
+            ++stepsWithRows;
     }
     CHECK(stepsWithRows >= 20);
     CHECK(ui.hovered() == hovered);
@@ -309,7 +331,8 @@ TEST_CASE("tour: the ion-trap script loads against the ion scene and plays") {
     for (std::size_t k = 0; k < tour.size(); ++k) {
         const TourStep& s = tour.steps()[k];
         INFO("step " << k << " '" << s.id << "'");
-        if (!s.focusInstance.empty() || !s.focusDescriptor.empty()) CHECK(tour.focusId(k).value != 0);
+        if (!s.focusInstance.empty() || !s.focusDescriptor.empty())
+            CHECK(tour.focusId(k).value != 0);
         CHECK(std::count(s.narration.begin(), s.narration.end(), '.') >= 3);
     }
     gfx::Camera cam;
@@ -335,7 +358,8 @@ TEST_CASE("tour: the ion-trap script loads against the ion scene and plays") {
     CHECK(visited.size() == tour.size());
 }
 
-TEST_CASE("tour: a script with an unresolved focus, bookmark or anchor is refused naming each one") {
+TEST_CASE(
+    "tour: a script with an unresolved focus, bookmark or anchor is refused naming each one") {
     Scene scene = build("ion_lab_11");
     Interaction ui(scene);
     const std::filesystem::path dir = std::filesystem::temp_directory_path() / "qxl_tour_test";
@@ -380,7 +404,7 @@ TEST_CASE("tour: a script with an unresolved focus, bookmark or anchor is refuse
     CHECK_FALSE(p->stepSkipped(0));
     CHECK(p->stepSkipped(1));
     p->play();
-    p->next();                       // the only other step is skipped, so the tour is over
+    p->next(); // the only other step is skipped, so the tour is over
     CHECK(p->finished());
     // A script none of whose steps resolve is refused.
     const std::filesystem::path none = dir / "none.json";
@@ -395,7 +419,9 @@ TEST_CASE("tour: a script with an unresolved focus, bookmark or anchor is refuse
     CHECK_FALSE(Tour::load(none, scene, ui, nullptr, theoryDir()).has_value());
     CHECK(msg.find("'a'") == std::string::npos); // the good step is not reported
     // A wrong envelope kind is refused too.
-    CHECK_FALSE(Tour::load(core::assetDir() / "Lab" / "Layouts" / "ion_lab_11" / "layout.json", scene, ui).has_value());
+    CHECK_FALSE(
+        Tour::load(core::assetDir() / "Lab" / "Layouts" / "ion_lab_11" / "layout.json", scene, ui)
+            .has_value());
     std::error_code ec;
     std::filesystem::remove_all(dir, ec);
 }
@@ -403,14 +429,19 @@ TEST_CASE("tour: a script with an unresolved focus, bookmark or anchor is refuse
 TEST_CASE("tour: seeking to a stop applies the view state of every stop before it") {
     Scene scene = build("sc_lab_standard");
     Interaction ui(scene);
-    auto t = Tour::load(core::assetDir() / "Lab" / "Tours" / "sc_lab_standard.json", scene, ui, nullptr, theoryDir());
+    auto t = Tour::load(core::assetDir() / "Lab" / "Tours" / "sc_lab_standard.json", scene, ui,
+                        nullptr, theoryDir());
     REQUIRE(t.has_value());
     // The script opens the fridge at an early stop (cans off or a cutaway) and the mixing-chamber
     // stop itself changes nothing, so a seek straight to it must arrive with the interior visible:
     // the folded state is what a play-through would have left, not the stop's own (empty) view.
     std::size_t mxc = t->size();
     for (std::size_t k = 0; k < t->size(); ++k)
-        if (t->steps()[k].focusInstance == "stage_mxc" || t->steps()[k].focusDescriptor == "stage_mxc") { mxc = k; break; }
+        if (t->steps()[k].focusInstance == "stage_mxc" ||
+            t->steps()[k].focusDescriptor == "stage_mxc") {
+            mxc = k;
+            break;
+        }
     REQUIRE(mxc < t->size());
     CHECK_FALSE(t->steps()[mxc].view.cans.has_value());
     CHECK_FALSE(t->steps()[mxc].view.cutaway.has_value());
@@ -423,7 +454,8 @@ TEST_CASE("tour: seeking to a stop applies the view state of every stop before i
     cam.lookAt({5.0, 3.0, 6.0}, {0.0, 1.2, 0.0});
     t->play();
     t->seek(mxc);
-    for (int i = 0; i < 90; ++i) t->update(1.0 / 60.0, cam);   // the 0.9 s flight and a moment of dwell
+    for (int i = 0; i < 90; ++i)
+        t->update(1.0 / 60.0, cam); // the 0.9 s flight and a moment of dwell
     CHECK((!ui.cansVisible() || ui.cutaway()));
     if (ui.cutaway()) {
         // The half of every can facing the camera is the one removed: the eye lies in the
@@ -433,6 +465,6 @@ TEST_CASE("tour: seeking to a stop applies the view state of every stop before i
         CHECK(glm::dot(glm::dvec3(plane), eye) + plane.w < 0.0);
     }
     t->stop();
-    CHECK(ui.cansVisible());   // restored
+    CHECK(ui.cansVisible()); // restored
     CHECK_FALSE(ui.cutaway());
 }

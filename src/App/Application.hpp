@@ -27,7 +27,7 @@ struct ImPlotContext;
 namespace qlab::app {
 
 class Application {
-public:
+  public:
     // `visible = false` gives a hidden window: the `--selftest` mode and the tests use it. Fails
     // with `err::NoContext` when no GL context can be created at all.
     static Result<std::unique_ptr<Application>> create(Options options, bool visible = true);
@@ -64,14 +64,15 @@ public:
 
     // ---- captures (spec 23 §8)
     // Renders the laboratory at `width × height` and writes it as PNG with the annotation strip.
-    Status captureViewport(const std::filesystem::path& png, int width = 0, int height = 0, bool annotate = true);
+    Status captureViewport(const std::filesystem::path& png, int width = 0, int height = 0,
+                           bool annotate = true);
     // The whole window as the user sees it (the ImGui frame included), for `--selftest`.
     Status captureWindow(const std::filesystem::path& png);
 
     // Sets the workspace and lets the dock layout settle, so a capture shows the finished layout.
     void showWorkspace(ui::Workspace w, int settleFrames = 3);
 
-private:
+  private:
     Application() = default;
     Status initWindow(bool visible);
     Status initImGui();
@@ -85,8 +86,8 @@ private:
 
     Options options_;
     std::unique_ptr<gfx::Window> window_;
-    std::unique_ptr<viz::GlBackend> gl_;         // created first: one per GL context (spec 21 §1.2)
-    std::unique_ptr<gfx::Renderer> renderer_;    // the laboratory viewport (spec 18 §4)
+    std::unique_ptr<viz::GlBackend> gl_;      // created first: one per GL context (spec 21 §1.2)
+    std::unique_ptr<gfx::Renderer> renderer_; // the laboratory viewport (spec 18 §4)
     ImGuiContext* imgui_ = nullptr;
     ImPlotContext* implot_ = nullptr;
     ui::UiResources resources_;
@@ -97,7 +98,7 @@ private:
     gfx::Camera camera_;
     std::vector<core::Subscription> subs_;
 
-    int viewportW_ = 1280, viewportH_ = 720;     // framebuffer pixels of the lab viewport
+    int viewportW_ = 1280, viewportH_ = 720; // framebuffer pixels of the lab viewport
     int pendingW_ = 0, pendingH_ = 0;
     float dpiScale_ = 1.0f, fontScale_ = 1.0f;
     double timeS_ = 0.0;
@@ -113,8 +114,8 @@ private:
     // What the panels read through the context but the App collects.
     std::vector<lang::Diagnostic> diagnostics_;
     std::optional<compiler::PassMetrics> metrics_;
-    std::vector<instr::Trace> traces_;        // the last `kMaxTraces` live acquisitions
-    std::uint64_t editorGeneration_ = 0;      // last `IncrementalCompiler::Update` taken
+    std::vector<instr::Trace> traces_;   // the last `kMaxTraces` live acquisitions
+    std::uint64_t editorGeneration_ = 0; // last `IncrementalCompiler::Update` taken
     static constexpr std::size_t kMaxTraces = 64;
 };
 

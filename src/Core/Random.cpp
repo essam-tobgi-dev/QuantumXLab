@@ -11,29 +11,45 @@ std::uint64_t splitmix64(std::uint64_t& x) {
 } // namespace
 void Random::reseed(std::uint64_t seed) {
     std::uint64_t x = seed;
-    for (auto& v : s_) v = splitmix64(x);
+    for (auto& v : s_)
+        v = splitmix64(x);
     haveSpare_ = false;
 }
 std::uint64_t Random::next() {
     const std::uint64_t result = std::rotl(s_[1] * 5, 7) * 9;
     const std::uint64_t t = s_[1] << 17;
-    s_[2] ^= s_[0]; s_[3] ^= s_[1]; s_[1] ^= s_[2]; s_[0] ^= s_[3];
+    s_[2] ^= s_[0];
+    s_[3] ^= s_[1];
+    s_[1] ^= s_[2];
+    s_[0] ^= s_[3];
     s_[2] ^= t;
     s_[3] = std::rotl(s_[3], 45);
     return result;
 }
 double Random::normal(double mean, double sigma) {
-    if (haveSpare_) { haveSpare_ = false; return mean + sigma * spare_; }
+    if (haveSpare_) {
+        haveSpare_ = false;
+        return mean + sigma * spare_;
+    }
     double u, v, s;
-    do { u = uniform(-1.0, 1.0); v = uniform(-1.0, 1.0); s = u * u + v * v; } while (s >= 1.0 || s == 0.0);
+    do {
+        u = uniform(-1.0, 1.0);
+        v = uniform(-1.0, 1.0);
+        s = u * u + v * v;
+    } while (s >= 1.0 || s == 0.0);
     double m = std::sqrt(-2.0 * std::log(s) / s);
-    spare_ = v * m; haveSpare_ = true;
+    spare_ = v * m;
+    haveSpare_ = true;
     return mean + sigma * u * m;
 }
 int Random::poisson(double lambda) {
     if (lambda < 30.0) {
-        double L = std::exp(-lambda), p = 1.0; int k = 0;
-        do { ++k; p *= uniform(); } while (p > L);
+        double L = std::exp(-lambda), p = 1.0;
+        int k = 0;
+        do {
+            ++k;
+            p *= uniform();
+        } while (p > L);
         return k - 1;
     }
     // Normal approximation with continuity correction for large lambda.
@@ -46,7 +62,12 @@ void Random::jump() {
     std::uint64_t s0 = 0, s1 = 0, s2 = 0, s3 = 0;
     for (auto j : J)
         for (int b = 0; b < 64; ++b) {
-            if (j & (1ull << b)) { s0 ^= s_[0]; s1 ^= s_[1]; s2 ^= s_[2]; s3 ^= s_[3]; }
+            if (j & (1ull << b)) {
+                s0 ^= s_[0];
+                s1 ^= s_[1];
+                s2 ^= s_[2];
+                s3 ^= s_[3];
+            }
             next();
         }
     s_ = {s0, s1, s2, s3};
@@ -57,7 +78,8 @@ Random Random::stream(std::uint64_t index) const {
     Random r;
     std::uint64_t x = s_[0] ^ (s_[1] * 0x9E3779B97F4A7C15ull) ^ (index + 1) * 0xD1B54A32D192ED03ull;
     r.reseed(x);
-    r.next(); r.next();
+    r.next();
+    r.next();
     return r;
 }
 } // namespace qlab::core

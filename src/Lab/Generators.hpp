@@ -15,7 +15,7 @@
 namespace qlab::lab {
 
 class GenParams {
-public:
+  public:
     GenParams() : j_(core::Json::object()) {}
     explicit GenParams(core::Json object);
     // Descriptor geometry with `overrides` (an object, may be null) applied key by key.
@@ -40,7 +40,7 @@ public:
     // Canonical cache key (spec 17 §6: results cached by parameter hash).
     std::string cacheKey(std::string_view generator, Detail detail, double unitScale) const;
 
-private:
+  private:
     core::Json j_;
 };
 
@@ -59,7 +59,8 @@ std::span<const std::string_view> generatorNames();
 bool hasGenerator(std::string_view name);
 // Runs a generator. Detail::Hidden yields an empty mesh. The result is oriented so triangle winding
 // agrees with the normals and validated (finite positions, unit normals, index range).
-Result<gfx::MeshData> generateMesh(std::string_view generator, const GenParams& params, const GenContext& ctx);
+Result<gfx::MeshData> generateMesh(std::string_view generator, const GenParams& params,
+                                   const GenContext& ctx);
 
 // Nominal envelopes of generators without size parameters (metres).
 inline constexpr double kSmaLength_m = 0.020;
@@ -75,10 +76,17 @@ inline constexpr double kTrapChipSize_m[3] = {0.010, 0.0005, 0.003};
 // circuit (top to bottom: condensing, still pumping, OVC / turbo, dumps and recovery); columns
 // are the branch valves on each line. Gauges sit in a row above the diagram.
 inline constexpr int kGhsValveCols = 5, kGhsValveRows = 4, kGhsGaugeCount = 6;
-inline constexpr double ghsValveX(int col) { return 0.17 * col - 0.34; }
-inline constexpr double ghsValveY(int row) { return 0.10 - 0.12 * row; }
-inline constexpr double ghsGaugeX(int i) { return 0.15 * i - 0.375; }
-inline constexpr double kGhsGaugeY = 0.36, kGhsPanelTop = 0.44, kGhsPanelBottom = -0.30, kGhsGrilleTop = -0.34;
+inline constexpr double ghsValveX(int col) {
+    return 0.17 * col - 0.34;
+}
+inline constexpr double ghsValveY(int row) {
+    return 0.10 - 0.12 * row;
+}
+inline constexpr double ghsGaugeX(int i) {
+    return 0.15 * i - 0.375;
+}
+inline constexpr double kGhsGaugeY = 0.36, kGhsPanelTop = 0.44, kGhsPanelBottom = -0.30,
+                        kGhsGrilleTop = -0.34;
 inline constexpr double kGhsFlowMeterX = 0.42, kGhsFlowMeterY = -0.10;
 inline constexpr double kGantryHeight_m = 0.35;
 inline constexpr double kTrayWidth_m = 0.30, kTrayHeight_m = 0.06;
@@ -88,7 +96,9 @@ inline constexpr double kTrayWidth_m = 0.30, kTrayHeight_m = 0.06;
 // and the shield flanges bolt on.
 inline constexpr double kPlateChamfer_m = 0.001;
 inline constexpr double kPlateBoltInset_m = 0.020;
-inline double plateBoltRing_m(double r_m) { return r_m - kPlateBoltInset_m; }
+inline double plateBoltRing_m(double r_m) {
+    return r_m - kPlateBoltInset_m;
+}
 // 24 or 36 so that the six posts (every 60°, from 30°) land on counterbores.
 inline int plateBoltCount(double r_m) {
     double n = 2.0 * 3.14159265358979 * plateBoltRing_m(r_m) / 0.045;
@@ -103,7 +113,8 @@ inline constexpr double kFilmGapTop_m = 4e-6;
 inline constexpr double kFilmMetalTop_m = 6e-6;
 inline constexpr double kFilmJunction_m = 0.3e-6;
 
-// Spec 17 §6 — λ/4 CPW resonator length L = c / (4 f_r sqrt(ε_eff)), ε_eff ≈ (1 + ε_r)/2 = 6.45 (Si).
+// Spec 17 §6 — λ/4 CPW resonator length L = c / (4 f_r sqrt(ε_eff)), ε_eff ≈ (1 + ε_r)/2 = 6.45
+// (Si).
 double quarterWaveLength_m(double f_r_Hz, double epsEff = 6.45);
 
 // Spec 17 §6 Meander(L, pitch, w, s, turns): chip-plane centreline from the origin along +x — a

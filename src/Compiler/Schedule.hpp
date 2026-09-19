@@ -25,10 +25,10 @@ struct IdleInterval {
 
 struct ScheduleInfo {
     SchedulePolicy policy = SchedulePolicy::Asap;
-    Picoseconds dt{0};          // device sample period
-    Picoseconds granule{0};     // dt × granularity_samples: every start and duration is a multiple
-    Picoseconds duration{0};    // critical path T_circ = latest end time
-    std::vector<TimedNode> nodes;                                 // parallel to `topologicalOrder()`
+    Picoseconds dt{0};       // device sample period
+    Picoseconds granule{0};  // dt × granularity_samples: every start and duration is a multiple
+    Picoseconds duration{0}; // critical path T_circ = latest end time
+    std::vector<TimedNode> nodes; // parallel to `topologicalOrder()`
     // Per wire that carries an operation: the gaps between consecutive nodes, ascending (wires
     // without a gap are absent). Explicit `delay` nodes are nodes, not gaps, and the wait before a
     // wire's first node is not listed: the qubit is still in |0⟩ then.
@@ -39,7 +39,7 @@ struct ScheduleInfo {
 
 struct ScheduleOptions {
     SchedulePolicy policy = SchedulePolicy::Asap;
-    bool enforceMaxDuration = true;     // QL4090 against `device.control.maxProgramDuration`
+    bool enforceMaxDuration = true; // QL4090 against `device.control.maxProgramDuration`
 };
 
 // Durations (spec 14 §9): per-qubit single-qubit and per-edge two-qubit gate durations, readout
@@ -56,8 +56,10 @@ struct ScheduleOptions {
 // own time axis, and stores in `c.meta()["schedule"]`:
 //   { "policy", "dt_ps", "granule_ps", "duration_ps", "start_ps": […], "length_ps": […],
 //     "idle": { "<wire>": [[t_a, t_b], …] } }
-Result<ScheduleInfo> schedule(ir::Circuit& c, const hw::Device& device, const hw::Calibration& calibration,
-                              const ScheduleOptions& options = {}, const PulseSource* pulses = nullptr);
+Result<ScheduleInfo> schedule(ir::Circuit& c, const hw::Device& device,
+                              const hw::Calibration& calibration,
+                              const ScheduleOptions& options = {},
+                              const PulseSource* pulses = nullptr);
 
 // QL4010: a `dt` duration cannot be resolved without a device (device-independent compiles).
 Status requireResolvedDurations(const ir::Circuit& c);

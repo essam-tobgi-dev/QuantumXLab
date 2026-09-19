@@ -1,7 +1,7 @@
 // Spec 15 §9 — the estimate record: the JSON schema shown in the spec, verbatim keys, and the
 // envelope the report exports.
-#include "Runtime/Estimate.hpp"
 #include "Data/Fidelity.hpp"
+#include "Runtime/Estimate.hpp"
 
 namespace qlab::runtime {
 namespace {
@@ -46,9 +46,10 @@ core::Json Estimate::toJson() const {
     j["wall_time"] = {{"value_s", wallTime.valueS},
                       {"min_s", wallTime.minS},
                       {"max_s", wallTime.maxS},
-                      {"reset_policy", wallTime.resetPolicy == hw::ResetPolicy::Active    ? "active"
-                                       : wallTime.resetPolicy == hw::ResetPolicy::Passive ? "passive"
-                                                                                          : "cooling"},
+                      {"reset_policy", wallTime.resetPolicy == hw::ResetPolicy::Active ? "active"
+                                       : wallTime.resetPolicy == hw::ResetPolicy::Passive
+                                           ? "passive"
+                                           : "cooling"},
                       {"terms", std::move(terms)}};
 
     core::Json fid;
@@ -64,8 +65,10 @@ core::Json Estimate::toJson() const {
         core::Json s;
         s["classical"] = fidelity.simulated->classical;
         s["hellinger"] = fidelity.simulated->hellinger;
-        if (fidelity.simulated->state) s["state"] = *fidelity.simulated->state;
-        if (fidelity.simulated->successProbability) s["success_probability"] = *fidelity.simulated->successProbability;
+        if (fidelity.simulated->state)
+            s["state"] = *fidelity.simulated->state;
+        if (fidelity.simulated->successProbability)
+            s["success_probability"] = *fidelity.simulated->successProbability;
         s["class"] = std::string(data::fidelityName(fidelity.simulated->cls));
         fid["simulated"] = std::move(s);
     } else {
@@ -96,11 +99,15 @@ core::Json Estimate::toJson() const {
 
     core::Json comp = core::Json::array();
     for (const DeviceComparison& c : comparison)
-        comp.push_back({{"device", c.device}, {"wall_time_s", c.wallTimeS}, {"fidelity_fast", c.fidelityFast}});
+        comp.push_back({{"device", c.device},
+                        {"wall_time_s", c.wallTimeS},
+                        {"fidelity_fast", c.fidelityFast}});
     j["comparison"] = std::move(comp);
     return j;
 }
 
-std::string Estimate::serialize() const { return core::JsonEnvelope::serialize(kKind, toJson()); }
+std::string Estimate::serialize() const {
+    return core::JsonEnvelope::serialize(kKind, toJson());
+}
 
 } // namespace qlab::runtime

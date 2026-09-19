@@ -22,8 +22,12 @@ struct Image {
     Image() = default;
     Image(int w, int h, Rgba fill = {0, 0, 0, 255});
     bool empty() const { return width <= 0 || height <= 0; }
-    std::uint8_t* pixel(int x, int y) { return rgba.data() + (static_cast<std::size_t>(y) * width + x) * 4; }
-    const std::uint8_t* pixel(int x, int y) const { return rgba.data() + (static_cast<std::size_t>(y) * width + x) * 4; }
+    std::uint8_t* pixel(int x, int y) {
+        return rgba.data() + (static_cast<std::size_t>(y) * width + x) * 4;
+    }
+    const std::uint8_t* pixel(int x, int y) const {
+        return rgba.data() + (static_cast<std::size_t>(y) * width + x) * 4;
+    }
     void set(int x, int y, Rgba c);
     Rgba get(int x, int y) const;
     void fillRect(int x, int y, int w, int h, Rgba c);
@@ -36,7 +40,7 @@ Status writePng(const std::filesystem::path& path, const Image& img);
 
 // Spec 23 §8: the badge of a view that appears in the strip.
 struct ViewBadge {
-    std::string view;                                       // "Bloch", "Q-sphere", "Density"
+    std::string view; // "Bloch", "Q-sphere", "Density"
     data::FidelityClass cls = data::FidelityClass::Exact;
     bool simulatorOnly = false;
 };
@@ -44,9 +48,9 @@ struct ViewBadge {
 struct Annotation {
     std::string title;
     std::string device;
-    std::string timestamp;        // empty = now
+    std::string timestamp; // empty = now
     std::vector<ViewBadge> badges;
-    int scale = 2;                // text scale; 2 is legible at viewport resolutions
+    int scale = 2; // text scale; 2 is legible at viewport resolutions
     Rgba background{18, 20, 26, 255};
     Rgba foreground{236, 239, 244, 255};
     Rgba accent{126, 200, 227, 255};
@@ -60,7 +64,8 @@ int annotationHeight(const Annotation& a);
 Image withAnnotation(const Image& img, const Annotation& a);
 
 // Spec 23 §8 viewport export: write `img` (optionally annotated) as PNG.
-Status writeViewportPng(const std::filesystem::path& path, const Image& img, const Annotation* annotation = nullptr);
+Status writeViewportPng(const std::filesystem::path& path, const Image& img,
+                        const Annotation* annotation = nullptr);
 // The same for a PNG already written by `gfx::Renderer::screenshot`: read it back, bake the strip
 // in and write it again. Keeps this module free of GL.
 Status annotatePngFile(const std::filesystem::path& path, const Annotation& annotation);

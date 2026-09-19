@@ -18,14 +18,21 @@ std::optional<SymbolInfo> lookupSymbol(std::string_view command);
 bool isFunctionOperator(std::string_view command);
 
 // Large operators (\sum, \int, ...) → glyph; `integral` marks ones whose limits stay as scripts.
-struct BigOpInfo { std::string_view glyph; bool integral; };
+struct BigOpInfo {
+    std::string_view glyph;
+    bool integral;
+};
 std::optional<BigOpInfo> lookupBigOp(std::string_view command);
 
 // Delimiters accepted after \left / \right (and bare | ‖ etc.).
 std::optional<std::string_view> lookupDelimiter(std::string_view token);
 
 // Accents: \vec \hat \bar \tilde \dot \ddot \overline \underline \underbrace.
-struct AccentInfo { std::string_view glyph; bool wide; bool below; };
+struct AccentInfo {
+    std::string_view glyph;
+    bool wide;
+    bool below;
+};
 std::optional<AccentInfo> lookupAccent(std::string_view command);
 
 // Style commands: \mathbf \mathrm \mathcal \mathbb \mathit \boldsymbol \text \operatorname \textrm

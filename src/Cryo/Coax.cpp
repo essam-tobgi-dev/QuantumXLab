@@ -49,29 +49,44 @@ CoaxCatalog::CoaxCatalog() {
 }
 
 const CoaxSpec* CoaxCatalog::find(std::string_view id) const {
-    for (auto& s : specs_) if (s.id == id) return &s;
+    for (auto& s : specs_)
+        if (s.id == id)
+            return &s;
     return nullptr;
 }
 Result<const CoaxSpec*> CoaxCatalog::get(std::string_view id) const {
-    if (auto* s = find(id)) return s;
+    if (auto* s = find(id))
+        return s;
     return fail(ErrorCode::Cryo_ + 10, std::format("unknown coax '{}'", id));
 }
 std::vector<std::string> CoaxCatalog::ids() const {
-    std::vector<std::string> v; for (auto& s : specs_) v.push_back(s.id); return v;
+    std::vector<std::string> v;
+    for (auto& s : specs_)
+        v.push_back(s.id);
+    return v;
 }
 void CoaxCatalog::add(CoaxSpec s) {
-    for (auto& e : specs_) if (e.id == s.id) { e = std::move(s); return; }
+    for (auto& e : specs_)
+        if (e.id == s.id) {
+            e = std::move(s);
+            return;
+        }
     specs_.push_back(std::move(s));
 }
 
 Result<ConductionLoad> conductionLoad(const CoaxSpec& coax, double L, double Tc, double Th,
                                       const MaterialCatalog& mats) {
-    if (L <= 0) return fail(ErrorCode::Cryo_ + 11, "coax length must be positive");
+    if (L <= 0)
+        return fail(ErrorCode::Cryo_ + 11, "coax length must be positive");
     ConductionLoad q;
     auto part = [&](const std::string& matId, double A, double& out) -> Status {
-        if (matId.empty() || A <= 0) { out = 0; return {}; }
+        if (matId.empty() || A <= 0) {
+            out = 0;
+            return {};
+        }
         auto m = mats.get(matId);
-        if (!m) return std::unexpected(m.error());
+        if (!m)
+            return std::unexpected(m.error());
         out = A / L * (*m)->conductivityIntegral(Tc, Th) * coax.conductors;
         return {};
     };
@@ -82,7 +97,8 @@ Result<ConductionLoad> conductionLoad(const CoaxSpec& coax, double L, double Tc,
 }
 
 double coaxLoss_dB(const CoaxSpec& coax, double L, double f_Hz, double T_K) {
-    if (coax.superconductingOuter && T_K < 9.2) return 0.02 * L;
+    if (coax.superconductingOuter && T_K < 9.2)
+        return 0.02 * L;
     double scale = std::sqrt(std::max(f_Hz, 1.0) / 5e9);
     double cold = T_K < 4.5 ? 0.6 : (T_K < 60 ? 0.8 : 1.0);
     return coax.loss_dB_per_m_5GHz * scale * cold * L;

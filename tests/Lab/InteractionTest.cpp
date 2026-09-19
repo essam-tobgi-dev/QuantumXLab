@@ -1,7 +1,7 @@
 // Spec 17 §7 — interaction: hover/tooltip, selection and breadcrumbs, focus, exploded view,
 // cutaway, X-ray, layer toggles, search-to-select and bookmarks. All headless.
-#include "Lab/Lab.hpp"
 #include "Data/Fidelity.hpp"
+#include "Lab/Lab.hpp"
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <map>
@@ -13,14 +13,16 @@ using namespace qlab::lab;
 namespace {
 Scene build() {
     auto s = buildScene("sc_lab_standard");
-    if (!s) FAIL(s.error().format());
+    if (!s)
+        FAIL(s.error().format());
     return std::move(*s);
 }
 
 // Stage plate world heights, top to bottom.
 std::vector<double> stageHeights(const Scene& scene) {
     std::vector<double> y;
-    for (ComponentId id : scene.stageNodes()) y.push_back(scene.node(id)->world[3].y);
+    for (ComponentId id : scene.stageNodes())
+        y.push_back(scene.node(id)->world[3].y);
     return y;
 }
 } // namespace
@@ -29,14 +31,17 @@ TEST_CASE("the exploded view separates the stages monotonically and 0 restores t
     Scene scene = build();
     Interaction ui(scene);
     std::vector<glm::dmat4> rest;
-    for (const Node& n : scene.nodes()) rest.push_back(n.world);
+    for (const Node& n : scene.nodes())
+        rest.push_back(n.world);
     std::vector<gfx::MeshData> restMeshes;
     for (const Node& n : scene.nodes())
-        if (n.spline) restMeshes.push_back(scene.meshes().data(n.finestMesh()));
+        if (n.spline)
+            restMeshes.push_back(scene.meshes().data(n.finestMesh()));
 
     std::vector<double> gaps0;
     std::vector<double> y0 = stageHeights(scene);
-    for (std::size_t k = 1; k < y0.size(); ++k) gaps0.push_back(y0[k - 1] - y0[k]);
+    for (std::size_t k = 1; k < y0.size(); ++k)
+        gaps0.push_back(y0[k - 1] - y0[k]);
 
     double previousSpread = 0.0;
     for (double s : {0.25, 0.5, 0.75, 1.0}) {
@@ -49,8 +54,9 @@ TEST_CASE("the exploded view separates the stages monotonically and 0 restores t
         for (std::size_t k = 1; k < y.size(); ++k) {
             double gap = y[k - 1] - y[k];
             INFO("stage " << k << " at s = " << s);
-            CHECK(gap > gaps0[k - 1] * 0.99);                      // stages only separate
-            CHECK(gap == Catch::Approx(gaps0[k - 1] + 0.25 * s));  // 0.25 m per stage at full extension
+            CHECK(gap > gaps0[k - 1] * 0.99); // stages only separate
+            CHECK(gap ==
+                  Catch::Approx(gaps0[k - 1] + 0.25 * s)); // 0.25 m per stage at full extension
         }
     }
     // s = 0 restores every transform exactly and re-evaluates the wiring splines back to rest
@@ -61,17 +67,20 @@ TEST_CASE("the exploded view separates the stages monotonically and 0 restores t
     }
     std::size_t spline = 0;
     for (const Node& n : scene.nodes()) {
-        if (!n.spline) continue;
+        if (!n.spline)
+            continue;
         const gfx::MeshData& now = scene.meshes().data(n.finestMesh());
         const gfx::MeshData& before = restMeshes[spline++];
         REQUIRE(now.vertices.size() == before.vertices.size());
-        for (std::size_t v = 0; v < now.vertices.size(); ++v) CHECK(now.vertices[v].position == before.vertices[v].position);
+        for (std::size_t v = 0; v < now.vertices.size(); ++v)
+            CHECK(now.vertices[v].position == before.vertices[v].position);
     }
     CHECK(spline > 100); // every coax run is a spline
     // exploding stretches the coax runs through the moved clamps
     ComponentId segment = ComponentId{0};
     for (const Node& n : scene.nodes())
-        if (n.spline && n.instanceName.starts_with("drive_q0.coax_MXC")) segment = n.id;
+        if (n.spline && n.instanceName.starts_with("drive_q0.coax_MXC"))
+            segment = n.id;
     REQUIRE(segment != ComponentId{0});
     double restLength = aabbSize(scene.node(segment)->localBounds).y;
     ui.setExplode(Assembly::FridgeStages, 1.0);
@@ -89,7 +98,8 @@ TEST_CASE("search-to-select finds every instance of a component") {
     Scene scene = build();
     Interaction ui(scene);
     std::set<std::uint32_t> attenuators;
-    for (ComponentId id : scene.findByDescriptor("attenuator")) attenuators.insert(id.value);
+    for (ComponentId id : scene.findByDescriptor("attenuator"))
+        attenuators.insert(id.value);
     REQUIRE(attenuators.size() > 50); // 27 drive × 2 + readout and pump lines
     auto hits = ui.search("attenuator");
     std::set<std::uint32_t> found;
@@ -127,7 +137,8 @@ TEST_CASE("focus keeps the node's bounding box inside the frustum") {
         INFO(instance);
         REQUIRE(id != ComponentId{0});
         REQUIRE(ui.focus(id, camera, 0.4));
-        for (int i = 0; i < 50; ++i) ui.update(0.01, camera); // the 400 ms ease completes
+        for (int i = 0; i < 50; ++i)
+            ui.update(0.01, camera); // the 400 ms ease completes
         CHECK_FALSE(camera.transitioning());
         const gfx::Aabb& box = scene.node(id)->subtreeBounds;
         CHECK(camera.frustum().intersects(box));
@@ -151,12 +162,14 @@ TEST_CASE("bookmarks come from the layout plus one per qubit") {
     Scene scene = build();
     Interaction ui(scene);
     std::map<std::string, int> names;
-    for (const auto& b : ui.bookmarks()) ++names[b.name];
+    for (const auto& b : ui.bookmarks())
+        ++names[b.name];
     for (const char* n : {"Overview", "Fridge", "MXC", "Chip", "Rack", "GHS"}) {
         INFO(n);
         CHECK(names.count(n) == 1);
     }
-    for (std::size_t q = 0; q < scene.qubitNodes().size(); ++q) CHECK(names.count(std::format("Qubit q[{}]", q)) == 1);
+    for (std::size_t q = 0; q < scene.qubitNodes().size(); ++q)
+        CHECK(names.count(std::format("Qubit q[{}]", q)) == 1);
     CHECK(ui.bookmarks().size() == 6 + scene.qubitNodes().size());
 
     gfx::Camera camera;
@@ -180,10 +193,12 @@ TEST_CASE("bookmarks come from the layout plus one per qubit") {
 TEST_CASE("layer toggles, X-ray, cutaway and hover state persist through the view state") {
     Scene scene = build();
     BindingRegistry registry;
-    registry.registerProvider(BindingRoot::Wiring, [](std::string_view path) -> std::optional<BindingValue> {
-        if (path.ends_with(".P_diss")) return BindingValue::number(1.5e-9, "W", data::FidelityClass::Model);
-        return std::nullopt;
-    });
+    registry.registerProvider(
+        BindingRoot::Wiring, [](std::string_view path) -> std::optional<BindingValue> {
+            if (path.ends_with(".P_diss"))
+                return BindingValue::number(1.5e-9, "W", data::FidelityClass::Model);
+            return std::nullopt;
+        });
     Interaction ui(scene, &registry);
     ComponentId attn = scene.findByInstance("drive_q3.att_MXC");
     REQUIRE(attn != ComponentId{0});
@@ -226,9 +241,10 @@ TEST_CASE("layer toggles, X-ray, cutaway and hover state persist through the vie
     ui.setXray(true);
     ui.setCutaway(true, 90.0);
     glm::dvec4 plane = ui.cutawayPlane();
-    CHECK(plane.y == 0.0);                                  // a vertical plane through the fridge axis
+    CHECK(plane.y == 0.0); // a vertical plane through the fridge axis
     CHECK(glm::dot(glm::dvec3(plane), glm::dvec3(0, 0, 1)) == Catch::Approx(1.0));
-    CHECK(glm::dot(glm::dvec3(plane), scene.layout().fridgePosition_m) + plane.w == Catch::Approx(0.0));
+    CHECK(glm::dot(glm::dvec3(plane), scene.layout().fridgePosition_m) + plane.w ==
+          Catch::Approx(0.0));
     ui.setExplode(Assembly::ChipPackage, 0.5);
 
     core::Json saved = ui.saveViewState();
@@ -246,7 +262,7 @@ TEST_CASE("leaving a chip bookmark restores the layers it hid (the way back to t
     Scene scene = build();
     Interaction ui(scene);
     gfx::Camera camera;
-    ui.setLayerVisible(Group::Rack, false);          // a choice the user made before
+    ui.setLayerVisible(Group::Rack, false); // a choice the user made before
     REQUIRE(ui.applyBookmark("Chip", camera, 0.0));
     CHECK(ui.layerVisible(Group::Chip));
     CHECK_FALSE(ui.layerVisible(Group::Room));
@@ -255,12 +271,15 @@ TEST_CASE("leaving a chip bookmark restores the layers it hid (the way back to t
     // A second chip-scale bookmark keeps the saved set (it does not save the hidden state).
     const auto marks = ui.bookmarks();
     for (const LayoutBookmark& b : marks)
-        if (b.name.rfind("Qubit", 0) == 0) { REQUIRE(ui.applyBookmark(b.name, camera, 0.0)); break; }
+        if (b.name.rfind("Qubit", 0) == 0) {
+            REQUIRE(ui.applyBookmark(b.name, camera, 0.0));
+            break;
+        }
     CHECK_FALSE(ui.layerVisible(Group::Room));
     REQUIRE(ui.applyBookmark("Overview", camera, 0.0));
     CHECK(ui.layerVisible(Group::Room));
     CHECK(ui.layerVisible(Group::FridgeInterior));
     CHECK(ui.layerVisible(Group::Wiring));
-    CHECK_FALSE(ui.layerVisible(Group::Rack));       // the user's own choice survives the round trip
+    CHECK_FALSE(ui.layerVisible(Group::Rack)); // the user's own choice survives the round trip
     CHECK_FALSE(ui.layersBeforeIsland().has_value());
 }

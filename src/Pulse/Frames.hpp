@@ -12,7 +12,7 @@
 namespace qlab::pulse {
 
 class FrameTimeline {
-public:
+  public:
     explicit FrameTimeline(const Schedule& schedule);
 
     // Carrier the schedule declares for the channel (its FrameDecl); 0 when none is declared.
@@ -27,11 +27,13 @@ public:
     double offsetPhase(ChannelId ch, double tS) const;
     // Phase every baseband sample of the channel carries relative to its declared frame:
     // phaseOps − offsetPhase.
-    double basebandPhase(ChannelId ch, double tS) const { return phaseOps(ch, tS) - offsetPhase(ch, tS); }
+    double basebandPhase(ChannelId ch, double tS) const {
+        return phaseOps(ch, tS) - offsetPhase(ch, tS);
+    }
     // Channels with a declared frame or at least one frame op.
     std::vector<ChannelId> channels() const;
 
-private:
+  private:
     struct Segment {
         double t0 = 0.0;          // start of the segment [s]
         double phaseOps = 0.0;    // accumulated phase instructions on the segment

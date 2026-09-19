@@ -1,12 +1,12 @@
 #pragma once
 // Spec 04 §6 — xoshiro256** seeded via SplitMix64; per-shot streams by jump (T11 §9).
 #include <array>
+#include <cmath>
 #include <cstdint>
 #include <limits>
-#include <cmath>
 namespace qlab::core {
 class Random {
-public:
+  public:
     using result_type = std::uint64_t;
     explicit Random(std::uint64_t seed = 0x9E3779B97F4A7C15ull) { reseed(seed); }
     void reseed(std::uint64_t seed);
@@ -25,7 +25,8 @@ public:
     void jump();
     Random stream(std::uint64_t index) const;
     std::array<std::uint64_t, 4> state() const { return s_; }
-private:
+
+  private:
     std::array<std::uint64_t, 4> s_{};
     bool haveSpare_ = false;
     double spare_ = 0.0;

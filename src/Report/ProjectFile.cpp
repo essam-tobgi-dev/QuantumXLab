@@ -17,7 +17,8 @@ std::filesystem::path withSuffix(const std::filesystem::path& file, std::string_
 
 std::string isoFileTime(std::filesystem::file_time_type t) {
     if constexpr (requires { std::chrono::file_clock::to_sys(t); }) {
-        return std::format("{:%FT%TZ}", std::chrono::floor<std::chrono::seconds>(std::chrono::file_clock::to_sys(t)));
+        return std::format("{:%FT%TZ}", std::chrono::floor<std::chrono::seconds>(
+                                            std::chrono::file_clock::to_sys(t)));
     } else {
         using Sys = std::chrono::system_clock;
         const Sys::time_point sys(std::chrono::duration_cast<Sys::duration>(t.time_since_epoch()));
@@ -27,11 +28,21 @@ std::string isoFileTime(std::filesystem::file_time_type t) {
 
 } // namespace
 
-std::filesystem::path projectDataDir(const std::filesystem::path& file) { return withSuffix(file, ".d"); }
-std::filesystem::path projectRunsDir(const std::filesystem::path& file) { return projectDataDir(file) / "runs"; }
-std::filesystem::path autosavePath(const std::filesystem::path& file) { return withSuffix(file, ".autosave"); }
-std::filesystem::path recoveryDir() { return core::userDataDir() / "recovery"; }
-std::filesystem::path recoveryPath(std::string_view id) { return recoveryDir() / (std::string(id) + ".qxlab"); }
+std::filesystem::path projectDataDir(const std::filesystem::path& file) {
+    return withSuffix(file, ".d");
+}
+std::filesystem::path projectRunsDir(const std::filesystem::path& file) {
+    return projectDataDir(file) / "runs";
+}
+std::filesystem::path autosavePath(const std::filesystem::path& file) {
+    return withSuffix(file, ".autosave");
+}
+std::filesystem::path recoveryDir() {
+    return core::userDataDir() / "recovery";
+}
+std::filesystem::path recoveryPath(std::string_view id) {
+    return recoveryDir() / (std::string(id) + ".qxlab");
+}
 
 std::string serializeProject(const Project& p) {
     ensureKinds();
@@ -48,8 +59,10 @@ static Status writeProjectTo(const std::filesystem::path& path, const Project& p
     ensureKinds();
     const core::Json data = p.toJson();
     // Spec 23 §1: NaN/Inf are not permitted in a document; nlohmann would write them as `null`.
-    if (!allFinite(data)) return fail(ErrorCode::InvalidArgument, "project holds a non-finite number");
-    return core::writeTextFileAtomic(path, core::JsonEnvelope::serialize(kProjectKind, data, kProjectSchema));
+    if (!allFinite(data))
+        return fail(ErrorCode::InvalidArgument, "project holds a non-finite number");
+    return core::writeTextFileAtomic(
+        path, core::JsonEnvelope::serialize(kProjectKind, data, kProjectSchema));
 }
 
 Status saveProject(const std::filesystem::path& file, const Project& p) {
@@ -61,9 +74,11 @@ Status saveProject(const std::filesystem::path& file, const Project& p) {
 Result<Project> loadProject(const std::filesystem::path& file) {
     ensureKinds();
     auto env = core::JsonEnvelope::load(file, kProjectKind);
-    if (!env) return std::unexpected(env.error());
+    if (!env)
+        return std::unexpected(env.error());
     auto p = Project::fromJson(env->data);
-    if (!p) p.error().notes.push_back("file: " + file.string());
+    if (!p)
+        p.error().notes.push_back("file: " + file.string());
     return p;
 }
 
@@ -74,7 +89,8 @@ Status writeAutosave(const std::filesystem::path& file, const Project& p) {
 Status clearAutosave(const std::filesystem::path& file) {
     std::error_code ec;
     std::filesystem::remove(autosavePath(file), ec);
-    if (ec) return fail(ErrorCode::Io, "cannot remove autosave: " + ec.message());
+    if (ec)
+        return fail(ErrorCode::Io, "cannot remove autosave: " + ec.message());
     return {};
 }
 
@@ -91,7 +107,8 @@ Result<OpenedProject> openProject(const std::filesystem::path& file, RecoveryCho
     bool autosaveNewer = hasAutosave;
     if (hasAutosave) {
         const auto at = std::filesystem::last_write_time(out.autosave, ec);
-        if (!ec) out.autosaveTime = isoFileTime(at);
+        if (!ec)
+            out.autosaveTime = isoFileTime(at);
         if (hasFile) {
             const auto ft = std::filesystem::last_write_time(file, ec);
             if (!ec) {

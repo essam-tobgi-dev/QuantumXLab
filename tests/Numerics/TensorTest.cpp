@@ -1,10 +1,12 @@
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/catch_approx.hpp>
 #include "Numerics/Numerics.hpp"
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
 using namespace qlab::num;
 using Catch::Approx;
 
-static Matrix mat2(const Mat2& m) { return m.toMatrix(); }
+static Matrix mat2(const Mat2& m) {
+    return m.toMatrix();
+}
 
 TEST_CASE("kron and kronList follow little-endian ordering") {
     Matrix X = mat2(pauli::X), I = mat2(pauli::I);
@@ -25,13 +27,16 @@ TEST_CASE("kron and kronList follow little-endian ordering") {
 
 TEST_CASE("embed of a 2-qubit gate on reversed targets") {
     // CNOT with control = targets[0] (low bit of U), target = targets[1].
-    Matrix cx = Matrix::fromRows({{1,0,0,0},{0,0,0,1},{0,0,1,0},{0,1,0,0}}); // little-endian CX: control q0, target q1
+    Matrix cx = Matrix::fromRows({{1, 0, 0, 0},
+                                  {0, 0, 0, 1},
+                                  {0, 0, 1, 0},
+                                  {0, 1, 0, 0}}); // little-endian CX: control q0, target q1
     std::size_t t01[2] = {0, 1};
     Matrix E = embed(cx, t01, 2);
     REQUIRE(approxEqual(E, cx, 1e-15));
     std::size_t t10[2] = {1, 0};
     Matrix E2 = embed(cx, t10, 2); // control q1, target q0
-    Matrix cx10 = Matrix::fromRows({{1,0,0,0},{0,1,0,0},{0,0,0,1},{0,0,1,0}});
+    Matrix cx10 = Matrix::fromRows({{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 0, 1}, {0, 0, 1, 0}});
     REQUIRE(approxEqual(E2, cx10, 1e-15));
 }
 
@@ -64,7 +69,8 @@ TEST_CASE("partialTrace of product state returns the factor") {
 }
 
 TEST_CASE("permuteAxes swaps two qubits") {
-    Vector psi(4); psi[1] = 1.0; // |q1 q0> = |01> (qubit 0 set)
+    Vector psi(4);
+    psi[1] = 1.0; // |q1 q0> = |01> (qubit 0 set)
     std::size_t dims[2] = {2, 2};
     std::size_t perm[2] = {1, 0};
     Vector out = permuteAxes(psi, dims, perm);

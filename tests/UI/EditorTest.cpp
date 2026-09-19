@@ -5,8 +5,8 @@
 #include "UI/Editor/CodeEditor.hpp"
 #include "UI/Editor/EditorModel.hpp"
 #include "UI/Widgets/Equations.hpp"
-#include <catch2/catch_test_macros.hpp>
 #include <algorithm>
+#include <catch2/catch_test_macros.hpp>
 #include <chrono>
 
 using namespace qlab;
@@ -32,7 +32,8 @@ c = measure q;
 
 const HighlightSpan* spanAt(const EditorModel& m, std::uint32_t line, std::uint32_t column) {
     for (const HighlightSpan& h : m.highlightsOn(line))
-        if (column >= h.begin && column < h.end) return &h;
+        if (column >= h.begin && column < h.end)
+            return &h;
     return nullptr;
 }
 
@@ -49,7 +50,7 @@ lang::Diagnostic errorAt(std::uint32_t line, std::uint32_t column, std::uint32_t
 
 TEST_CASE("Editor document: positions, edits and code-point columns") {
     Document doc("abc\ndefgh\n");
-    CHECK(doc.lineCount() == 3);          // the trailing newline opens an empty third line
+    CHECK(doc.lineCount() == 3); // the trailing newline opens an empty third line
     CHECK(doc.line(1) == "abc");
     CHECK(doc.line(2) == "defgh");
     CHECK(doc.line(3).empty());
@@ -65,7 +66,7 @@ TEST_CASE("Editor document: positions, edits and code-point columns") {
     // Columns count code points, exactly as the lexer's cursor does.
     Document greek("αβγ x\n");
     CHECK(greek.lineLength(1) == 5);
-    CHECK(greek.offsetOf(Position{1, 4}) == 6);    // three 2-byte code points before the space
+    CHECK(greek.offsetOf(Position{1, 4}) == 6); // three 2-byte code points before the space
     CHECK(greek.positionOf(6) == Position{1, 4});
     CHECK(greek.byteToColumn(1, 6) == 4);
 
@@ -78,9 +79,10 @@ TEST_CASE("Editor document: positions, edits and code-point columns") {
 
 TEST_CASE("Editor document: undo and redo, with a typing run as one entry (spec 19 §3, §5.3)") {
     Document doc("a\n");
-    for (char c : std::string("bcd")) doc.insert(Position{1, doc.lineLength(1) + 1}, std::string(1, c));
+    for (char c : std::string("bcd"))
+        doc.insert(Position{1, doc.lineLength(1) + 1}, std::string(1, c));
     CHECK(doc.line(1) == "abcd");
-    CHECK(doc.undoDepth() == 1);            // one typing run, not three entries
+    CHECK(doc.undoDepth() == 1); // one typing run, not three entries
     Position caret;
     REQUIRE(doc.undo(&caret));
     CHECK(doc.line(1) == "a");
@@ -95,10 +97,12 @@ TEST_CASE("Editor document: undo and redo, with a typing run as one entry (spec 
     doc.insert(Position{2, 1}, "e");
     doc.erase(Position{2, 1}, Position{2, 2});
     CHECK(doc.undoDepth() == 4);
-    while (doc.canUndo()) REQUIRE(doc.undo());
+    while (doc.canUndo())
+        REQUIRE(doc.undo());
     CHECK(doc.text() == "a\n");
     // Redoing everything returns the buffer exactly.
-    while (doc.canRedo()) REQUIRE(doc.redo());
+    while (doc.canRedo())
+        REQUIRE(doc.redo());
     CHECK(doc.line(1) == "abcd");
     CHECK(doc.line(2).empty());
 }
@@ -113,7 +117,7 @@ TEST_CASE("Editor: token-kind highlighting covers the sample program (spec 13 §
     REQUIRE(openqasm != nullptr);
     CHECK(openqasm->kind == lang::TokenKind::Keyword);
     CHECK(openqasm->begin == 1);
-    CHECK(openqasm->end == 9);                                   // "OPENQASM" is 8 columns
+    CHECK(openqasm->end == 9); // "OPENQASM" is 8 columns
     const HighlightSpan* version = spanAt(m, 1, 10);
     REQUIRE(version != nullptr);
     CHECK(version->kind == lang::TokenKind::Number);
@@ -124,10 +128,11 @@ TEST_CASE("Editor: token-kind highlighting covers the sample program (spec 13 §
 
     // Line 4: `gate myx a {` — the declaration keyword and the user gate name.
     CHECK(spanAt(m, 4, 1)->kind == lang::TokenKind::Keyword);
-    CHECK(spanAt(m, 4, 6)->kind == lang::TokenKind::Gate);       // a user gate colours as a gate
+    CHECK(spanAt(m, 4, 6)->kind == lang::TokenKind::Gate); // a user gate colours as a gate
     CHECK(spanAt(m, 4, 10)->kind == lang::TokenKind::Identifier);
 
-    // Line 5: `x a;` — `x` is an stdgates.inc name, an Identifier to the lexer, a Gate to the editor.
+    // Line 5: `x a;` — `x` is an stdgates.inc name, an Identifier to the lexer, a Gate to the
+    // editor.
     CHECK(spanAt(m, 5, 3)->kind == lang::TokenKind::Gate);
 
     // Line 8/9: `qubit[3] q;` / `bit[3] c;` — types.
@@ -159,14 +164,16 @@ TEST_CASE("Editor: token-kind highlighting covers the sample program (spec 13 §
     }
     // The per-line index really partitions the whole run list.
     std::size_t counted = 0;
-    for (std::uint32_t line = 1; line <= m.doc().lineCount(); ++line) counted += m.highlightsOn(line).size();
+    for (std::uint32_t line = 1; line <= m.doc().lineCount(); ++line)
+        counted += m.highlightsOn(line).size();
     CHECK(counted == m.highlights().size());
 }
 
 TEST_CASE("Editor: a diagnostic span becomes a gutter line and a squiggle (spec 19 §3)") {
     EditorModel m;
     m.setSource(kSample);
-    m.setDiagnostics({errorAt(10, 1, 4), lang::Diagnostics::make("QL2050", SourceSpan{12, 4, 12, 6, {}}, "qlab.nope")});
+    m.setDiagnostics({errorAt(10, 1, 4), lang::Diagnostics::make(
+                                             "QL2050", SourceSpan{12, 4, 12, 6, {}}, "qlab.nope")});
     CHECK(m.errorCount() + m.warningCount() == 2);
 
     const auto onTen = m.markersOn(10);
@@ -181,19 +188,22 @@ TEST_CASE("Editor: a diagnostic span becomes a gutter line and a squiggle (spec 
     CHECK(onTwelve.front()->begin == 4);
     CHECK(onTwelve.front()->end == 6);
     // Markers are ordered by (line, column) so the gutter can walk them in one pass.
-    CHECK(std::is_sorted(m.markers().begin(), m.markers().end(), [](const Marker& a, const Marker& b) {
-        return std::tie(a.line, a.begin) < std::tie(b.line, b.begin);
-    }));
+    CHECK(std::is_sorted(m.markers().begin(), m.markers().end(),
+                         [](const Marker& a, const Marker& b) {
+                             return std::tie(a.line, a.begin) < std::tie(b.line, b.begin);
+                         }));
 }
 
 TEST_CASE("Editor: autocomplete offers declarations, stdgates, pragmas and keywords (spec 19 §3)") {
     EditorModel m;
     m.setSource(kSample);
     const auto has = [](const std::vector<Completion>& list, std::string_view text) {
-        return std::find_if(list.begin(), list.end(), [&](const Completion& c) { return c.text == text; }) != list.end();
+        return std::find_if(list.begin(), list.end(),
+                            [&](const Completion& c) { return c.text == text; }) != list.end();
     };
     const auto kindOf = [](const std::vector<Completion>& list, std::string_view text) {
-        const auto it = std::find_if(list.begin(), list.end(), [&](const Completion& c) { return c.text == text; });
+        const auto it = std::find_if(list.begin(), list.end(),
+                                     [&](const Completion& c) { return c.text == text; });
         return it == list.end() ? CompletionKind::Keyword : it->kind;
     };
 
@@ -212,8 +222,9 @@ TEST_CASE("Editor: autocomplete offers declarations, stdgates, pragmas and keywo
     CHECK(has(all, "qubit"));
     // Declared names come before the standard library, which comes before the language.
     const auto index = [&](std::string_view t) {
-        return std::distance(all.begin(),
-                             std::find_if(all.begin(), all.end(), [&](const Completion& c) { return c.text == t; }));
+        return std::distance(
+            all.begin(),
+            std::find_if(all.begin(), all.end(), [&](const Completion& c) { return c.text == t; }));
     };
     CHECK(index("q") < index("cx"));
     CHECK(index("cx") < index("measure"));
@@ -222,7 +233,8 @@ TEST_CASE("Editor: autocomplete offers declarations, stdgates, pragmas and keywo
     m.doc().insert(m.doc().end(), "my");
     const std::vector<Completion> filtered = m.completions(m.doc().end());
     REQUIRE_FALSE(filtered.empty());
-    for (const Completion& c : filtered) CHECK(std::string_view(c.text).starts_with("my"));
+    for (const Completion& c : filtered)
+        CHECK(std::string_view(c.text).starts_with("my"));
     CHECK(has(filtered, "myx"));
 
     // Applying one replaces the partial word.
@@ -264,7 +276,7 @@ TEST_CASE("Editor: bracket matching, auto-indent and go-to-definition (spec 19 �
 
     // Auto-indent: a line that opens a brace indents the next one by two spaces.
     CHECK(m.indentAfter(4) == "  ");
-    CHECK(m.indentAfter(5) == "  ");   // already inside the body, unchanged
+    CHECK(m.indentAfter(5) == "  "); // already inside the body, unchanged
     CHECK(m.indentAfter(8).empty());
 
     // Go to definition: the use of `myx` on line 10 jumps to its declaration on line 4.
@@ -273,7 +285,7 @@ TEST_CASE("Editor: bracket matching, auto-indent and go-to-definition (spec 19 �
     REQUIRE(def.has_value());
     CHECK(def->at == Position{4, 6});
     CHECK_FALSE(def->defcal);
-    CHECK_FALSE(m.definitionOf("cx").has_value());   // stdgates have no source definition
+    CHECK_FALSE(m.definitionOf("cx").has_value()); // stdgates have no source definition
 
     // A `defcal` is a definition too, and is NOT coloured as a gate.
     m.setSource("defcal mygate $0 { }\n");
@@ -285,16 +297,17 @@ TEST_CASE("Editor: bracket matching, auto-indent and go-to-definition (spec 19 �
 
 TEST_CASE("Editor: hover documentation comes from gates.json (spec 19 §3)") {
     const auto assets = qlab::ui::TheoryAssets::load();
-    if (!assets) SKIP("Assets/Theory is not available: " + assets.error().message);
+    if (!assets)
+        SKIP("Assets/Theory is not available: " + assets.error().message);
     EditorModel m;
     m.setSource(kSample);
-    const qlab::ui::GateDocEntry* doc = m.hoverDoc(Position{11, 2}, *assets);   // `cx`
+    const qlab::ui::GateDocEntry* doc = m.hoverDoc(Position{11, 2}, *assets); // `cx`
     REQUIRE(doc != nullptr);
     CHECK(doc->name == "cx");
     CHECK(doc->qubits == 2);
     CHECK_FALSE(doc->description.empty());
     CHECK_FALSE(doc->theory.empty());
-    CHECK(m.hoverDoc(Position{8, 10}, *assets) == nullptr);   // `q` is not a gate
+    CHECK(m.hoverDoc(Position{8, 10}, *assets) == nullptr); // `q` is not a gate
 }
 
 namespace {
@@ -304,7 +317,8 @@ std::string manyLines(int n) {
     std::string big;
     big.reserve(static_cast<std::size_t>(n) * 25 + 64);
     big += "OPENQASM 3.0;\ninclude \"stdgates.inc\";\nqubit[2] q;\n";
-    for (int i = 0; i < n; ++i) big += "cx q[0], q[1];  // line\n";
+    for (int i = 0; i < n; ++i)
+        big += "cx q[0], q[1];  // line\n";
     return big;
 }
 constexpr std::size_t kTokensPerLine = 12;
@@ -321,7 +335,7 @@ TEST_CASE("Editor: a 100 k-line file analyses once and answers per line in const
     REQUIRE(m.doc().lineCount() > 100'000);
 
     const auto start = std::chrono::steady_clock::now();
-    const std::size_t total = m.highlights().size();   // the one whole-buffer analysis
+    const std::size_t total = m.highlights().size(); // the one whole-buffer analysis
     const double analysisMs = millisSince(start);
     CHECK(total > 100'000 * kTokensPerLine);
 
@@ -329,10 +343,11 @@ TEST_CASE("Editor: a 100 k-line file analyses once and answers per line in const
     // sixty visible rows cost microseconds however long the file is.
     const auto queryStart = std::chrono::steady_clock::now();
     std::size_t visible = 0;
-    for (std::uint32_t line = 50'000; line < 50'060; ++line) visible += m.highlightsOn(line).size();
+    for (std::uint32_t line = 50'000; line < 50'060; ++line)
+        visible += m.highlightsOn(line).size();
     const double frameMs = millisSince(queryStart);
     CHECK(visible == 60 * kTokensPerLine);
-    CHECK(frameMs < 1.0);              // spec 19 §9: 100 k-line files scroll without hitching
+    CHECK(frameMs < 1.0); // spec 19 §9: 100 k-line files scroll without hitching
     INFO("100 k-line analysis " << analysisMs << " ms, 60 visible rows " << frameMs << " ms");
 
     // Re-asking without an edit is free (the cache is keyed on the document revision).
@@ -350,7 +365,7 @@ TEST_CASE("Editor: a keystroke in a 5 k-line file re-analyses well inside the fr
     CHECK(m.highlights().size() > 5'000 * kTokensPerLine);
 
     const auto start = std::chrono::steady_clock::now();
-    m.doc().insert(Position{4, 1}, "x");      // one keystroke
+    m.doc().insert(Position{4, 1}, "x"); // one keystroke
     const std::size_t after = m.highlights().size();
     const double keystrokeMs = millisSince(start);
     CHECK(after > 5'000 * kTokensPerLine);
@@ -371,7 +386,7 @@ TEST_CASE("CodeEditor: caret commands, fix-its and state persistence work withou
     REQUIRE(editor.gotoDefinition());
     CHECK(editor.caret() == Position{4, 6});
     editor.setCaret(Position{8, 3});
-    CHECK_FALSE(editor.gotoDefinition());          // `qubit` is not a user gate
+    CHECK_FALSE(editor.gotoDefinition()); // `qubit` is not a user gate
 
     // Selection and clipboard text.
     editor.setCaret(Position{1, 1});
@@ -380,7 +395,8 @@ TEST_CASE("CodeEditor: caret commands, fix-its and state persistence work withou
     CHECK(editor.selectedText() == "OPENQASM");
 
     // Ctrl+. applies the fix-it of the diagnostic on the caret's line.
-    lang::Diagnostic fixable = lang::Diagnostics::make("QL3007", SourceSpan{10, 1, 10, 4, {}}, "myx");
+    lang::Diagnostic fixable =
+        lang::Diagnostics::make("QL3007", SourceSpan{10, 1, 10, 4, {}}, "myx");
     fixable.fix = "myz";
     editor.model().setDiagnostics({fixable});
     CHECK(editor.model().markersStale() == false);
@@ -388,8 +404,8 @@ TEST_CASE("CodeEditor: caret commands, fix-its and state persistence work withou
     REQUIRE(editor.applyFixIt());
     CHECK(editor.model().doc().line(10) == "myz q[0];");
     CHECK(editor.caret() == Position{10, 4});
-    CHECK(editor.model().markersStale());          // the edit outran the published diagnostics
-    CHECK_FALSE(editor.applyFixIt());              // the fix was already applied at that span
+    CHECK(editor.model().markersStale()); // the edit outran the published diagnostics
+    CHECK_FALSE(editor.applyFixIt());     // the fix was already applied at that span
 
     // Undo/redo go through the document journal and move the caret with the edit.
     editor.undo();

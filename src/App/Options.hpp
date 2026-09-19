@@ -24,19 +24,19 @@ enum class Mode : std::uint8_t { Gui, Run, SelfTest, Version, Help };
 
 struct Options {
     Mode mode = Mode::Gui;
-    std::filesystem::path project;      // positional `.qxlab`, Gui mode
-    std::filesystem::path program;      // --run
-    std::filesystem::path outDir;       // --selftest
-    std::filesystem::path assets;       // --assets (empty = QXL_ASSET_DIR / QXL_ASSETS)
+    std::filesystem::path project; // positional `.qxlab`, Gui mode
+    std::filesystem::path program; // --run
+    std::filesystem::path outDir;  // --selftest
+    std::filesystem::path assets;  // --assets (empty = QXL_ASSET_DIR / QXL_ASSETS)
     std::string device = "sc_fixed_5";
-    std::string layout;                 // --layout; empty = the device's default lab layout
+    std::string layout; // --layout; empty = the device's default lab layout
     std::uint32_t shots = 1024;
     std::uint64_t seed = 1;
     runtime::BackendChoice backend = runtime::BackendChoice::Auto;
-    bool json = false;                  // --json: RunResult + Estimate as one JSON document
-    bool ideal = false;                 // --ideal: no calibration-derived noise
-    bool physicalLab = false;           // --physical-lab: start with the spec 00 §6 toggle on
-    int optimize = 1;                   // -O0 | -O1 | -O2
+    bool json = false;        // --json: RunResult + Estimate as one JSON document
+    bool ideal = false;       // --ideal: no calibration-derived noise
+    bool physicalLab = false; // --physical-lab: start with the spec 00 §6 toggle on
+    int optimize = 1;         // -O0 | -O1 | -O2
     // Which of the three the command line pinned: everything else is taken from the program's
     // `pragma qlab.*` (spec 13 §7), exactly as `compiler::resolveContext` resolves compile options.
     bool shotsGiven = false, seedGiven = false, backendGiven = false, optimizeGiven = false;
@@ -50,7 +50,7 @@ namespace err {
 inline constexpr ErrorCode BadArgument = ErrorCode::InvalidArgument;
 inline constexpr ErrorCode MissingValue = ErrorCode::InvalidArgument;
 inline constexpr ErrorCode NoAsset = ErrorCode::NotFound;
-inline constexpr ErrorCode NoContext = ErrorCode::Unsupported;   // no window / GL context
+inline constexpr ErrorCode NoContext = ErrorCode::Unsupported; // no window / GL context
 } // namespace err
 
 // Parses `argv[1..]`. An unknown flag, a missing value or a malformed number is an error naming the

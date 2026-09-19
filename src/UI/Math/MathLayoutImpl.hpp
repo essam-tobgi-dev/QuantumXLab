@@ -7,23 +7,26 @@ namespace qlab::ui::math::detail {
 
 struct Ctx {
     MathStyleLevel level;
-    double base;                                   // base size px
+    double base; // base size px
     double size() const { return base * styleScale(level); }
     bool display() const { return level == MathStyleLevel::Display; }
     Ctx with(MathStyleLevel l) const { return {l, base}; }
 };
 
 class Layouter {
-public:
-    Layouter(const MathFont& f, std::vector<std::string>& warnings) : font_(f), warnings_(warnings) {}
+  public:
+    Layouter(const MathFont& f, std::vector<std::string>& warnings)
+        : font_(f), warnings_(warnings) {}
     Box layout(const MathNode& n, Ctx c);
 
-    Box glyph(std::string_view text, double size, GlyphStyle st, std::optional<SourceRange> src) const;
-    Box textRun(std::string_view text, double size, GlyphStyle st, std::optional<SourceRange> src) const;
+    Box glyph(std::string_view text, double size, GlyphStyle st,
+              std::optional<SourceRange> src) const;
+    Box textRun(std::string_view text, double size, GlyphStyle st,
+                std::optional<SourceRange> src) const;
     Box scaledGlyph(std::string_view text, double size, double height, double depth) const;
     Box rule(double width, double thickness) const;
     Box space(double width) const;
-    static Box hbox(std::vector<Box> children); // children already positioned via x/y
+    static Box hbox(std::vector<Box> children);        // children already positioned via x/y
     static void extend(Box& parent, const Box& child); // grow parent bounds by a positioned child
     static double totalHeight(const Box& b) { return b.height + b.depth; }
     static void centerHoriz(Box& b, double width) { b.x += (width - b.width) / 2.0; }

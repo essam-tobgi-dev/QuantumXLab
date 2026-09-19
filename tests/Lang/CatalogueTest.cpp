@@ -16,7 +16,8 @@ namespace fs = std::filesystem;
 namespace {
 std::set<std::string> catalogueIds() {
     std::set<std::string> ids;
-    for (const auto& d : lang::Diagnostics::all()) ids.insert(std::string(d.id));
+    for (const auto& d : lang::Diagnostics::all())
+        ids.insert(std::string(d.id));
     return ids;
 }
 } // namespace
@@ -32,20 +33,25 @@ TEST_CASE("every diagnostic id emitted by the sources is catalogued") {
     std::size_t scanned = 0;
     for (const char* module : {"Lang", "IR", "Compiler", "Runtime", "Pulse"}) {
         const fs::path dir = root / module;
-        if (!fs::exists(dir)) continue;
+        if (!fs::exists(dir))
+            continue;
         for (const auto& e : fs::recursive_directory_iterator(dir)) {
-            if (!e.is_regular_file()) continue;
+            if (!e.is_regular_file())
+                continue;
             const auto ext = e.path().extension();
-            if (ext != ".cpp" && ext != ".hpp") continue;
+            if (ext != ".cpp" && ext != ".hpp")
+                continue;
             auto text = core::readTextFile(e.path());
             REQUIRE(text.has_value());
             ++scanned;
             for (std::sregex_iterator it(text->begin(), text->end(), lit), end; it != end; ++it)
-                if (!ids.contains((*it)[1].str())) missing.insert((*it)[1].str() + " in " + e.path().filename().string());
+                if (!ids.contains((*it)[1].str()))
+                    missing.insert((*it)[1].str() + " in " + e.path().filename().string());
         }
     }
     REQUIRE(scanned > 20);
-    for (const auto& m : missing) UNSCOPED_INFO("uncatalogued: " << m);
+    for (const auto& m : missing)
+        UNSCOPED_INFO("uncatalogued: " << m);
     REQUIRE(missing.empty());
 }
 
@@ -56,7 +62,8 @@ TEST_CASE("the shipped diagnostics.json matches the in-code catalogue") {
     core::Json j = core::Json::parse(*text, nullptr, false);
     REQUIRE_FALSE(j.is_discarded());
     const core::Json& data = j.contains("data") ? j["data"] : j;
-    const core::Json& list = data.is_object() && data.contains("diagnostics") ? data["diagnostics"] : data;
+    const core::Json& list =
+        data.is_object() && data.contains("diagnostics") ? data["diagnostics"] : data;
     REQUIRE(list.is_array());
     std::set<std::string> shipped;
     for (const auto& d : list) {

@@ -16,25 +16,29 @@ using Assignment2 = std::array<std::array<double, 2>, 2>; // same type as hw::Ma
 // One independent block of the assignment map: a single qubit (k = 1) or a correlated readout
 // group of k ≤ 4 qubits sharing a feedline, which replaces the tensor product of its members.
 struct ReadoutFactor {
-    std::vector<std::size_t> positions; // indices into ReadoutModel::qubits(); local index little-endian
-    num::RealMatrix matrix;             // 2^k × 2^k, matrix(i, j) = P(read j | prepared i)
+    std::vector<std::size_t>
+        positions;          // indices into ReadoutModel::qubits(); local index little-endian
+    num::RealMatrix matrix; // 2^k × 2^k, matrix(i, j) = P(read j | prepared i)
 };
 
 struct Mitigation {
     std::vector<double> probabilities; // argmin ‖Mᵀp − q‖₂ subject to p ≥ 0, Σp = 1   (T10 (7.2))
-    std::vector<double> unconstrained; // M^{-T} q: unbiased but possibly negative; empty if M is singular
-    double residual = 0.0;             // ‖Mᵀp − q‖₂ at `probabilities`
-    std::size_t iterations = 0;        // projected-gradient iterations; 0 when the inverse was feasible
+    std::vector<double>
+        unconstrained;          // M^{-T} q: unbiased but possibly negative; empty if M is singular
+    double residual = 0.0;      // ‖Mᵀp − q‖₂ at `probabilities`
+    std::size_t iterations = 0; // projected-gradient iterations; 0 when the inverse was feasible
     bool converged = true;
 };
 
 class ReadoutModel {
-public:
+  public:
     ReadoutModel() = default;
     // General form. Every measured qubit must be covered by exactly one factor.
-    static Result<ReadoutModel> make(std::vector<QubitIndex> qubits, std::vector<ReadoutFactor> factors);
+    static Result<ReadoutModel> make(std::vector<QubitIndex> qubits,
+                                     std::vector<ReadoutFactor> factors);
     // Independent errors: assignment[k] belongs to qubits[k].
-    static Result<ReadoutModel> independent(std::vector<QubitIndex> qubits, std::span<const Assignment2> assignment);
+    static Result<ReadoutModel> independent(std::vector<QubitIndex> qubits,
+                                            std::span<const Assignment2> assignment);
     // Error-free readout of `qubits`.
     static ReadoutModel ideal(std::vector<QubitIndex> qubits);
 
@@ -45,7 +49,8 @@ public:
 
     // A prepared outcome i is reported as j with probability M_ij. bits[k] belongs to qubits()[k].
     Status applyToBits(std::span<std::uint8_t> bits, core::Random& rng) const;
-    Result<std::size_t> applyToIndex(std::size_t prepared, core::Random& rng) const; // little-endian index
+    Result<std::size_t> applyToIndex(std::size_t prepared,
+                                     core::Random& rng) const; // little-endian index
     // Noisy counts, shot by shot; keys are MSB-first bitstrings over qubits() like qsim::Counts.
     Result<qsim::Counts> applyToCounts(const qsim::Counts& ideal, core::Random& rng) const;
     // q = Mᵀp over all 2^n outcomes (DensityMatrix: applied to the diagonal before sampling, §7.1).
@@ -58,7 +63,7 @@ public:
     // Dense 2^n × 2^n row-stochastic matrix for display and tests (n ≤ 10).
     Result<num::RealMatrix> fullMatrix() const;
 
-private:
+  private:
     // out_local = B · in_local along one factor, for every setting of the other bits.
     void applyAlong(std::vector<double>& v, const ReadoutFactor& f, const num::RealMatrix& b) const;
     Status checkLength(std::size_t n) const;

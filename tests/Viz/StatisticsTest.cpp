@@ -1,10 +1,10 @@
 // Spec 21 §2.5, §3.7, §3.11 — Wilson intervals, histogram model with theory overlay and distances,
 // Pauli expectations (exact and from shots). Headless.
+#include "Viz/Math/Statistics.hpp"
 #include "Core/Random.hpp"
 #include "Data/Fidelity.hpp"
 #include "Numerics/Matrix.hpp"
 #include "Viz/Math/PauliTable.hpp"
-#include "Viz/Math/Statistics.hpp"
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <cmath>
@@ -25,11 +25,17 @@ std::pair<double, double> wilsonFormula(double k, double n, double z) {
     return {(centre - half) / (1 + z * z / n), (centre + half) / (1 + z * z / n)};
 }
 
-qsim::PauliString pauli(const char* label) { return *qsim::PauliString::parse(label); }
+qsim::PauliString pauli(const char* label) {
+    return *qsim::PauliString::parse(label);
+}
 } // namespace
 
 TEST_CASE("Wilson score interval at 68.3 % (z = 1) matches the closed form") {
-    for (auto [k, n] : {std::pair<std::uint64_t, std::uint64_t>{500, 1000}, {3, 1000}, {997, 1000}, {1, 7}, {40, 100}}) {
+    for (auto [k, n] : {std::pair<std::uint64_t, std::uint64_t>{500, 1000},
+                        {3, 1000},
+                        {997, 1000},
+                        {1, 7},
+                        {40, 100}}) {
         const auto bar = wilsonBar(k, n);
         const auto [lo, hi] = wilsonFormula(static_cast<double>(k), static_cast<double>(n), 1.0);
         CHECK(bar.pHat == Approx(static_cast<double>(k) / static_cast<double>(n)));
@@ -38,7 +44,8 @@ TEST_CASE("Wilson score interval at 68.3 % (z = 1) matches the closed form") {
         CHECK(bar.lo <= bar.pHat);
         CHECK(bar.hi >= bar.pHat);
     }
-    // k = 0: the interval is [0, z²/(N + z²)] — never the degenerate [0, 0] of the normal approximation.
+    // k = 0: the interval is [0, z²/(N + z²)] — never the degenerate [0, 0] of the normal
+    // approximation.
     const auto none = wilsonBar(0, 1000);
     CHECK(none.lo == Approx(0.0).margin(1e-15));
     CHECK(none.hi == Approx(1.0 / 1001.0).margin(1e-14));
@@ -52,10 +59,12 @@ TEST_CASE("Wilson score interval at 68.3 % (z = 1) matches the closed form") {
     CHECK(empty.hi == 1.0);
 }
 
-TEST_CASE("Bell-state histogram: two bars at 0.5 within the Wilson interval for N = 1000 (spec 21 §5)") {
+TEST_CASE(
+    "Bell-state histogram: two bars at 0.5 within the Wilson interval for N = 1000 (spec 21 §5)") {
     core::Random rng(20260917);
     data::Histogram counts(2);
-    for (int shot = 0; shot < 1000; ++shot) counts.add(rng.bernoulli(0.5) ? 0b11u : 0b00u);
+    for (int shot = 0; shot < 1000; ++shot)
+        counts.add(rng.bernoulli(0.5) ? 0b11u : 0b00u);
     const std::vector<double> ideal{0.5, 0.0, 0.0, 0.5};
     auto model = buildHistogram(counts, ideal);
     REQUIRE(model.has_value());
@@ -72,11 +81,13 @@ TEST_CASE("Bell-state histogram: two bars at 0.5 within the Wilson interval for 
     CHECK(model->bars[1].cumulative == Approx(1.0));
     REQUIRE(model->hellinger.has_value());
     CHECK(*model->hellinger < 0.03);
-    CHECK(*model->totalVariation == Approx(std::abs(model->bars[0].estimate.pHat - 0.5)).margin(1e-12));
+    CHECK(*model->totalVariation ==
+          Approx(std::abs(model->bars[0].estimate.pHat - 0.5)).margin(1e-12));
     CHECK(model->cls == data::FidelityClass::Statistical);
 }
 
-TEST_CASE("histogram distances, ordering, unobserved ideal outcomes, marginal and the 'other' bin") {
+TEST_CASE(
+    "histogram distances, ordering, unobserved ideal outcomes, marginal and the 'other' bin") {
     data::Histogram counts(3);
     counts.add("000", 50);
     counts.add("011", 30);
@@ -135,13 +146,15 @@ TEST_CASE("Pauli expectations of a Bell state: <XX> = 1, <YY> = -1, <ZZ> = 1, si
     CHECK(*pauliExpectation(bell, pauli("YY")) == Approx(-1.0).margin(1e-12));
     CHECK(*pauliExpectation(bell, pauli("ZZ")) == Approx(1.0).margin(1e-12));
     CHECK(*pauliExpectation(bell, pauli("-ZZ")) == Approx(-1.0).margin(1e-12));
-    for (const auto& p : singleQubitPaulis(2)) CHECK(*pauliExpectation(bell, p) == Approx(0.0).margin(1e-12));
+    for (const auto& p : singleQubitPaulis(2))
+        CHECK(*pauliExpectation(bell, p) == Approx(0.0).margin(1e-12));
     const num::Matrix rho = num::projector(bell);
     CHECK(*pauliExpectation(rho, pauli("XX")) == Approx(1.0).margin(1e-12));
     CHECK(*pauliExpectation(rho, pauli("YY")) == Approx(-1.0).margin(1e-12));
     CHECK(*pauliExpectation(rho, pauli("XY")) == Approx(0.0).margin(1e-12));
     CHECK_FALSE(pauliExpectation(bell, pauli("XXX")).has_value());
-    // MSB-first labels: "ZI" is Z on qubit 1. |01⟩ (index 1: qubit 0 excited) has ⟨ZI⟩ = +1, ⟨IZ⟩ = −1.
+    // MSB-first labels: "ZI" is Z on qubit 1. |01⟩ (index 1: qubit 0 excited) has ⟨ZI⟩ = +1, ⟨IZ⟩ =
+    // −1.
     const std::vector<Complex> q0excited{0.0, 1.0, 0.0, 0.0};
     CHECK(*pauliExpectation(q0excited, pauli("ZI")) == Approx(1.0));
     CHECK(*pauliExpectation(q0excited, pauli("IZ")) == Approx(-1.0));
@@ -174,15 +187,18 @@ TEST_CASE("Pauli estimator from shots: value, standard error, and 'not measured'
     auto zz = pauliFromCounts(counts, pauli("ZZ"), map);
     REQUIRE(zz.has_value());
     CHECK(zz->value == Approx((480.0 + 470.0 - 30.0 - 20.0) / 1000.0));
-    CHECK(zz->standardError == Approx(std::sqrt((1.0 - 0.9 * 0.9) / 1000.0)).margin(1e-12)); // spec 21 §3.11
+    CHECK(zz->standardError ==
+          Approx(std::sqrt((1.0 - 0.9 * 0.9) / 1000.0)).margin(1e-12)); // spec 21 §3.11
     auto zi = pauliFromCounts(counts, pauli("ZI"), map); // qubit 1 → bit 1: "10" and "11" are −1
     REQUIRE(zi.has_value());
     CHECK(zi->value == Approx((480.0 + 30.0 - 470.0 - 20.0) / 1000.0));
-    CHECK_FALSE(pauliFromCounts(counts, pauli("XX"), map).has_value()); // measured in Z: "not measured"
+    CHECK_FALSE(
+        pauliFromCounts(counts, pauli("XX"), map).has_value()); // measured in Z: "not measured"
     map.basis = {'X', 'Z'};
     CHECK(pauliFromCounts(counts, pauli("ZX"), map).has_value());
     CHECK_FALSE(pauliFromCounts(counts, pauli("ZZ"), map).has_value());
     map.bitOfQubit = {-1, 1};
-    CHECK_FALSE(pauliFromCounts(counts, pauli("ZX"), map).has_value()); // qubit 0 was never read out
+    CHECK_FALSE(
+        pauliFromCounts(counts, pauli("ZX"), map).has_value()); // qubit 0 was never read out
     CHECK(pauliFromCounts(counts, pauli("ZI"), map).has_value());
 }

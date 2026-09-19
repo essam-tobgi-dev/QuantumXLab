@@ -31,8 +31,10 @@ TEST_CASE("Hinton view: model, hit test, CSV, and a headless ImGui frame with ho
     HintonView view;
     view.update(bell());
     REQUIRE(view.model().dim == 4);
-    REQUIRE(view.model().squares.size() == 4); // rho_00, rho_03, rho_30, rho_33 of (|00> + i|11>)/sqrt2
-    CHECK(view.wants(view.input()).empty());    // whole register, <= 8 qubits: nothing asked of the run
+    REQUIRE(view.model().squares.size() ==
+            4); // rho_00, rho_03, rho_30, rho_33 of (|00> + i|11>)/sqrt2
+    CHECK(
+        view.wants(view.input()).empty()); // whole register, <= 8 qubits: nothing asked of the run
 
     const VizTheme theme = VizTheme::fallbackDark();
     SelectionModel selection;
@@ -42,7 +44,7 @@ TEST_CASE("Hinton view: model, hit test, CSV, and a headless ImGui frame with ho
     ctx.showHeader = false;
     test::ImGuiHarness ui;
     ui.frame(view, ctx);
-    CHECK(ui.vertices() > 50);                  // squares, grid, labels, phase wheel were emitted
+    CHECK(ui.vertices() > 50); // squares, grid, labels, phase wheel were emitted
     CHECK(view.bodySize().x > 100.0f);
     CHECK(view.cellSize() > 10.0f);
 
@@ -58,14 +60,16 @@ TEST_CASE("Hinton view: model, hit test, CSV, and a headless ImGui frame with ho
     CHECK(hit->readout[2].value == "-π/2");
     CHECK_FALSE(view.hitTest({2.0f, 2.0f}).has_value());
 
-    // Hover: the callback fires when the mouse lands on the element; the card waits 150 ms (spec 21 §4).
+    // Hover: the callback fires when the mouse lands on the element; the card waits 150 ms (spec 21
+    // §4).
     int hovers = 0;
-    view.setOnHover([&](const HitResult& h) { hovers += h.kind == HitKind::MatrixElement ? 1 : 0; });
+    view.setOnHover(
+        [&](const HitResult& h) { hovers += h.kind == HitKind::MatrixElement ? 1 : 0; });
     const ImVec2 o = ui.bodyOrigin();
     ui.mouseTo(ImVec2(o.x + local.x, o.y + local.y));
     ui.frame(view, ctx);
     ui.frame(view, ctx, 0.2);
-    CHECK(hovers == 1);                         // once per mark, not once per frame
+    CHECK(hovers == 1); // once per mark, not once per frame
 
     const auto csv = view.exportCsv();
     REQUIRE(csv.has_value());
@@ -94,7 +98,7 @@ TEST_CASE("GL views draw a placeholder without a GL backend; a click still selec
     bloch.update(bell());
     ui.frame(bloch, ctx);
     REQUIRE(bloch.cells().size() == 2);
-    REQUIRE(bloch.cells()[1].onPage);           // laid out even though nothing was rendered
+    REQUIRE(bloch.cells()[1].onPage); // laid out even though nothing was rendered
     const ImVec2 o = ui.bodyOrigin();
     const glm::vec2 c = bloch.cells()[1].centerPx;
     ui.mouseTo(ImVec2(o.x + c.x, o.y + c.y));

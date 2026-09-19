@@ -21,7 +21,8 @@ inline constexpr std::size_t kMaxControls = 8;
 Status decompose(ir::Circuit& c, const Target& target, std::stop_token stop = {});
 
 // One gate, appended to `out` in TIME order. `physical` says whether the wires are device qubits.
-Status decomposeGate(const ir::Gate& g, const Target& target, bool physical, std::vector<ir::Gate>& out);
+Status decomposeGate(const ir::Gate& g, const Target& target, bool physical,
+                     std::vector<ir::Gate>& out);
 
 // Exact expansion of an uncontrolled multi-qubit library gate into single-qubit gates and cx by
 // the generic rules: gate = e^{i·phase} · (product of the returned gates).

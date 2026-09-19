@@ -36,12 +36,12 @@ LinkRef classifyLink(std::string_view href);
 
 // ---------------------------------------------------------------- inline runs
 struct InlineSpan {
-    std::string text;      // literal text, or the LaTeX body when `math` is set
+    std::string text; // literal text, or the LaTeX body when `math` is set
     bool bold = false;
     bool italic = false;
     bool code = false;
-    bool math = false;     // inline $…$
-    LinkRef link;          // kind != None when this run is a link
+    bool math = false; // inline $…$
+    LinkRef link;      // kind != None when this run is a link
 };
 
 std::vector<InlineSpan> parseInline(std::string_view text);
@@ -49,7 +49,14 @@ std::string spansToPlainText(const std::vector<InlineSpan>& spans);
 
 // ---------------------------------------------------------------- blocks
 enum class BlockKind : std::uint8_t {
-    Heading, Paragraph, DisplayMath, Table, Code, List, Quote, Rule,
+    Heading,
+    Paragraph,
+    DisplayMath,
+    Table,
+    Code,
+    List,
+    Quote,
+    Rule,
 };
 
 struct TableCell {
@@ -61,25 +68,25 @@ enum class ColumnAlign : std::uint8_t { Default, Left, Center, Right };
 
 struct ListItem {
     std::vector<InlineSpan> spans;
-    int indent = 0;        // nesting level, 0 = outermost
-    std::string marker;    // "-", "1." …
+    int indent = 0;     // nesting level, 0 = outermost
+    std::string marker; // "-", "1." …
 };
 
 struct Block {
     BlockKind kind = BlockKind::Paragraph;
-    std::uint32_t line = 0;          // 1-based source line of the block start
+    std::uint32_t line = 0; // 1-based source line of the block start
 
-    int level = 0;                   // heading level 1–4
-    std::string anchor;              // heading slug (headings only)
-    std::string plain;               // heading/paragraph text without markup; raw body for Code/DisplayMath
-    std::vector<InlineSpan> spans;   // Heading, Paragraph, Quote
+    int level = 0;      // heading level 1–4
+    std::string anchor; // heading slug (headings only)
+    std::string plain;  // heading/paragraph text without markup; raw body for Code/DisplayMath
+    std::vector<InlineSpan> spans; // Heading, Paragraph, Quote
 
-    std::string latex;               // DisplayMath body (no $$)
-    std::string tag;                 // \tag{…} argument if present
+    std::string latex; // DisplayMath body (no $$)
+    std::string tag;   // \tag{…} argument if present
 
-    std::string language;            // fenced code info string
-    bool ordered = false;            // List
-    std::vector<ListItem> items;     // List
+    std::string language;                     // fenced code info string
+    bool ordered = false;                     // List
+    std::vector<ListItem> items;              // List
     std::vector<std::vector<TableCell>> rows; // Table, row 0 is the header
     std::vector<ColumnAlign> align;           // Table
 };
@@ -92,8 +99,8 @@ struct HeadingRef {
 };
 
 struct TheoryDocument {
-    std::string id;      // "T05" (file-name prefix) or the stem when it has no Txx prefix
-    std::string title;   // first level-1 heading, else the file stem
+    std::string id;    // "T05" (file-name prefix) or the stem when it has no Txx prefix
+    std::string title; // first level-1 heading, else the file stem
     std::string path;
     std::vector<Block> blocks;
     std::vector<HeadingRef> headings;

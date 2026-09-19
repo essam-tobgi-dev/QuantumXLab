@@ -17,12 +17,15 @@ Complex coefficient(const qsim::PauliString& p, std::uint64_t j) {
 }
 
 Status checkWidth(const qsim::PauliString& p, std::size_t dim) {
-    if (dim == 0 || !std::has_single_bit(dim)) return fail(ErrorCode::InvalidArgument, "Pauli expectation: state dimension is not 2^n");
+    if (dim == 0 || !std::has_single_bit(dim))
+        return fail(ErrorCode::InvalidArgument, "Pauli expectation: state dimension is not 2^n");
     const auto n = static_cast<std::size_t>(std::countr_zero(dim));
     if (p.size() != n)
-        return fail(ErrorCode::InvalidArgument, "Pauli string '" + p.label() + "' spans " + std::to_string(p.size()) +
+        return fail(ErrorCode::InvalidArgument, "Pauli string '" + p.label() + "' spans " +
+                                                    std::to_string(p.size()) +
                                                     " qubits, the state has " + std::to_string(n));
-    if (n > 62) return fail(ErrorCode::OutOfRange, "Pauli expectation: too many qubits");
+    if (n > 62)
+        return fail(ErrorCode::OutOfRange, "Pauli expectation: too many qubits");
     return {};
 }
 
@@ -32,33 +35,42 @@ Result<double> pauliExpectation(std::span<const Complex> psi, const qsim::PauliS
     QXL_TRY(checkWidth(p, psi.size()));
     const std::uint64_t x = p.xMask();
     Complex sum{};
-    for (std::uint64_t j = 0; j < psi.size(); ++j) sum += std::conj(psi[j ^ x]) * coefficient(p, j) * psi[j];
+    for (std::uint64_t j = 0; j < psi.size(); ++j)
+        sum += std::conj(psi[j ^ x]) * coefficient(p, j) * psi[j];
     return sum.real();
 }
 
 Result<double> pauliExpectation(const num::Matrix& rho, const qsim::PauliString& p) {
-    if (rho.rows != rho.cols) return fail(ErrorCode::InvalidArgument, "Pauli expectation: density matrix is not square");
+    if (rho.rows != rho.cols)
+        return fail(ErrorCode::InvalidArgument, "Pauli expectation: density matrix is not square");
     QXL_TRY(checkWidth(p, rho.rows));
     const std::uint64_t x = p.xMask();
     Complex sum{};
-    for (std::uint64_t j = 0; j < rho.rows; ++j) sum += rho(j, j ^ x) * coefficient(p, j); // (ρP)_jj
+    for (std::uint64_t j = 0; j < rho.rows; ++j)
+        sum += rho(j, j ^ x) * coefficient(p, j); // (ρP)_jj
     return sum.real();
 }
 
 bool MeasurementMap::measures(std::uint32_t qubit, char letter) const {
-    return qubit < basis.size() && qubit < bitOfQubit.size() && bitOfQubit[qubit] >= 0 && basis[qubit] == letter;
+    return qubit < basis.size() && qubit < bitOfQubit.size() && bitOfQubit[qubit] >= 0 &&
+           basis[qubit] == letter;
 }
 
-std::optional<PauliEstimate> pauliFromCounts(const data::Histogram& counts, const qsim::PauliString& p,
+std::optional<PauliEstimate> pauliFromCounts(const data::Histogram& counts,
+                                             const qsim::PauliString& p,
                                              const MeasurementMap& map) {
-    if (counts.total() == 0 || p.size() > 64) return std::nullopt;
+    if (counts.total() == 0 || p.size() > 64)
+        return std::nullopt;
     std::uint64_t bitMask = 0; // classical bits whose parity gives the eigenvalue
     for (std::size_t q = 0; q < p.size(); ++q) {
         const char letter = p.op(q);
-        if (letter == 'I') continue;
-        if (!map.measures(static_cast<std::uint32_t>(q), letter)) return std::nullopt;
+        if (letter == 'I')
+            continue;
+        if (!map.measures(static_cast<std::uint32_t>(q), letter))
+            return std::nullopt;
         const auto bit = static_cast<std::uint32_t>(map.bitOfQubit[q]);
-        if (bit >= 64 || bit >= counts.nbits()) return std::nullopt;
+        if (bit >= 64 || bit >= counts.nbits())
+            return std::nullopt;
         bitMask |= std::uint64_t{1} << bit;
     }
     double acc = 0.0;
@@ -79,7 +91,8 @@ std::vector<qsim::PauliString> singleQubitPaulis(std::uint32_t n) {
     for (std::uint32_t q = 0; q < n; ++q)
         for (char letter : {'X', 'Y', 'Z'}) {
             const std::pair<QubitIndex, char> term{QubitIndex{q}, letter};
-            out.push_back(qsim::PauliString::fromQubits(n, std::span<const std::pair<QubitIndex, char>>(&term, 1)));
+            out.push_back(qsim::PauliString::fromQubits(
+                n, std::span<const std::pair<QubitIndex, char>>(&term, 1)));
         }
     return out;
 }
@@ -91,23 +104,31 @@ std::string pauliRowLabel(const qsim::PauliString& p) {
             ++support;
             where = q;
         }
-    if (support == 1) return std::string(1, p.op(where)) + std::to_string(where);
+    if (support == 1)
+        return std::string(1, p.op(where)) + std::to_string(where);
     return p.label();
 }
 
 Result<qsim::PauliString> parseUserPauli(std::string_view text, std::uint32_t n) {
     // Trim blanks; keep an optional sign.
-    while (!text.empty() && (text.front() == ' ' || text.front() == '\t')) text.remove_prefix(1);
-    while (!text.empty() && (text.back() == ' ' || text.back() == '\t')) text.remove_suffix(1);
+    while (!text.empty() && (text.front() == ' ' || text.front() == '\t'))
+        text.remove_prefix(1);
+    while (!text.empty() && (text.back() == ' ' || text.back() == '\t'))
+        text.remove_suffix(1);
     auto parsed = qsim::PauliString::parse(text);
-    if (!parsed) return fail(ErrorCode::InvalidArgument, "Pauli string: " + parsed.error().message);
-    if (parsed->phase().imag() != 0.0) return fail(ErrorCode::InvalidArgument, "Pauli string: an imaginary prefix is not Hermitian");
+    if (!parsed)
+        return fail(ErrorCode::InvalidArgument, "Pauli string: " + parsed.error().message);
+    if (parsed->phase().imag() != 0.0)
+        return fail(ErrorCode::InvalidArgument,
+                    "Pauli string: an imaginary prefix is not Hermitian");
     if (parsed->size() > n)
-        return fail(ErrorCode::OutOfRange, "Pauli string spans " + std::to_string(parsed->size()) + " qubits, the state has " +
-                                               std::to_string(n));
-    if (parsed->size() == n) return *parsed;
+        return fail(ErrorCode::OutOfRange, "Pauli string spans " + std::to_string(parsed->size()) +
+                                               " qubits, the state has " + std::to_string(n));
+    if (parsed->size() == n)
+        return *parsed;
     std::vector<std::pair<QubitIndex, char>> terms;
-    for (std::size_t q = 0; q < parsed->size(); ++q) terms.emplace_back(QubitIndex{static_cast<std::uint32_t>(q)}, parsed->op(q));
+    for (std::size_t q = 0; q < parsed->size(); ++q)
+        terms.emplace_back(QubitIndex{static_cast<std::uint32_t>(q)}, parsed->op(q));
     return qsim::PauliString::fromQubits(n, terms, parsed->phase());
 }
 

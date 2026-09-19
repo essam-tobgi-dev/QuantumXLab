@@ -28,13 +28,37 @@ struct Value {
     std::int64_t asInt() const {
         return kind == Kind::Float ? static_cast<std::int64_t>(f < 0 ? f - 0.5 : f + 0.5) : i;
     }
-    static Value ofInt(std::int64_t v) { Value x; x.kind = Kind::Int; x.i = v; x.f = static_cast<double>(v); return x; }
-    static Value ofFloat(double v) { Value x; x.kind = Kind::Float; x.f = v; x.i = static_cast<std::int64_t>(v); return x; }
-    static Value ofDuration(ir::Duration d) { Value x; x.kind = Kind::Dur; x.dur = d; return x; }
-    static Value ofSym(ClassicalExpr e) { Value x; x.kind = Kind::Symbolic; x.sym = std::move(e); return x; }
+    static Value ofInt(std::int64_t v) {
+        Value x;
+        x.kind = Kind::Int;
+        x.i = v;
+        x.f = static_cast<double>(v);
+        return x;
+    }
+    static Value ofFloat(double v) {
+        Value x;
+        x.kind = Kind::Float;
+        x.f = v;
+        x.i = static_cast<std::int64_t>(v);
+        return x;
+    }
+    static Value ofDuration(ir::Duration d) {
+        Value x;
+        x.kind = Kind::Dur;
+        x.dur = d;
+        return x;
+    }
+    static Value ofSym(ClassicalExpr e) {
+        Value x;
+        x.kind = Kind::Symbolic;
+        x.sym = std::move(e);
+        return x;
+    }
     // Constants become literal ClassicalExpr leaves when they meet a symbolic operand.
     ClassicalExpr toExpr() const {
-        return kind == Kind::Symbolic ? sym : ClassicalExpr::constant(kind == Kind::Dur ? dur.ps.get() : asInt());
+        return kind == Kind::Symbolic
+                   ? sym
+                   : ClassicalExpr::constant(kind == Kind::Dur ? dur.ps.get() : asInt());
     }
 };
 
@@ -42,10 +66,10 @@ struct Value {
 struct Binding {
     enum class Kind { Value, Storage, Qubits };
     Kind kind = Kind::Value;
-    Value value;                 // Value: a compile-time constant (or a captured per-shot expression)
-    CregRef reg{};               // Storage: a span of the flat classical bit space
+    Value value;   // Value: a compile-time constant (or a captured per-shot expression)
+    CregRef reg{}; // Storage: a span of the flat classical bit space
     RegKind regKind = RegKind::Bit;
-    std::vector<Wire> qubits;    // Qubits: a qubit register, formal gate qubit or def qubit param
+    std::vector<Wire> qubits; // Qubits: a qubit register, formal gate qubit or def qubit param
 };
 
 enum class Flow { Normal, Break, Continue, Return, End };
@@ -72,25 +96,31 @@ std::set<std::string> runtimeNames(const lang::Program& p);
 Result<Value> foldBinary(lang::BinaryOp op, const Value& a, const Value& b);
 
 class Builder {
-public:
+  public:
     Builder(const lang::Program& p, const ParamMap& inputs, const BuildOptions& opts);
     Result<Circuit> run();
 
-private:
+  private:
     // ---- scopes, storage, spans (Build.cpp)
-    struct Found { Binding* binding = nullptr; std::size_t scope = 0; };
+    struct Found {
+        Binding* binding = nullptr;
+        std::size_t scope = 0;
+    };
     Found find(std::string_view name);
     Binding* lookup(std::string_view name) { return find(name).binding; }
     void push() { scopes_.emplace_back(); }
     void pop() { scopes_.pop_back(); }
-    void bind(const std::string& name, Binding b) { scopes_.back().insert_or_assign(name, std::move(b)); }
+    void bind(const std::string& name, Binding b) {
+        scopes_.back().insert_or_assign(name, std::move(b));
+    }
     // Allocates a register of fresh bits. Global declarations keep their name; block-local and
     // temporary storage gets a name no global symbol or earlier register uses.
-    CregRef allocRegister(std::string_view name, std::uint32_t width, RegKind kind, bool scalar, bool global);
+    CregRef allocRegister(std::string_view name, std::uint32_t width, RegKind kind, bool scalar,
+                          bool global);
     std::string uniqueRegisterName(std::string_view base) const;
     Status setupRegisters();
     Circuit& out() { return *stack_.back(); }
-    NodeId emit(Node n);                    // stamps the current statement span on the node
+    NodeId emit(Node n); // stamps the current statement span on the node
     Status countUnrolled(const SourceSpan& sp);
     std::optional<std::string> literalOf(std::string_view globalName) const;
 
@@ -117,16 +147,24 @@ private:
     // Wires named by a qubit operand: a register yields all of its wires, in little-endian order.
     Result<std::vector<Wire>> qubitOperand(const Expr& e);
     // The storage a classical assignment names, plus the element when it is indexed.
-    struct Place { CregRef reg; std::optional<std::uint32_t> element; Binding* binding = nullptr; std::size_t scope = 0; };
+    struct Place {
+        CregRef reg;
+        std::optional<std::uint32_t> element;
+        Binding* binding = nullptr;
+        std::size_t scope = 0;
+    };
     Result<Place> place(const Expr& e);
     // Inclusive OpenQASM range [start : step : stop] (spec 13 §3) without materialising it.
-    struct Range { std::int64_t start = 0, step = 1; std::uint64_t count = 0; };
+    struct Range {
+        std::int64_t start = 0, step = 1;
+        std::uint64_t count = 0;
+    };
     Result<Range> range(const lang::RangeExpr& r);
 
     // ---- gates and subroutines (BuildGate.cpp)
     Status lowerGateCall(const lang::GateCall& c, const Applied& outer);
-    Status applyGate(std::string_view name, const std::vector<double>& params, const std::vector<Wire>& targets,
-                     const Applied& mod, bool opaque);
+    Status applyGate(std::string_view name, const std::vector<double>& params,
+                     const std::vector<Wire>& targets, const Applied& mod, bool opaque);
     Status emitGate(Gate g, const Applied& mod);
     Status expandUserGate(const lang::GateDecl& g, const std::vector<double>& params,
                           const std::vector<Wire>& qubits, const Applied& mod);
@@ -146,8 +184,8 @@ private:
     // Index of the innermost run-time Branch/Loop body scope; bindings in lower scopes live outside
     // it and must not be changed at build time from inside (0 = not inside one).
     std::size_t conditionScope_ = 0;
-    SourceSpan stmtSpan_;        // span stamped on emitted nodes
-    int spanPin_ = 0;            // > 0 while expanding a gate or def call: keep the call-site span
+    SourceSpan stmtSpan_; // span stamped on emitted nodes
+    int spanPin_ = 0;     // > 0 while expanding a gate or def call: keep the call-site span
     Flow flow_ = Flow::Normal;
     std::optional<Value> returned_;
 };

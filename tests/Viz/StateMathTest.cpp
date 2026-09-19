@@ -25,7 +25,8 @@ std::vector<Complex> randomState(std::uint32_t n, std::uint64_t seed) {
         a = Complex(rng.normal(), rng.normal());
         norm += std::norm(a);
     }
-    for (auto& a : psi) a /= std::sqrt(norm);
+    for (auto& a : psi)
+        a /= std::sqrt(norm);
     return psi;
 }
 
@@ -126,14 +127,16 @@ TEST_CASE("Schmidt spectrum of GHZ is (1/sqrt2, 1/sqrt2) across every cut") {
     std::vector<Complex> ghz(std::size_t{1} << n, 0.0);
     ghz.front() = ghz.back() = kInvSqrt2;
     for (const std::vector<QubitIndex>& cut :
-         {std::vector<QubitIndex>{QubitIndex{0}}, std::vector<QubitIndex>{QubitIndex{1}, QubitIndex{3}},
+         {std::vector<QubitIndex>{QubitIndex{0}},
+          std::vector<QubitIndex>{QubitIndex{1}, QubitIndex{3}},
           std::vector<QubitIndex>{QubitIndex{0}, QubitIndex{1}, QubitIndex{2}}}) {
         auto s = schmidtSpectrum(ghz, n, cut);
         REQUIRE(s.has_value());
         REQUIRE(s->coefficients.size() >= 2);
         CHECK(s->coefficients[0] == Approx(kInvSqrt2).margin(kTol));
         CHECK(s->coefficients[1] == Approx(kInvSqrt2).margin(kTol));
-        for (std::size_t k = 2; k < s->coefficients.size(); ++k) CHECK(s->coefficients[k] == Approx(0.0).margin(kTol));
+        for (std::size_t k = 2; k < s->coefficients.size(); ++k)
+            CHECK(s->coefficients[k] == Approx(0.0).margin(kTol));
         CHECK(s->rank == 2);
         CHECK(s->entropyBits == Approx(1.0).margin(1e-12));
     }
@@ -154,14 +157,17 @@ TEST_CASE("the O(2^n) kernels agree with the generic partial trace on a random s
     }
     for (std::uint32_t i = 0; i < n; ++i)
         for (std::uint32_t j = 0; j < n; ++j) {
-            if (i == j) continue;
+            if (i == j)
+                continue;
             const std::vector<std::size_t> keep{i, j}; // i least significant, also when i > j
-            CHECK(num::approxEqual(*reducedPair(psi, n, i, j), num::reducedState(psi, n, keep), 1e-13));
+            CHECK(num::approxEqual(*reducedPair(psi, n, i, j), num::reducedState(psi, n, keep),
+                                   1e-13));
         }
     // The same reductions from the density matrix |ψ⟩⟨ψ|.
     const num::Matrix rho = num::projector(psi);
     const std::vector<QubitIndex> pair{QubitIndex{4}, QubitIndex{1}};
-    CHECK(num::approxEqual(*reducedFromDensity(rho, n, 2, pair), *reducedPair(psi, n, 4, 1), 1e-13));
+    CHECK(
+        num::approxEqual(*reducedFromDensity(rho, n, 2, pair), *reducedPair(psi, n, 4, 1), 1e-13));
     CHECK_FALSE(reducedSingle(psi, n, n).has_value());
     CHECK_FALSE(reducedPair(psi, n, 2, 2).has_value());
     CHECK_FALSE(reducedSingle(std::vector<Complex>(5), 2, 0).has_value());

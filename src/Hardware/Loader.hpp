@@ -1,5 +1,6 @@
 #pragma once
-// Spec 09 §1 — loading a device directory. Every cross-reference failure is collected, not just the first.
+// Spec 09 §1 — loading a device directory. Every cross-reference failure is collected, not just the
+// first.
 #include "Core/Json.hpp"
 #include "Hardware/Calibration.hpp"
 #include "Hardware/Device.hpp"
@@ -10,7 +11,8 @@ namespace qlab::hw {
 struct LoadedDevice {
     Device device;
     Calibration calibration;
-    std::vector<std::string> warnings; // model-vs-calibration disagreements (spec 09 §5.3), class Model
+    std::vector<std::string>
+        warnings; // model-vs-calibration disagreements (spec 09 §5.3), class Model
 };
 
 Result<Device> parseDevice(const core::Json& data, const std::filesystem::path& dir = {});

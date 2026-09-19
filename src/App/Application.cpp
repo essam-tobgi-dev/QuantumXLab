@@ -22,10 +22,10 @@ constexpr const char* kGlslVersion = "#version 410 core";
 gfx::RendererDesc labRendererDesc(const ui::Theme& theme) {
     gfx::RendererDesc d;
     d.samples = 4;
-    d.shadowSize = 4096;         // spec 18 §4: one tight-fitted map, 16-tap rotated Poisson PCF
-    d.ibl = true;                // spec 18 §4: the procedural laboratory environment lights the metals
-    d.ssao = true;               // spec 18 §5 pass 8
-    d.bloom = true;              // spec 18 §5: LEDs and pulse packets glow
+    d.shadowSize = 4096; // spec 18 §4: one tight-fitted map, 16-tap rotated Poisson PCF
+    d.ibl = true;        // spec 18 §4: the procedural laboratory environment lights the metals
+    d.ssao = true;       // spec 18 §5 pass 8
+    d.bloom = true;      // spec 18 §5: LEDs and pulse packets glow
     d.aoStrength = 0.8f;
     d.bloomStrength = 0.12f;
     const glm::vec4 clear = theme[ui::Token::BgViewport];
@@ -45,15 +45,19 @@ Application::~Application() {
         model_->live().waitIdle();
         model_->waitReductions();
     }
-    if (projects_ != nullptr) projects_->discardAutosave();
-    if (model_ != nullptr && model_->sceneRenderer() != nullptr) model_->sceneRenderer()->releaseGpu();
+    if (projects_ != nullptr)
+        projects_->discardAutosave();
+    if (model_ != nullptr && model_->sceneRenderer() != nullptr)
+        model_->sceneRenderer()->releaseGpu();
     if (imgui_ != nullptr) {
         ImGui::SetCurrentContext(imgui_);
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
     }
-    if (implot_ != nullptr) ImPlot::DestroyContext(implot_);
-    if (imgui_ != nullptr) ImGui::DestroyContext(imgui_);
+    if (implot_ != nullptr)
+        ImPlot::DestroyContext(implot_);
+    if (imgui_ != nullptr)
+        ImGui::DestroyContext(imgui_);
     projects_.reset();
     model_.reset();
     renderer_.reset();
@@ -86,11 +90,13 @@ Status Application::initWindow(bool visible) {
     desc.srgb = false;
     QXL_TRY_ASSIGN(window_, gfx::Window::create(desc));
     window_->makeCurrent();
-    if (!gfx::loadGl(nullptr)) return fail(err::NoContext, "the OpenGL entry points did not load");
+    if (!gfx::loadGl(nullptr))
+        return fail(err::NoContext, "the OpenGL entry points did not load");
     dpiScale_ = std::max(1.0f, window_->contentScale());
     viewportW_ = std::max(64, window_->framebufferWidth() - 320);
     viewportH_ = std::max(64, window_->framebufferHeight() - 200);
-    QXL_LOG_INFO(Gfx, "OpenGL {}.{} — {}", window_->caps().major, window_->caps().minor, window_->caps().renderer);
+    QXL_LOG_INFO(Gfx, "OpenGL {}.{} — {}", window_->caps().major, window_->caps().minor,
+                 window_->caps().renderer);
 
     // Spec 21 §1.2: one GL backend per context, created before the laboratory renderer so that the
     // state views and the viewport each own their framebuffers.
@@ -105,25 +111,31 @@ Status Application::initImGui() {
     imgui_ = ImGui::CreateContext();
     implot_ = ImPlot::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
-    io.DisplaySize = ImVec2(static_cast<float>(window_->windowWidth()), static_cast<float>(window_->windowHeight()));
+    io.DisplaySize = ImVec2(static_cast<float>(window_->windowWidth()),
+                            static_cast<float>(window_->windowHeight()));
     ui::Shell::configureImGui();
     if (auto st = resources_.loadAssets("dark"); !st)
-        QXL_LOG_WARN(Ui, "assets: {}", st.error().message);   // fallbacks are in place (spec 19 §1)
+        QXL_LOG_WARN(Ui, "assets: {}", st.error().message); // fallbacks are in place (spec 19 §1)
     if (auto st = resources_.applyScale(io.Fonts, dpiScale_, fontScale_); !st)
         QXL_LOG_WARN(Ui, "fonts: {}", st.error().message);
     ui::Strings::setGlobal(ui::Strings::load().value_or(ui::Strings{}));
 
     QXL_TRY_ASSIGN(renderer_, gfx::Renderer::create(labRendererDesc(resources_.theme)));
-    if (auto st = resources_.loadLogo(); !st) QXL_LOG_WARN(Ui, "logo: {}", st.error().message); // the bar shows the name alone
+    if (auto st = resources_.loadLogo(); !st)
+        QXL_LOG_WARN(Ui, "logo: {}", st.error().message); // the bar shows the name alone
     // A lit room (spec 18 §4): a soft key light from above, the environment's irradiance and
     // reflections through the IBL, and the exposure the spec recommends for that environment
-    // (E/π ≈ 1.4 from the panels: sunlit white ≈ 2 HDR at exposure 1). The constant ambient only serves the `ibl = false` path.
-    renderer_->setSun(glm::normalize(glm::vec3(-0.35f, -0.85f, -0.4f)), glm::vec3(1.0f, 0.95f, 0.86f), 3.2f); // warm key against the cool panels
+    // (E/π ≈ 1.4 from the panels: sunlit white ≈ 2 HDR at exposure 1). The constant ambient only
+    // serves the `ibl = false` path.
+    renderer_->setSun(glm::normalize(glm::vec3(-0.35f, -0.85f, -0.4f)),
+                      glm::vec3(1.0f, 0.95f, 0.86f), 3.2f); // warm key against the cool panels
     renderer_->setAmbient(glm::vec3(0.22f));
     renderer_->setExposure(0.55f);
 
-    if (!ImGui_ImplGlfw_InitForOpenGL(window_->handle(), true)) return fail(err::NoContext, "ImGui GLFW backend");
-    if (!ImGui_ImplOpenGL3_Init(kGlslVersion)) return fail(err::NoContext, "ImGui OpenGL backend");
+    if (!ImGui_ImplGlfw_InitForOpenGL(window_->handle(), true))
+        return fail(err::NoContext, "ImGui GLFW backend");
+    if (!ImGui_ImplOpenGL3_Init(kGlslVersion))
+        return fail(err::NoContext, "ImGui OpenGL backend");
     return {};
 }
 
@@ -154,15 +166,18 @@ Status Application::initModel() {
     }
     if (programSource().empty()) {
         // Spec 26 phase 3: the application opens on the example the vertical slice starts from.
-        const std::filesystem::path bell = core::assetDir() / "Programs" / "Examples" / "Basics" / "bell.qasm";
-        if (auto text = core::readTextFile(bell)) setProgramSource(std::move(*text));
+        const std::filesystem::path bell =
+            core::assetDir() / "Programs" / "Examples" / "Basics" / "bell.qasm";
+        if (auto text = core::readTextFile(bell))
+            setProgramSource(std::move(*text));
     }
     return {};
 }
 
 void Application::showWorkspace(ui::Workspace w, int settleFrames) {
     shell_.setWorkspace(w);
-    for (int i = 0; i < settleFrames; ++i) frame(1.0 / 60.0);
+    for (int i = 0; i < settleFrames; ++i)
+        frame(1.0 / 60.0);
 }
 
 int Application::run() {
@@ -175,11 +190,13 @@ int Application::run() {
         frame(dt);
     }
     // Spec 02 §6: a graceful shutdown cancels every job and drops the autosave.
-    if (projects_->dirty()) (void)projects_->autosaveNow();
+    if (projects_->dirty())
+        (void)projects_->autosaveNow();
     model_->incremental().cancel();
     model_->live().waitIdle();
     model_->waitReductions();
-    if (runPending_) model_->session().cancel(runHandle_);
+    if (runPending_)
+        model_->session().cancel(runHandle_);
     projects_->discardAutosave();
     return 0;
 }

@@ -22,7 +22,8 @@ inline SystemModel bareModel(std::uint32_t sites, std::uint32_t levels) {
 }
 
 // H += Re Ω(t)·(a + a†) + Im Ω(t)·i(a† − a): Ω(t) = Ω_Rabi/2 is a resonant x drive (T05 (7.1)).
-inline DriveTerm ladderDrive(const SystemModel& m, std::uint32_t site, std::function<Complex(double)> envelope) {
+inline DriveTerm ladderDrive(const SystemModel& m, std::uint32_t site,
+                             std::function<Complex(double)> envelope) {
     auto [a, b] = driveFromLadder(m.siteDims, site);
     return DriveTerm{std::format("d[{}]", site), std::move(a), std::move(b), std::move(envelope)};
 }
@@ -34,7 +35,8 @@ inline CollapseOp decay(const SystemModel& m, std::uint32_t site, double gamma) 
     return {std::format("T1 q{}", site), std::move(a)};
 }
 
-// Pure dephasing √(2γφ) a†a (spec 07 §5), which on a qubit equals √(γφ/2) Z: ρ01 decays at γφ (T04 (4.1)).
+// Pure dephasing √(2γφ) a†a (spec 07 §5), which on a qubit equals √(γφ/2) Z: ρ01 decays at γφ (T04
+// (4.1)).
 inline CollapseOp dephasing(const SystemModel& m, std::uint32_t site, double gammaPhi) {
     Matrix n = numberOperator(m.siteDims, site);
     n *= std::sqrt(2.0 * gammaPhi);
@@ -56,10 +58,12 @@ inline Matrix anharmonicity(const SystemModel& m, std::uint32_t site, double alp
 struct GaussianPulse {
     double tg = 0, sigma = 0, amp = 0;
     GaussianPulse(double duration, double area) : tg(duration), sigma(duration / 4.0) {
-        amp = area / (sigma * std::sqrt(2.0 * std::numbers::pi) * std::erf(tg / (2.0 * std::sqrt(2.0) * sigma)));
+        amp = area / (sigma * std::sqrt(2.0 * std::numbers::pi) *
+                      std::erf(tg / (2.0 * std::sqrt(2.0) * sigma)));
     }
     double value(double t) const {
-        if (t < 0 || t > tg) return 0.0;
+        if (t < 0 || t > tg)
+            return 0.0;
         const double u = (t - 0.5 * tg) / sigma;
         return amp * std::exp(-0.5 * u * u);
     }

@@ -13,8 +13,8 @@ SelectionRequest pulse(std::uint32_t n, std::uint32_t levels = 3) {
     r.pulseLevel = true;
     return r;
 }
-SelectionRequest gates(std::uint32_t n, bool noise = false, bool clifford = false, bool pauliOnly = false,
-                       std::uint32_t levels = 2) {
+SelectionRequest gates(std::uint32_t n, bool noise = false, bool clifford = false,
+                       bool pauliOnly = false, std::uint32_t levels = 2) {
     SelectionRequest r;
     r.nQubits = n;
     r.levels = levels;
@@ -58,18 +58,19 @@ TEST_CASE("selectBackend follows every row of the spec 07 table") {
     REQUIRE(tooBig.error().code == err::TooLarge);
     REQUIRE(tooBig.error().message.find("Lindblad") != std::string::npos);
     REQUIRE(tooBig.error().message.find("trajectories") != std::string::npos);
-    REQUIRE_FALSE(selectBackend(pulse(6, 3)).has_value()); // 3^6 > 243 and trajectories are two-level
+    REQUIRE_FALSE(
+        selectBackend(pulse(6, 3)).has_value()); // 3^6 > 243 and trajectories are two-level
 
-    // Row 3: Clifford circuits go to the stabilizer backend, Exact without noise and Statistical with
-    // Pauli-only noise; non-Pauli noise or a non-Clifford gate leaves the row.
+    // Row 3: Clifford circuits go to the stabilizer backend, Exact without noise and Statistical
+    // with Pauli-only noise; non-Pauli noise or a non-Clifford gate leaves the row.
     REQUIRE(chosen(gates(2000, false, true)).kind == Kind::Stabilizer);
     REQUIRE(chosen(gates(2000, false, true)).cls == FidelityClass::Exact);
     const auto pauliNoise = chosen(gates(500, true, true, true));
     REQUIRE(pauliNoise.kind == Kind::Stabilizer);
     REQUIRE(pauliNoise.cls == FidelityClass::Statistical);
     REQUIRE(chosen(gates(8, true, true, false)).kind == Kind::DensityMatrix); // non-Pauli noise
-    // Beyond the tableau cap (10^4) the stabilizer row no longer applies, and no state vector can hold
-    // 10001 qubits either, so the request is refused rather than silently mis-routed.
+    // Beyond the tableau cap (10^4) the stabilizer row no longer applies, and no state vector can
+    // hold 10001 qubits either, so the request is refused rather than silently mis-routed.
     auto beyondTableau = selectBackend(gates(10001, false, true));
     REQUIRE_FALSE(beyondTableau.has_value());
     REQUIRE(beyondTableau.error().code == err::TooLarge);
@@ -122,21 +123,33 @@ TEST_CASE("A pinned backend that cannot run the program fails loudly") {
         REQUIRE(s.error().message.find("gate-level") != std::string::npos);
     }
     // Capability mismatches.
-    REQUIRE(pinned(gates(4), Kind::Stabilizer).error().code == err::Unsupported);               // not Clifford
-    REQUIRE(pinned(gates(4, true, true, false), Kind::Stabilizer).error().code == err::Unsupported); // non-Pauli noise
-    REQUIRE(pinned(gates(4, false, true, false, 3), Kind::Stabilizer).error().code == err::Unsupported);
-    REQUIRE(pinned(gates(4, false, false, false, 3), Kind::StateVector).error().code == err::Unsupported);
+    REQUIRE(pinned(gates(4), Kind::Stabilizer).error().code == err::Unsupported); // not Clifford
+    REQUIRE(pinned(gates(4, true, true, false), Kind::Stabilizer).error().code ==
+            err::Unsupported); // non-Pauli noise
+    REQUIRE(pinned(gates(4, false, true, false, 3), Kind::Stabilizer).error().code ==
+            err::Unsupported);
+    REQUIRE(pinned(gates(4, false, false, false, 3), Kind::StateVector).error().code ==
+            err::Unsupported);
     // Size caps, with the same diagnostic the automatic choice would give.
-    REQUIRE(pinned(gates(StateVectorBackend::maxQubits() + 1), Kind::StateVector).error().code == err::TooLarge);
-    REQUIRE(pinned(gates(DensityMatrixBackend::maxQubits() + 1, true), Kind::DensityMatrix).error().code == err::TooLarge);
-    REQUIRE(pinned(gates(9, false, false, false, 3), Kind::DensityMatrix).error().code == err::TooLarge); // 3^9 > 8192
+    REQUIRE(pinned(gates(StateVectorBackend::maxQubits() + 1), Kind::StateVector).error().code ==
+            err::TooLarge);
+    REQUIRE(pinned(gates(DensityMatrixBackend::maxQubits() + 1, true), Kind::DensityMatrix)
+                .error()
+                .code == err::TooLarge);
+    REQUIRE(pinned(gates(9, false, false, false, 3), Kind::DensityMatrix).error().code ==
+            err::TooLarge); // 3^9 > 8192
     REQUIRE(pinned(gates(10001, false, true), Kind::Stabilizer).error().code == err::TooLarge);
     REQUIRE(pinned(pulse(6), Kind::Lindblad).error().code == err::TooLarge);
-    REQUIRE(pinned(pulse(4, 4), Kind::Lindblad).error().code == err::TooLarge);  // 4^4 = 256 > 243
+    REQUIRE(pinned(pulse(4, 4), Kind::Lindblad).error().code == err::TooLarge); // 4^4 = 256 > 243
     REQUIRE(pinned(pulse(9, 2), Kind::Trajectories).error().code == err::TooLarge);
     REQUIRE(pinned(pulse(6, 3), Kind::Trajectories).error().code == err::TooLarge); // 3^6 > 256
     // Pins that can run keep the requested backend and carry the right fidelity class.
-    struct Case { SelectionRequest req; Kind kind; FidelityClass cls; bool unravel; };
+    struct Case {
+        SelectionRequest req;
+        Kind kind;
+        FidelityClass cls;
+        bool unravel;
+    };
     const std::vector<Case> ok{
         {gates(6), Kind::StateVector, FidelityClass::Exact, false},
         {gates(6, true), Kind::StateVector, FidelityClass::Statistical, true},
@@ -161,7 +174,10 @@ TEST_CASE("A pinned backend that cannot run the program fails loudly") {
 }
 
 TEST_CASE("makeBackend builds every kind with the capabilities of spec 07") {
-    struct Expected { Kind kind; bool exactNoise, stochasticNoise, nonClifford, midCircuit, multiLevel, timeDomain, readback; };
+    struct Expected {
+        Kind kind;
+        bool exactNoise, stochasticNoise, nonClifford, midCircuit, multiLevel, timeDomain, readback;
+    };
     const std::vector<Expected> table{
         {Kind::StateVector, false, true, true, true, false, false, true},
         {Kind::DensityMatrix, true, false, true, true, true, false, true},

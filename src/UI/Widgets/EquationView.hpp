@@ -7,8 +7,8 @@
 //
 // Spec 19 §6 — `EduTooltip` is the same card without an owning widget: title, one-sentence meaning,
 // the governing equation, the current value with unit and fidelity badge, and a "Theory ›" link.
-#include "UI/Context.hpp"
 #include "Data/Fidelity.hpp"
+#include "UI/Context.hpp"
 #include "UI/Widgets/Equations.hpp"
 #include <functional>
 #include <imgui.h>
@@ -21,23 +21,23 @@ namespace qlab::ui {
 // Live value of one symbol of an equation, supplied by whatever panel draws it (the Inspector
 // resolves them through `lab::BindingRegistry`, the Estimates panel from the estimate record).
 struct TermValue {
-    std::string symbol;                 // matches EquationTerm::symbol
+    std::string symbol; // matches EquationTerm::symbol
     double si = 0.0;
-    std::string unit;                   // overrides the term's declared unit when non-empty
+    std::string unit; // overrides the term's declared unit when non-empty
     data::FidelityClass cls = data::FidelityClass::Model;
     bool simulatorOnly = false;
-    bool available = true;              // false renders "—" (spec 17 §5)
+    bool available = true; // false renders "—" (spec 17 §5)
 };
 
 class EquationView {
-public:
+  public:
     // `latex` may come from an `EquationDoc` or straight from a component descriptor.
     void setLatex(std::string latex);
-    void setDocument(const EquationDoc* doc);   // supplies terms, assumptions and the theory anchor
+    void setDocument(const EquationDoc* doc); // supplies terms, assumptions and the theory anchor
     void setValues(std::vector<TermValue> values);
-    void setWithValues(bool on) { withValues_ = on; }   // spec 20 §5 second line
+    void setWithValues(bool on) { withValues_ = on; } // spec 20 §5 second line
     void setDisplayStyle(bool display) { display_ = display; }
-    void setScale(float s) { scale_ = s; }               // ×1 body size; the Theory Browser uses 1.15
+    void setScale(float s) { scale_ = s; } // ×1 body size; the Theory Browser uses 1.15
 
     const std::string& latex() const { return latex_; }
     const EquationDoc* document() const { return doc_; }
@@ -50,7 +50,7 @@ public:
     // Draws at the current cursor. Returns the symbol that was clicked, or "" when nothing was.
     std::string draw(const UiContext& ctx);
 
-private:
+  private:
     const math::LayoutResult* layout(const UiContext& ctx) const;
     const TermValue* valueOf(std::string_view symbol) const;
 
@@ -69,7 +69,7 @@ private:
 // Delay 250 ms (ImGui's `DelayNormal`), max width 420 px, hidden on any key press.
 void eduTooltip(const UiContext& ctx, std::string_view id, std::span<const TermValue> values = {});
 // The card body without the hover plumbing, for panels that show it inline.
-void eduCard(const UiContext& ctx, std::string_view id, std::string_view title, std::string_view meaning,
-             std::span<const TermValue> values);
+void eduCard(const UiContext& ctx, std::string_view id, std::string_view title,
+             std::string_view meaning, std::span<const TermValue> values);
 
 } // namespace qlab::ui

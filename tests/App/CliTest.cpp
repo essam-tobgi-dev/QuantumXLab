@@ -24,7 +24,8 @@ std::filesystem::path bellPath() {
 
 app::Options parse(std::vector<std::string_view> args) {
     auto o = app::parseOptions(std::span<const std::string_view>(args));
-    if (!o) FAIL(o.error().message);
+    if (!o)
+        FAIL(o.error().message);
     return *o;
 }
 
@@ -41,8 +42,9 @@ TEST_CASE("the command line of spec 03 §3 parses") {
     CHECK(project.mode == app::Mode::Gui);
     CHECK(project.project == std::filesystem::path("my.qxlab"));
 
-    const app::Options run = parse({"--run", "p.qasm", "--device", "sc_heavyhex_27", "--shots", "4096", "--seed",
-                                   "7", "--backend", "statevector", "--json", "-O2"});
+    const app::Options run =
+        parse({"--run", "p.qasm", "--device", "sc_heavyhex_27", "--shots", "4096", "--seed", "7",
+               "--backend", "statevector", "--json", "-O2"});
     CHECK(run.mode == app::Mode::Run);
     CHECK(run.program == std::filesystem::path("p.qasm"));
     CHECK(run.device == "sc_heavyhex_27");
@@ -81,7 +83,8 @@ TEST_CASE("the command line of spec 03 §3 parses") {
 // first argument, where a leading double dash is an option token, so CTest can never run the case
 // ("Unrecognised token: --run") however green the unfiltered binary looks.
 TEST_CASE("headless --run of bell.qasm on sc_fixed_5 reproduces the Bell distribution") {
-    app::Options o = parse({"--run", "x", "--device", "sc_fixed_5", "--shots", "4096", "--seed", "1"});
+    app::Options o =
+        parse({"--run", "x", "--device", "sc_fixed_5", "--shots", "4096", "--seed", "1"});
     o.program = bellPath();
     std::ostringstream out, err;
     REQUIRE(app::runHeadless(o, out, err) == 0);
@@ -122,9 +125,11 @@ TEST_CASE("headless --run of bell.qasm on sc_fixed_5 reproduces the Bell distrib
     CHECK(p01 > 0.0);
     CHECK(p10 > 0.0);
 
-    // Spec 15 §9: the estimate is a complete Model record, and every number in the document is finite.
+    // Spec 15 §9: the estimate is a complete Model record, and every number in the document is
+    // finite.
     const core::Json& estimate = data["estimate"];
-    for (const char* key : {"wall_time", "fidelity", "resources", "classical_cost", "assumptions", "class"})
+    for (const char* key :
+         {"wall_time", "fidelity", "resources", "classical_cost", "assumptions", "class"})
         CHECK(estimate.contains(key));
     CHECK(estimate["class"] == "Model");
     CHECK(estimate["wall_time"]["value_s"].get<double>() > 0.0);
@@ -165,7 +170,8 @@ TEST_CASE("headless --run resolves the program's pragmas where the command line 
 TEST_CASE("headless --run reports a program that does not compile") {
     app::Options o = parse({"--run", "x"});
     o.program = core::assetDir() / "Programs" / "Conformance" / "semantics" / "err_undeclared.qasm";
-    if (!std::filesystem::exists(o.program)) SKIP("the conformance corpus is not installed");
+    if (!std::filesystem::exists(o.program))
+        SKIP("the conformance corpus is not installed");
     std::ostringstream out, err;
     CHECK(app::runHeadless(o, out, err) == 1);
     CHECK_FALSE(err.str().empty());

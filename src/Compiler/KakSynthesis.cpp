@@ -21,12 +21,14 @@ constexpr double kZero = 1e-9;
 
 // Builds the {U, cx} sequence, multiplying neighbouring single-qubit factors into one U per wire.
 class Emitter {
-public:
+  public:
     Emitter(ir::Wire q0, ir::Wire q1, const SourceSpan& span) : wires_{q0, q1}, span_(span) {
         pending_[0] = pending_[1] = num::Matrix::identity(2);
     }
     void one(int q, const num::Matrix& m) { pending_[q] = num::matmul(m, pending_[q]); }
-    void one(int q, std::string_view name, std::vector<double> params = {}) { one(q, *ir::gates::matrix(name, params)); }
+    void one(int q, std::string_view name, std::vector<double> params = {}) {
+        one(q, *ir::gates::matrix(name, params));
+    }
     Status cx(int control, int target) {
         QXL_TRY(flush(0));
         QXL_TRY(flush(1));
@@ -40,12 +42,14 @@ public:
         return std::move(out_);
     }
 
-private:
+  private:
     Status flush(int q) {
         const EulerAngles e = eulerAngles(pending_[q].view());
         pending_[q] = num::Matrix::identity(2);
-        if (e.theta < kAngleEps && std::abs(wrapAngle(e.phi + e.lambda)) < kAngleEps) return {};   // identity up to phase
-        QXL_TRY_ASSIGN(ir::Gate g, gate("U", {wires_[q]}, {e.theta, wrapAngle(e.phi), wrapAngle(e.lambda)}, span_));
+        if (e.theta < kAngleEps && std::abs(wrapAngle(e.phi + e.lambda)) < kAngleEps)
+            return {}; // identity up to phase
+        QXL_TRY_ASSIGN(ir::Gate g, gate("U", {wires_[q]},
+                                        {e.theta, wrapAngle(e.phi), wrapAngle(e.lambda)}, span_));
         out_.push_back(std::move(g));
         return {};
     }
@@ -66,36 +70,52 @@ Status twoCx(Emitter& e, double a, double c) {
 Status canonical(Emitter& e, const KakDecomposition& k) {
     const bool za = std::abs(k.a) < kZero, zb = std::abs(k.b) < kZero;
     const std::uint32_t count = k.cxCount(kZero);
-    if (count == 0) return {};
-    if (count == 1) {   // bring the ±π/4 coordinate to XX: S⊗S maps XX → YY, H⊗H maps XX → ZZ
+    if (count == 0)
+        return {};
+    if (count == 1) { // bring the ±π/4 coordinate to XX: S⊗S maps XX → YY, H⊗H maps XX → ZZ
         const double v = !za ? k.a : !zb ? k.b : k.c;
         const char* into = !za ? nullptr : !zb ? "sdg" : "h";
         const char* back = !za ? nullptr : !zb ? "s" : "h";
-        if (into) { e.one(0, into); e.one(1, into); }
-        if (v > 0) {   // rxx(−π/2)
-            e.one(0, "rx", {-kPi / 2}); e.one(1, "rx", {-kPi / 2}); e.one(0, "ry", {-kPi / 2});
-            QXL_TRY(e.cx(0, 1));
-            e.one(0, "ry", {kPi / 2});
-        } else {       // rxx(+π/2)
+        if (into) {
+            e.one(0, into);
+            e.one(1, into);
+        }
+        if (v > 0) { // rxx(−π/2)
+            e.one(0, "rx", {-kPi / 2});
+            e.one(1, "rx", {-kPi / 2});
             e.one(0, "ry", {-kPi / 2});
             QXL_TRY(e.cx(0, 1));
-            e.one(0, "ry", {kPi / 2}); e.one(1, "rx", {kPi / 2}); e.one(0, "rx", {kPi / 2});
+            e.one(0, "ry", {kPi / 2});
+        } else { // rxx(+π/2)
+            e.one(0, "ry", {-kPi / 2});
+            QXL_TRY(e.cx(0, 1));
+            e.one(0, "ry", {kPi / 2});
+            e.one(1, "rx", {kPi / 2});
+            e.one(0, "rx", {kPi / 2});
         }
-        if (back) { e.one(0, back); e.one(1, back); }
+        if (back) {
+            e.one(0, back);
+            e.one(1, back);
+        }
         return {};
     }
     if (count == 2) {
-        if (zb) return twoCx(e, k.a, k.c);
-        if (za) {   // N(0,b,c) = (S⊗S) N(b,0,c) (S†⊗S†)
-            e.one(0, "sdg"); e.one(1, "sdg");
+        if (zb)
+            return twoCx(e, k.a, k.c);
+        if (za) { // N(0,b,c) = (S⊗S) N(b,0,c) (S†⊗S†)
+            e.one(0, "sdg");
+            e.one(1, "sdg");
             QXL_TRY(twoCx(e, k.b, k.c));
-            e.one(0, "s"); e.one(1, "s");
+            e.one(0, "s");
+            e.one(1, "s");
             return {};
         }
         // N(a,b,0) = (W⊗W) N(a,0,b) (W†⊗W†), W = Rx(π/2): YY ↔ ZZ
-        e.one(0, "rx", {-kPi / 2}); e.one(1, "rx", {-kPi / 2});
+        e.one(0, "rx", {-kPi / 2});
+        e.one(1, "rx", {-kPi / 2});
         QXL_TRY(twoCx(e, k.a, k.b));
-        e.one(0, "rx", {kPi / 2}); e.one(1, "rx", {kPi / 2});
+        e.one(0, "rx", {kPi / 2});
+        e.one(1, "rx", {kPi / 2});
         return {};
     }
     e.one(0, "rz", {-kPi / 2});
@@ -110,7 +130,8 @@ Status canonical(Emitter& e, const KakDecomposition& k) {
 }
 } // namespace
 
-Result<std::vector<ir::Gate>> synthesizeTwoQubit(num::ConstMatrixView u, ir::Wire q0, ir::Wire q1, const SourceSpan& span) {
+Result<std::vector<ir::Gate>> synthesizeTwoQubit(num::ConstMatrixView u, ir::Wire q0, ir::Wire q1,
+                                                 const SourceSpan& span) {
     QXL_TRY_ASSIGN(const KakDecomposition k, kakDecompose(u));
     Emitter e(q0, q1, span);
     e.one(0, k.before0);

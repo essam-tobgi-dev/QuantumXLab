@@ -19,27 +19,45 @@ namespace qlab::ui {
 // Spec 19 §2 — the three built-in workspace presets.
 enum class Workspace : std::uint8_t { Lab, Program, Analysis, Count };
 inline constexpr std::size_t kWorkspaceCount = static_cast<std::size_t>(Workspace::Count);
-std::string_view workspaceName(Workspace w);      // "lab", "program", "analysis"
-std::string_view workspaceLabelKey(Workspace w);  // strings.en.json key
+std::string_view workspaceName(Workspace w);     // "lab", "program", "analysis"
+std::string_view workspaceLabelKey(Workspace w); // strings.en.json key
 std::optional<Workspace> workspaceFromName(std::string_view name);
 
 // Spec 19 §3 panel catalog, in table order.
 enum class PanelId : std::uint8_t {
-    Viewport, Inspector, ComponentTree, CodeEditor, Diagnostics, Circuit, Pulses, RunControls,
-    Results, StateViews, Plots, Fits, Instruments, Fridge, Estimates, Theory, Examples, Project, Log, Tour,
+    Viewport,
+    Inspector,
+    ComponentTree,
+    CodeEditor,
+    Diagnostics,
+    Circuit,
+    Pulses,
+    RunControls,
+    Results,
+    StateViews,
+    Plots,
+    Fits,
+    Instruments,
+    Fridge,
+    Estimates,
+    Theory,
+    Examples,
+    Project,
+    Log,
+    Tour,
     Count
 };
 inline constexpr std::size_t kPanelCount = static_cast<std::size_t>(PanelId::Count);
 
 class Panel {
-public:
+  public:
     virtual ~Panel() = default;
 
     // ---- identity (spec 19 §3)
     virtual PanelId id() const = 0;
-    virtual std::string_view key() const = 0;         // "viewport", "code_editor", …
-    virtual std::string_view titleKey() const = 0;    // strings.en.json key of the visible title
-    virtual std::string_view icon() const = 0;        // one glyph from the atlas ranges
+    virtual std::string_view key() const = 0;      // "viewport", "code_editor", …
+    virtual std::string_view titleKey() const = 0; // strings.en.json key of the visible title
+    virtual std::string_view icon() const = 0;     // one glyph from the atlas ranges
     virtual Workspace defaultWorkspace() const = 0;
     // Spec 00 §6 / 19 §2: a Simulator-only panel is hidden by the Physical-lab toggle.
     virtual viz::Observability observability() const { return viz::Observability::Physical; }
@@ -50,8 +68,8 @@ public:
     virtual void deserialize(const core::Json&) {}
 
     bool simulatorOnly() const { return observability() == viz::Observability::SimulatorOnly; }
-    std::string title() const;         // resolved through the global strings table
-    std::string windowTitle() const;   // "⬒ Viewport###viewport" — a stable ImGui window id
+    std::string title() const;       // resolved through the global strings table
+    std::string windowTitle() const; // "⬒ Viewport###viewport" — a stable ImGui window id
     // Whether the panel is in the workspace's visibility set; the Shell owns this flag.
     bool open = true;
 };
@@ -61,9 +79,9 @@ using PanelPtr = std::unique_ptr<Panel>;
 // Identity boilerplate for the catalog panels: everything but `draw` (and, where it has state,
 // `serialize`/`deserialize`) comes from the constructor.
 class BasicPanel : public Panel {
-public:
-    BasicPanel(PanelId id, std::string_view key, std::string_view titleKey, std::string_view icon, Workspace ws,
-               viz::Observability obs = viz::Observability::Physical)
+  public:
+    BasicPanel(PanelId id, std::string_view key, std::string_view titleKey, std::string_view icon,
+               Workspace ws, viz::Observability obs = viz::Observability::Physical)
         : id_(id), key_(key), titleKey_(titleKey), icon_(icon), workspace_(ws), obs_(obs) {}
 
     PanelId id() const final { return id_; }
@@ -73,7 +91,7 @@ public:
     Workspace defaultWorkspace() const final { return workspace_; }
     viz::Observability observability() const final { return obs_; }
 
-private:
+  private:
     PanelId id_;
     std::string_view key_, titleKey_, icon_;
     Workspace workspace_;

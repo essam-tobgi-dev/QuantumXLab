@@ -61,8 +61,7 @@ struct Error {
     std::source_location where = std::source_location::current();
 
     Error() = default;
-    Error(ErrorCode c, std::string msg,
-          std::source_location loc = std::source_location::current())
+    Error(ErrorCode c, std::string msg, std::source_location loc = std::source_location::current())
         : code(c), message(std::move(msg)), where(loc) {}
 
     Error& withSpan(SourceSpan s) {
@@ -84,25 +83,29 @@ template <class T> using Result = std::expected<T, Error>;
 using Status = std::expected<void, Error>;
 
 template <class... Args>
-[[nodiscard]] std::unexpected<Error> fail(ErrorCode c, std::string msg,
-                                          std::source_location loc = std::source_location::current()) {
+[[nodiscard]] std::unexpected<Error>
+fail(ErrorCode c, std::string msg, std::source_location loc = std::source_location::current()) {
     return std::unexpected(Error(c, std::move(msg), loc));
 }
-[[nodiscard]] inline std::unexpected<Error> fail(Error e) { return std::unexpected(std::move(e)); }
+[[nodiscard]] inline std::unexpected<Error> fail(Error e) {
+    return std::unexpected(std::move(e));
+}
 
 // QXL_TRY(expr): propagate an error from a Result-returning expression.
-#define QXL_TRY(expr)                                                                             \
-    do {                                                                                          \
-        if (auto&& _r = (expr); !_r) return std::unexpected(std::move(_r.error()));               \
+#define QXL_TRY(expr)                                                                              \
+    do {                                                                                           \
+        if (auto&& _r = (expr); !_r)                                                               \
+            return std::unexpected(std::move(_r.error()));                                         \
     } while (0)
 
 #define QXL_CAT_(a, b) a##b
 #define QXL_CAT(a, b) QXL_CAT_(a, b)
-// QXL_TRY_ASSIGN(decl, expr): `QXL_TRY_ASSIGN(auto v, f(x));` binds v to the value or returns the error.
-#define QXL_TRY_ASSIGN(decl, expr)                                                                \
-    auto&& QXL_CAT(_qxl_r_, __LINE__) = (expr);                                                   \
-    if (!QXL_CAT(_qxl_r_, __LINE__))                                                              \
-        return std::unexpected(std::move(QXL_CAT(_qxl_r_, __LINE__).error()));                    \
+// QXL_TRY_ASSIGN(decl, expr): `QXL_TRY_ASSIGN(auto v, f(x));` binds v to the value or returns the
+// error.
+#define QXL_TRY_ASSIGN(decl, expr)                                                                 \
+    auto&& QXL_CAT(_qxl_r_, __LINE__) = (expr);                                                    \
+    if (!QXL_CAT(_qxl_r_, __LINE__))                                                               \
+        return std::unexpected(std::move(QXL_CAT(_qxl_r_, __LINE__).error()));                     \
     decl = std::move(*QXL_CAT(_qxl_r_, __LINE__))
 
 } // namespace qlab

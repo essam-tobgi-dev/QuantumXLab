@@ -21,7 +21,7 @@ struct MeshHandle {
 };
 
 class MeshLibrary {
-public:
+  public:
     // Stores `mesh`. A non-empty `key` already present returns the cached handle and drops `mesh`.
     MeshHandle add(gfx::MeshData mesh, std::string key = {});
     // Cached handle for `key`, or an invalid handle.
@@ -33,14 +33,16 @@ public:
     // Object-space bounds; `valid()` is false for an empty mesh.
     const gfx::Aabb& bounds(MeshHandle h) const { return entries_.at(h.index).bounds; }
     std::uint32_t version(MeshHandle h) const { return entries_.at(h.index).version; }
-    std::size_t triangles(MeshHandle h) const { return h.valid() ? entries_.at(h.index).data.triangleCount() : 0; }
+    std::size_t triangles(MeshHandle h) const {
+        return h.valid() ? entries_.at(h.index).data.triangleCount() : 0;
+    }
 
     std::size_t size() const { return entries_.size(); }
     std::size_t cacheHits() const { return hits_; }
     std::size_t uniqueTriangles() const;
     std::size_t bytes() const;
 
-private:
+  private:
     struct Entry {
         gfx::MeshData data;
         gfx::Aabb bounds;

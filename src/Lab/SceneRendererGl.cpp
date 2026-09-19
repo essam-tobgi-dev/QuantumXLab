@@ -5,8 +5,6 @@
 #include "Lab/RackPanel.hpp"
 #include "Lab/SceneRenderer.hpp"
 #include <algorithm>
-#include <cmath>
-#include <glm/trigonometric.hpp>
 #include <bit>
 #include <cmath>
 #include <glm/trigonometric.hpp>
@@ -17,7 +15,9 @@ namespace qlab::lab {
 namespace {
 std::uint64_t materialKey(const gfx::Material& m) {
     std::uint64_t h = 1469598103934665603ull;
-    auto mix = [&h](float v) { h = (h ^ static_cast<std::uint64_t>(std::bit_cast<std::uint32_t>(v))) * 1099511628211ull; };
+    auto mix = [&h](float v) {
+        h = (h ^ static_cast<std::uint64_t>(std::bit_cast<std::uint32_t>(v))) * 1099511628211ull;
+    };
     mix(m.baseColor.r);
     mix(m.baseColor.g);
     mix(m.baseColor.b);
@@ -26,23 +26,30 @@ std::uint64_t materialKey(const gfx::Material& m) {
     mix(m.roughness);
     // Batches bind their texture set once (spec 18 §4): two materials that differ only by set
     // must not share a batch.
-    for (const char c : m.textureSet) h = (h ^ static_cast<std::uint64_t>(static_cast<unsigned char>(c))) * 1099511628211ull;
+    for (const char c : m.textureSet)
+        h = (h ^ static_cast<std::uint64_t>(static_cast<unsigned char>(c))) * 1099511628211ull;
     mix(m.uvScale);
     mix(m.normalStrength);
     return h;
 }
 } // namespace
 
-const gfx::Mesh* SceneRenderer::gpuMesh(MeshHandle handle, bool clipped, const glm::dvec4& planeObject) {
-    if (!handle.valid()) return nullptr;
-    const std::uint64_t key = clipped ? (1ull << 63) | (static_cast<std::uint64_t>(std::bit_cast<std::uint32_t>(
-                                                            static_cast<float>(planeObject.w))) << 32) |
-                                            handle.index
-                                      : handle.index;
+const gfx::Mesh* SceneRenderer::gpuMesh(MeshHandle handle, bool clipped,
+                                        const glm::dvec4& planeObject) {
+    if (!handle.valid())
+        return nullptr;
+    const std::uint64_t key =
+        clipped ? (1ull << 63) |
+                      (static_cast<std::uint64_t>(
+                           std::bit_cast<std::uint32_t>(static_cast<float>(planeObject.w)))
+                       << 32) |
+                      handle.index
+                : handle.index;
     double angle = std::atan2(planeObject.z, planeObject.x);
     std::uint32_t version = scene_->meshes().version(handle);
     auto it = gpu_.find(key);
-    if (it != gpu_.end() && it->second.version == version && (!clipped || std::abs(it->second.angle - angle) < 1e-9))
+    if (it != gpu_.end() && it->second.version == version &&
+        (!clipped || std::abs(it->second.angle - angle) < 1e-9))
         return it->second.mesh ? it->second.mesh.get() : nullptr;
     const gfx::MeshData& source = scene_->meshes().data(handle);
     gfx::MeshData data = clipped ? mesh::clipByPlane(source, planeObject) : source;
@@ -53,7 +60,8 @@ const gfx::Mesh* SceneRenderer::gpuMesh(MeshHandle handle, bool clipped, const g
         gpu.mesh.reset();
         return nullptr;
     }
-    if (!gpu.mesh) gpu.mesh = std::make_unique<gfx::Mesh>();
+    if (!gpu.mesh)
+        gpu.mesh = std::make_unique<gfx::Mesh>();
     gpu.mesh->upload(data);
     return gpu.mesh.get();
 }
@@ -76,9 +84,11 @@ void SceneRenderer::submit(gfx::Renderer& renderer, const Interaction& ui) {
 
     for (const DrawItem& item : items_) {
         glm::dvec4 planeObject{0.0};
-        if (item.clipped) planeObject = glm::transpose(item.world) * plane;
+        if (item.clipped)
+            planeObject = glm::transpose(item.world) * plane;
         const gfx::Mesh* mesh = gpuMesh(item.mesh, item.clipped, planeObject);
-        if (!mesh) continue;
+        if (!mesh)
+            continue;
         gfx::SubmitFlags flags;
         flags.noPick = !item.pickable;
         flags.castShadow = !item.transparent;
@@ -111,31 +121,44 @@ void SceneRenderer::submit(gfx::Renderer& renderer, const Interaction& ui) {
             continue;
         }
         for (const auto& data : batch.instances) {
-            renderer.submit(*batch.mesh, batch.material, data.model, ComponentId{data.idFlags.x}, batch.flags);
+            renderer.submit(*batch.mesh, batch.material, data.model, ComponentId{data.idFlags.x},
+                            batch.flags);
             ++stats_.draws;
         }
     }
     renderer.setSelection(ui.selected(), ui.hovered());
     if (panelLabels_) { // nameplate labels of the rack units drawn at full detail and within range
         for (const DrawItem& item : items_) {
-            if (item.lod != 0) continue;
+            if (item.lod != 0)
+                continue;
             const Node* n = scene_->node(item.id);
-            if (!n || n->group != Group::Rack || n->descriptorIndex < 0) continue;
-            const ComponentDescriptor& d = scene_->catalog().all()[static_cast<std::size_t>(n->descriptorIndex)];
-            if (d.generator != "RackUnit") continue;
+            if (!n || n->group != Group::Rack || n->descriptorIndex < 0)
+                continue;
+            const ComponentDescriptor& d =
+                scene_->catalog().all()[static_cast<std::size_t>(n->descriptorIndex)];
+            if (d.generator != "RackUnit")
+                continue;
             const int u = std::max(1, static_cast<int>(std::lround(d.geometryNumber("u", 1))));
-            const double depth = d.geometry.contains("depth_m") ? d.geometryNumber("depth_m", kRackUnitDepth_m) : kRackUnitDepth_m;
-            const glm::dvec3 anchor = glm::dvec3(item.world * glm::dvec4(rackNameplateLocal(u, depth) + glm::dvec3(0.0, 0.006, 0.0), 1.0));
+            const double depth = d.geometry.contains("depth_m")
+                                     ? d.geometryNumber("depth_m", kRackUnitDepth_m)
+                                     : kRackUnitDepth_m;
+            const glm::dvec3 anchor = glm::dvec3(
+                item.world *
+                glm::dvec4(rackNameplateLocal(u, depth) + glm::dvec3(0.0, 0.006, 0.0), 1.0));
             const double dist = glm::length(anchor - eye_);
-            if (dist > panelLabelRange_m) continue;
+            if (dist > panelLabelRange_m)
+                continue;
             // A 9 px label on a unit that spans fewer pixels than that would overprint its
             // neighbours (eight 1U boards in a row): compare angular sizes, viewport-independent
             // for a 1000 px-tall view at the camera's field of view.
             const double unitAngle = u * kRackUnit_m / std::max(dist, 1e-6);
-            const double labelAngle = 9.0 / 1000.0 * 2.0 * std::tan(glm::radians(renderer.camera().fovDeg()) * 0.5);
-            if (unitAngle < 1.6 * labelAngle) continue;
-            renderer.text().label3D(anchor, d.modelName.empty() ? d.name : d.modelName, 9.0f, {0.95f, 0.95f, 0.95f, 1.0f},
-                                    gfx::TextAnchor::BottomLeft, {0.0f, 0.0f});
+            const double labelAngle =
+                9.0 / 1000.0 * 2.0 * std::tan(glm::radians(renderer.camera().fovDeg()) * 0.5);
+            if (unitAngle < 1.6 * labelAngle)
+                continue;
+            renderer.text().label3D(anchor, d.modelName.empty() ? d.name : d.modelName, 9.0f,
+                                    {0.95f, 0.95f, 0.95f, 1.0f}, gfx::TextAnchor::BottomLeft,
+                                    {0.0f, 0.0f});
         }
     }
     if (labels_ && ui.selected().value != 0) {

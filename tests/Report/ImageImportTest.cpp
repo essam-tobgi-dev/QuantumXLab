@@ -1,6 +1,6 @@
 // Spec 23 §8 (images and the baked annotation strip) and §11 (import).
-#include "ReportTestUtil.hpp"
 #include "Data/Fidelity.hpp"
+#include "ReportTestUtil.hpp"
 
 #include "Hardware/Hardware.hpp"
 #include "Lang/Sema.hpp"
@@ -55,17 +55,20 @@ TEST_CASE("images: the annotation strip is baked under the capture (spec 23 §8)
     CHECK(out.height == shot.height + annotationHeight(a));
     // The capture itself is untouched.
     for (int y = 0; y < shot.height; ++y)
-        for (int x = 0; x < shot.width; ++x) REQUIRE(out.get(x, y) == shot.get(x, y));
+        for (int x = 0; x < shot.width; ++x)
+            REQUIRE(out.get(x, y) == shot.get(x, y));
     // The strip is drawn: an accent rule, background, and text pixels in the foreground colour.
     CHECK(out.get(0, shot.height) == a.accent);
     int foreground = 0, accent = 0;
     for (int y = shot.height + 2; y < out.height; ++y)
         for (int x = 0; x < out.width; ++x) {
-            if (out.get(x, y) == a.foreground) ++foreground;
-            if (out.get(x, y) == a.accent) ++accent;
+            if (out.get(x, y) == a.foreground)
+                ++foreground;
+            if (out.get(x, y) == a.accent)
+                ++accent;
         }
-    CHECK(foreground > 100);   // the device/time line and the badges
-    CHECK(accent > 100);       // the title line
+    CHECK(foreground > 100); // the device/time line and the badges
+    CHECK(accent > 100);     // the title line
     CHECK(out.get(out.width - 1, out.height - 1) == a.background);
 
     rtest::Sandbox box("annotate");
@@ -91,13 +94,14 @@ TEST_CASE("images: the 5x7 font covers printable ASCII and folds lowercase to up
     CHECK(font::glyph('a').data() == font::glyph('A').data());
     CHECK(font::glyph(' ')[0] == 0x00);
     CHECK(font::glyph('0')[0] == 0x3E);
-    CHECK(font::glyph('\x01').data() == font::glyph('?').data());   // unknown -> '?'
-    CHECK(font::textWidth("abc", 1) == 17);                         // 3 * 6 - 1
+    CHECK(font::glyph('\x01').data() == font::glyph('?').data()); // unknown -> '?'
+    CHECK(font::textWidth("abc", 1) == 17);                       // 3 * 6 - 1
     CHECK(font::textWidth("abc", 2) == 34);
     CHECK(font::textWidth("", 3) == 0);
     // Every glyph fits in seven rows.
     for (char c = 0x20; c < 0x60; ++c)
-        for (std::uint8_t column : font::glyph(c)) CHECK(column < 0x80);
+        for (std::uint8_t column : font::glyph(c))
+            CHECK(column < 0x80);
 }
 
 TEST_CASE("import: only the three formats of spec 23 §11 are accepted") {
@@ -139,7 +143,7 @@ TEST_CASE("import: OpenQASM 2 is converted and every rewrite is reported (spec 2
     CHECK(imported->source.find("stdgates.inc") != std::string::npos);
     CHECK(imported->source.find("qelib1.inc") == std::string::npos);
     CHECK(imported->source.find("// [import] opaque custom") != std::string::npos);
-    CHECK(imported->source.find("measure q -> c;") != std::string::npos);   // accepted as it is
+    CHECK(imported->source.find("measure q -> c;") != std::string::npos); // accepted as it is
 
     // Every rewrite is listed, with the line it happened on and no catalogue id.
     REQUIRE(imported->diagnostics.size() >= 3u);
@@ -196,7 +200,8 @@ TEST_CASE("import: a device directory is linted before it is copied (spec 23 §1
     // A directory that fails the lint is never copied.
     const std::filesystem::path broken = box / "broken";
     std::filesystem::create_directories(broken);
-    REQUIRE(core::writeTextFileAtomic(broken / "device.json", "{\"qxl\": {\"kind\": \"device\"}, \"data\": {}}")
+    REQUIRE(core::writeTextFileAtomic(broken / "device.json",
+                                      "{\"qxl\": {\"kind\": \"device\"}, \"data\": {}}")
                 .has_value());
     auto bad = importDeviceDirectory(broken, box / "dest");
     REQUIRE_FALSE(bad.has_value());

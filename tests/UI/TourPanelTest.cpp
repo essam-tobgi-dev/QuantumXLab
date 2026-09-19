@@ -1,8 +1,8 @@
 // Spec 17 §7.10 / 19 §3 — the Guided tour panel and the viewport narration card in a headless
 // frame with a running tour (harness: UiHarness.hpp; fixture style of FrameTest.cpp).
-#include "UiHarness.hpp"
 #include "Core/Paths.hpp"
 #include "Lab/Tour.hpp"
+#include "UiHarness.hpp"
 #include <catch2/catch_test_macros.hpp>
 #include <imgui_internal.h>
 
@@ -19,15 +19,18 @@ struct TourFixture {
 
     static lab::Scene build() {
         auto s = lab::buildScene("sc_lab_standard");
-        if (!s) FAIL(s.error().format());
+        if (!s)
+            FAIL(s.error().format());
         return std::move(*s);
     }
     TourFixture() : scene(build()), ui(scene) {
         cam.setAspect(16.0 / 9.0);
         cam.set(ui.bookmark("Overview")->view);
-        auto t = lab::Tour::load(core::assetDir() / "Lab" / "Tours" / "sc_lab_standard.json", scene, ui, nullptr,
-                                 std::filesystem::path(QXL_SOURCE_DIR) / "docs" / "theory");
-        if (!t) FAIL(t.error().format());
+        auto t =
+            lab::Tour::load(core::assetDir() / "Lab" / "Tours" / "sc_lab_standard.json", scene, ui,
+                            nullptr, std::filesystem::path(QXL_SOURCE_DIR) / "docs" / "theory");
+        if (!t)
+            FAIL(t.error().format());
         tour.emplace(std::move(*t));
     }
     void bind(UiContext& ctx) {
@@ -39,30 +42,32 @@ struct TourFixture {
 };
 
 // One frame: the panel in its own window plus the overlay over a fake viewport image.
-template <class Harness>
-void frameWith(Harness& h, Panel& panel, UiContext& ctx, bool overlay) {
+template <class Harness> void frameWith(Harness& h, Panel& panel, UiContext& ctx, bool overlay) {
     // Two frames: child windows and scrollbars settle on the second one, so vertex counts of
     // identical content are comparable.
-    for (int pass = 0; pass < 2; ++pass) h.frame([&] {
-        ImGui::SetNextWindowSize(ImVec2(900.0f, 420.0f), ImGuiCond_Always);
-        ImGui::Begin(panel.windowTitle().c_str());
-        panel.draw(ctx);
-        ImGui::End();
-        // The viewport stand-in is always there; `overlay` only decides whether the card is drawn,
-        // so vertex counts with and without it compare the card alone.
-        ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_Always);
-        ImGui::SetNextWindowSize(ImVec2(1200.0f, 700.0f), ImGuiCond_Always);
-        ImGui::Begin("##viewport_stand_in", nullptr, ImGuiWindowFlags_NoDecoration);
-        if (overlay) drawTourOverlay(ctx, ImVec2(0.0f, 0.0f), ImVec2(1200.0f, 700.0f));
-        ImGui::End();
-    });
+    for (int pass = 0; pass < 2; ++pass)
+        h.frame([&] {
+            ImGui::SetNextWindowSize(ImVec2(900.0f, 420.0f), ImGuiCond_Always);
+            ImGui::Begin(panel.windowTitle().c_str());
+            panel.draw(ctx);
+            ImGui::End();
+            // The viewport stand-in is always there; `overlay` only decides whether the card is
+            // drawn, so vertex counts with and without it compare the card alone.
+            ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_Always);
+            ImGui::SetNextWindowSize(ImVec2(1200.0f, 700.0f), ImGuiCond_Always);
+            ImGui::Begin("##viewport_stand_in", nullptr, ImGuiWindowFlags_NoDecoration);
+            if (overlay)
+                drawTourOverlay(ctx, ImVec2(0.0f, 0.0f), ImVec2(1200.0f, 700.0f));
+            ImGui::End();
+        });
 }
 
 } // namespace
 
 TEST_CASE("Tour panel: catalog identity, the Lab preset and a headless frame with a running tour") {
     test::UiHarness h;
-    if (!h.ready()) SKIP("pinned fonts not on disk");
+    if (!h.ready())
+        SKIP("pinned fonts not on disk");
     PanelPtr panel = makePanel(PanelId::Tour);
     REQUIRE(panel != nullptr);
     CHECK(panel->key() == "tour");
@@ -93,7 +98,8 @@ TEST_CASE("Tour panel: catalog identity, the Lab preset and a headless frame wit
 
     // Running tour: the model advances (as LabModel::tickLab does), the panel and the card draw it.
     f.tour->play();
-    for (int i = 0; i < 70; ++i) f.tour->update(1.0 / 60.0, f.cam);
+    for (int i = 0; i < 70; ++i)
+        f.tour->update(1.0 / 60.0, f.cam);
     REQUIRE(f.tour->playing());
     CHECK(f.tour->phase() == lab::Tour::Phase::Dwelling);
     frameWith(h, *panel, ctx, true);
@@ -110,7 +116,8 @@ TEST_CASE("Tour panel: catalog identity, the Lab preset and a headless frame wit
     CHECK(h.vertices() > idleWithOverlay);
     for (std::size_t k = 0; k < f.tour->size(); k += 5) {
         f.tour->seek(k);
-        for (int i = 0; i < 60; ++i) f.tour->update(1.0 / 60.0, f.cam);
+        for (int i = 0; i < 60; ++i)
+            f.tour->update(1.0 / 60.0, f.cam);
         INFO("step " << k);
         frameWith(h, *panel, ctx, true);
         CHECK(h.vertices() > idleWithOverlay);
@@ -125,7 +132,8 @@ TEST_CASE("Tour panel: catalog identity, the Lab preset and a headless frame wit
     ctx.physicalLab = true;
     f.tour->setPhysicalLab(true);
     f.tour->play();
-    for (int i = 0; i < 70; ++i) f.tour->update(1.0 / 60.0, f.cam);
+    for (int i = 0; i < 70; ++i)
+        f.tour->update(1.0 / 60.0, f.cam);
     frameWith(h, *panel, ctx, true);
     CHECK(h.vertices() > idleWithOverlay);
     ctx.physicalLab = false;

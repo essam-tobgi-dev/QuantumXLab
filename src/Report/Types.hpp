@@ -43,8 +43,9 @@ struct RunIdentity {
 
     core::Json toJson() const;
     static RunIdentity of(const runtime::RunResult& r);
-    static RunIdentity of(std::uint64_t programHash, std::string_view device, std::string_view calibrationTime,
-                          std::string_view backend, std::uint64_t shots, std::uint64_t seed);
+    static RunIdentity of(std::uint64_t programHash, std::string_view device,
+                          std::string_view calibrationTime, std::string_view backend,
+                          std::uint64_t shots, std::uint64_t seed);
 };
 
 // Spec 23 §9: the notice a state export carries in its sidecar and in the export dialog.

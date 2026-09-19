@@ -1,8 +1,8 @@
 // Spec 21 §3.1, §4, §5 — Bloch view: model from a snapshot, trail, pagination, hit testing and
 // selection (headless), and a headless render to PNG checked pixel by pixel (SKIP without GL).
-#include "Graphics/Window.hpp"
-#include "Data/Fidelity.hpp"
 #include "Viz/Views/BlochView.hpp"
+#include "Data/Fidelity.hpp"
+#include "Graphics/Window.hpp"
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <cmath>
@@ -20,7 +20,8 @@ const double kInvSqrt2 = 1.0 / std::sqrt(2.0);
 std::shared_ptr<const qsim::Snapshot> snapshotOf(std::vector<Complex> psi, std::uint64_t gate = 0) {
     auto s = std::make_shared<qsim::Snapshot>();
     s->kind = qsim::Kind::StateVector;
-    s->nQubits = static_cast<std::uint32_t>(std::lround(std::log2(static_cast<double>(psi.size()))));
+    s->nQubits =
+        static_cast<std::uint32_t>(std::lround(std::log2(static_cast<double>(psi.size()))));
     s->gateIndex = gate;
     s->amplitudes = std::move(psi);
     return s;
@@ -36,8 +37,11 @@ struct Image {
     int w = 0, h = 0;
     std::vector<unsigned char> px;
     std::array<int, 3> at(glm::vec2 p) const {
-        const int x = std::clamp(static_cast<int>(std::lround(p.x)), 0, w - 1), y = std::clamp(static_cast<int>(std::lround(p.y)), 0, h - 1);
-        const std::size_t o = (static_cast<std::size_t>(y) * static_cast<std::size_t>(w) + static_cast<std::size_t>(x)) * 4;
+        const int x = std::clamp(static_cast<int>(std::lround(p.x)), 0, w - 1),
+                  y = std::clamp(static_cast<int>(std::lround(p.y)), 0, h - 1);
+        const std::size_t o = (static_cast<std::size_t>(y) * static_cast<std::size_t>(w) +
+                               static_cast<std::size_t>(x)) *
+                              4;
         return {px[o], px[o + 1], px[o + 2]};
     }
 };
@@ -46,12 +50,15 @@ Image loadPng(const std::filesystem::path& p) {
     int n = 0;
     unsigned char* data = stbi_load(p.string().c_str(), &img.w, &img.h, &n, 4);
     REQUIRE(data != nullptr);
-    img.px.assign(data, data + static_cast<std::size_t>(img.w) * static_cast<std::size_t>(img.h) * 4);
+    img.px.assign(data,
+                  data + static_cast<std::size_t>(img.w) * static_cast<std::size_t>(img.h) * 4);
     stbi_image_free(data);
     return img;
 }
 int distance(const std::array<int, 3>& a, const glm::vec4& c) {
-    return std::abs(a[0] - static_cast<int>(c.r * 255)) + std::abs(a[1] - static_cast<int>(c.g * 255)) + std::abs(a[2] - static_cast<int>(c.b * 255));
+    return std::abs(a[0] - static_cast<int>(c.r * 255)) +
+           std::abs(a[1] - static_cast<int>(c.g * 255)) +
+           std::abs(a[2] - static_cast<int>(c.b * 255));
 }
 std::filesystem::path buildDir() {
     const std::filesystem::path dir = std::filesystem::path(QXL_SOURCE_DIR) / "build";
@@ -82,7 +89,8 @@ TEST_CASE("Bloch view: Bell pair has |r| = 0 on both qubits, product states sit 
     CHECK(view.wants(view.input()).singles);
 }
 
-TEST_CASE("Bloch view: update is free for an unchanged input; the trail keeps one point per snapshot") {
+TEST_CASE(
+    "Bloch view: update is free for an unchanged input; the trail keeps one point per snapshot") {
     BlochView view;
     view.setTrailLength(3);
     ViewInput in = inputOf({1.0, 0.0}, 0);
@@ -128,10 +136,11 @@ TEST_CASE("Bloch view: reductions from the run, stale flag, 8 per row with pages
     CHECK_FALSE(view.stale());
     CHECK(view.pageCount() == 2); // 8 per row, two rows of ≥ 120 px fit: 16 per page
     std::size_t onPage = 0;
-    for (const auto& c : view.cells()) onPage += c.onPage ? 1 : 0;
+    for (const auto& c : view.cells())
+        onPage += c.onPage ? 1 : 0;
     CHECK(onPage == 16);
-    CHECK(view.cells()[8].rect.y0 > view.cells()[0].rect.y0);              // second row
-    CHECK(view.cells()[7].rect.x0 > view.cells()[6].rect.x0);              // eighth column
+    CHECK(view.cells()[8].rect.y0 > view.cells()[0].rect.y0); // second row
+    CHECK(view.cells()[7].rect.x0 > view.cells()[6].rect.x0); // eighth column
     CHECK_FALSE(view.cells()[0].rect.overlaps(view.cells()[1].rect));
     view.setPage(1);
     CHECK(view.cells()[16].onPage);
@@ -163,8 +172,8 @@ TEST_CASE("Bloch view: hover readout and click select the qubit in the shared mo
     CHECK(hit->title == "q1");
     REQUIRE(hit->readout.size() >= 6);
     CHECK(hit->readout[0].value == "(1, 0, 0)");
-    CHECK(hit->readout[1].value == "1");        // |r|
-    CHECK(hit->readout[3].value == "π/2");      // θ
+    CHECK(hit->readout[1].value == "1");   // |r|
+    CHECK(hit->readout[3].value == "π/2"); // θ
     CHECK_FALSE(view.hitTest({-5.0f, -5.0f}).has_value());
 
     SelectionModel selection;
@@ -175,7 +184,8 @@ TEST_CASE("Bloch view: hover readout and click select the qubit in the shared mo
     REQUIRE(view.click(c1.centerPx, &selection).has_value());
     CHECK(clicks == 1);
     CHECK(selection.isSelected(QubitIndex{1}));
-    CHECK(selection.component() == ComponentId{102}); // the lab highlights the qubit's pad (spec 21 §1.1)
+    CHECK(selection.component() ==
+          ComponentId{102}); // the lab highlights the qubit's pad (spec 21 §1.1)
     // |0⟩ is up: the north pole projects above the sphere centre, |+⟩ (x) toward the viewer.
     const auto& c0 = view.cells()[0];
     double depth = 0.0;
@@ -192,7 +202,8 @@ TEST_CASE("Bloch view renders to PNG: the arrow points up for |0> and down for |
     wd.height = 240;
     wd.vsync = false;
     auto window = gfx::Window::create(wd);
-    if (!window) SKIP("no GL context available");
+    if (!window)
+        SKIP("no GL context available");
     const VizTheme theme = VizTheme::load("dark").value_or(VizTheme::fallbackDark());
     GlBackendDesc desc;
     desc.background = glm::vec3(theme.bgPanel);
@@ -208,17 +219,21 @@ TEST_CASE("Bloch view renders to PNG: the arrow points up for |0> and down for |
     REQUIRE(a.w == W);
     REQUIRE(a.h == H);
     const auto& cell = view.cells()[0];
-    const glm::vec2 shaftUp = view.projectPoint(cell, {0, 0, 0.5}), shaftDown = view.projectPoint(cell, {0, 0, -0.5});
+    const glm::vec2 shaftUp = view.projectPoint(cell, {0, 0, 0.5}),
+                    shaftDown = view.projectPoint(cell, {0, 0, -0.5});
     const glm::vec4 orange = theme.qubitColor(0);
-    // The lit shaft is not the exact token colour, but it is orange: red > green > blue and far from the panel.
+    // The lit shaft is not the exact token colour, but it is orange: red > green > blue and far
+    // from the panel.
     const auto onShaft = a.at(shaftUp);
     CHECK(onShaft[0] > onShaft[1]);
     CHECK(onShaft[1] > onShaft[2]);
     CHECK(distance(onShaft, orange) < distance(onShaft, theme.bgPanel));
-    CHECK(distance(a.at(shaftDown), theme.bgPanel) < distance(a.at(shaftDown), orange)); // nothing but shell below
-    CHECK(distance(a.at({2.0f, 2.0f}), theme.bgPanel) <= 6);                              // exact panel colour
+    CHECK(distance(a.at(shaftDown), theme.bgPanel) <
+          distance(a.at(shaftDown), orange));                // nothing but shell below
+    CHECK(distance(a.at({2.0f, 2.0f}), theme.bgPanel) <= 6); // exact panel colour
 
-    // |11⟩ in a fresh view (no trail): the arrows point down and the upper half of the axis is empty.
+    // |11⟩ in a fresh view (no trail): the arrows point down and the upper half of the axis is
+    // empty.
     BlochView flippedView;
     flippedView.update(inputOf({0.0, 0.0, 0.0, 1.0}));
     const auto down = buildDir() / "viz_bloch_one.png";

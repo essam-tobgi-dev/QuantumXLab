@@ -13,17 +13,19 @@ Transform Transform::rotated(const glm::dvec3& p, const glm::dvec3& axis, double
 
 std::optional<long long> InstanceParams::index(std::string_view key) const {
     const std::string* s = token(key);
-    if (!s || s->empty()) return std::nullopt;
+    if (!s || s->empty())
+        return std::nullopt;
     long long v = 0;
     auto [p, ec] = std::from_chars(s->data(), s->data() + s->size(), v);
-    if (ec != std::errc{} || p != s->data() + s->size()) return std::nullopt;
+    if (ec != std::errc{} || p != s->data() + s->size())
+        return std::nullopt;
     return v;
 }
 
 namespace {
 constexpr std::array<std::string_view, kGroupCount> kGroupNames{
-    "room", "fridge_exterior", "fridge_interior", "wiring", "rack",
-    "ghs",  "chip",            "chip_micro",      "overlay"};
+    "room", "fridge_exterior", "fridge_interior", "wiring", "rack", "ghs",
+    "chip", "chip_micro",      "overlay"};
 } // namespace
 
 std::string_view groupName(Group g) {
@@ -51,9 +53,12 @@ bool groupFromName(std::string_view s, Group& out) {
 
 std::string_view detailName(Detail d) {
     switch (d) {
-    case Detail::Full: return "full";
-    case Detail::Simple: return "simple";
-    case Detail::Hidden: return "hidden";
+    case Detail::Full:
+        return "full";
+    case Detail::Simple:
+        return "simple";
+    case Detail::Hidden:
+        return "hidden";
     }
     return "?";
 }

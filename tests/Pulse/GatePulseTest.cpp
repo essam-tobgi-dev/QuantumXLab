@@ -17,13 +17,15 @@ constexpr double kPi = std::numbers::pi;
 std::vector<Play> playsOn(const Schedule& s, ChannelId ch) {
     std::vector<Play> out;
     for (auto const& i : s.instructions())
-        if (auto* p = std::get_if<Play>(&i); p && p->ch == ch) out.push_back(*p);
+        if (auto* p = std::get_if<Play>(&i); p && p->ch == ch)
+            out.push_back(*p);
     return out;
 }
 std::vector<FrameOp> frameOps(const Schedule& s) {
     std::vector<FrameOp> out;
     for (auto const& i : s.instructions())
-        if (auto* f = std::get_if<FrameOp>(&i)) out.push_back(*f);
+        if (auto* f = std::get_if<FrameOp>(&i))
+            out.push_back(*f);
     return out;
 }
 // Trapezoid ∫A·e dt of the played envelope (amplitude included), independent of Waveform::area().
@@ -31,7 +33,8 @@ std::vector<FrameOp> frameOps(const Schedule& s) {
 double trapezoidArea(const Waveform& w, int n = 20000) {
     const double h = w.duration / n;
     double acc = 0.5 * (w.sample(0.0).real() + w.sample(w.duration).real());
-    for (int i = 1; i < n; ++i) acc += w.sample(i * h).real();
+    for (int i = 1; i < n; ++i)
+        acc += w.sample(i * h).real();
     return acc * h;
 }
 } // namespace
@@ -54,21 +57,26 @@ TEST_CASE("X90 DRAG pulse: area theorem gives pi/2 within 1e-6 (spec 10 §7)") {
             // σ = T/4 of the calibrated gate time (§6.1); T itself sits on the nearest granule
             const double calT = lib.calibration().qubit(q)->duration1q.value.v;
             REQUIRE(wSx.sigma == Approx(calT / 4.0).epsilon(1e-12));
-            REQUIRE(std::abs(wSx.duration - calT) <= 0.5 * lib.dt().value * lib.granularity() * 1e-12 + 1e-18);
+            REQUIRE(std::abs(wSx.duration - calT) <=
+                    0.5 * lib.dt().value * lib.granularity() * 1e-12 + 1e-18);
             // κ_d from the independent π calibration point (x), then θ(sx) = κ_d·A·area(e).
-            const double kappa = kPi / trapezoidArea(xPlays[0].wf); // sample() carries the amplitude A_x
+            const double kappa =
+                kPi / trapezoidArea(xPlays[0].wf); // sample() carries the amplitude A_x
             const double theta = physics::rotationAngle(kappa, wSx);
             REQUIRE(std::abs(theta - kPi / 2.0) < 1e-6);
-            REQUIRE(std::abs(wSx.area().imag()) < 1e-20); // the DRAG quadrature integrates to zero (§11)
+            REQUIRE(std::abs(wSx.area().imag()) <
+                    1e-20); // the DRAG quadrature integrates to zero (§11)
             auto coupling = lib.driveCoupling(q);
             REQUIRE(coupling);
             REQUIRE(*coupling == Approx(kappa).epsilon(1e-6));
-            REQUIRE(physics::amplitudeForAngle(kPi / 2.0, *coupling, wSx) == Approx(wSx.amplitude).epsilon(1e-9));
+            REQUIRE(physics::amplitudeForAngle(kPi / 2.0, *coupling, wSx) ==
+                    Approx(wSx.amplitude).epsilon(1e-9));
         }
     }
 }
 
-TEST_CASE("echoed CR: two CR halves of opposite sign, echo pulses on the control, calibrated duration") {
+TEST_CASE(
+    "echoed CR: two CR halves of opposite sign, echo pulses on the control, calibrated duration") {
     for (const char* id : {"sc_fixed_5", "sc_heavyhex_27"}) {
         const PulseLibrary& lib = library(id);
         const std::int64_t grain = lib.dt().value * lib.granularity();
@@ -101,25 +109,30 @@ TEST_CASE("echoed CR: two CR halves of opposite sign, echo pulses on the control
             REQUIRE(echo[0].t0 == cr[0].t0 + cr[0].duration());
             REQUIRE(cr[1].t0 == echo[0].t0 + echo[0].duration());
             REQUIRE(echo[1].t0 == cr[1].t0 + cr[1].duration());
-            // total = 2·T_CR + 2·T_x, within one granule of cal.edges.c-t.duration_ns (spec 10 §1 grid)
+            // total = 2·T_CR + 2·T_x, within one granule of cal.edges.c-t.duration_ns (spec 10 §1
+            // grid)
             const std::int64_t total = 2 * (p->crDuration.value + p->echoDuration.value);
             REQUIRE(cx->duration().value == total);
             REQUIRE(ecr->duration().value == total);
-            REQUIRE(std::abs(static_cast<double>(total) * 1e-12 - p->calibratedDurationS) <= grain * 1e-12);
+            REQUIRE(std::abs(static_cast<double>(total) * 1e-12 - p->calibratedDurationS) <=
+                    grain * 1e-12);
             REQUIRE(total % grain == 0);
             // ecr is steps 1–4 only; cx adds the target sx beside the second echo and virtual Zs.
             REQUIRE(frameOps(*ecr).empty());
             REQUIRE(playsOn(*ecr, ChannelId::drive(t)).size() == 2);
             REQUIRE(cancel[2].t0 == echo[1].t0);
-            REQUIRE(cancel[2].wf == playsOn(*lib.scheduleFor("sx", {t}), ChannelId::drive(t))[0].wf);
+            REQUIRE(cancel[2].wf ==
+                    playsOn(*lib.scheduleFor("sx", {t}), ChannelId::drive(t))[0].wf);
             double shiftControl = 0.0, shiftTarget = 0.0;
             for (auto const& f : frameOps(*cx)) {
                 REQUIRE(f.op == FrameOp::Op::ShiftPhase);
-                if (f.ch == ChannelId::drive(c)) shiftControl += f.value;
-                if (f.ch == ChannelId::drive(t)) shiftTarget += f.value;
+                if (f.ch == ChannelId::drive(c))
+                    shiftControl += f.value;
+                if (f.ch == ChannelId::drive(t))
+                    shiftTarget += f.value;
             }
             REQUIRE(shiftControl == Approx(kPi / 2.0)); // Rz_c(−π/2) = shift_phase(+π/2)
-            REQUIRE(shiftTarget == Approx(-2.0 * kPi));  // Rz_t(π) sx Rz_t(π)
+            REQUIRE(shiftTarget == Approx(-2.0 * kPi)); // Rz_t(π) sx Rz_t(π)
         }
     }
 }
@@ -165,8 +178,10 @@ TEST_CASE("flux CZ and iSWAP play one calibrated pulse on the coupler flux line"
     REQUIRE(czPlays.size() == 1);
     REQUIRE(swPlays.size() == 1);
     REQUIRE(czPlays[0].wf.kind == WaveformKind::Slepian);
-    REQUIRE(czPlays[0].duration() == lib.quantise(lib.calibration().edge(edge.a, edge.b)->duration.value.v, true));
-    REQUIRE(czPlays[0].wf.amplitude == lib.find("cz", std::vector<std::uint32_t>{edge.a, edge.b})->extra["amp"].get<double>());
+    REQUIRE(czPlays[0].duration() ==
+            lib.quantise(lib.calibration().edge(edge.a, edge.b)->duration.value.v, true));
+    REQUIRE(czPlays[0].wf.amplitude ==
+            lib.find("cz", std::vector<std::uint32_t>{edge.a, edge.b})->extra["amp"].get<double>());
     REQUIRE(swPlays[0].wf.kind == WaveformKind::GaussianSquare);
     REQUIRE(swPlays[0].wf.rise == Approx(5e-9));
     const auto& extra = lib.calibration().edge(edge.a, edge.b)->extraGates.at("siswap");
@@ -179,7 +194,8 @@ TEST_CASE("flux CZ and iSWAP play one calibrated pulse on the coupler flux line"
     REQUIRE(bad.error().diagnosticId == "E_NO_CHANNEL");
 }
 
-TEST_CASE("measurement acquires T_ro after the ring-up delay; active reset waits out the feed-forward") {
+TEST_CASE(
+    "measurement acquires T_ro after the ring-up delay; active reset waits out the feed-forward") {
     const PulseLibrary& lib = library("sc_fixed_5");
     auto m = lib.scheduleFor("measure", {2});
     REQUIRE(m);
@@ -187,9 +203,11 @@ TEST_CASE("measurement acquires T_ro after the ring-up delay; active reset waits
     REQUIRE(tone.size() == 1);
     const Acquire* acq = nullptr;
     for (auto const& i : m->instructions())
-        if (auto* a = std::get_if<Acquire>(&i)) acq = a;
+        if (auto* a = std::get_if<Acquire>(&i))
+            acq = a;
     REQUIRE(acq != nullptr);
-    REQUIRE(acq->t0 == tone[0].t0 + lib.quantise(100e-9)); // acquire_delay after the tone starts (§6.7)
+    REQUIRE(acq->t0 ==
+            tone[0].t0 + lib.quantise(100e-9)); // acquire_delay after the tone starts (§6.7)
     REQUIRE(acq->length == tone[0].duration());
     REQUIRE(acq->weights == "matched");
 

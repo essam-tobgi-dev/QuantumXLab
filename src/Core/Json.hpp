@@ -1,16 +1,24 @@
 #pragma once
-// Spec 04 §8 — JSON envelope { "qxl": {kind, schema, app, created}, "data": {...} } with upgrade chains.
+// Spec 04 §8 — JSON envelope { "qxl": {kind, schema, app, created}, "data": {...} } with upgrade
+// chains.
 #include "Core/Error.hpp"
 #include <filesystem>
 #include <functional>
 #include <nlohmann/json.hpp>
 namespace qlab::core {
 using Json = nlohmann::json;
-struct Envelope { std::string kind; int schema = 1; std::string app; std::string created; Json data; };
+struct Envelope {
+    std::string kind;
+    int schema = 1;
+    std::string app;
+    std::string created;
+    Json data;
+};
 using Upgrader = std::function<Result<Json>(Json)>; // v -> v+1
 class JsonEnvelope {
-public:
-    static void registerKind(std::string kind, int currentSchema, std::vector<Upgrader> upgraders = {});
+  public:
+    static void registerKind(std::string kind, int currentSchema,
+                             std::vector<Upgrader> upgraders = {});
     static Result<Envelope> parse(const std::string& text, std::string_view expectedKind);
     static Result<Envelope> load(const std::filesystem::path& path, std::string_view expectedKind);
     static std::string serialize(std::string_view kind, const Json& data, int schema = -1);

@@ -19,21 +19,21 @@ struct AncillaSpec {
 };
 
 struct StabilizerCode {
-    std::string id;                               // "steane_7" (Core has no interned strings)
-    std::uint32_t n = 0, k = 0, d = 0;            // [[n, k, d]]
-    std::vector<PauliString> stabilizers;         // n − k independent generators
-    std::vector<PauliString> logicalX, logicalZ;  // k each
-    std::vector<Coord2> dataLayout;               // (x, y) per data qubit
-    std::vector<AncillaSpec> ancillas;            // ancillas[j] measures stabilizers[j]
+    std::string id;                              // "steane_7" (Core has no interned strings)
+    std::uint32_t n = 0, k = 0, d = 0;           // [[n, k, d]]
+    std::vector<PauliString> stabilizers;        // n − k independent generators
+    std::vector<PauliString> logicalX, logicalZ; // k each
+    std::vector<Coord2> dataLayout;              // (x, y) per data qubit
+    std::vector<AncillaSpec> ancillas;           // ancillas[j] measures stabilizers[j]
     CodeFamily family = CodeFamily::Other;
     std::vector<std::string> theoryRefs;
-    std::string defaultDecoder = "union_find";    // asset field "decoder": "lookup" | "union_find"
+    std::string defaultDecoder = "union_find"; // asset field "decoder": "lookup" | "union_find"
     std::string notes;
 
     std::uint32_t checkCount() const { return static_cast<std::uint32_t>(stabilizers.size()); }
     // Pauli type of generator j read from its letters (not from the ancilla annotation).
     CheckType checkType(std::uint32_t j) const;
-    bool isCss() const;   // every generator is purely X-type or purely Z-type
+    bool isCss() const; // every generator is purely X-type or purely Z-type
     // Logical operator j of a memory basis: logicalZ for LogicalBasis::Z, logicalX for X.
     const PauliString& logical(LogicalBasis basis, std::uint32_t j = 0) const;
     // CSS code in which every single-qubit X and Z error flips at most two generators: the decoding
@@ -49,13 +49,13 @@ struct StabilizerCode {
 // are [[3,1,1]] as quantum codes but are shipped with d = 3), otherwise `distance`.
 struct DistanceReport {
     std::uint32_t distance = 0, dX = 0, dZ = 0, declared = 0;
-    PauliString witness;   // a logical operator of weight `declared`
+    PauliString witness; // a logical operator of weight `declared`
 };
 
 struct VerifyOptions {
     bool checkLayout = true;
     bool checkDistance = true;
-    std::uint32_t exhaustiveDistanceMaxN = 25;   // spec 16 §1: exhaustive search for n ≤ 25
+    std::uint32_t exhaustiveDistanceMaxN = 25; // spec 16 §1: exhaustive search for n ≤ 25
 };
 
 // Exhaustive search; fails with err::TooLarge beyond 64 qubits or 2·10^8 candidate strings.
@@ -73,7 +73,8 @@ Result<StabilizerCode> codeFromJson(const core::Json& data);
 core::Json codeToJson(const StabilizerCode& code);
 
 // Parse + verify. `loadShippedCode("surface_rot_3")` reads `<assets>/QEC/surface_rot_3.json`.
-Result<StabilizerCode> loadCode(const std::filesystem::path& path, const VerifyOptions& options = {});
+Result<StabilizerCode> loadCode(const std::filesystem::path& path,
+                                const VerifyOptions& options = {});
 Result<StabilizerCode> loadShippedCode(std::string_view id, const VerifyOptions& options = {});
 const std::vector<std::string>& shippedCodeIds();
 

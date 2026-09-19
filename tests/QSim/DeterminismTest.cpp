@@ -65,6 +65,7 @@ TEST_CASE("Determinism: mid-circuit measurement outcomes follow the seed") {
     };
     REQUIRE(run(5) == run(5));
     bool differs = false;
-    for (std::uint64_t s = 6; s < 40 && !differs; ++s) differs = run(s) != run(5);
+    for (std::uint64_t s = 6; s < 40 && !differs; ++s)
+        differs = run(s) != run(5);
     REQUIRE(differs);
 }

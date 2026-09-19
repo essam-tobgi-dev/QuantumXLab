@@ -1,7 +1,7 @@
 // Spec 19 §3 "Estimates" — hardware time, fidelity, resources and the QEC overhead (spec 15, 16 §7)
 // with the assumption list EXPANDED BY DEFAULT and a fidelity badge on every row.
-#include "UI/Format.hpp"
 #include "Data/Fidelity.hpp"
+#include "UI/Format.hpp"
 #include "UI/Panels/Panels.hpp"
 #include "UI/Widgets/NumberField.hpp"
 #include "UI/Widgets/Widgets.hpp"
@@ -11,8 +11,10 @@ namespace qlab::ui {
 namespace {
 
 class EstimatesPanel final : public BasicPanel {
-public:
-    EstimatesPanel() : BasicPanel(PanelId::Estimates, "estimates", "panels.estimates", "∑", Workspace::Analysis) {}
+  public:
+    EstimatesPanel()
+        : BasicPanel(PanelId::Estimates, "estimates", "panels.estimates", "∑",
+                     Workspace::Analysis) {}
 
     void draw(UiContext& ctx) override;
     core::Json serialize() const override {
@@ -26,12 +28,14 @@ public:
                 assumptionsOpen_ = it->get<bool>();
     }
 
-private:
-    void row(const UiContext& ctx, std::string_view label, std::string value, data::FidelityClass cls);
+  private:
+    void row(const UiContext& ctx, std::string_view label, std::string value,
+             data::FidelityClass cls);
     bool assumptionsOpen_ = true; // spec 19 §3: expanded by default
 };
 
-void EstimatesPanel::row(const UiContext& ctx, std::string_view label, std::string value, data::FidelityClass cls) {
+void EstimatesPanel::row(const UiContext& ctx, std::string_view label, std::string value,
+                         data::FidelityClass cls) {
     ImGui::TableNextRow();
     ImGui::TableNextColumn();
     widgets::text(ctx, Token::TextSecondary, label);
@@ -52,7 +56,8 @@ void EstimatesPanel::draw(UiContext& ctx) {
     const runtime::Estimate& e = *ctx.estimate;
     widgets::labelled(ctx, "Device", e.device);
     ImGui::SameLine();
-    widgets::labelled(ctx, "Calibration", e.calibrationTimestamp.empty() ? "—" : e.calibrationTimestamp);
+    widgets::labelled(ctx, "Calibration",
+                      e.calibrationTimestamp.empty() ? "—" : e.calibrationTimestamp);
 
     const auto table = [&](std::string_view id) {
         return ImGui::BeginTable(id.data(), 3, widgets::tableFlags(false), ImVec2(0.0f, 0.0f));
@@ -72,7 +77,8 @@ void EstimatesPanel::draw(UiContext& ctx) {
     widgets::sectionHeader(ctx, ctx.text("estimates.fidelity_fast"));
     if (table("##fid")) {
         row(ctx, "Product model", format::percent(e.fidelity.fast, 3), e.fidelity.cls);
-        row(ctx, "Interval", format::percent(e.fidelity.low, 3) + " … " + format::percent(e.fidelity.high, 3),
+        row(ctx, "Interval",
+            format::percent(e.fidelity.low, 3) + " … " + format::percent(e.fidelity.high, 3),
             e.fidelity.cls);
         row(ctx, "Gates", format::percent(e.fidelity.gateProduct, 3), e.fidelity.cls);
         row(ctx, "Idles", format::percent(e.fidelity.idleProduct, 3), e.fidelity.cls);
@@ -81,11 +87,13 @@ void EstimatesPanel::draw(UiContext& ctx) {
             const runtime::SimulatedFidelity& sim = *e.fidelity.simulated;
             row(ctx, "Classical F_c", format::percent(sim.classical, 3), sim.cls);
             row(ctx, "Hellinger", format::number(sim.hellinger), sim.cls);
-            if (sim.state) row(ctx, "State fidelity", format::percent(*sim.state, 3), sim.cls);
+            if (sim.state)
+                row(ctx, "State fidelity", format::percent(*sim.state, 3), sim.cls);
         }
         ImGui::EndTable();
     }
-    for (const std::string& caveat : e.fidelity.caveats) widgets::textWrapped(ctx, Token::Warn, caveat);
+    for (const std::string& caveat : e.fidelity.caveats)
+        widgets::textWrapped(ctx, Token::Warn, caveat);
 
     widgets::sectionHeader(ctx, ctx.text("estimates.resources"));
     if (table("##res")) {
@@ -100,10 +108,14 @@ void EstimatesPanel::draw(UiContext& ctx) {
 
     widgets::sectionHeader(ctx, ctx.text("estimates.classical_cost"));
     if (table("##cost")) {
-        row(ctx, "State vector", format::bytes(e.classicalCost.stateVectorBytes), data::FidelityClass::Model);
-        row(ctx, "Density matrix", format::bytes(e.classicalCost.densityMatrixBytes), data::FidelityClass::Model);
-        row(ctx, "Estimated time", format::duration(e.classicalCost.estimatedTimeS), data::FidelityClass::Model);
-        row(ctx, "Host maximum qubits", format::integer(e.classicalCost.hostMaxQubits), data::FidelityClass::Model);
+        row(ctx, "State vector", format::bytes(e.classicalCost.stateVectorBytes),
+            data::FidelityClass::Model);
+        row(ctx, "Density matrix", format::bytes(e.classicalCost.densityMatrixBytes),
+            data::FidelityClass::Model);
+        row(ctx, "Estimated time", format::duration(e.classicalCost.estimatedTimeS),
+            data::FidelityClass::Model);
+        row(ctx, "Host maximum qubits", format::integer(e.classicalCost.hostMaxQubits),
+            data::FidelityClass::Model);
         ImGui::EndTable();
     }
 
@@ -123,7 +135,9 @@ void EstimatesPanel::draw(UiContext& ctx) {
         widgets::sectionHeader(ctx, ctx.text("estimates.comparison"));
         if (table("##cmp")) {
             for (const runtime::DeviceComparison& c : e.comparison)
-                row(ctx, c.device, format::duration(c.wallTimeS) + "   " + format::percent(c.fidelityFast, 2), e.cls);
+                row(ctx, c.device,
+                    format::duration(c.wallTimeS) + "   " + format::percent(c.fidelityFast, 2),
+                    e.cls);
             ImGui::EndTable();
         }
     }
@@ -133,9 +147,11 @@ void EstimatesPanel::draw(UiContext& ctx) {
     if (ImGui::CollapsingHeader(std::string(ctx.text("estimates.assumptions")).c_str())) {
         assumptionsOpen_ = true;
         for (const std::string& key : e.assumptions) {
-            const std::string_view fromStrings = ctx.text(std::string("estimate_assumptions.") + key);
-            const std::string_view sentence =
-                fromStrings.starts_with("estimate_assumptions.") ? runtime::assumptionText(key) : fromStrings;
+            const std::string_view fromStrings =
+                ctx.text(std::string("estimate_assumptions.") + key);
+            const std::string_view sentence = fromStrings.starts_with("estimate_assumptions.")
+                                                  ? runtime::assumptionText(key)
+                                                  : fromStrings;
             widgets::textWrapped(ctx, Token::TextSecondary,
                                  sentence.empty() ? std::string_view(key) : sentence);
         }
@@ -146,6 +162,8 @@ void EstimatesPanel::draw(UiContext& ctx) {
 
 } // namespace
 
-PanelPtr makeEstimatesPanel() { return std::make_unique<EstimatesPanel>(); }
+PanelPtr makeEstimatesPanel() {
+    return std::make_unique<EstimatesPanel>();
+}
 
 } // namespace qlab::ui

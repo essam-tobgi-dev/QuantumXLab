@@ -13,7 +13,7 @@ namespace qlab::app {
 
 struct ProgramRun {
     runtime::RunResult result;
-    std::vector<lang::Diagnostic> diagnostics;   // front end + compiler, in order
+    std::vector<lang::Diagnostic> diagnostics; // front end + compiler, in order
     std::chrono::milliseconds compileTime{0};
     std::chrono::milliseconds runTime{0};
     runtime::ProgramId program{0};
@@ -29,9 +29,10 @@ compiler::CompileOptions compileOptionsFor(const Options& o);
 // Loads, compiles and runs `source` on `session` (which must already have a device). A compile
 // error is returned as an `Error` carrying the first error diagnostic; warnings ride along in
 // `ProgramRun::diagnostics`.
-Result<ProgramRun> compileAndRun(runtime::Session& session, std::string source, std::filesystem::path origin,
-                                 const Options& o);
+Result<ProgramRun> compileAndRun(runtime::Session& session, std::string source,
+                                 std::filesystem::path origin, const Options& o);
 // The same from a file.
-Result<ProgramRun> compileAndRunFile(runtime::Session& session, const std::filesystem::path& file, const Options& o);
+Result<ProgramRun> compileAndRunFile(runtime::Session& session, const std::filesystem::path& file,
+                                     const Options& o);
 
 } // namespace qlab::app

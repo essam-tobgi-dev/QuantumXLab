@@ -17,9 +17,9 @@
 namespace qlab::ui {
 
 class Shell {
-public:
-    Shell();                                        // the whole spec 19 §3 catalog
-    explicit Shell(std::vector<PanelPtr> panels);   // a subset (tests)
+  public:
+    Shell();                                      // the whole spec 19 §3 catalog
+    explicit Shell(std::vector<PanelPtr> panels); // a subset (tests)
     ~Shell();
     Shell(const Shell&) = delete;
     Shell& operator=(const Shell&) = delete;
@@ -52,7 +52,7 @@ public:
     // in a workspace records the arrangement the user is looking at.
     LayoutState saveLayout();
     Status loadLayout(LayoutState state);
-    void resetLayout(Workspace w);     // re-run the preset's DockBuilder script on the next frame
+    void resetLayout(Workspace w); // re-run the preset's DockBuilder script on the next frame
     // Spec 19 §7: the user's text scale. Layout is in logical points, so this is the ONE knob that
     // magnifies the interface; the display scale only decides how finely the faces are rasterised.
     // The App notices a change and re-rasterises the atlas.
@@ -67,15 +67,15 @@ public:
     // may call it once after creating the context, and `draw` calls it defensively.
     static void configureImGui();
 
-private:
+  private:
     void drawTopBar(UiContext& ctx, float& heightOut);
     void drawMenus(UiContext& ctx);
     void drawDockspace(UiContext& ctx, float topHeight);
     void drawPanels(UiContext& ctx);
     void handleShortcuts(UiContext& ctx);
-    void buildDock(unsigned dockspaceId);           // the preset's DockBuilder script
-    void captureIni();                              // current ImGui settings → the active workspace
-    void applyPending();                            // deferred ini load after a workspace switch
+    void buildDock(unsigned dockspaceId); // the preset's DockBuilder script
+    void captureIni();                    // current ImGui settings → the active workspace
+    void applyPending();                  // deferred ini load after a workspace switch
 
     // Spec 21 §1.1: the bridge remembers what each side looked like last frame, so ONE instance
     // must live across frames; it is rebuilt when the App swaps the scene or the selection.
@@ -84,7 +84,7 @@ private:
     const void* bridgeLab_ = nullptr;
 
     std::vector<PanelPtr> panels_;
-    std::array<std::vector<bool>, kWorkspaceCount> open_;   // per workspace, per PanelId
+    std::array<std::vector<bool>, kWorkspaceCount> open_; // per workspace, per PanelId
     std::array<WorkspaceLayout, kWorkspaceCount> saved_;
     Workspace workspace_ = Workspace::Lab;
     bool physicalLab_ = false;

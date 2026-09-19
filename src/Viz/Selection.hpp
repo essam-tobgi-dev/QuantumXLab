@@ -20,7 +20,7 @@ class Interaction;
 namespace qlab::viz {
 
 class SelectionModel {
-public:
+  public:
     using Edge = std::pair<QubitIndex, QubitIndex>; // stored with first < second
     using Listener = std::function<void(const SelectionModel&)>;
 
@@ -30,9 +30,9 @@ public:
     void toggleQubit(QubitIndex q);
     void setQubits(std::span<const QubitIndex> qubits);
     void clearQubits();
-    std::span<const QubitIndex> qubits() const { return qubits_; }   // in selection order
+    std::span<const QubitIndex> qubits() const { return qubits_; } // in selection order
     bool isSelected(QubitIndex q) const;
-    std::optional<QubitIndex> primaryQubit() const;                   // the most recently selected
+    std::optional<QubitIndex> primaryQubit() const; // the most recently selected
 
     // ---- coupling edge (coupling-graph and entanglement views; the Inspector shows the coupler)
     void selectEdge(QubitIndex a, QubitIndex b);
@@ -47,7 +47,8 @@ public:
     void setHoveredQubit(std::optional<QubitIndex> q) { hovered_ = q; }
     std::optional<QubitIndex> hoveredQubit() const { return hovered_; }
 
-    // ---- basis-state focus: a click on a Q-sphere node restricts the amplitude views (spec 21 §3.4)
+    // ---- basis-state focus: a click on a Q-sphere node restricts the amplitude views (spec 21
+    // §3.4)
     void setBasisFocus(std::optional<std::uint64_t> index);
     std::optional<std::uint64_t> basisFocus() const { return basisFocus_; }
 
@@ -55,16 +56,16 @@ public:
 
     // ---- qubit ↔ component map, read once at device load (spec 21 §1.1)
     void setQubitComponents(std::span<const ComponentId> nodePerQubit);
-    void bindScene(const lab::Scene& scene);                         // scene.qubitNodes()
+    void bindScene(const lab::Scene& scene); // scene.qubitNodes()
     std::optional<ComponentId> componentOf(QubitIndex q) const;
     std::optional<QubitIndex> qubitOf(ComponentId id) const;
 
     // ---- change tracking
-    std::uint64_t revision() const { return revision_; }             // bumped on every real change
-    int subscribe(Listener fn);                                      // returns a token
+    std::uint64_t revision() const { return revision_; } // bumped on every real change
+    int subscribe(Listener fn);                          // returns a token
     void unsubscribe(int token);
 
-private:
+  private:
     void changed();
     std::vector<QubitIndex> qubits_;
     std::optional<Edge> edge_;
@@ -82,11 +83,11 @@ private:
 // is copied to the other; when both changed, the lab pick wins (it is the more recent mouse event
 // of that frame).
 class LabSelectionBridge {
-public:
+  public:
     LabSelectionBridge(SelectionModel& model, lab::Interaction& lab);
     void sync();
 
-private:
+  private:
     SelectionModel* model_;
     lab::Interaction* lab_;
     ComponentId lastLab_{0};

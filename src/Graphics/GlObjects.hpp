@@ -3,8 +3,8 @@
 // move-only. GL 4.1 core (no DSA): wrappers bind internally where needed.
 #include "Core/Error.hpp"
 #include "Graphics/GlLoader.hpp"
-#include <cstddef>
 #include <algorithm>
+#include <cstddef>
 #include <cstdint>
 #include <span>
 #include <utility>
@@ -14,16 +14,23 @@ namespace qlab::gfx {
 
 // Base move-only handle.
 class GlHandle {
-public:
+  public:
     GlHandle() = default;
     GlHandle(const GlHandle&) = delete;
     GlHandle& operator=(const GlHandle&) = delete;
     GlHandle(GlHandle&& o) noexcept : id_(std::exchange(o.id_, 0)) {}
-    GlHandle& operator=(GlHandle&& o) noexcept { if (this != &o) { release(); id_ = std::exchange(o.id_, 0); } return *this; }
+    GlHandle& operator=(GlHandle&& o) noexcept {
+        if (this != &o) {
+            release();
+            id_ = std::exchange(o.id_, 0);
+        }
+        return *this;
+    }
     virtual ~GlHandle() = default;
     GLuint id() const { return id_; }
     explicit operator bool() const { return id_ != 0; }
-protected:
+
+  protected:
     virtual void release() {}
     GLuint id_ = 0;
 };
@@ -31,7 +38,7 @@ protected:
 enum class BufferUsage { Static, Dynamic, Stream };
 
 class Buffer : public GlHandle {
-public:
+  public:
     Buffer() = default;
     explicit Buffer(GLenum target);
     ~Buffer() override { release(); }
@@ -49,20 +56,27 @@ public:
     void update(std::size_t offset, std::span<const std::byte> bytes); // glBufferSubData
     std::size_t sizeBytes() const { return size_; }
     GLenum target() const { return target_; }
-protected:
+
+  protected:
     void release() override;
-private:
+
+  private:
     GLenum target_ = GL_ARRAY_BUFFER;
     std::size_t size_ = 0;
 };
 
 struct VertexAttrib {
-    GLuint index; GLint components; GLenum type; bool normalized; GLsizei stride; std::size_t offset;
+    GLuint index;
+    GLint components;
+    GLenum type;
+    bool normalized;
+    GLsizei stride;
+    std::size_t offset;
     GLuint divisor = 0; // 1 = per-instance
 };
 
 class VertexArray : public GlHandle {
-public:
+  public:
     VertexArray();
     ~VertexArray() override { release(); }
     VertexArray(VertexArray&&) = default;
@@ -72,23 +86,36 @@ public:
     // Binds `buf` as ARRAY_BUFFER and sets the attributes on this VAO.
     void setAttribs(const Buffer& buf, std::span<const VertexAttrib> attribs);
     void setIndexBuffer(const Buffer& ibo);
-protected:
+
+  protected:
     void release() override;
 };
 
-enum class TexFormat { RGBA8, SRGBA8, RGBA16F, RGB16F, R11G11B10F, R32UI, R8, RG16F, R32F, Depth24Stencil8, Depth32F };
+enum class TexFormat {
+    RGBA8,
+    SRGBA8,
+    RGBA16F,
+    RGB16F,
+    R11G11B10F,
+    R32UI,
+    R8,
+    RG16F,
+    R32F,
+    Depth24Stencil8,
+    Depth32F
+};
 
 struct TexDesc {
     int width = 1, height = 1;
     TexFormat format = TexFormat::RGBA8;
-    int samples = 0;          // >0 = multisample texture
+    int samples = 0; // >0 = multisample texture
     bool mipmaps = false;
-    bool linear = true;       // filtering (ignored for integer / multisample)
+    bool linear = true; // filtering (ignored for integer / multisample)
     bool clampToEdge = true;
 };
 
 class Texture2D : public GlHandle {
-public:
+  public:
     Texture2D() = default;
     explicit Texture2D(const TexDesc& d, const void* pixels = nullptr);
     ~Texture2D() override { release(); }
@@ -102,9 +129,11 @@ public:
     void upload(const void* pixels); // full re-upload, non-MSAA only
     void resize(int w, int h);
     static void glFormat(TexFormat f, GLenum& internal, GLenum& format, GLenum& type);
-protected:
+
+  protected:
     void release() override;
-private:
+
+  private:
     void allocate(const void* pixels);
     TexDesc desc_;
 };
@@ -115,11 +144,11 @@ private:
 struct CubeDesc {
     int size = 256;
     TexFormat format = TexFormat::RGB16F;
-    int levels = 1;           // 1 = no mip chain
+    int levels = 1; // 1 = no mip chain
     bool linear = true;
 };
 class TextureCube : public GlHandle {
-public:
+  public:
     TextureCube() = default;
     explicit TextureCube(const CubeDesc& d);
     ~TextureCube() override { release(); }
@@ -130,13 +159,17 @@ public:
     int size() const { return desc_.size; }
     int levels() const { return desc_.levels; }
     int levelSize(int level) const { return std::max(1, desc_.size >> level); }
-    void generateMipmaps();   // fills levels 1..n-1 from level 0 (box filter)
+    void generateMipmaps(); // fills levels 1..n-1 from level 0 (box filter)
     // Reads one face level back as RGBA floats (row-major, levelSize² × 4). Synchronous.
     std::vector<float> readFace(int face, int level) const;
-    static GLenum faceTarget(int face) { return GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(face); }
-protected:
+    static GLenum faceTarget(int face) {
+        return GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLenum>(face);
+    }
+
+  protected:
     void release() override;
-private:
+
+  private:
     CubeDesc desc_;
 };
 
@@ -146,7 +179,7 @@ private:
 // query is in flight, so reading never stalls the pipeline. GL_TIMESTAMP is not usable here:
 // Apple's GL 4.1 answers glQueryCounter with 0.
 class TimerQuery : public GlHandle {
-public:
+  public:
     TimerQuery() = default;
     explicit TimerQuery(bool create);
     ~TimerQuery() override { release(); }
@@ -155,40 +188,44 @@ public:
     void begin();
     void end();
     double resultMs();
-protected:
+
+  protected:
     void release() override;
-private:
+
+  private:
     bool pending_ = false;
     double lastMs_ = 0.0;
 };
 
 // 1D texture for colormaps (spec 18 §6).
 class Texture1D : public GlHandle {
-public:
+  public:
     Texture1D() = default;
     Texture1D(std::span<const float> rgb, int count); // rgb triplets
     ~Texture1D() override { release(); }
     Texture1D(Texture1D&&) = default;
     Texture1D& operator=(Texture1D&&) = default;
     void bind(GLuint unit) const;
-protected:
+
+  protected:
     void release() override;
 };
 
 class Sampler : public GlHandle {
-public:
+  public:
     Sampler() = default;
     Sampler(bool linear, bool clamp, bool compareDepth = false);
     ~Sampler() override { release(); }
     Sampler(Sampler&&) = default;
     Sampler& operator=(Sampler&&) = default;
     void bind(GLuint unit) const;
-protected:
+
+  protected:
     void release() override;
 };
 
 class Framebuffer : public GlHandle {
-public:
+  public:
     Framebuffer();
     ~Framebuffer() override { release(); }
     Framebuffer(Framebuffer&&) = default;
@@ -205,7 +242,8 @@ public:
     void blitTo(const Framebuffer& dst, int srcIndex, int dstIndex, int w, int h, GLenum filter,
                 bool depth = false) const;
     void blitToDefault(int srcIndex, int srcW, int srcH, int dstW, int dstH) const;
-protected:
+
+  protected:
     void release() override;
 };
 

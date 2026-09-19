@@ -2,13 +2,13 @@
 // acceptance check that no ImGui default colour, rounding or padding survives.
 #include "UI/Theme.hpp"
 #include "Data/Fidelity.hpp"
+#include "UI/UI.hpp"
 #include "UiHarness.hpp"
+#include <array>
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 #include <vector>
-#include "UI/UI.hpp"
-#include <array>
 
 using namespace qlab;
 using namespace qlab::ui;
@@ -44,7 +44,8 @@ TEST_CASE("Theme: the spec 19 §1 tokens load from theme.json and match the comp
     // `accent.soft` carries its alpha: #4FA3FF33 = 0x33/255.
     CHECK(dark->color(Token::AccentSoft).a == Approx(51.0 / 255.0).margin(1e-6));
     CHECK(dark->fidelityColor(data::FidelityClass::Exact) == dark->color(Token::ClassExact));
-    CHECK(dark->fidelityColor(data::FidelityClass::Illustrative) == dark->color(Token::ClassIllustrative));
+    CHECK(dark->fidelityColor(data::FidelityClass::Illustrative) ==
+          dark->color(Token::ClassIllustrative));
 
     const auto light = Theme::load("light");
     REQUIRE(light.has_value());
@@ -62,11 +63,13 @@ TEST_CASE("Theme: the spec 19 §1 tokens load from theme.json and match the comp
     CHECK(failed.error().message.find("not a colour") != std::string::npos);
 }
 
-TEST_CASE("Theme: the qubit palette is Okabe-Ito and wraps with a lightness step (spec 19 §1, §8)") {
+TEST_CASE(
+    "Theme: the qubit palette is Okabe-Ito and wraps with a lightness step (spec 19 §1, §8)") {
     const Theme dark = Theme::fallback(true);
     constexpr std::array<const char*, 8> kOkabeIto{"#E69F00", "#56B4E9", "#009E73", "#F0E442",
                                                    "#0072B2", "#D55E00", "#CC79A7", "#999999"};
-    for (std::uint32_t i = 0; i < 8; ++i) CHECK(dark.qubitColor(i) == Theme::parseHex(kOkabeIto[i]).value());
+    for (std::uint32_t i = 0; i < 8; ++i)
+        CHECK(dark.qubitColor(i) == Theme::parseHex(kOkabeIto[i]).value());
     // Qubit 8 reuses hue 0 one lightness step lighter in the dark theme.
     const Color base = dark.qubitColor(0), wrapped = dark.qubitColor(8);
     CHECK(wrapped != base);
@@ -77,7 +80,8 @@ TEST_CASE("Theme: the qubit palette is Okabe-Ito and wraps with a lightness step
 
 TEST_CASE("Theme: every text/background pair reads at >= 4.5:1 (spec 19 §8)") {
     for (const char* name : {"dark", "light"}) {
-        const Theme theme = Theme::load(name).value_or(Theme::fallback(std::string_view(name) == "dark"));
+        const Theme theme =
+            Theme::load(name).value_or(Theme::fallback(std::string_view(name) == "dark"));
         INFO("palette " << name);
         for (Token bg : backgroundTokens()) {
             for (Token fg : textTokens()) {
@@ -101,8 +105,10 @@ TEST_CASE("Theme: every text/background pair reads at >= 4.5:1 (spec 19 §8)") {
               theme.contrast(Token::TextSecondary, Token::BgPanel));
     }
     // The measured values of the §8 sentence, on bg.panel.
-    CHECK(Theme::load("dark").value().contrast(Token::TextSecondary, Token::BgPanel) == Approx(6.86).margin(0.02));
-    CHECK(Theme::load("light").value().contrast(Token::TextSecondary, Token::BgPanel) == Approx(5.98).margin(0.02));
+    CHECK(Theme::load("dark").value().contrast(Token::TextSecondary, Token::BgPanel) ==
+          Approx(6.86).margin(0.02));
+    CHECK(Theme::load("light").value().contrast(Token::TextSecondary, Token::BgPanel) ==
+          Approx(5.98).margin(0.02));
 }
 
 TEST_CASE("Theme: readableText is idempotent and monotone") {
@@ -110,10 +116,11 @@ TEST_CASE("Theme: readableText is idempotent and monotone") {
     const Color bg = light.color(Token::BgPanel);
     const Color once = Theme::readableText(light.color(Token::Ok), bg);
     CHECK(contrast(once, bg) >= 4.5);
-    CHECK(Theme::readableText(once, bg) == once);            // already readable: unchanged
-    CHECK(contrast(light.color(Token::Ok), bg) < 4.5);        // the pinned hue is what needed help
+    CHECK(Theme::readableText(once, bg) == once);      // already readable: unchanged
+    CHECK(contrast(light.color(Token::Ok), bg) < 4.5); // the pinned hue is what needed help
     // A pair that already clears a higher bar is returned untouched.
-    CHECK(Theme::readableText(light.color(Token::TextPrimary), bg) == light.color(Token::TextPrimary));
+    CHECK(Theme::readableText(light.color(Token::TextPrimary), bg) ==
+          light.color(Token::TextPrimary));
 }
 
 TEST_CASE("Theme: pixel tokens scale with the DPI and the user font scale (spec 19 §7)") {
@@ -124,8 +131,8 @@ TEST_CASE("Theme: pixel tokens scale with the DPI and the user font scale (spec 
     CHECK(base.editorPx == Approx(13.0f));
     CHECK(base.spacing(1) == Approx(4.0f));
     CHECK(base.spacing(6) == Approx(32.0f));
-    CHECK(base.spacing(0) == Approx(4.0f));   // clamped
-    CHECK(base.spacing(9) == Approx(32.0f));  // clamped
+    CHECK(base.spacing(0) == Approx(4.0f));  // clamped
+    CHECK(base.spacing(9) == Approx(32.0f)); // clamped
 
     const Metrics retina = t.metricsAt(2.0f);
     CHECK(retina.bodyPx == Approx(26.0f));
@@ -138,7 +145,8 @@ TEST_CASE("Theme: pixel tokens scale with the DPI and the user font scale (spec 
 
 TEST_CASE("Theme: the ImGui style carries no default value (spec 19 §9)") {
     test::UiHarness ui;
-    if (!ui.ready()) SKIP("the pinned fonts are not available");
+    if (!ui.ready())
+        SKIP("the pinned fonts are not available");
     const Theme& theme = ui.resources().theme;
     // `applyScale` applied the style; nothing may still hold an ImGui default.
     const std::vector<std::string> mismatches = imguiStyleMismatches(theme, 1.0f);
@@ -159,7 +167,7 @@ TEST_CASE("Theme: the ImGui style carries no default value (spec 19 §9)") {
     CHECK(toColor(style.Colors[ImGuiCol_Text]) == theme.color(Token::TextPrimary));
     CHECK(toColor(style.Colors[ImGuiCol_WindowBg]) == theme.color(Token::BgBase));
     CHECK(toColor(style.Colors[ImGuiCol_Border]) == theme.color(Token::Border));
-    CHECK(style.TabRounding == Approx(theme.metrics().radiusSm));   // spec 19 §4
+    CHECK(style.TabRounding == Approx(theme.metrics().radiusSm)); // spec 19 §4
 }
 
 TEST_CASE("Theme: the Viz variant carries the same tokens (spec 21 §1)") {
@@ -170,7 +178,8 @@ TEST_CASE("Theme: the Viz variant carries the same tokens (spec 21 §1)") {
     CHECK(v.accent == t.color(Token::Accent));
     CHECK(v.simOnly == t.color(Token::SimOnly));
     CHECK(v.fidelityColor(data::FidelityClass::Statistical) == t.color(Token::ClassStatistical));
-    for (std::uint32_t q = 0; q < 8; ++q) CHECK(v.qubitColor(q) == t.qubitColor(q));
+    for (std::uint32_t q = 0; q < 8; ++q)
+        CHECK(v.qubitColor(q) == t.qubitColor(q));
     CHECK(v.fontPx == Approx(t.metrics().bodyPx));
 }
 
@@ -182,7 +191,8 @@ TEST_CASE("every panel icon has a glyph in the shipped interface font") {
     auto theme = Theme::load("dark");
     REQUIRE(theme);
     auto fonts = FontSet::build(&atlas, *theme);
-    if (!fonts || !fonts->loaded) SKIP("the shipped fonts are not available");
+    if (!fonts || !fonts->loaded)
+        SKIP("the shipped fonts are not available");
     ImFont* title = fonts->get(FontRole::PanelTitle);
     REQUIRE(title != nullptr);
 
@@ -194,30 +204,40 @@ TEST_CASE("every panel icon has a glyph in the shipped interface font") {
         // Decode one UTF-8 code point (the icons are all in the basic multilingual plane).
         unsigned cp = 0;
         const unsigned char* b = reinterpret_cast<const unsigned char*>(icon.c_str());
-        if (b[0] < 0x80) cp = b[0];
-        else if ((b[0] & 0xE0) == 0xC0) cp = ((b[0] & 0x1Fu) << 6) | (b[1] & 0x3Fu);
-        else if ((b[0] & 0xF0) == 0xE0) cp = ((b[0] & 0x0Fu) << 12) | ((b[1] & 0x3Fu) << 6) | (b[2] & 0x3Fu);
+        if (b[0] < 0x80)
+            cp = b[0];
+        else if ((b[0] & 0xE0) == 0xC0)
+            cp = ((b[0] & 0x1Fu) << 6) | (b[1] & 0x3Fu);
+        else if ((b[0] & 0xF0) == 0xE0)
+            cp = ((b[0] & 0x0Fu) << 12) | ((b[1] & 0x3Fu) << 6) | (b[2] & 0x3Fu);
         REQUIRE(cp != 0);
         if (title->FindGlyphNoFallback(static_cast<ImWchar>(cp)) == nullptr)
             missing.push_back(std::string(panel->key()) + " '" + icon + "'");
     }
-    for (const auto& m : missing) UNSCOPED_INFO("no glyph: " << m);
+    for (const auto& m : missing)
+        UNSCOPED_INFO("no glyph: " << m);
     CHECK(missing.empty());
 }
 
-TEST_CASE("the interface font carries the physics glyphs the narration uses (ṅ, combining dot, subscripts)") {
+TEST_CASE("the interface font carries the physics glyphs the narration uses (ṅ, combining dot, "
+          "subscripts)") {
     // A missing glyph renders as `?` in a tooltip or a tour card: "Q?" for Q̇, "?₃" for ṅ₃.
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     io.IniFilename = nullptr;
     qlab::ui::Theme theme = qlab::ui::Theme::fallback();
     auto set = qlab::ui::FontSet::build(io.Fonts, theme, 1.0f, 1.0f);
-    if (!set) { ImGui::DestroyContext(); SKIP("the pinned fonts are not available"); }
-    unsigned char* px = nullptr; int w = 0, h = 0;
+    if (!set) {
+        ImGui::DestroyContext();
+        SKIP("the pinned fonts are not available");
+    }
+    unsigned char* px = nullptr;
+    int w = 0, h = 0;
     io.Fonts->GetTexDataAsRGBA32(&px, &w, &h);
     ImFont* body = set->get(qlab::ui::FontRole::Body);
     REQUIRE(body != nullptr);
-    for (ImWchar cp : {ImWchar(0x1E45), ImWchar(0x0307), ImWchar(0x0304), ImWchar(0x2083), ImWchar(0x00B2), ImWchar(0x03B7)}) {
+    for (ImWchar cp : {ImWchar(0x1E45), ImWchar(0x0307), ImWchar(0x0304), ImWchar(0x2083),
+                       ImWchar(0x00B2), ImWchar(0x03B7)}) {
         INFO("code point U+" << std::hex << cp);
         CHECK(body->FindGlyphNoFallback(cp) != nullptr);
     }

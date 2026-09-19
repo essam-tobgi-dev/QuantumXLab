@@ -8,14 +8,18 @@ using namespace qtest;
 using Catch::Approx;
 
 namespace {
-struct Oracle { const char* label; double value; };
+struct Oracle {
+    const char* label;
+    double value;
+};
 
 // |Φ+⟩ = (|00⟩ + |11⟩)/√2 is the +1 eigenstate of XX and ZZ and the −1 eigenstate of YY (T09 §1.2).
 constexpr Oracle kBell[] = {{"II", 1.0}, {"ZZ", 1.0}, {"XX", 1.0}, {"YY", -1.0}, {"-ZZ", -1.0},
-                            {"ZI", 0.0}, {"IZ", 0.0}, {"XI", 0.0}, {"IY", 0.0}, {"XY", 0.0},
+                            {"ZI", 0.0}, {"IZ", 0.0}, {"XI", 0.0}, {"IY", 0.0},  {"XY", 0.0},
                             {"YX", 0.0}, {"ZX", 0.0}, {"XZ", 0.0}};
 // |q1 q0⟩ = |0⟩ ⊗ |+i⟩: Z on q1 reads +1, Y on q0 reads +1, and the labels say which is which.
-constexpr Oracle kPlusI[] = {{"ZI", 1.0}, {"IY", 1.0}, {"ZY", 1.0}, {"IZ", 0.0}, {"YI", 0.0}, {"IX", 0.0}};
+constexpr Oracle kPlusI[] = {{"ZI", 1.0}, {"IY", 1.0}, {"ZY", 1.0},
+                             {"IZ", 0.0}, {"YI", 0.0}, {"IX", 0.0}};
 
 void check(const IBackend& b, std::span<const Oracle> oracles, double tol, const char* what) {
     for (const auto& o : oracles) {
@@ -107,7 +111,7 @@ TEST_CASE("Pauli expectations agree with the closed forms on every backend") {
     TrajectoriesBackend tbY;
     tbY.setSettings(TrajectorySettings{1, 10e-12, 1e-9, true});
     SystemModel yModel = bareModel(2, 2);
-    yModel.h0 = num::kron(I2(), X());       // X on q0
+    yModel.h0 = num::kron(I2(), X());                  // X on q0
     yModel.h0 *= -std::numbers::pi / (4.0 * duration); // e^{+iπX/4}|0⟩ = |+i⟩
     REQUIRE(tbY.setModel(yModel).has_value());
     REQUIRE(tbY.runEnsemble(duration, rng).has_value());
@@ -129,9 +133,11 @@ TEST_CASE("Reduced states are returned in the requested qubit order") {
     const Circuit c{{"h", H(), q({0}), {}}, {"x", X(), q({1}), {}}};
     Matrix q0q1(4, 4), q1q0(4, 4);
     for (std::size_t i = 2; i < 4; ++i)
-        for (std::size_t j = 2; j < 4; ++j) q0q1(i, j) = 0.5;   // q1 = 1 is the high bit
+        for (std::size_t j = 2; j < 4; ++j)
+            q0q1(i, j) = 0.5; // q1 = 1 is the high bit
     for (std::size_t i : {1u, 3u})
-        for (std::size_t j : {1u, 3u}) q1q0(i, j) = 0.5;        // q1 = 1 is now the low bit
+        for (std::size_t j : {1u, 3u})
+            q1q0(i, j) = 0.5; // q1 = 1 is now the low bit
     StateVectorBackend sv;
     REQUIRE(sv.allocate(3).has_value());
     REQUIRE(applyAll(sv, c).has_value());
@@ -162,10 +168,13 @@ TEST_CASE("Reduced states are returned in the requested qubit order") {
     REQUIRE(maxAbsDiff(dmSnap->reduced[0].rho, q1q0) < 1e-14);
     LindbladBackend lb;
     REQUIRE(lb.allocate(3).has_value());
-    REQUIRE(lb.setPure(std::vector<Complex>{0.0, 0.0, 1.0 / std::sqrt(2.0), 1.0 / std::sqrt(2.0), 0.0, 0.0, 0.0, 0.0}).has_value());
+    REQUIRE(lb.setPure(std::vector<Complex>{0.0, 0.0, 1.0 / std::sqrt(2.0), 1.0 / std::sqrt(2.0),
+                                            0.0, 0.0, 0.0, 0.0})
+                .has_value());
     auto lbSnap = lb.snapshot(SnapshotRequest{false, false, true, {q({1, 0})}, false});
     REQUIRE(lbSnap.has_value());
     REQUIRE(maxAbsDiff(lbSnap->reduced[0].rho, q1q0) < 1e-14);
-    REQUIRE(lb.snapshot(SnapshotRequest{false, false, true, {q({1, 1})}, false}).error().code == err::BadTargets);
+    REQUIRE(lb.snapshot(SnapshotRequest{false, false, true, {q({1, 1})}, false}).error().code ==
+            err::BadTargets);
     REQUIRE(sv.reducedDensityMatrix(q({3})).error().code == err::BadTargets);
 }

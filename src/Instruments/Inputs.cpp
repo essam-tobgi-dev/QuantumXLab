@@ -5,20 +5,23 @@
 namespace qlab::instr {
 namespace {
 const CryoCatalogs& sharedCatalogs() {
-    static const CryoCatalogs catalogs; // immutable after construction: safe to share across threads
+    static const CryoCatalogs
+        catalogs; // immutable after construction: safe to share across threads
     return catalogs;
 }
 
 cryo::StageArray nominalTemperatures() {
     cryo::StageArray t{};
-    for (cryo::Stage s : cryo::kStages) t[static_cast<std::size_t>(cryo::stageIndex(s))] = cryo::nominalTemperature(s);
+    for (cryo::Stage s : cryo::kStages)
+        t[static_cast<std::size_t>(cryo::stageIndex(s))] = cryo::nominalTemperature(s);
     return t;
 }
 
 std::optional<std::uint32_t> parseIndex(std::string_view s) {
     std::uint32_t v = 0;
     auto [p, ec] = std::from_chars(s.data(), s.data() + s.size(), v);
-    if (ec != std::errc{} || p != s.data() + s.size()) return std::nullopt;
+    if (ec != std::errc{} || p != s.data() + s.size())
+        return std::nullopt;
     return v;
 }
 
@@ -34,7 +37,8 @@ OutputChain evaluateChain(const cryo::NoiseBudget& budget, const cryo::WiringLin
     c.efficiency = c.tSysK > 0.0 ? c.tQuantumK / c.tSysK : 0.0;
     c.gainDb = o.gainTotal_dB;
     for (auto const& e : line.elements)
-        if (e.kind == cryo::ElementKind::Preamp) c.hasPreamp = true;
+        if (e.kind == cryo::ElementKind::Preamp)
+            c.hasPreamp = true;
     return c;
 }
 } // namespace
@@ -42,7 +46,8 @@ OutputChain evaluateChain(const cryo::NoiseBudget& budget, const cryo::WiringLin
 bool channelListCovers(std::string_view channel, std::uint32_t index) {
     const auto open = channel.find('[');
     const auto close = channel.rfind(']');
-    if (open == std::string_view::npos || close == std::string_view::npos || close <= open + 1) return false;
+    if (open == std::string_view::npos || close == std::string_view::npos || close <= open + 1)
+        return false;
     std::string_view inner = channel.substr(open + 1, close - open - 1);
     if (const auto dots = inner.find(".."); dots != std::string_view::npos) {
         auto lo = parseIndex(inner.substr(0, dots));
@@ -52,8 +57,10 @@ bool channelListCovers(std::string_view channel, std::uint32_t index) {
     while (!inner.empty()) { // "3" or "0,1"
         const auto comma = inner.find(',');
         auto v = parseIndex(inner.substr(0, comma));
-        if (v && *v == index) return true;
-        if (comma == std::string_view::npos) break;
+        if (v && *v == index)
+            return true;
+        if (comma == std::string_view::npos)
+            break;
         inner.remove_prefix(comma + 1);
     }
     return false;
@@ -62,14 +69,17 @@ bool channelListCovers(std::string_view channel, std::uint32_t index) {
 cryo::StageArray Environment::stageTemperatures() const {
     cryo::StageArray t = nominalTemperatures();
     for (std::size_t i = 0; i < t.size(); ++i)
-        if (thermal.T_K[i] > 0.0) t[i] = thermal.T_K[i];
+        if (thermal.T_K[i] > 0.0)
+            t[i] = thermal.T_K[i];
     return t;
 }
 
 const cryo::WiringLine* Environment::lineFor(cryo::LineKind kind, std::uint32_t qubit) const {
-    if (!wiring) return nullptr;
+    if (!wiring)
+        return nullptr;
     for (auto const& l : wiring->lines)
-        if (l.kind == kind && channelListCovers(l.channel, qubit)) return &l;
+        if (l.kind == kind && channelListCovers(l.channel, qubit))
+            return &l;
     return nullptr;
 }
 
@@ -78,7 +88,8 @@ OutputChain Environment::outputChain(std::uint32_t qubit, double frequencyHz) co
     if (const cryo::WiringLine* line = lineFor(cryo::LineKind::ReadoutOut, qubit))
         return evaluateChain(budget, *line, stageTemperatures(), frequencyHz);
     auto line = cryo::ChainCatalog::instantiate("readout_out_std", "readout_out_std", "a[*]");
-    if (!line) return {};
+    if (!line)
+        return {};
     return evaluateChain(budget, *line, stageTemperatures(), frequencyHz);
 }
 
@@ -90,10 +101,12 @@ double Environment::inputAttenuationDb(std::uint32_t qubit, double frequencyHz) 
         for (auto const& e : line.elements)
             if (e.kind == cryo::ElementKind::CoaxSegment)
                 if (const cryo::CoaxSpec* c = coax.find(e.coax))
-                    db += cryo::coaxLoss_dB(*c, e.length_m, frequencyHz, t[static_cast<std::size_t>(cryo::stageIndex(e.stage))]);
+                    db += cryo::coaxLoss_dB(*c, e.length_m, frequencyHz,
+                                            t[static_cast<std::size_t>(cryo::stageIndex(e.stage))]);
         return db;
     };
-    if (const cryo::WiringLine* line = lineFor(cryo::LineKind::ReadoutIn, qubit)) return total(*line);
+    if (const cryo::WiringLine* line = lineFor(cryo::LineKind::ReadoutIn, qubit))
+        return total(*line);
     auto line = cryo::ChainCatalog::instantiate("readout_in_std", "readout_in_std", "m[*]");
     return line ? total(*line) : 70.0;
 }
@@ -105,7 +118,8 @@ double Environment::electricalDelayS() const {
 
 OutputChain referenceOutputChain(double frequencyHz) {
     auto line = cryo::ChainCatalog::instantiate("readout_out_std", "readout_out_std", "a[*]");
-    if (!line) return {};
+    if (!line)
+        return {};
     return evaluateChain(sharedCatalogs().budget, *line, nominalTemperatures(), frequencyHz);
 }
 

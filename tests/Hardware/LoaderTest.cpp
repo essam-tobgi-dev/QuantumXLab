@@ -9,7 +9,10 @@ using namespace qlab::hw;
 using Catch::Approx;
 
 namespace {
-struct Expect { std::size_t qubits, edges; Technology tech; };
+struct Expect {
+    std::size_t qubits, edges;
+    Technology tech;
+};
 const std::map<std::string, Expect> kShipped = {
     {"sc_fixed_5", {5, 4, Technology::TransmonFixed}},
     {"sc_heavyhex_27", {27, 28, Technology::TransmonFixed}},
@@ -26,7 +29,8 @@ TEST_CASE("every shipped device loads with the generated counts") {
         INFO("device " << id);
         REQUIRE(std::find(ids.begin(), ids.end(), id) != ids.end());
         auto ld = loadShippedDevice(id);
-        if (!ld) FAIL(ld.error().format());
+        if (!ld)
+            FAIL(ld.error().format());
         REQUIRE(ld->device.id == id);
         REQUIRE(ld->device.technology == exp.tech);
         REQUIRE(ld->device.qubitCount() == exp.qubits);
@@ -69,7 +73,8 @@ TEST_CASE("coherence-time ordering holds on every shipped device") {
 }
 
 TEST_CASE("shipped transmon devices are free of spec 09 §6 collisions") {
-    for (const auto& id : {"sc_fixed_5", "sc_heavyhex_27", "sc_heavyhex_127", "sc_tunable_grid_54"}) {
+    for (const auto& id :
+         {"sc_fixed_5", "sc_heavyhex_27", "sc_heavyhex_127", "sc_tunable_grid_54"}) {
         auto ld = loadShippedDevice(id);
         REQUIRE(ld);
         FrequencyPlan plan(ld->device, ld->calibration);
@@ -107,7 +112,8 @@ TEST_CASE("frequency plan detects each hard collision rule") {
         REQUIRE(!hard.empty());
         bool found = false;
         for (const auto& c : hard)
-            if (c.kind == CollisionKind::Degenerate) found = true;
+            if (c.kind == CollisionKind::Degenerate)
+                found = true;
         REQUIRE(found);
     }
     SECTION("cross-resonance detuning too large") {
@@ -115,7 +121,8 @@ TEST_CASE("frequency plan detects each hard collision rule") {
         FrequencyPlan plan(ld->device, cal);
         bool found = false;
         for (const auto& c : plan.hardCollisions())
-            if (c.kind == CollisionKind::CrTooSlow) found = true;
+            if (c.kind == CollisionKind::CrTooSlow)
+                found = true;
         REQUIRE(found);
     }
     SECTION("straddling the |0>-|2>/2 transition") {
@@ -125,7 +132,8 @@ TEST_CASE("frequency plan detects each hard collision rule") {
         FrequencyPlan plan(ld->device, cal);
         bool found = false;
         for (const auto& c : plan.hardCollisions())
-            if (c.kind == CollisionKind::Straddle) found = true;
+            if (c.kind == CollisionKind::Straddle)
+                found = true;
         REQUIRE(found);
     }
 }
@@ -151,11 +159,13 @@ TEST_CASE("tunable-grid couplers and edge coupler references load") {
     REQUIRE(d.dataQubitCount() == 54);
     std::size_t couplers = 0;
     for (const auto& q : d.qubits)
-        if (q.kind == QubitKind::Coupler) ++couplers;
+        if (q.kind == QubitKind::Coupler)
+            ++couplers;
     REQUIRE(couplers == 93);
     REQUIRE(d.isCoupler(54));
     REQUIRE_FALSE(d.isCoupler(0));
-    for (const auto& e : d.edges) REQUIRE(e.coupler.has_value());
+    for (const auto& e : d.edges)
+        REQUIRE(e.coupler.has_value());
     const auto* ec = ld->calibration.edge(d.edges[0].a, d.edges[0].b);
     REQUIRE(ec);
     REQUIRE(ec->nativeGate == "cz");

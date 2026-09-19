@@ -18,15 +18,17 @@ TEST_CASE("debounce: a burst of edits compiles once, 150 ms after the last one")
     core::Timer timer;
     std::uint64_t last = 0;
     for (int edit = 0; edit < 5; ++edit)
-        last = inc.submit(program("qubit[2] q; bit[2] c; h q[0]; cx q[0], q[1]; rz(0." + std::to_string(edit) + ") q[1]; c = measure q;"), "edit.qasm");
+        last = inc.submit(program("qubit[2] q; bit[2] c; h q[0]; cx q[0], q[1]; rz(0." +
+                                  std::to_string(edit) + ") q[1]; c = measure q;"),
+                          "edit.qasm");
     const auto update = inc.wait();
     const double ms = timer.ms();
     REQUIRE(update != nullptr);
     CHECK(last == 5);
-    CHECK(update->generation == 5);                 // only the newest edit was compiled
+    CHECK(update->generation == 5); // only the newest edit was compiled
     CHECK(published.load() == 1);
     CHECK(inc.cancelledCount() == 4);
-    CHECK(ms >= 150.0);                             // the debounce interval elapsed after the last edit
+    CHECK(ms >= 150.0); // the debounce interval elapsed after the last edit
     REQUIRE(update->program.has_value());
     CHECK(update->program->circuit.isPhysical());
     CHECK_FALSE(update->frontEndCached);
@@ -42,7 +44,8 @@ TEST_CASE("caches: identical text is served whole; a device-side option reuses p
     compiler::IncrementalCompiler inc(jobs, fast);
     const auto& d = device("sc_heavyhex_27");
     inc.setTarget(&d.device, &d.calibration);
-    const std::string text = program("qubit[4] q; h q[0]; cx q[0], q[1]; cx q[1], q[2]; cx q[2], q[3]; t q[3];");
+    const std::string text =
+        program("qubit[4] q; h q[0]; cx q[0], q[1]; cx q[1], q[2]; cx q[2], q[3]; t q[3];");
     inc.submit(text, "a.qasm");
     const auto first = inc.wait();
     REQUIRE(first != nullptr);
@@ -65,7 +68,8 @@ TEST_CASE("caches: identical text is served whole; a device-side option reuses p
     CHECK(third->frontEndCached);
     CHECK_FALSE(third->fullyCached);
     CHECK(third->program->initialLayout.v2p == std::vector<std::uint32_t>{0, 1, 2, 3});
-    CHECK(third->trace.front().pass == "Build");    // the cached front trace is part of the published trace
+    CHECK(third->trace.front().pass ==
+          "Build"); // the cached front trace is part of the published trace
     REQUIRE(third->program->equivalence.has_value());
     CHECK(third->program->equivalence->equivalent);
 
@@ -81,14 +85,16 @@ TEST_CASE("errors are published with their diagnostics; cancel drops the job in 
     compiler::IncrementalCompiler::Settings fast;
     fast.debounce = std::chrono::milliseconds(5);
     compiler::IncrementalCompiler inc(jobs, fast);
-    inc.submit(program("qubit q;\nfoo q;\n"), "bad.qasm");        // device-independent target
+    inc.submit(program("qubit q;\nfoo q;\n"), "bad.qasm"); // device-independent target
     const auto bad = inc.wait();
     REQUIRE(bad != nullptr);
     REQUIRE_FALSE(bad->program.has_value());
     CHECK(bad->program.error().diagnosticId.starts_with("QL3"));
     CHECK(lang::hasErrors(bad->diagnostics));
 
-    inc.submit(program("qubit[9] q;\nctrl(9) @ x q[0], q[1], q[2], q[3], q[4], q[5], q[6], q[7], q[8], q[8];\n"), "bad2.qasm");
+    inc.submit(program("qubit[9] q;\nctrl(9) @ x q[0], q[1], q[2], q[3], q[4], q[5], q[6], q[7], "
+                       "q[8], q[8];\n"),
+               "bad2.qasm");
     const auto sema = inc.wait();
     REQUIRE_FALSE(sema->program.has_value());
 
@@ -96,7 +102,7 @@ TEST_CASE("errors are published with their diagnostics; cancel drops the job in 
     const auto dt = inc.wait();
     REQUIRE_FALSE(dt->program.has_value());
     CHECK(dt->program.error().diagnosticId == "QL4010");
-    CHECK(dt->trace.back().pass == "Verify");                      // the trace ends at the pass that failed
+    CHECK(dt->trace.back().pass == "Verify"); // the trace ends at the pass that failed
     CHECK(dt->trace.back().diagnostics.size() == 1);
 
     const auto before = inc.latest();
@@ -105,7 +111,7 @@ TEST_CASE("errors are published with their diagnostics; cancel drops the job in 
     compiler::IncrementalCompiler cancellable(jobs, slow);
     cancellable.submit(program("qubit q; x q;"), "c.qasm");
     cancellable.cancel();
-    CHECK(cancellable.wait() == nullptr);                          // nothing was ever published
+    CHECK(cancellable.wait() == nullptr); // nothing was ever published
     CHECK(cancellable.cancelledCount() == 1);
     CHECK(inc.latest() == before);
 }

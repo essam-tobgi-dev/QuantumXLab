@@ -12,8 +12,8 @@
 namespace qlab::compiler::detail {
 
 class StateVec {
-public:
-    explicit StateVec(std::uint32_t qubits);                        // |0…0⟩
+  public:
+    explicit StateVec(std::uint32_t qubits); // |0…0⟩
     std::uint32_t qubits() const { return n_; }
     std::size_t dim() const { return amp_.size(); }
     std::vector<num::Complex>& amplitudes() { return amp_; }
@@ -22,18 +22,18 @@ public:
     void setBasis(std::size_t index);
     // Applies `u` (2^k × 2^k, wires[0] = least significant index) on the basis states whose control
     // bits match: bit set for a positive control, clear for a negative one.
-    void apply(const num::Matrix& u, std::span<const std::uint32_t> wires, std::size_t controlMask = 0,
-               std::size_t controlPattern = 0);
+    void apply(const num::Matrix& u, std::span<const std::uint32_t> wires,
+               std::size_t controlMask = 0, std::size_t controlPattern = 0);
     // A gate node with its wires renamed through `wireMap` (node wire → state wire).
     Status applyGate(const ir::Gate& g, std::span<const std::uint32_t> wireMap);
 
     double probabilityOfOne(std::uint32_t wire) const;
     // Projects `wire` onto `outcome` and renormalises; returns the probability of that outcome.
     double project(std::uint32_t wire, int outcome);
-    void flip(std::uint32_t wire);                                  // X
+    void flip(std::uint32_t wire); // X
     double norm() const;
 
-private:
+  private:
     std::uint32_t n_;
     std::vector<num::Complex> amp_;
 };

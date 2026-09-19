@@ -13,76 +13,135 @@
 namespace qlab::ui {
 namespace {
 
-ImVec4 iv(const Color& c) { return ImVec4(c.r, c.g, c.b, c.a); }
+ImVec4 iv(const Color& c) {
+    return ImVec4(c.r, c.g, c.b, c.a);
+}
 Color mix(const Color& a, const Color& b, float t) {
     return Color(viz::math::mixColor(glm::vec3(a), glm::vec3(b), t), a.a + (b.a - a.a) * t);
 }
-Color alpha(const Color& c, float a) { return Color(c.r, c.g, c.b, a); }
+Color alpha(const Color& c, float a) {
+    return Color(c.r, c.g, c.b, a);
+}
 // Spec 19 §5.7: alternating table rows differ by 3 % lightness.
 Color lightnessStep(const Color& c, bool dark, float delta) {
-    return Color(viz::math::mixColor(glm::vec3(c), dark ? glm::vec3(1.0f) : glm::vec3(0.0f), delta), c.a);
+    return Color(viz::math::mixColor(glm::vec3(c), dark ? glm::vec3(1.0f) : glm::vec3(0.0f), delta),
+                 c.a);
 }
 
-bool ends(std::string_view s, std::string_view suffix) { return s.size() >= suffix.size() && s.substr(s.size() - suffix.size()) == suffix; }
+bool ends(std::string_view s, std::string_view suffix) {
+    return s.size() >= suffix.size() && s.substr(s.size() - suffix.size()) == suffix;
+}
 
 // The §1 token behind every ImGui colour slot.
 Color colorFor(std::string_view name, const Theme& t) {
     const Color base = t[Token::BgBase], panel = t[Token::BgPanel], raised = t[Token::BgRaised];
     const Color accent = t[Token::Accent], soft = t[Token::AccentSoft], border = t[Token::Border];
 
-    if (name == "Text") return t[Token::TextPrimary];
-    if (name == "TextDisabled") return t[Token::TextDisabled];
-    if (name == "WindowBg") return base;
-    if (name == "ChildBg") return panel;
-    if (name == "PopupBg") return raised;
-    if (name == "Border") return border;
-    if (name == "BorderShadow") return alpha(base, 0.0f); // spec 19 §4: 1 px borders, never a shadow
-    if (name == "FrameBg") return raised;
-    if (name == "FrameBgHovered") return mix(raised, accent, 0.18f);
-    if (name == "FrameBgActive") return mix(raised, accent, 0.32f);
-    if (name == "TitleBg") return raised;
-    if (name == "TitleBgActive") return mix(raised, accent, 0.12f);
-    if (name == "TitleBgCollapsed") return panel;
-    if (name == "MenuBarBg") return panel;
-    if (name == "ScrollbarBg") return panel;
-    if (name == "ScrollbarGrab") return border;
-    if (name == "ScrollbarGrabHovered") return mix(border, t[Token::TextSecondary], 0.5f);
-    if (name == "ScrollbarGrabActive") return accent;
-    if (name == "CheckMark" || name == "SliderGrab") return accent;
-    if (name == "SliderGrabActive") return lightnessStep(accent, t.dark(), 0.2f);
-    if (name == "Button") return raised;
-    if (name == "ButtonHovered") return mix(raised, accent, 0.28f);
-    if (name == "ButtonActive") return accent;
-    if (name == "Header") return soft;
-    if (name == "HeaderHovered") return mix(raised, accent, 0.35f);
-    if (name == "HeaderActive") return accent;
-    if (name == "Separator") return border;
-    if (name == "SeparatorHovered" || name == "SeparatorActive") return accent;
-    if (name == "ResizeGrip") return alpha(border, 0.6f);
-    if (name == "ResizeGripHovered") return mix(border, accent, 0.5f);
-    if (name == "ResizeGripActive") return accent;
+    if (name == "Text")
+        return t[Token::TextPrimary];
+    if (name == "TextDisabled")
+        return t[Token::TextDisabled];
+    if (name == "WindowBg")
+        return base;
+    if (name == "ChildBg")
+        return panel;
+    if (name == "PopupBg")
+        return raised;
+    if (name == "Border")
+        return border;
+    if (name == "BorderShadow")
+        return alpha(base, 0.0f); // spec 19 §4: 1 px borders, never a shadow
+    if (name == "FrameBg")
+        return raised;
+    if (name == "FrameBgHovered")
+        return mix(raised, accent, 0.18f);
+    if (name == "FrameBgActive")
+        return mix(raised, accent, 0.32f);
+    if (name == "TitleBg")
+        return raised;
+    if (name == "TitleBgActive")
+        return mix(raised, accent, 0.12f);
+    if (name == "TitleBgCollapsed")
+        return panel;
+    if (name == "MenuBarBg")
+        return panel;
+    if (name == "ScrollbarBg")
+        return panel;
+    if (name == "ScrollbarGrab")
+        return border;
+    if (name == "ScrollbarGrabHovered")
+        return mix(border, t[Token::TextSecondary], 0.5f);
+    if (name == "ScrollbarGrabActive")
+        return accent;
+    if (name == "CheckMark" || name == "SliderGrab")
+        return accent;
+    if (name == "SliderGrabActive")
+        return lightnessStep(accent, t.dark(), 0.2f);
+    if (name == "Button")
+        return raised;
+    if (name == "ButtonHovered")
+        return mix(raised, accent, 0.28f);
+    if (name == "ButtonActive")
+        return accent;
+    if (name == "Header")
+        return soft;
+    if (name == "HeaderHovered")
+        return mix(raised, accent, 0.35f);
+    if (name == "HeaderActive")
+        return accent;
+    if (name == "Separator")
+        return border;
+    if (name == "SeparatorHovered" || name == "SeparatorActive")
+        return accent;
+    if (name == "ResizeGrip")
+        return alpha(border, 0.6f);
+    if (name == "ResizeGripHovered")
+        return mix(border, accent, 0.5f);
+    if (name == "ResizeGripActive")
+        return accent;
     // Spec 19 §4: inactive tabs use text.secondary on the panel colour; the selected tab is raised.
-    if (name == "Tab") return panel;
-    if (name == "TabHovered") return mix(panel, accent, 0.25f);
-    if (name == "TabSelected" || name == "TabActive") return raised;
-    if (ends(name, "Overline")) return name == "TabDimmedSelectedOverline" ? border : accent;
-    if (name == "TabDimmed" || name == "TabUnfocused") return base;
-    if (name == "TabDimmedSelected" || name == "TabUnfocusedActive") return panel;
-    if (name == "DockingPreview") return soft;
-    if (name == "DockingEmptyBg") return base;
-    if (name == "PlotLines" || name == "PlotHistogram") return accent;
-    if (name == "PlotLinesHovered" || name == "PlotHistogramHovered") return t[Token::Warn];
-    if (name == "TableHeaderBg") return raised;
-    if (name == "TableBorderStrong") return border;
-    if (name == "TableBorderLight") return mix(border, panel, 0.5f);
-    if (name == "TableRowBg") return panel;
-    if (name == "TableRowBgAlt") return lightnessStep(panel, t.dark(), 0.03f);
-    if (name == "TextLink") return accent;
-    if (name == "TextSelectedBg") return soft;
-    if (name == "DragDropTarget") return accent;
-    if (name == "NavCursor" || name == "NavHighlight") return accent; // spec 19 §8 focus ring
-    if (name == "NavWindowingHighlight") return alpha(accent, 0.7f);
-    if (name == "NavWindowingDimBg" || name == "ModalWindowDimBg") return alpha(base, 0.6f);
+    if (name == "Tab")
+        return panel;
+    if (name == "TabHovered")
+        return mix(panel, accent, 0.25f);
+    if (name == "TabSelected" || name == "TabActive")
+        return raised;
+    if (ends(name, "Overline"))
+        return name == "TabDimmedSelectedOverline" ? border : accent;
+    if (name == "TabDimmed" || name == "TabUnfocused")
+        return base;
+    if (name == "TabDimmedSelected" || name == "TabUnfocusedActive")
+        return panel;
+    if (name == "DockingPreview")
+        return soft;
+    if (name == "DockingEmptyBg")
+        return base;
+    if (name == "PlotLines" || name == "PlotHistogram")
+        return accent;
+    if (name == "PlotLinesHovered" || name == "PlotHistogramHovered")
+        return t[Token::Warn];
+    if (name == "TableHeaderBg")
+        return raised;
+    if (name == "TableBorderStrong")
+        return border;
+    if (name == "TableBorderLight")
+        return mix(border, panel, 0.5f);
+    if (name == "TableRowBg")
+        return panel;
+    if (name == "TableRowBgAlt")
+        return lightnessStep(panel, t.dark(), 0.03f);
+    if (name == "TextLink")
+        return accent;
+    if (name == "TextSelectedBg")
+        return soft;
+    if (name == "DragDropTarget")
+        return accent;
+    if (name == "NavCursor" || name == "NavHighlight")
+        return accent; // spec 19 §8 focus ring
+    if (name == "NavWindowingHighlight")
+        return alpha(accent, 0.7f);
+    if (name == "NavWindowingDimBg" || name == "ModalWindowDimBg")
+        return alpha(base, 0.6f);
     // Any slot a future ImGui adds: the panel colour, never an ImGui default.
     return ends(name, "Bg") ? panel : t[Token::TextSecondary];
 }
@@ -142,14 +201,18 @@ void fillStyle(ImGuiStyle& s, const Theme& theme, float uiScale) {
 
 bool same(const ImVec4& a, const ImVec4& b) {
     constexpr float kEps = 1.0f / 512.0f;
-    return std::fabs(a.x - b.x) < kEps && std::fabs(a.y - b.y) < kEps && std::fabs(a.z - b.z) < kEps &&
-           std::fabs(a.w - b.w) < kEps;
+    return std::fabs(a.x - b.x) < kEps && std::fabs(a.y - b.y) < kEps &&
+           std::fabs(a.z - b.z) < kEps && std::fabs(a.w - b.w) < kEps;
 }
-bool same(const ImVec2& a, const ImVec2& b) { return std::fabs(a.x - b.x) < 1e-3f && std::fabs(a.y - b.y) < 1e-3f; }
+bool same(const ImVec2& a, const ImVec2& b) {
+    return std::fabs(a.x - b.x) < 1e-3f && std::fabs(a.y - b.y) < 1e-3f;
+}
 
 } // namespace
 
-void applyImGuiStyle(const Theme& theme, float uiScale) { fillStyle(ImGui::GetStyle(), theme, uiScale); }
+void applyImGuiStyle(const Theme& theme, float uiScale) {
+    fillStyle(ImGui::GetStyle(), theme, uiScale);
+}
 
 std::vector<std::string> imguiStyleMismatches(const Theme& theme, float uiScale) {
     ImGuiStyle want{};
@@ -158,15 +221,18 @@ std::vector<std::string> imguiStyleMismatches(const Theme& theme, float uiScale)
     std::vector<std::string> out;
     for (int i = 0; i < ImGuiCol_COUNT; ++i)
         if (!same(have.Colors[i], want.Colors[i]))
-            out.push_back(std::format("colour {} is {:.3f},{:.3f},{:.3f},{:.3f}, theme wants {:.3f},{:.3f},{:.3f},{:.3f}",
-                                      ImGui::GetStyleColorName(i), have.Colors[i].x, have.Colors[i].y, have.Colors[i].z,
-                                      have.Colors[i].w, want.Colors[i].x, want.Colors[i].y, want.Colors[i].z,
-                                      want.Colors[i].w));
+            out.push_back(std::format(
+                "colour {} is {:.3f},{:.3f},{:.3f},{:.3f}, theme wants {:.3f},{:.3f},{:.3f},{:.3f}",
+                ImGui::GetStyleColorName(i), have.Colors[i].x, have.Colors[i].y, have.Colors[i].z,
+                have.Colors[i].w, want.Colors[i].x, want.Colors[i].y, want.Colors[i].z,
+                want.Colors[i].w));
     const auto checkF = [&](std::string_view n, float h, float w) {
-        if (std::fabs(h - w) > 1e-3f) out.push_back(std::format("{} is {}, theme wants {}", n, h, w));
+        if (std::fabs(h - w) > 1e-3f)
+            out.push_back(std::format("{} is {}, theme wants {}", n, h, w));
     };
     const auto checkV = [&](std::string_view n, const ImVec2& h, const ImVec2& w) {
-        if (!same(h, w)) out.push_back(std::format("{} is {},{}, theme wants {},{}", n, h.x, h.y, w.x, w.y));
+        if (!same(h, w))
+            out.push_back(std::format("{} is {},{}, theme wants {},{}", n, h.x, h.y, w.x, w.y));
     };
     checkF("Alpha", have.Alpha, want.Alpha);
     checkF("DisabledAlpha", have.DisabledAlpha, want.DisabledAlpha);

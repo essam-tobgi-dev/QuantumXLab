@@ -10,17 +10,17 @@
 namespace qlab::compiler {
 
 struct OptimizeOptions {
-    bool cancel = true;       // §5.1 + §5.6, looking through commuting gates when `commute` is set
-    bool fuse = true;         // §5.2
-    bool commute = true;      // §5.3
-    std::uint32_t maxIterations = 50;   // sweeps repeat to a fixpoint; this only bounds the loop
+    bool cancel = true;  // §5.1 + §5.6, looking through commuting gates when `commute` is set
+    bool fuse = true;    // §5.2
+    bool commute = true; // §5.3
+    std::uint32_t maxIterations = 50; // sweeps repeat to a fixpoint; this only bounds the loop
     // Largest |θ| a merged two-qubit rotation may take (ions: one MS pulse covers π/2, T06 §6);
     // 0 = unbounded. The `Target` overload fills it in.
     double maxEntanglerAngle = 0.0;
 };
 
 struct OptimizeStats {
-    std::uint32_t iterations = 0;       // sweeps over the top-level circuit
+    std::uint32_t iterations = 0; // sweeps over the top-level circuit
     std::uint32_t gatesBefore = 0, gatesAfter = 0;
 };
 
@@ -29,8 +29,8 @@ struct OptimizeStats {
 // replaced only when that lowers (pulses, gates), so a second run changes nothing (spec 25 §4).
 Result<OptimizeStats> optimize(ir::Circuit& c, Basis1q basis, const OptimizeOptions& options = {},
                                std::stop_token stop = {});
-inline Result<OptimizeStats> optimize(ir::Circuit& c, const Target& target, OptimizeOptions options = {},
-                                      std::stop_token stop = {}) {
+inline Result<OptimizeStats> optimize(ir::Circuit& c, const Target& target,
+                                      OptimizeOptions options = {}, std::stop_token stop = {}) {
     options.maxEntanglerAngle = target.maxEntanglerAngle;
     return optimize(c, target.basis, options, stop);
 }
@@ -43,8 +43,8 @@ inline Result<OptimizeStats> optimize(ir::Circuit& c, const Target& target, Opti
 // with i the position in `topologicalOrder()` and φ ∈ (−π, π] the accumulated rz angle on wire q
 // before node i. Only top-level gates that see a non-zero phase are listed.
 struct VirtualZInfo {
-    std::uint32_t frameChanges = 0;          // rz gates, nested bodies included
-    std::vector<double> finalPhase;          // per wire
+    std::uint32_t frameChanges = 0; // rz gates, nested bodies included
+    std::vector<double> finalPhase; // per wire
 };
 Result<VirtualZInfo> virtualZ(ir::Circuit& c);
 
