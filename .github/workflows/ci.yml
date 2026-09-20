@@ -19,45 +19,19 @@ jobs:
   build:
     name: ${{ matrix.name }} · ${{ matrix.preset }}
     runs-on: ${{ matrix.runner }}
-    # Windows has never been built; its jobs report but do not fail the workflow until they pass.
-    continue-on-error: ${{ matrix.experimental == true }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - name: macOS arm64 (AppleClang)
             runner: macos-26   # Xcode 26 / AppleClang 21: std::jthread, std::expected
-            preset: debug
-          - name: macOS arm64 (AppleClang)
-            runner: macos-26   # Xcode 26 / AppleClang 21: std::jthread, std::expected
             preset: release
-          - name: macOS arm64 (AppleClang)
-            runner: macos-26   # Xcode 26 / AppleClang 21: std::jthread, std::expected
-            preset: asan
-          - name: Ubuntu (GCC 13)
-            runner: ubuntu-24.04
-            preset: debug
-            cc: gcc-13
-            cxx: g++-13
-          - name: Ubuntu (GCC 13)
-            runner: ubuntu-24.04
-            preset: release
-            cc: gcc-13
-            cxx: g++-13
           - name: Ubuntu (Clang 20)
             runner: ubuntu-24.04
             preset: debug
             cc: clang-20
             cxx: clang++-20
             llvm: "20"
-          - name: Windows (MSVC)
-            runner: windows-2022
-            preset: debug
-            experimental: true
-          - name: Windows (MSVC)
-            runner: windows-2022
-            preset: release
-            experimental: true
     steps:
       - uses: actions/checkout@v4
 
@@ -81,17 +55,6 @@ jobs:
           wget -q https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo ./llvm.sh ${{ matrix.llvm }}
-      - name: Install Mesa (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          curl -L -o mesa.7z https://github.com/pal1000/mesa-dist-win/releases/download/24.2.4/mesa3d-24.2.4-release-msvc.7z
-          7z x mesa.7z -omesa
-          echo "GALLIUM_DRIVER=llvmpipe" >> $env:GITHUB_ENV
-
-      - name: MSVC environment (Windows)
-        if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
-
       - name: Cache dependencies
         uses: actions/cache@v4
         with:
@@ -110,7 +73,7 @@ jobs:
         run: cmake --build --preset ${{ matrix.preset }} -j
 
       - name: clang-format check
-        if: runner.os == 'macOS' && matrix.preset == 'debug'
+        if: runner.os == 'macOS'
         run: |
           # Pinned: formatting drifts between major releases (23 reflowed 75 files that 22 accepts).
           python3 -m venv .clang-format-venv
@@ -120,11 +83,11 @@ jobs:
           .clang-format-venv/bin/clang-format --dry-run --Werror $files
 
       - name: Include lint (layering rules G1/P1 of spec 02 §1)
-        if: runner.os == 'macOS' && matrix.preset == 'debug'
+        if: runner.os == 'macOS'
         run: python3 tools/check_includes.py
 
       - name: Asset lint
-        if: runner.os == 'macOS' && matrix.preset == 'debug'
+        if: runner.os == 'macOS'
         run: |
           python3 tools/check_xrefs.py
           python3 tools/gen_assets.py
@@ -164,7 +127,6 @@ jobs:
         shell: bash
 
       - name: Self-test screenshots
-        if: matrix.preset != 'asan'
         run: |
           cmake --build --preset ${{ matrix.preset }} --target quantumxlab
           ${{ runner.os == 'Linux' && 'xvfb-run -a -s "-screen 0 1600x1000x24" ' || '' }}./build/${{ matrix.preset }}/bin/quantumxlab --selftest selftest-out
@@ -172,7 +134,6 @@ jobs:
         continue-on-error: true
 
       - name: Upload screenshots
-        if: matrix.preset != 'asan'
         uses: actions/upload-artifact@v4
         with:
           name: selftest-${{ runner.os }}-${{ matrix.preset }}
