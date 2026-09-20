@@ -76,7 +76,7 @@ class ResourceEstimator {
     Result<std::uint32_t> requiredDistance(double targetLogicalError, double p) const;
     static double physicalQubitsPerLogical(std::uint32_t d) {
         return 2.0 * d * d - 1.0;
-    }                                                              // T09 §5.1
+    } // T09 §5.1
     double factoryQubits(std::uint32_t factoryDistance) const;     // 72 d_f²
     double factoryCyclesPerT(std::uint32_t factoryDistance) const; // 6 d_f
     // (8.1) applied `levels` times: 35 p³, then 35 (35 p³)³, …

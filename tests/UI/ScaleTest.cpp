@@ -184,9 +184,7 @@ TEST_CASE("Scale: `dpiScale` is named only where a logical->device conversion be
     const std::set<std::string> converters{
         "UI/Panels/ViewportPanel.cpp", // framebuffer size and pick coordinates
         "Viz/IStateView.hpp",          // the field itself
-        "Viz/Views/BlochViewDraw.cpp",
-        "Viz/Views/CityView.cpp",
-        "Viz/Views/CircuitViewPanel.cpp",
+        "Viz/Views/BlochViewDraw.cpp", "Viz/Views/CityView.cpp", "Viz/Views/CircuitViewPanel.cpp",
         "Viz/Views/GraphView.cpp",
         "Viz/Views/QSphereView.cpp", // GL canvas resolution
     };

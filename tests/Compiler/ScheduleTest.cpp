@@ -213,9 +213,9 @@ box[200ns] { x $4; x $4; }
 TEST_CASE("QL4090 over the maximum program duration, QL4080 without calibration, QL4010 without a "
           "device") {
     const auto& d = device("sc_fixed_5");
-    ir::Circuit slow =
-        build(program("pragma qlab.layout physical\nx $0; delay[20ms] $0; x $0;")); // max_program_duration_ms
-                                                                                    // = 10
+    ir::Circuit slow = build(program(
+        "pragma qlab.layout physical\nx $0; delay[20ms] $0; x $0;")); // max_program_duration_ms
+                                                                      // = 10
     auto tooLong = compiler::schedule(slow, d.device, d.calibration);
     REQUIRE_FALSE(tooLong.has_value());
     CHECK(tooLong.error().diagnosticId == "QL4090");

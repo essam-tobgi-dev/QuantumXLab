@@ -218,46 +218,65 @@ namespace literals {
     constexpr Type operator""_##name(unsigned long long x) {                                       \
         return Type(static_cast<double>(x) * (scale));                                             \
     }
+// clang-format off
+// One user-defined literal per line; the invocations carry no semicolon, which
+// clang-format cannot lay out stably.
 QXL_UDL(ps, Time, 1e-12)
-QXL_UDL(ns, Time, 1e-9) QXL_UDL(us, Time, 1e-6) QXL_UDL(ms, Time, 1e-3) QXL_UDL(s, Time, 1.0)
-    QXL_UDL(Hz, Frequency, 1.0) QXL_UDL(kHz, Frequency, 1e3) QXL_UDL(MHz, Frequency, 1e6)
-        QXL_UDL(GHz, Frequency, 1e9) QXL_UDL(rad_s, AngularFrequency, 1.0) QXL_UDL(J, Energy, 1.0)
-            QXL_UDL(eV, Energy, 1.602176634e-19) QXL_UDL(meV, Energy, 1.602176634e-22) QXL_UDL(
-                ueV, Energy, 1.602176634e-25) QXL_UDL(uK, Temperature,
-                                                      1e-6) QXL_UDL(mK, Temperature, 1e-3)
-                QXL_UDL(K, Temperature, 1.0) QXL_UDL(W, Power, 1.0) QXL_UDL(mW, Power, 1e-3)
-                    QXL_UDL(uW, Power, 1e-6) QXL_UDL(nW, Power, 1e-9) QXL_UDL(pW, Power, 1e-12)
-                        QXL_UDL(fW, Power, 1e-15) QXL_UDL(aW, Power, 1e-18) QXL_UDL(V, Voltage, 1.0)
-                            QXL_UDL(mV, Voltage, 1e-3) QXL_UDL(uV, Voltage, 1e-6) QXL_UDL(
-                                A,
-                                Current, 1.0) QXL_UDL(mA, Current,
-                                                      1e-3) QXL_UDL(uA, Current, 1e-6)
-                                QXL_UDL(nA, Current, 1e-9) QXL_UDL(Wb, MagneticFlux, 1.0) QXL_UDL(
-                                    F, Capacitance,
-                                    1.0) QXL_UDL(pF, Capacitance,
-                                                 1e-12) QXL_UDL(fF, Capacitance, 1e-15)
-                                    QXL_UDL(aF, Capacitance,
-                                            1e-18) QXL_UDL(H, Inductance,
-                                                           1.0) QXL_UDL(nH, Inductance, 1e-9)
-                                        QXL_UDL(pH, Inductance, 1e-12) QXL_UDL(ohm, Resistance, 1.0)
-                                            QXL_UDL(kohm, Resistance,
-                                                    1e3) QXL_UDL(Pa, Pressure,
-                                                                 1.0) QXL_UDL(mbar, Pressure, 100.0)
-                                                QXL_UDL(bar, Pressure,
-                                                        1e5) QXL_UDL(mol_s, MolarFlow,
-                                                                     1.0) QXL_UDL(mmol_s, MolarFlow,
-                                                                                  1e-3)
-                                                    QXL_UDL(umol_s, MolarFlow,
-                                                            1e-6) QXL_UDL(m, Length, 1.0)
-                                                        QXL_UDL(mm, Length,
-                                                                1e-3) QXL_UDL(um, Length, 1e-6)
-                                                            QXL_UDL(nm, Length,
-                                                                    1e-9) QXL_UDL(kg, Mass, 1.0)
-                                                                QXL_UDL(u, Mass, 1.66053906660e-27)
-                                                                    QXL_UDL(rad, Angle, 1.0)
-                                                                        QXL_UDL(deg, Angle,
-                                                                                std::numbers::pi /
-                                                                                    180.0)
+QXL_UDL(ns, Time, 1e-9)
+QXL_UDL(us, Time, 1e-6)
+QXL_UDL(ms, Time, 1e-3)
+QXL_UDL(s, Time, 1.0)
+QXL_UDL(Hz, Frequency, 1.0)
+QXL_UDL(kHz, Frequency, 1e3)
+QXL_UDL(MHz, Frequency, 1e6)
+QXL_UDL(GHz, Frequency, 1e9)
+QXL_UDL( rad_s, AngularFrequency, 1.0)
+QXL_UDL(J, Energy, 1.0)
+QXL_UDL(eV, Energy, 1.602176634e-19)
+QXL_UDL(meV, Energy, 1.602176634e-22)
+QXL_UDL(ueV, Energy, 1.602176634e-25)
+QXL_UDL( uK, Temperature, 1e-6)
+QXL_UDL(mK, Temperature, 1e-3)
+QXL_UDL(K, Temperature, 1.0)
+QXL_UDL(W, Power, 1.0)
+QXL_UDL(mW, Power, 1e-3)
+QXL_UDL(uW, Power, 1e-6)
+QXL_UDL(nW, Power, 1e-9)
+QXL_UDL(pW, Power, 1e-12)
+QXL_UDL( fW, Power, 1e-15)
+QXL_UDL(aW, Power, 1e-18)
+QXL_UDL(V, Voltage, 1.0)
+QXL_UDL(mV, Voltage, 1e-3)
+QXL_UDL(uV, Voltage, 1e-6)
+QXL_UDL(A, Current, 1.0)
+QXL_UDL(mA, Current, 1e-3)
+QXL_UDL(uA, Current, 1e-6)
+QXL_UDL( nA, Current, 1e-9)
+QXL_UDL(Wb, MagneticFlux, 1.0)
+QXL_UDL(F, Capacitance, 1.0)
+QXL_UDL(pF, Capacitance, 1e-12)
+QXL_UDL(fF, Capacitance, 1e-15)
+QXL_UDL(aF, Capacitance, 1e-18)
+QXL_UDL(H, Inductance, 1.0)
+QXL_UDL(nH, Inductance, 1e-9)
+QXL_UDL(pH, Inductance, 1e-12)
+QXL_UDL(ohm, Resistance, 1.0)
+QXL_UDL(kohm, Resistance, 1e3)
+QXL_UDL(Pa, Pressure, 1.0)
+QXL_UDL(mbar, Pressure, 100.0)
+QXL_UDL( bar, Pressure, 1e5)
+QXL_UDL(mol_s, MolarFlow, 1.0)
+QXL_UDL(mmol_s, MolarFlow, 1e-3)
+QXL_UDL(umol_s, MolarFlow, 1e-6)
+QXL_UDL(m, Length, 1.0)
+QXL_UDL(mm, Length, 1e-3)
+QXL_UDL(um, Length, 1e-6)
+QXL_UDL(nm, Length, 1e-9)
+QXL_UDL(kg, Mass, 1.0)
+QXL_UDL(u, Mass, 1.66053906660e-27)
+QXL_UDL(rad, Angle, 1.0)
+QXL_UDL(deg, Angle, std::numbers::pi / 180.0)
+// clang-format on
 #undef QXL_UDL
 } // namespace literals
 

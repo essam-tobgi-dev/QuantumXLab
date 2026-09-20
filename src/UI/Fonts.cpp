@@ -38,14 +38,14 @@ constexpr std::array<RoleSpec, kFontRoleCount> kRoles{{
 // The LaTeX face carries the whole mathematical repertoire: operators, relations, arrows, big
 // operators, delimiters, accents, and the italic/bold alphabets above U+FFFF (IMGUI_USE_WCHAR32).
 constexpr std::array<ImWchar, 21> kMathGlyphRanges{
-    0x0020,  0x00FF,  // Latin + Latin-1 (upright letters, digits, punctuation, ×, ±, µ)
-    0x02B0,  0x036F,  // modifier letters and combining marks (˙ ¨ ¯ ˆ ˜ and the accents)
-    0x0370,  0x03FF,  // Greek (upright)
-    0x2000,  0x2BFF,  // punctuation, super/subscripts, letterlike, arrows, operators, technical,
+    0x0020, 0x00FF,   // Latin + Latin-1 (upright letters, digits, punctuation, ×, ±, µ)
+    0x02B0, 0x036F,   // modifier letters and combining marks (˙ ¨ ¯ ˆ ˜ and the accents)
+    0x0370, 0x03FF,   // Greek (upright)
+    0x2000, 0x2BFF,   // punctuation, super/subscripts, letterlike, arrows, operators, technical,
                       // shapes
     0x1D400, 0x1D7FF, // mathematical alphanumerics: bold, italic, script, fraktur, double-struck,
                       // digits
-    0,       0,       0, 0, 0, 0, 0, 0, 0, 0, 0};
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 constexpr std::array<ImWchar, 29> kGlyphRanges{
     0x0020, 0x00FF, // Latin + Latin-1 supplement
     0x0300, 0x036F, // combining marks (Q̇, n̄, X̄ in narration; zero-advance, drawn over the base)
