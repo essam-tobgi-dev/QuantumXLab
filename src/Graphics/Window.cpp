@@ -7,12 +7,19 @@
 
 namespace qlab::gfx {
 
-bool hasCurrentContext() {
-    return glfwGetCurrentContext() != nullptr;
-}
 namespace {
 int g_glfwRefs = 0;
 std::mutex g_glfwMu;
+} // namespace
+
+bool hasCurrentContext() {
+    // After the last window released GLFW, asking it for the current context is itself an error
+    // ("The GLFW library is not initialized" on every object destroyed after the window): with no
+    // window left there is no context either.
+    std::lock_guard lk(g_glfwMu);
+    return g_glfwRefs > 0 && glfwGetCurrentContext() != nullptr;
+}
+namespace {
 void glfwErrorCb(int code, const char* msg) {
     QXL_LOG_ERROR(Gfx, "GLFW error {}: {}", code, msg ? msg : "");
 }
