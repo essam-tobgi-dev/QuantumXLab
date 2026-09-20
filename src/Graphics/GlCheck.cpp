@@ -4,6 +4,10 @@
 namespace qlab::gfx {
 bool loadGl(void* (*getProcAddress)(const char*)) {
 #if defined(QXL_GL_GLAD)
+    // `Window::create` loads the entry points for its context; a later call without a loader
+    // (the App re-checks after making the window current) only asks whether that happened.
+    if (getProcAddress == nullptr)
+        return glad_glGetString != nullptr;
     return gladLoadGL((GLADloadfunc)getProcAddress) != 0;
 #else
     (void)getProcAddress;

@@ -3,6 +3,7 @@
 #include "Core/Log.hpp"
 #include "Core/Paths.hpp"
 #include "Graphics/GlCheck.hpp"
+#include "Graphics/GlLoader.hpp"
 #include <format>
 #include <glm/gtc/type_ptr.hpp>
 #include <sstream>
@@ -164,7 +165,7 @@ void ShaderProgram::use() const {
     glUseProgram(id_);
 }
 void ShaderProgram::release() {
-    if (id_)
+    if (id_ && hasCurrentContext())
         glDeleteProgram(id_);
     id_ = 0;
 }

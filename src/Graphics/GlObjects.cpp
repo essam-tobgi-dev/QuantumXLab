@@ -1,6 +1,7 @@
 #include "Graphics/GlObjects.hpp"
 #include "Core/Log.hpp"
 #include "Graphics/GlCheck.hpp"
+#include "Graphics/GlLoader.hpp"
 
 namespace qlab::gfx {
 
@@ -10,7 +11,8 @@ Buffer::Buffer(GLenum target) : target_(target) {
 }
 void Buffer::release() {
     if (id_) {
-        glDeleteBuffers(1, &id_);
+        if (hasCurrentContext())
+            glDeleteBuffers(1, &id_);
         id_ = 0;
     }
 }
@@ -45,7 +47,8 @@ VertexArray::VertexArray() {
 }
 void VertexArray::release() {
     if (id_) {
-        glDeleteVertexArrays(1, &id_);
+        if (hasCurrentContext())
+            glDeleteVertexArrays(1, &id_);
         id_ = 0;
     }
 }
@@ -165,7 +168,8 @@ void Texture2D::allocate(const void* pixels) {
 }
 void Texture2D::release() {
     if (id_) {
-        glDeleteTextures(1, &id_);
+        if (hasCurrentContext())
+            glDeleteTextures(1, &id_);
         id_ = 0;
     }
 }
@@ -219,7 +223,8 @@ TextureCube::TextureCube(const CubeDesc& d) : desc_(d) {
 }
 void TextureCube::release() {
     if (id_) {
-        glDeleteTextures(1, &id_);
+        if (hasCurrentContext())
+            glDeleteTextures(1, &id_);
         id_ = 0;
     }
 }
@@ -249,7 +254,8 @@ TimerQuery::TimerQuery(bool create) {
 }
 void TimerQuery::release() {
     if (id_) {
-        glDeleteQueries(1, &id_);
+        if (hasCurrentContext())
+            glDeleteQueries(1, &id_);
         id_ = 0;
     }
 }
@@ -289,7 +295,8 @@ Texture1D::Texture1D(std::span<const float> rgb, int count) {
 }
 void Texture1D::release() {
     if (id_) {
-        glDeleteTextures(1, &id_);
+        if (hasCurrentContext())
+            glDeleteTextures(1, &id_);
         id_ = 0;
     }
 }
@@ -312,7 +319,8 @@ Sampler::Sampler(bool linear, bool clamp, bool compareDepth) {
 }
 void Sampler::release() {
     if (id_) {
-        glDeleteSamplers(1, &id_);
+        if (hasCurrentContext())
+            glDeleteSamplers(1, &id_);
         id_ = 0;
     }
 }
@@ -326,7 +334,8 @@ Framebuffer::Framebuffer() {
 }
 void Framebuffer::release() {
     if (id_) {
-        glDeleteFramebuffers(1, &id_);
+        if (hasCurrentContext())
+            glDeleteFramebuffers(1, &id_);
         id_ = 0;
     }
 }

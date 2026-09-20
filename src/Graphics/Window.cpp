@@ -6,6 +6,10 @@
 #include <mutex>
 
 namespace qlab::gfx {
+
+bool hasCurrentContext() {
+    return glfwGetCurrentContext() != nullptr;
+}
 namespace {
 int g_glfwRefs = 0;
 std::mutex g_glfwMu;

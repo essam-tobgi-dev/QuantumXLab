@@ -16,4 +16,8 @@
 namespace qlab::gfx {
 // Loads function pointers where a loader is required; returns false on failure. No-op on macOS.
 bool loadGl(void* (*getProcAddress)(const char*));
+// True while an OpenGL context is current on this thread. A GL object released after its
+// window is gone (a view destroyed after the test window, an App torn down) must not call
+// into the driver: the context freed the object already, and on Linux the call is a crash.
+bool hasCurrentContext();
 } // namespace qlab::gfx
